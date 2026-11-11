@@ -1,7 +1,34 @@
 # CyberGuard AI (CG AI) — V3.0
 
-This repository contains the **research and engineering specifications** for CyberGuard AI V3.0, including **CG-001 to CG-1440**.
+**Enterprise cybersecurity research and engineering specification — مواصفات مشروع سايبر جارد AI**
 
-**Status:** Research and implementation specification, not a deployed or validated security product.
+> **الحالة:** ملفات بحث وهندسة، وليست منصة أمنية جاهزة. لم يبدأ تنفيذ أو اختبار جميع الميزات. المتطلبات **1,440** معرّفًا تاريخيًا، وبعضها متكرر أو مشروط أو خارج النطاق الحالي، وكلها محفوظة للنقاش والتصنيف.
 
-See `00_START_HERE/` for the engineering prompt and full requirements. Authorized testing only. Never commit secrets or live credentials.
+## البداية مع Codex
+
+1. اقرأ [AGENTS.md](AGENTS.md) و[دليل البدء في Codex](00_START_HERE/CODEX_START_HERE.md).
+2. اقرأ [برومبت التنفيذ](00_START_HERE/CyberGuard_AI_V3.0_EXECUTION_PROMPT_ONLY.md).
+3. استخدم [البرومبت الرئيسي الكامل](00_START_HERE/CyberGuard_AI_V3.0_MASTER_PROMPT_COMPLETE.md).
+4. راجع [كل المتطلبات كـ JSONL](02_REQUIREMENTS/CG_Requirements_1440.jsonl)، ثم [تقسيمات الـ12 ملفًا](02_REQUIREMENTS/CHUNKS/).
+5. راجع [تقرير إغلاق الفجوات](01_SOURCE/Gap_Closure_Audit_v2.9.md) و[السجل الأخير v2.9](01_SOURCE/Research_and_Requirements_v2.9.md).
+6. احتفظ بمراجعات [تاريخ المشروع من v0.3 إلى v2.9](03_HISTORY/).
+
+[مهمة بدء التطوير على GitHub](../../issues/1) توثق أول مخرجات مطلوبة من Codex.
+
+## نطاق المشروع
+
+- حماية الأجهزة والخوادم على Windows وmacOS وLinux وفق قدرات كل نظام وإصداره.
+- اكتشاف وتصنيف الأجهزة، والتحقق من حالة الحماية، وتطبيق ملفات حماية تكيفية.
+- تحليل تهديدات وSIEM/XDR، ومراقبة جلسات التحكم عن بُعد مع التمييز بين جهاز المتحكم A والجهاز المستهدف B.
+- AI Red Team واختبارات تحقق دفاعية *مصرح بها*؛ مع أدلة وموافقة بشرية مستقلة قبل أي إجراء حساس.
+- أتمتة الاستجابة الأمنية، DevSecOps، أمن الهوية والسحابة، واختبارات التعافي.
+- **NCC** لإدارة الشبكات، و**IT Twin** للتوأم الرقمي، ونظام **Tickets** لخدمات الصيانة تبقى مشروعات منفصلة.
+
+## سلامة الملفات والتصميم
+
+- المعرفات: **CG-001 إلى CG-1440**، تم التحقق من جميع سجلات JSONL دون فجوات.
+- [Manifest V3.0](00_START_HERE/Manifest_V3.0.json) يضم بصمات SHA-256 للمستندات الرئيسية.
+- الملف الوحيد من أرشيف V3.0 الأصلي **الذي لم يُنقل بعد** هو لقطة التصميم الثنائية `04_REFERENCE/SOC_Dashboard_User_Reference.png`؛ التفاصيل والبصمة في [دليل المرجع البصري](04_REFERENCE/README.md). تعليمات التصميم النصية موجودة كاملة.
+- لا ترفع إلى هذا المستودع بيانات تشغيل حساسة أو كلمات مرور أو مفاتيح API.
+
+**تنبيه:** هذا المستودع عام حاليًا. يمكن تحويله إلى Private من إعدادات GitHub؛ النسخ التي حصل عليها الآخرون أثناء كونه عامًا لا يمكن استرجاعها بعد ذلك.
