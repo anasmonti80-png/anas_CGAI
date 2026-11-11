@@ -1,0 +1,229 @@
+{
+  "schema_version": 1,
+  "registered": 1440,
+  "tracked": 1440,
+  "verified": 0,
+  "production_ready": false,
+  "semantic_review_complete": false,
+  "by_area": {
+    "ai-policy": 81,
+    "alerts": 41,
+    "assets": 158,
+    "cloud": 48,
+    "detection": 86,
+    "devsecops": 47,
+    "endpoint": 223,
+    "identity": 72,
+    "network": 108,
+    "platform": 367,
+    "remote-access": 24,
+    "resilience": 74,
+    "response": 79,
+    "ui": 4,
+    "vulnerability": 28
+  },
+  "by_scope": {
+    "CyberGuard": 1434,
+    "IT-Twin": 6
+  },
+  "by_milestone": {
+    "M1": 269,
+    "M2": 151,
+    "M3": 79,
+    "M4": 691,
+    "M5": 81,
+    "M6": 169
+  },
+  "source_integrity": "pass-normalized-lf",
+  "files": [
+    {
+      "path": "01_SOURCE/Research_and_Requirements_v2.9.md",
+      "expected": "88c8ab2a51c61409f49d625bdacfdd686e5331db9e6aeda8d886083fb8808bda",
+      "actual": "88c8ab2a51c61409f49d625bdacfdd686e5331db9e6aeda8d886083fb8808bda"
+    },
+    {
+      "path": "01_SOURCE/Gap_Closure_Audit_v2.9.md",
+      "expected": "6109a3437f200236d64c2d53dabfe255de1a4ff6f156eb0a4c109e4cb9690dce",
+      "actual": "6109a3437f200236d64c2d53dabfe255de1a4ff6f156eb0a4c109e4cb9690dce"
+    },
+    {
+      "path": "00_START_HERE/CyberGuard_AI_V3.0_MASTER_PROMPT_COMPLETE.md",
+      "expected": "f4268dae26b1eb1563d71b584ab5388fb3ffabf2cfa62ea50aa2bdfb8438fbff",
+      "actual": "f4268dae26b1eb1563d71b584ab5388fb3ffabf2cfa62ea50aa2bdfb8438fbff"
+    },
+    {
+      "path": "00_START_HERE/CyberGuard_AI_V3.0_EXECUTION_PROMPT_ONLY.md",
+      "expected": "eef5bf611810cc1662818397789b3e96e899909d7ed8869a2693d33895a20dab",
+      "actual": "eef5bf611810cc1662818397789b3e96e899909d7ed8869a2693d33895a20dab"
+    },
+    {
+      "path": "02_REQUIREMENTS/CG_Requirements_1440.jsonl",
+      "expected": "5001738fb0c1c638c8d024419c5487004310e56cbae6bbc3da38eb3b66bbd015",
+      "actual": "5001738fb0c1c638c8d024419c5487004310e56cbae6bbc3da38eb3b66bbd015"
+    }
+  ],
+  "chunks": [
+    {
+      "name": "CG_0001-0120.md",
+      "sha256": "2eb3ed1f8d8969ec372f4ee6712f6ae0d6252eed8bc193fe917f1d8f3749cc52"
+    },
+    {
+      "name": "CG_0121-0240.md",
+      "sha256": "e3639cf0d455aea31196a3220bdfb0c7985d6beca2460fd202326330122fc7d7"
+    },
+    {
+      "name": "CG_0241-0360.md",
+      "sha256": "7178d3874a0840d21948a55378671d9c9aaf0677089726378078ce87a83ffa43"
+    },
+    {
+      "name": "CG_0361-0480.md",
+      "sha256": "8c023e73bed4ef0ba5597365a50b93b66091e43db49c9b3e83e76d046f43dede"
+    },
+    {
+      "name": "CG_0481-0600.md",
+      "sha256": "277d4f0c95c80b8dc3e080d9c2ae3328206025c42da49dc6c8a75f3d8eb20f1f"
+    },
+    {
+      "name": "CG_0601-0720.md",
+      "sha256": "d0c7206fea27e2bae9febc99d3db397aacafc25da3c897e47828eaf61ae662b8"
+    },
+    {
+      "name": "CG_0721-0840.md",
+      "sha256": "c991f52908525b67d177e36d286c0254061585788cc341f30b1732a175b02199"
+    },
+    {
+      "name": "CG_0841-0960.md",
+      "sha256": "c35fc95736088e14b2881ddec5ead37792b1a72aecfe71f912bfc7823a3a2a88"
+    },
+    {
+      "name": "CG_0961-1080.md",
+      "sha256": "25dc2be70ed96f241c120480222ca1b5542f631fbcacbd8ea2ddbc3aab4b84dd"
+    },
+    {
+      "name": "CG_1081-1200.md",
+      "sha256": "d3544975432f407fc8e560b131ccc0a56d40ff27e33d84a78bcf91970d2bb527"
+    },
+    {
+      "name": "CG_1201-1320.md",
+      "sha256": "ced70095a456f29ad66f8931a8579ca92d2591c11118fc2f8dbd8475a1e3514b"
+    },
+    {
+      "name": "CG_1321-1440.md",
+      "sha256": "467a282871ab9bcfd01c6e3af85ba0040da76243797ae62c88664b6fae85273c"
+    }
+  ],
+  "history": [
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.3.md",
+      "sha256": "2acba6056602f5a35df63067dc2158ee63e7fe8b4d77eb90a40eb3db52b2b69a"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.4.md",
+      "sha256": "4ef3e5e3725fe95daad575485c8c4fc4b69ee1bc5a9f92758b88c7fbc91d6652"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.5.md",
+      "sha256": "ffc580ce9921aa52e8291833f388033482cf56e4af49b0673bf1c6d6089dbecd"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.6.md",
+      "sha256": "753e593c8b4b9eb96039f2ad5dd1a0d3caf14896958a6f99dcdf57959d88f64d"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.7.md",
+      "sha256": "033679e9325163d45635ef95e39c9ddde2ded59e388fbc81d7faeb1b4e204b0a"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.8.md",
+      "sha256": "264ec09199a0cbef504e7f4ef6ff8402f7866324b80f12f32f566ae926ecc70a"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v0.9.md",
+      "sha256": "6785952808b8a19762738febf902280e44e66517eb5c916f4e344f8dce72f591"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.0.md",
+      "sha256": "26cb511fdf3a1a9db3089b2db9d8ade873a29822cf1918acaa56454a2942a64c"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.1.md",
+      "sha256": "a74771eeb53cdd19105ddcda6cf0d5d0a475a67776611b598e6e237906be874c"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.2.md",
+      "sha256": "d90b384dab0903f02ffaf80fd637d627a28ae33385f0985cd34853d7374c33bb"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.3.md",
+      "sha256": "9547885770c05e988cb978902dadf77175e1725c0d031d07aefee69b028a68f8"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.4.md",
+      "sha256": "6f320d9597a832774a55fef7b46f8eba33a53b442d88970badc7b22fcaf894eb"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.5.md",
+      "sha256": "b198c1fedf6b52ec49a22ef35521ea0f8a6ac8a803972d973f14fe5dec26c15f"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.6.md",
+      "sha256": "70296cdcd3a24b9e6e664f6392747b5c2c24bb8000ed26ed4f49740d967596bf"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.7.md",
+      "sha256": "3260eb5aca904c14b9925cfac96e87aaf68a2e0dd595b44716cb58df2cdb0218"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.8.md",
+      "sha256": "18955ae555dab42d11885e1d8366454b0e7dff25b75fd8f0100fa3549080ec23"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v1.9.md",
+      "sha256": "fe64b30a62f2532a0fa5435940cc5bddb0bca91c5d7e166a225d9bc23d7b65e2"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.0.md",
+      "sha256": "edd24af4ad797efc98d123963a0d7736df1dd0e355fa22de746f5c95fd1bd106"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.1.md",
+      "sha256": "075de9f9015124bb018c24bcd0b241294941d3ac8738eda0523bd535c71ce333"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.2.md",
+      "sha256": "3ebc42bf1d1d5c605b8843528706cc711a8d2377b811f7470b19996575938585"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.3.md",
+      "sha256": "c43c864a9930a0fb65e257118d88703791dc54f413fa60fd410cf775fa1ece2a"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.4.md",
+      "sha256": "9b2adf203a3853da195648fa55ba59ee9cc358d9f31d19b94c7ffa117c791ce8"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.5.md",
+      "sha256": "40ed0ee126c330f95a251427c657ec48ed51a3cbc57cf7ecd18a0fb0aae63552"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.6.md",
+      "sha256": "b9b2c30d14729f6e0201f5ccdd825f908bbcb778a821572a55b0c5919f7b1ea0"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.7.md",
+      "sha256": "fa976657013fd85145f041d91e04df37da3ac3b47f96e03a367ceea90e27a747"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.8.md",
+      "sha256": "44f854c211c5962aa94188833e7027409dfa02bd874f5063136c9c3686cf5d8c"
+    },
+    {
+      "path": "03_HISTORY/CyberGuard_AI_Research_and_Requirements_v2.9.md",
+      "sha256": "88c8ab2a51c61409f49d625bdacfdd686e5331db9e6aeda8d886083fb8808bda"
+    }
+  ],
+  "caveats": [
+    "Routing is an initial automated classification, not a completed manual semantic review.",
+    "No requirement is fully verified by inventory or a unit test of a subset."
+  ]
+}

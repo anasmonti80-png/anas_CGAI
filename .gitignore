@@ -1,0 +1,10 @@
+node_modules/
+data/
+certs/
+.env
+*.log
+artifacts/private/
+coverage/
+*.sqlite*
+*.key
+*.pfx

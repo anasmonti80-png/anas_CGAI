@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "product_stage": "engineering-preview",
+  "production_ready": false,
+  "platforms": [
+    {"platform":"Windows x64 / Node 24.21.x", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
+    {"platform":"Windows Server", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
+    {"platform":"macOS Intel/Apple Silicon", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
+    {"platform":"Linux x64/ARM64", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
+    {"platform":"Windows", "component":"Defender/EDR/AD live connectors", "status":"not-implemented", "evidence":[]},
+    {"platform":"macOS", "component":"EndpointSecurity prevention", "status":"blocked-entitlement-and-implementation", "evidence":[]},
+    {"platform":"Linux", "component":"eBPF/audit prevention", "status":"not-implemented", "evidence":[]}
+  ],
+  "restrictions": ["loopback-only", "single-tenant", "no-production-validation", "no-AV-engine", "no-remote-execution", "no-cloud-egress", "no-20000-asset-capacity-claim"]
+}
