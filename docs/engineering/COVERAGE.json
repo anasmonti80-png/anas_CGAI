@@ -23,9 +23,18 @@
     "vulnerability": 28
   },
   "by_scope": {
-    "CyberGuard": 1434,
-    "IT-Twin": 6
+    "CyberGuard": 1432,
+    "CyberGuard/NCC-integration": 1,
+    "CyberGuard/Tickets-integration": 1,
+    "IT-Twin": 4,
+    "IT-Twin-boundary": 1,
+    "Tickets-boundary": 1
   },
+  "by_status": {
+    "partially-implemented": 21,
+    "planned": 1419
+  },
+  "reviewed_subset_boundaries": 33,
   "by_milestone": {
     "M1": 269,
     "M2": 151,

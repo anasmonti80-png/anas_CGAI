@@ -1,0 +1,31 @@
+name: Verify engineering preview
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  verify:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: '24.21.0'
+      - run: node scripts/verify.js
+      - run: node scripts/requirements.js
+      - name: Validate Windows exporter syntax
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $parseErrors = $null
+          $parseTokens = $null
+          [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD 'scripts/Export-WindowsEvents.ps1'), [ref]$parseTokens, [ref]$parseErrors) | Out-Null
+          if ($parseErrors.Count -gt 0) { throw 'PowerShell syntax validation failed' }

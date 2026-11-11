@@ -1,22 +1,15 @@
-# SOC Dashboard visual reference — asset status
+# SOC Dashboard — original user visual reference
 
-The original V3.0 package includes a **PNG visual reference** at `04_REFERENCE/SOC_Dashboard_User_Reference.png`.
+The user supplied the original screenshot again on 2026-11-11 and confirmed this as the primary visual direction. The binary is now preserved at `SOC_Dashboard_User_Reference.png`.
 
-The GitHub connector used for the first upload accepts UTF-8 text, but not the original PNG bytes. Therefore **the PNG has not been uploaded to this repository**. Do not interpret the presence of this README as a substitute for the missing binary image.
-
-Original PNG details for future verification:
-- Filename: `SOC_Dashboard_User_Reference.png`
 - Dimensions: **901 × 885 px**
 - Size: **374,904 bytes**
 - SHA-256: `53df69c6f4504b64b6bd513c0169ba87c9cbfaac85a0a2212c5f0b6219156ca2`
+- The hash matches the original reference recorded in the V3.0 package exactly.
+- The screenshot credits “Cyber Security Monitoring Dashboard by Delubemo™ Studio on Dribbble.” It is a visual reference, not a statement of ownership or a license for commercial redistribution of the original screenshot.
 
-## Design direction available from the written specification
+The implementation follows the slim left rail, tab navigation, charcoal/slate surfaces, orange selected controls, three metric cards, adjacent incident panel, score panel, eight tool cards, orange-red analytics panel and lower timeline. English uses the reference's reading order; Arabic uses RTL content with the navigation rail retained at the left. The interface is responsive.
 
-- Dark navy/charcoal SOC dashboard
-- Restrained orange accent for active elements; severity colors for status
-- Responsive Arabic RTL + English LTR
-- Clear top-level panels for overview, discover, assets, threats, incidents, identity, cloud, policies, response, AI analyst, reports, and settings
-- Distinguish actual protection from not configured, unsupported, not scanned, offline, or unverifiable.
-- Do not copy another product's trademark or third-party proprietary illustrations.
+Metrics are computed from available data. Unmeasured score, detection time and unconnected vulnerability scanner remain explicit. The reference's sample user, numbers and successful protection claims are not running product data.
 
-**To preserve pixel-level fidelity**, add the original PNG via a GitHub upload method that supports binary files before visual implementation decisions are finalized.
+Implementation: `public/dashboard.js`, `public/soc.css`, and shared UI `public/app.js`. Pixel-identical reproduction across arbitrary viewports is not claimed; browser comparison is recorded in `docs/engineering/BROWSER_QA_AR.md`.

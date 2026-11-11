@@ -17,6 +17,19 @@ function fixture(t) {
   const ingest=events=>d.ingest('admin-a',source.id,{schema_version:'cg.telemetry/1',events});
   return {s,d,source,event,ingest,advance:ms=>{now+=ms;}};
 }
+
+test('SOC dashboard uses actual daily counts, keeps unmeasured security metrics null and filters severity',t=>{
+  const {d,event,ingest,advance}=fixture(t);
+  let dash=d.dashboard();
+  assert.equal(dash.daily.length,28);assert.ok(dash.daily.every(day=>day.events===0&&day.alerts===0));
+  for(const key of ['security_score','vulnerability_scan','mean_detection_minutes','mean_acknowledge_minutes'])assert.equal(dash[key],null);
+  ingest([event('reported','security.finding',{severity:'critical',title:'SYNTHETIC critical',description:'Synthetic only'}),event('observed')]);
+  dash=d.dashboard();assert.equal(dash.events,2);assert.equal(dash.daily.at(-1).events,2);assert.equal(dash.severity_counts.critical,1);
+  assert.equal(d.dashboard('low').recent_alerts.length,0);assert.equal(d.dashboard('critical').recent_alerts.length,1);
+  advance(30000);d.acknowledge('admin-a',dash.recent_alerts[0].id);
+  assert.equal(d.dashboard().mean_acknowledge_minutes,.5);assert.equal(d.dashboard().mean_detection_minutes,null);
+  assert.throws(()=>d.dashboard('invalid'),/invalid_severity/);
+});
 test('source credentials are hashed, scoped, rotatable and revocable',t=>{
   const {s,d,source}=fixture(t);
   assert.notEqual(s.get('SELECT token_hash FROM sources').token_hash,source.token);

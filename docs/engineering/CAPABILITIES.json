@@ -1,14 +1,66 @@
 {
   "stage": "engineering-preview",
-  "validation": "not-yet-run",
+  "validation": "Unit Tested",
+  "evidence": [
+    "artifacts/verification.json",
+    "artifacts/tests.tap",
+    "docs/engineering/BROWSER_QA_AR.md"
+  ],
   "features": [
-    {"name":"Local identity and RBAC", "status":"implemented-unverified", "limitations":"Loopback only; MFA/SSO/TLS deployment pending"},
-    {"name":"Structured telemetry ingestion", "status":"implemented-unverified", "limitations":"cg.telemetry/1; not OCSF; no live vendor connectors"},
-    {"name":"Asset evidence and source health", "status":"implemented-unverified", "limitations":"Source-scoped identity; no cross-source reconciliation"},
-    {"name":"Remote A to B session evidence", "status":"implemented-unverified", "limitations":"Source-reported; no live endpoint verification"},
-    {"name":"Alerts and cases", "status":"implemented-unverified", "limitations":"Local dashboard and ACK; external delivery not configured"},
-    {"name":"Local metadata approval and rollback", "status":"implemented-unverified", "limitations":"Criticality metadata only; no device or network actions"},
-    {"name":"Deterministic investigation reports", "status":"implemented-unverified", "limitations":"Not an LLM or AI inference engine"},
-    {"name":"EDR prevention, cloud, NCC execution, LLM, restore, Red Team", "status":"not-implemented", "limitations":"Requires later engineering milestones and authorized labs"}
+    {
+      "name": "Local identity and RBAC",
+      "status": "unit-tested",
+      "limitations": "Loopback only; MFA/SSO/TLS deployment pending"
+    },
+    {
+      "name": "Structured telemetry ingestion",
+      "status": "unit-tested",
+      "limitations": "cg.telemetry/1; not OCSF; no live vendor connectors"
+    },
+    {
+      "name": "Asset evidence and source health",
+      "status": "unit-tested",
+      "limitations": "Source-scoped identity; no cross-source reconciliation"
+    },
+    {
+      "name": "Remote A to B session evidence",
+      "status": "unit-tested",
+      "limitations": "Source-reported; no live endpoint verification"
+    },
+    {
+      "name": "Alerts and cases",
+      "status": "unit-tested",
+      "limitations": "Local dashboard and ACK; external delivery not configured"
+    },
+    {
+      "name": "Local metadata approval and rollback",
+      "status": "unit-tested",
+      "limitations": "Criticality metadata only; no device or network actions"
+    },
+    {
+      "name": "SOC dashboard and actual activity charts",
+      "status": "unit-tested",
+      "limitations": "Metrics are received evidence and local detections, not security assurance; UI checks documented separately"
+    },
+    {
+      "name": "Windows Security export parser",
+      "status": "unit-tested",
+      "limitations": "Synthetic fixtures only. PowerShell exporter syntax checked; live Security log collection not run"
+    },
+    {
+      "name": "Explicit local host inventory",
+      "status": "unit-tested",
+      "limitations": "Injected OS fixture only; no network scan, persistent agent or protection verification"
+    },
+    {
+      "name": "Deterministic investigation reports",
+      "status": "unit-tested",
+      "limitations": "Not an LLM or AI inference engine"
+    },
+    {
+      "name": "EDR prevention, cloud, NCC execution, LLM, restore, Red Team",
+      "status": "not-implemented",
+      "limitations": "Requires later engineering milestones and authorized labs"
+    }
   ]
 }

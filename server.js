@@ -5,11 +5,13 @@ import { fileURLToPath } from 'node:url';
 import { Store } from './lib/store.js';
 import { Auth } from './lib/auth.js';
 import { Domain } from './lib/domain.js';
+import { localObservation } from './lib/local-collector.js';
+import { normalizeWindowsExport } from './lib/windows-events.js';
 import { AppError, fail, equal, object, page, token } from './lib/common.js';
 
 const ROOT=fileURLToPath(new URL('./',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
-const STATIC=new Set(['/','/app.js','/styles.css','/icon.svg']);
+const STATIC=new Set(['/','/app.js','/dashboard.js','/styles.css','/soc.css','/icon.svg']);
 const COOKIE='Path=/; HttpOnly; SameSite=Strict';
 const readJson=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
 const trace=()=>fs.readFileSync(path.join(ROOT,'docs/engineering/TRACEABILITY.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
@@ -33,6 +35,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
     if (!fs.existsSync(setupFile)) fs.writeFileSync(setupFile,bootstrap,{mode:0o600,flag:'wx'});
   }
   const requirements=trace(), coverage=readJson('docs/engineering/COVERAGE.json');
+  function ingestInput(actor,source,input){
+    if(input?.schema_version==='cg.windows-export/1'){const parsed=normalizeWindowsExport(input,clock?clock():Date.now());return {...domain.ingest(actor,source,parsed.batch),parser_report:parsed.report};}
+    return domain.ingest(actor,source,input);
+  }
   let monitorError=false;
   const rates=new Map();
   function rate(req) {
@@ -42,6 +48,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
     fail(r.n<=600,429,'request_rate_limit');
   }
   const server=http.createServer(async(req,res)=>{
+    let authenticatedActor=null;
     res.setHeader('Cache-Control','no-store');
     res.setHeader('X-Content-Type-Options','nosniff');
     res.setHeader('Referrer-Policy','no-referrer');
@@ -53,6 +60,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       fail([`127.0.0.1:${port}`,`localhost:${port}`,`[::1]:${port}`].includes(req.headers.host),403,'host_not_allowed');
       rate(req);
       const url=new URL(req.url,`http://${req.headers.host}`), p=url.pathname, method=req.method;
+      fail(['GET','POST'].includes(method),405,'method_not_allowed');
       const mutation=!['GET','HEAD'].includes(method);
       const bearer=String(req.headers.authorization||'').startsWith('Bearer ')?String(req.headers.authorization).slice(7):null;
       const ingest=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/events$/);
@@ -83,9 +91,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       if(bearer && ingest && method==='POST') {
         const source=domain.sourceToken(bearer,ingest[1]);
-        return send(res,200,domain.ingest(`source:${source.id}`,source.id,await body(req)));
+        return send(res,200,ingestInput(`source:${source.id}`,source.id,await body(req)));
       }
       const user=auth.session(req.headers.cookie);
+      authenticatedActor=user.id;
       if(mutation) fail(equal(req.headers['x-csrf-token']||'',user.csrf),403,'csrf_required');
       const roles=(allowed)=>auth.require(user,allowed);
       if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role},csrf:user.csrf});
@@ -98,13 +107,23 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         return send(res,201,{user:await auth.createUser(user.id,input)});
       }
       if(p==='/api/overview'&&method==='GET') return send(res,200,domain.summary());
+      if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));
       if(p==='/api/sources') {
         if(method==='GET') return send(res,200,{items:domain.sources()});
         roles(['admin']); return send(res,201,domain.createSource(user.id,await body(req)));
       }
+      if(p==='/api/collectors/local'&&method==='POST') {
+        roles(['admin']);
+        const input=object(await body(req),['confirm_read_only'],'local_collection');
+        fail(input.confirm_read_only===true,400,'collection_confirmation_required');
+        const name='Control-plane host / explicit local inventory';
+        let source=store.get('SELECT id,revoked FROM sources WHERE name=?',name);
+        if(!source) source=domain.createSource(user.id,{name,stale_seconds:86400});
+        return send(res,200,domain.ingest(user.id,source.id,localObservation()));
+      }
       const sourceAction=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/(rotate|revoke)$/);
       if(sourceAction&&method==='POST') { roles(['admin']); return send(res,200,sourceAction[2]==='rotate'?domain.rotateSource(user.id,sourceAction[1]):domain.revokeSource(user.id,sourceAction[1])); }
-      if(ingest&&method==='POST') {roles(['admin','analyst']);return send(res,200,domain.ingest(user.id,ingest[1],await body(req)));}
+      if(ingest&&method==='POST') {roles(['admin','analyst']);return send(res,200,ingestInput(user.id,ingest[1],await body(req)));}
       const tables={'/api/assets':'assets','/api/events':'events','/api/alerts':'alerts','/api/remote-sessions':'remote_sessions','/api/cases':'cases','/api/actions':'actions','/api/audit':'audit'};
       if(tables[p]&&method==='GET') {if(p==='/api/audit') roles(['admin']);return send(res,200,domain.list(tables[p],page(url.searchParams)));}
       const assetRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})(\/report)?$/);
@@ -112,6 +131,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const eventRoute=p.match(/^\/api\/events\/([a-f0-9-]{36})$/);
       if(eventRoute&&method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM events WHERE id=?',[eventRoute[1]])));
       const ack=p.match(/^\/api\/alerts\/([a-f0-9-]{36})\/ack$/);
+      const alertRoute=p.match(/^\/api\/alerts\/([a-f0-9-]{36})$/);
+      if(alertRoute&&method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM alerts WHERE id=?',[alertRoute[1]])));
       if(ack&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.acknowledge(user.id,ack[1]));}
       if(p==='/api/cases'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.createCase(user.id,await body(req)));}
       const caseRoute=p.match(/^\/api\/cases\/([a-f0-9-]{36})$/);
@@ -121,6 +142,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       if(p==='/api/actions/preview'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.previewAction(user.id,await body(req)));}
       const action=p.match(/^\/api\/actions\/([a-f0-9-]{36})\/(approve|execute|rollback)$/);
+      const actionDetail=p.match(/^\/api\/actions\/([a-f0-9-]{36})$/);
+      if(actionDetail&&method==='GET') return send(res,200,store.require('SELECT * FROM actions WHERE id=?',[actionDetail[1]]));
       if(action&&method==='POST') {roles(['admin']);const fn={approve:'approveAction',execute:'executeAction',rollback:'rollbackAction'}[action[2]];return send(res,200,domain[fn](user.id,action[1]));}
       if(p==='/api/audit/verify'&&method==='GET') {roles(['admin']);return send(res,200,store.verifyAudit());}
       if(p==='/api/coverage'&&method==='GET') return send(res,200,{...coverage,support:readJson('docs/engineering/SUPPORT_MATRIX.json'),capabilities:readJson('docs/engineering/CAPABILITIES.json')});
@@ -131,6 +154,9 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       throw new AppError(404,'not_found');
     } catch(e) {
+      if(authenticatedActor && e instanceof AppError && e.status===403) {
+        try {store.audit(authenticatedActor,'request.denied','http-api',{reason:e.code});} catch {monitorError=true;}
+      }
       if(!res.headersSent) send(res,e instanceof AppError?e.status:500,{error:e instanceof AppError?e.code:'internal_error'});
       else res.end();
     }

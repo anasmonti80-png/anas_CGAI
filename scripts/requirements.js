@@ -2,6 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
+import {sourceFingerprint} from './source-fingerprint.js';
 
 export const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const hash = s => createHash('sha256').update(s).digest('hex');
@@ -61,7 +62,7 @@ export function classify(requirements) {
     const prior = seen.get(normalized);
     seen.set(normalized, prior || r.id);
     let scope = 'CyberGuard', reason = 'V3-02; section-based routing requires semantic review';
-    if (r.number >= 921 && r.number <= 926) { scope = 'IT-Twin'; reason = 'V3-02 transfers the historical digital-twin subsystem; retain security integration context'; }
+    if (r.number >= 921 && r.number <= 924) { scope = 'IT-Twin'; reason = 'V3-02 and CG-939 transfer what-if simulation; NCC owns network execution. Retain CyberGuard security context.'; }
     const evidence = Object.hasOwn(refines, r.number) ? refines[r.number].map(n => `CG-${String(n).padStart(3,'0')}`) : [];
     return {
       id:r.id, number:r.number, raw_requirement:r.text_verbatim, source_section:r.section,
@@ -76,13 +77,31 @@ export function classify(requirements) {
     };
   });
 }
+export function applyReview(rows,review,verification=null,fingerprint=null) {
+  const fresh=verification?.passed===true&&verification.source?.sha256===fingerprint?.sha256;
+  const ids=new Set(rows.map(r=>r.id));
+  for(const id of Object.keys(review)) if(!ids.has(id)) throw new Error(`Unknown reviewed requirement ${id}`);
+  return rows.map(row=>{
+    const item=review[row.id];if(!item)return row;
+    return {...row,...(item.scope?{current_scope:item.scope}:{}),review_status:'reviewed-subset-boundaries',classification_method:'manual-scope-and-subset-v1',
+      decision_reason:item.reason,code_reference:item.code||[],test_id:item.tests||[],
+      status:item.code?.length?'partially-implemented':'planned',
+      test_result:item.tests?.length&&fresh?'passed-for-subset':'not-run-for-this-source',
+      last_verified:item.tests?.length&&fresh?verification.at:null,
+      platform_coverage:{...row.platform_coverage,...(item.tests?.length&&fresh&&verification.environment.platform==='win32'?{windows:'unit-tested-subset'}:{})},
+      evidence:item.tests?.length&&fresh?['artifacts/verification.json','artifacts/tests.tap']:[],restrictions:[...row.restrictions,...item.remaining]};
+  });
+}
 export function generate() {
   const inventory = sourceInventory();
-  const rows = classify(inventory.requirements);
+  const reviewed=JSON.parse(read('docs/engineering/REVIEWED_SUBSETS.json'));
+  const verification=fs.existsSync(path.join(ROOT,'artifacts/verification.json'))?JSON.parse(read('artifacts/verification.json')):null;
+  const rows = applyReview(classify(inventory.requirements),reviewed,verification,sourceFingerprint());
   const group = key => Object.fromEntries([...new Set(rows.map(r => r[key]))].sort().map(k => [k, rows.filter(r => r[key] === k).length]));
   const coverage = {
     schema_version:1, registered:1440, tracked:rows.length, verified:0, production_ready:false,
     semantic_review_complete:false, by_area:group('area'), by_scope:group('current_scope'),
+    by_status:group('status'), reviewed_subset_boundaries:Object.keys(reviewed).length,
     by_milestone:group('milestone'), source_integrity:'pass-normalized-lf',
     files:inventory.files, chunks:inventory.chunks, history:inventory.history,
     caveats:['Routing is an initial automated classification, not a completed manual semantic review.', 'No requirement is fully verified by inventory or a unit test of a subset.'],

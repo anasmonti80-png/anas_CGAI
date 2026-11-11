@@ -3,11 +3,12 @@
   "product_stage": "engineering-preview",
   "production_ready": false,
   "platforms": [
-    {"platform":"Windows x64 / Node 24.21.x", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
+    {"platform":"Windows x64 / OS 10.0.26200 / Node 24.21.0", "component":"local-control-plane", "status":"unit-tested", "evidence":["artifacts/verification.json","artifacts/tests.tap"], "scope":"Synthetic unit/integration/loopback HTTP; no real endpoint or production acceptance"},
     {"platform":"Windows Server", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
     {"platform":"macOS Intel/Apple Silicon", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
     {"platform":"Linux x64/ARM64", "component":"local-control-plane", "status":"not-tested", "evidence":[]},
     {"platform":"Windows", "component":"Defender/EDR/AD live connectors", "status":"not-implemented", "evidence":[]},
+    {"platform":"Windows", "component":"Security event JSON export parser", "status":"unit-tested", "evidence":["tests/windows-events.test.js","tests/http.test.js","artifacts/tests.tap"],"scope":"Synthetic input only; PowerShell exporter has syntax validation only"},
     {"platform":"macOS", "component":"EndpointSecurity prevention", "status":"blocked-entitlement-and-implementation", "evidence":[]},
     {"platform":"Linux", "component":"eBPF/audit prevention", "status":"not-implemented", "evidence":[]}
   ],
