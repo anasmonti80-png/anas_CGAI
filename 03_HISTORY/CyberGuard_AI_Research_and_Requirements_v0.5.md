@@ -1,0 +1,473 @@
+# CyberGuard AI — السجل التراكمي للبحث والمتطلبات
+
+**الإصدار:** v0.5 (مسودة بحث موسعة؛ تتضمن v0.4 كاملة)  
+**تاريخ التحديث:** 2026-11-10  
+**الحالة:** دراسة وتوثيق فقط؛ **لا برمجة، ولا بروتوتايب، ولا نشر، ولا فحص لأجهزة فعلية**.  
+**الاسم:** CyberGuard AI اسم عمل مؤقت؛ يجب إجراء فحص علامة تجارية ونطاق قبل اعتماده.  
+**المرجع البصري:** لقطة لوحة SOC الكحلية/الرمادية/البرتقالية التي قدمها المستخدم؛ نحتفظ باتجاهها وتوزيعها دون نسخ أصول مملوكة لطرف آخر حرفيًا.
+
+> مبدأ السجل: لا تُحذف أي فكرة سابقة دون تسجيل سبب القرار؛ نسجل كل متطلب بحالة (مطلوب/بحث/قابل للتنفيذ بشروط/مؤجل/مرفوض). هذه **أهداف تصميم** وليست قدرات منفذة أو مضمونة.
+
+## أ. تعريف المنتج
+
+منصة أمنية دفاعية تجمع SIEM وEDR/XDR وNDR وVulnerability Management وSecurity Posture وSOAR وAI Analyst، وتعمل بدءًا من جهاز PC محلي مع واجهة Windows ولوحة ويب آمنة للجوال والتابلت، وتتوسع لاحقًا إلى خوادم وحساسات موزعة وبيئات Multi-Vendor وMulti-Cloud وMulti-Tenant.
+
+## ب. سجل المتطلبات المرقم — معرّفات ثابتة
+
+### 01 — التصميم وتجربة الاستخدام
+- **CG-001** مطلوب — Dark SOC Dashboard كحلي/رمادي مع برتقالي للتأكيد وألوان حالة محدودة، قريب من الصورة المرجعية.
+- **CG-002** مطلوب — شريط جانبي: Overview, Discover, Assets, Network Map, Threats, Incidents, Vulnerabilities, Identity, Cloud, Policies, Response, AI Analyst, Reports, Settings.
+- **CG-003** مطلوب — دعم عربي/إنجليزي وRTL وResponsive للكمبيوتر والتابلت والجوال.
+- **CG-004** مطلوب — شاشة وضع أمني واضحة مع «لم يتم فحصه/غير مرئي» وتفاصيل الأدلة، وعدم الادعاء بضمان أمن 100%.
+
+### 02 — نطاق الشبكات والاكتشاف
+- **CG-005** مطلوب — اكتشاف مصرح به للأجهزة، العناوين، الشبكات، المسارات، VLAN، المنافذ، الخدمات، تغيّر الأصول، الانقطاع أو الإضافة.
+- **CG-006** مطلوب — اكتشاف متسلسل باستخدام LLDP/CDP وSNMPv3 وواجهات API وDNS/DHCP وAD وARP بحسب التوفر.
+- **CG-007** مطلوب — دعم ثلاثة أوضاع: PC Local، Enterprise Collectors، Authorized Defense Validation Lab.
+- **CG-008** مطلوب — إظهار حدود الرؤية: PC وحده لا يرى كل الحركة بين الأجهزة خلف السويتش؛ يدعم SPAN/TAP/Flow Logs/Agents عند الحاجة.
+- **CG-009** هدف لاحق — قابلية التوسع إلى 20,000 جهاز بتصميم موزع، لا على جهاز PC واحد.
+
+### 03 — أمن الأجهزة والسيرفرات
+- **CG-010** مطلوب — Agents اختيارية للأجهزة المُدارة: Windows Event Logs، Sysmon، Linux audit/syslog، خدمات وعمليات وحالة AV/EDR.
+- **CG-011** مطلوب — مراقبة التغييرات الحساسة: Registry/ملفات/خدمات/برامج/Firewalls/حسابات/سياسات.
+- **CG-012** مطلوب — رصد مؤشرات الخبيث والفدية ومحاولة تعطيل الحماية وعمليات مشبوهة بأدلة وقواعد.
+- **CG-013** مطلوب — جرد برامج وتحديثات وثغرات الأجهزة، وربطها بالإصدارات المثبتة.
+
+### 04 — الهوية والوصول البعيد
+- **CG-014** مطلوب — تكامل AD/LDAP، Windows Accounts، Microsoft Entra ID، IAM السحابي، ومراقبة تغيير المجموعات والامتيازات.
+- **CG-015** مطلوب — اكتشاف MFA غير مفعل، الحسابات الراكدة، الدخول الشاذ، Password Spraying، موافقات OAuth الخطرة، تعديلات IdP.
+- **CG-016** مطلوب — مراقبة مؤشرات RDP/SSH/AnyDesk وغيرها، مع التمييز بين وجود تطبيق واتصال مؤكد وبين اتصال مشروع أو مريب.
+- **CG-017** مطلوب — Just-in-Time Privileges وتصاريح مؤقتة ذات مدة وحدود وأسباب وموافقات وتدقيق.
+
+### 05 — كشف الشبكة والجدار الناري
+- **CG-018** مطلوب — تجميع Syslog وNetFlow/IPFIX وIDS/IPS وDNS وDHCP وVPN وFirewall logs والتطبيع إلى نموذج أحداث مشترك.
+- **CG-019** مطلوب — تحليل الاتصالات بين الأجهزة والتعرض للإنترنت وDNS غير المعتاد ومؤشرات الحركة الجانبية.
+- **CG-020** مطلوب — Firewall Rule Analyzer: تعارض/تكرار/قواعد واسعة/قواعد قديمة/انتهاء الاستثناءات/تأثير تغيير.
+- **CG-021** مطلوب — مراقبة تصحيحات وإصدارات أجهزة الشبكة والجدران النارية، تغيّر إعدادات DNS وVPN والإدارة الخارجية.
+- **CG-022** مطلوب — التمييز بين TCP/UDP Port في جدار ناري وSwitch Physical Port؛ لا يخلط النظام بينهما.
+- **CG-023** بحث — تكامل DNS security وWAF وIDS/IPS وNAC وNDR وZTNA بحسب بيئة العميل.
+
+### 06 — الثغرات وتحقق الدفاع
+- **CG-024** مطلوب — Vulnerability Assessment ضمن نطاق تفويض، باستخدام مصادر CVE/CVSS/EPSS/CISA KEV وسمات الانكشاف.
+- **CG-025** مطلوب — ترتيب مخاطر الثغرات بحسب الأصل وأهميته والتعرض وإثبات الاستغلال والضوابط الحالية؛ لا يعتمد على CVSS وحده.
+- **CG-026** مطلوب — ثلاث طبقات للاختبار: Passive، Low-Impact Authorized Validation، وAdversary Emulation في مختبر مصرح به.
+- **CG-027** مطلوب — قياس نجاح الكشف أثناء الاختبارات وكتابة Detection Gap بدل الادعاء بأن كل ثغرة قابلة للاستغلال.
+- **CG-028** مطلوب — معاملة الأصول الحرجة الإنتاجية بسياسات منع الفحوص المؤثرة حتى مع صلاحيات المسؤول.
+
+### 07 — الاستجابة وإدارة الخدمات والمنافذ
+- **CG-029** مطلوب — Actions: Block/Allow IP, Port, App, Domain؛ Stop/Disable Service؛ Quarantine File؛ Isolate/Reconnect Device؛ Shutdown managed host؛ Switch port admin-down فقط بتصريح.
+- **CG-030** مطلوب — إزالة خدمة/تغيير دائم كإجراء عالي الخطورة بموافقة منفصلة وخطة استرداد؛ لا تستخدم إزالة عمياء.
+- **CG-031** مطلوب — Temporary Permit: نطاق جهاز/مستخدم/مصدر/وجهة/منفذ/مدة/سبب/مالك/موافق؛ انتهاء آلي موثوق يثبت الإلغاء.
+- **CG-032** مطلوب — Dry Run وImpact Analysis ثم Approve ثم Execute ثم Verify ثم Audit ثم Rollback.
+- **CG-033** مطلوب — حفظ قناة الإدارة وتجنّب قطع السويتشات الأساسية أو DC أو اتصال منصة الأمن بنفسها.
+- **CG-034** مطلوب — إجراءات حساسة تستدعي MFA حديثة، Two-Person Approval حين يلزم، Break-Glass مضبوط، وتسجيل immutable/append-only حيث أمكن.
+- **CG-035** مطلوب — Playbooks لكل نوع حادث مع مسارات أدلة واستجابة آمنة، وإجراءات مؤتمتة منخفضة الخطورة فقط بعد الاعتماد.
+
+### 08 — محلل الذكاء الاصطناعي
+- **CG-036** مطلوب — AI يفسر «ماذا حدث؟ لماذا هو مشبوه؟ ما الدليل؟ ما مستوى الثقة؟ ما الحل؟» بالعربية والإنجليزية.
+- **CG-037** مطلوب — AI Grounding من السجلات والقواعد والاستشارات ومراجع موثقة؛ مصدر لكل ادعاء، ومنع اختلاق حقائق.
+- **CG-038** مطلوب — استخدام نموذج محلي أساسًا مع Cloud AI اختيارية للبيانات المنقحة بموافقة العميل.
+- **CG-039** مطلوب — AI لا يرسل أوامر خام مباشرة؛ فقط يطلب إجراءات من كتالوج محدود يخضع لصلاحيات وموافقات ومحرك سياسات.
+- **CG-040** مطلوب — Incident Timeline وEvidence Graph وAttack Path احتمالي مع الفصل بين إثبات حادث وفرضية تحليل.
+
+### 09 — موصلات الشركات: الشبكات المحلية
+- **CG-041** مطلوب — Cisco: IOS/IOS XE حيث تسمح النسخة؛ Catalyst Center للـinventory/topology/assurance؛ Cisco ISE ANC للعزل؛ Secure Firewall FMC لقواعد الجدار.
+- **CG-042** مطلوب — Huawei: iMaster NCE-Campus/CloudCampus Northbound APIs للتجهيز والمراقبة؛ واجهات الأجهزة المباشرة حسب الإصدار والرخصة.
+- **CG-043** بحث — Palo Alto PAN-OS/Panorama APIs، Fortinet FortiManager/FortiOS، Juniper، Aruba، MikroTik، pfSense/OPNsense، Linux routers.
+- **CG-044** مطلوب — Capability Negotiation: نكشف ما يدعمه كل جهاز فعليًا من Read/Logs/Config/Policy/Isolation/Port Shutdown/Undo، مع التحقق من الإصدار والرخصة.
+- **CG-045** مطلوب — فصل قراءة البيانات عن امتيازات التعديل واشتراط الموافقة والتفويض المحدد للأصول.
+
+### 10 — موصلات السحابة
+- **CG-046** مطلوب — AWS: Organizations/Cross-account IAM Roles، CloudTrail، GuardDuty، Security Hub CSPM، Inspector، Config، VPC Flow Logs، AWS Network Firewall، Security Groups، EventBridge؛ حسب الامتيازات والخدمة.
+- **CG-047** مطلوب — Azure: Subscriptions/Resource Graph، Entra Sign-in/Audit، Defender for Cloud، Sentinel، Azure Monitor، VNet Flow Logs، Azure Firewall وNSG/ASG، Network Watcher.
+- **CG-048** بحث — Google Cloud: SCC، Cloud Audit Logs، VPC Flow Logs، IAM، Cloud Armor، VPC Firewall Rules؛ لاحقًا Kubernetes/EKS/AKS/GKE.
+- **CG-049** مطلوب — صلاحيات مؤقتة محدودة لكل حساب/اشتراك/مشروع، لا طلب Root أو Global Admin دائم.
+- **CG-050** مطلوب — توحيد Cloud Asset Inventory والتنبيهات والسياسات عبر الأقاليم والحسابات والسحب، مع بيان الفجوات والرسوم.
+- **CG-051** مهم — Azure NSG Flow Logs توقّف إنشاء الجديد منه وهو في طريقه للتقاعد في 2027-09-30؛ الجديد يعتمد VNet Flow Logs.
+
+### 11 — الوصول والهوية والأمان الداخلي للمنصة
+- **CG-052** مطلوب — HTTPS مع SSO/MFA وRBAC/ABAC وتقسيم Tenant/Site/Scope/Role، وLeast Privilege.
+- **CG-053** مطلوب — Windows Desktop + Tablet/Mobile browser، والوصول الخارجي يكون من خلال بوابة Zero Trust أو VPN وقيود أجهزة.
+- **CG-054** مطلوب — عدم تعريض محرك الأمان أو قواعد البيانات للعامة؛ تظل البيانات والسيطرة محلية افتراضيًا.
+- **CG-055** مطلوب — تشفير أسرار الاتصالات وخزنها في Secret Store، تدوير الرموز، تفويض مجزأ، فصل أدوار التحليل والموافقة والتنفيذ.
+- **CG-056** مطلوب — سجلات تدقيق موثوقة، إحصاءات التغطية والصحة، تقييم فقدان Agents، تنبيه على فشل إرسال السجلات.
+
+### 12 — جودة المشروع والقابلية للتوسع
+- **CG-057** مطلوب — لا ندّعي نسبة أمان مطلقة؛ Score يتضمن Coverage وEvidence وFreshness وConfidence.
+- **CG-058** مطلوب — قياس Precision/False Positives وMTTD/MTTR وتغطية الأجهزة والقواعد وفشل إجراءات الاستجابة.
+- **CG-059** مطلوب — Multi-Tenant عند التوسع: عزل بيانات كل عميل، حدود موارد، سياسات واحتفاظ وسجلات مستقلة.
+- **CG-060** مطلوب — دعم الانقطاع: Local operation، Queue، Retry، Idempotency، Change Reconciliation، وتحقق بعد التراجع.
+- **CG-061** مطلوب — مراجعة تراخيص البرمجيات المفتوحة والخصوصية والالتزامات القانونية قبل الدمج/التوزيع التجاري.
+- **CG-062** مطلوب — مراحل تنفيذ تبدأ بمختبر معزول وبيانات اختبار، ثم تجربة نطاق محدود مصرح بها، ثم توسع مشروط بالاختبارات.
+- **CG-063** مؤجل — Prompt تطوير شامل نهائي عند انتهاء الدراسة واعتماد المتطلبات؛ **لا نكتبه ولا نبدأ البرمجة الآن**.
+
+### 13 — Threat Knowledge Engine (إضافة هذه الجلسة)
+- **CG-064** مطلوب — مكتبة دراسات حوادث موثقة مرتبطة بمراحل الهجوم، ومصادر الرؤية، والاستجابة والوقاية.
+- **CG-065** مطلوب — تحويل الأدلة المنشورة إلى فرضيات كشف وقواعد يتم اختبارها يدويًا قبل الاعتماد، لا تحويل نصوص الويب إلى تنفيذ آلي.
+- **CG-066** مطلوب — تحديث قواعد الكشف ومعرفة التهديدات بشكل خاضع للمراجعة والتوقيع والنسخ السابقة والتراجع.
+- **CG-067** مطلوب — وصف أفضل طريقة لإصلاح كل مشكلة بحسب بيئة الشبكة ونوع الأصل، وإظهار القيود وعدم اليقين.
+
+## ج. دراسات الحوادث ومخرجاتها
+
+| الرمز | الحادث | أسلوب الدخول الموثق | كشف/احتواء مقترح | معرفات المتطلبات |
+|---|---|---|---|---|
+| CASE-01 | Change Healthcare 2024 | بيانات دخول مسروقة عبر بوابة وصول غير محمية بـMFA | تدقيق MFA، مراقبة وصول بعيد وسلوك حسابات، تقسيم الشبكة والاستجابة | CG-014–017, CG-029 |
+| CASE-02 | Microsoft Midnight Blizzard 2023/24 | Password spray على حساب اختبار قديم ثم إساءة استخدام OAuth | رصد حسابات قديمة وتغييرات OAuth والامتيازات والجلسات | CG-015, CG-040 |
+| CASE-03 | Snowflake customers UNC5537 2024 | اعتمادات مسروقة قديمة ومفقود MFA/allow lists | رصد الجلسات السحابية والتحويلات الكبيرة ومراقبة الاعتمادات | CG-045–050 |
+| CASE-04 | MGM Resorts 2023 | تقارير عن هندسة اجتماعية استهدفت مكتب الدعم | تدقيق MFA reset والهوية الاتحادية وتغييرات حسابات الامتياز | CG-014–017 |
+| CASE-05 | MOVEit CL0P 2023 | استغلال ثغرة نقل ملفات مكشوفة؛ web shell وسحب بيانات | كشف exposure/patch/web changes/exfil | CG-024–028 |
+| CASE-06 | Volt Typhoon 2024 advisory | إساءة استخدام أجهزة شبكة ضعيفة وأدوات شرعية | مراقبة Firmware/الإدارة الخارجية/DNS وVPN والسجلات | CG-020–023, CG-064 |
+| CASE-07 | DNS hijack via compromised SOHO routers (DOJ 2026) | تعديل DNS في راوترات مصابة | Baseline DNS وFirmware والتعرض الخارجي | CG-021, CG-064 |
+
+**تنبيه:** أمثلة إجراءات الكشف ليست ادعاء بأن تلك المؤسسات طبّقتها فعليًا أو أن المنتج قادر عليها الآن؛ هي متطلبات مستنبطة من قصص منشورة.
+
+## د. مصفوفة تكامل أولية — ليست ضمان دعم كل جهاز
+
+| البيئة | القراءة/الكشف | الاستجابة المشروطة | الحدود |
+|---|---|---|---|
+| Cisco Switches/Routers | SNMPv3, Syslog, LLDP/CDP, Catalyst Center APIs, telemetry | Port/VLAN/ACL وفق الجهاز والتحكم المخول | اختلاف IOS/IOS XE والامتيازات ونقطة التحكم |
+| Cisco ISE / Secure Firewall | ANC/pxGrid/FMC APIs | Quarantine/Re-auth/Rules/Policy Deployment | يحتاج خدمة قائمة ورخصة مناسبة وموافقات |
+| Huawei switches / iMaster NCE | NBI RESTful, alarms, device/interface/link data | Ports, VLANs, policy حسب API والإصدار | ليس مضمونًا لكل طراز أو ترخيص |
+| Palo Alto / Fortinet | APIs/Syslog/logs | Rules/Objects حسب API وصلاحيات المشغل | Commit/Deploy، rate limits، اختلاف المنتج |
+| Windows/AD | Event Logs, Sysmon, Agent, LDAP, AD logs | Service/Firewall/Isolation managed endpoint | Agent/Privileges/OS compatibility |
+| Linux | Syslog/audit/eBPF وAgent عند الحاجة | Firewall/Service عبر عامل مصرح | فروق النظام والتوزيعة |
+| AWS | CloudTrail/GuardDuty/Security Hub/VPC Flow Logs/Config | SG/Network Firewall/response workflow | IAM Role/Region/account/API limits |
+| Azure | Entra/Defender/Sentinel/VNet Flow Logs/Monitor | Azure Firewall/NSG/managed resources | RBAC/licensing and Cloud costs |
+| Google Cloud | SCC/Cloud Audit Logs/VPC Flow Logs | VPC Firewall/IAM response when authorized | Project/org scopes/licensing |
+
+## هـ. دراسات الجدار الناري المطلوبة قبل التنفيذ
+
+1. الفرق بين Stateless ACL وStateful Firewall وNGFW وWAF وIPS/IDS وDNS Security وNAC وZTNA.
+2. قواعد ingress/egress وeast-west وnorth-south والتسلسل والأولوية والتعارض والـshadowed rules.
+3. الفرق بين فتح منفذ TCP/UDP وبين إغلاق physical switchport.
+4. التحقق من الارتباطات: IP→MAC→Switchport→Asset→Identity، قبل قطع الاتصال.
+5. سياسة منع التعديل على Core/Trunk/Uplink/Management/DC إلا بعد تحقق ونافذة تغيير واستعادة.
+6. استثناءات JIT ومدة صلاحيتها وموثوقية الإلغاء حتى بعد إعادة تشغيل النظام.
+7. Pre-change backup وdry run وتأثير التغيير وpost-change verification وrollback.
+8. Traffic encryption/privacy: عدم فك تشفير المحتوى بلا تفويض ونطاق وحوكمة.
+
+## و. مرحلة ما قبل البروتوتايب (Checkpoints)
+
+- CHECK-01 تعريف حالات استخدام قابلة للقياس وThreat Model ووضع الصلاحيات.
+- CHECK-02 حصر أصول المختبر وبيانات Logs المطلوبة والأنظمة والإصدارات.
+- CHECK-03 تحديد أقل تكامل يعمل لكل Vendor مع Read-only أولاً.
+- CHECK-04 وضع مصفوفة صلاحيات مستقلة لكل Action وVendor وScope.
+- CHECK-05 التحقق من طرق رصد RDP/AnyDesk وWindows Event/Sysmon والسجلات المتاحة.
+- CHECK-06 مراجعة المصادر الأمنية والأدوات وترخيص كل أداة وكلفة التشغيل.
+- CHECK-07 اختبار التفاعل بين Sensor وSIEM وAI على أحداث مصطنعة دون التأثير على الإنتاج.
+- CHECK-08 تصميم واجهة محافظة على اتجاه الصورة المرجعية وقياس تجربة الجوال.
+- CHECK-09 تقييم PC Local مقابل Linux VM مقابل موزع Hybrid، RAM/storage/log rate/retention.
+- CHECK-10 اعتماد Threat Modeling وضوابط المنصة والاسترداد والفشل الآمن.
+- CHECK-11 مراجعة معايير النجاح ودقة التنبيهات وCoverage وMTTD/MTTR.
+- CHECK-12 عند اكتمال الدراسة فقط: كتابة Prompt نهائي متعقب لهذه المعرّفات ثم بناء بروتوتايب.
+
+## ز. مصادر موثوقة للبحث الحالي
+
+### حوادث
+- Change Healthcare: https://www.cybersecuritydive.com/news/change-healthcare-compromised-credentials-no-mfa/714792/
+- Microsoft Midnight Blizzard: https://www.microsoft.com/en-us/security/blog/2024/01/25/midnight-blizzard-guidance-for-responders-on-nation-state-attack/
+- Snowflake / Mandiant: https://cloud.google.com/blog/topics/threat-intelligence/unc5537-snowflake-data-theft-extortion
+- MGM reports: https://www.bloomberg.com/news/articles/2023-09-16/mgm-resorts-hackers-broke-in-after-tricking-it-service-desk
+- MOVEit / CISA: https://content.govdelivery.com/accounts/USDHSCISA/bulletins/35ecb08
+- Volt Typhoon official CISA/FBI announcement: https://content.govdelivery.com/accounts/USDHSCISA/bulletins/389465e
+- DNS hijacking of SOHO routers, DOJ 2026: https://www.justice.gov/opa/pr/justice-department-conducts-court-authorized-disruption-dns-hijacking-network-controlled
+
+### Network vendor APIs
+- Cisco ISE ANC: https://developer.cisco.com/docs/pxgrid/adaptive-network-control-anc-policies/
+- Cisco Secure Firewall FMC REST: https://www.cisco.com/c/en/us/td/docs/security/secure-firewall/management-center/API/REST_API_config_guide/secure-firewall-management-center-rest-api-for-access-control-policy.html
+- Huawei iMaster NCE APIs: https://intl.devzone.huawei.com/en/enterprise/cloudcampus/quickStart.html
+- Huawei CampusInsight: https://e.huawei.com/ma/products/network-analysis/campusinsight
+- Palo Alto APIs: https://docs.paloaltonetworks.com/ngfw/api/get-started-with-the-pan-os-rest-api
+- FortiManager: https://www.fortinet.com/products/management/fortimanager
+
+### Cloud & security frameworks
+- AWS GuardDuty: https://docs.aws.amazon.com/guardduty/latest/ug/
+- AWS Security Hub CSPM: https://docs.aws.amazon.com/securityhub/latest/userguide/securityhub-internal-providers.html
+- AWS VPC security and flow: https://docs.aws.amazon.com/vpc/latest/userguide/monitoring.html
+- AWS Cross-account: https://docs.aws.amazon.com/IAM/latest/UserGuide/access_policies-cross-account-resource-access.html
+- Azure Network Monitoring: https://learn.microsoft.com/en-us/azure/networking/design-guide/monitor
+- Azure Entra to Sentinel: https://learn.microsoft.com/en-us/azure/sentinel/connect-azure-active-directory
+- Azure NSG Flow Logs retirement: https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-overview
+- GCP VPC Flow Logs: https://docs.cloud.google.com/vpc/docs/flow-logs
+- MITRE ATT&CK Detection Strategies: https://attack.mitre.org/detectionstrategies/
+- NIST SP 800-61 Rev 3: https://csrc.nist.gov/news/2025/nist-revises-sp-800-61
+
+## ح. قرارات مؤجلة ومنهج التعديل
+
+1. الاسم النهائي/العلامة والنطاق.
+2. أي أدوات مفتوحة المصدر سندمج فعليًا مقابل استخدامها مرجعًا أو تشغيلها بشكل اختياري.
+3. نموذج الترخيص، تكاليف السحابة، تخزين الأدلة، البلد والالتزامات التنظيمية.
+4. اختيار أول مزود أجهزة نختبره داخل بيئة معملية مصرح بها؛ لا نفترض دعم كل Vendor منذ النسخة الأولى.
+5. تحديد من يملك حق المشاهدة والتحليل والعزل والتغيير والموافقة، خاصة في الإنتاج.
+6. كل إضافة مستقبلية تحفظ كمطلب جديد CG-068 فصاعدًا وتربط بسيناريو ومصدر وأولوية وحالة اختبار، ولا تُكتب البرمجة حتى يطلبها المستخدم.
+
+**ملاحظة الاستمرارية:** هذه نسخة قابلة للتحميل/الاحتفاظ والرفع لاحقًا لاستكمال الدراسة. لا تُجري أبحاثًا تلقائية في الخلفية أو تحديثًا ذاتيًا بين الجلسات.
+
+
+---
+
+# ط. الجولة البحثية الموسعة — v0.4 بتاريخ 2026-11-09
+
+**التحديث:** مراجعة مرجعية لممارسات فرق SOC والمؤسسات عالية الحساسية، مع تغطية أنظمة قديمة، الهوية، البرمجيات، أمن الشبكة، OT، الحاويات، التعافي، مخاطر الذكاء الاصطناعي، والمعايير السعودية. نتائج البحث هنا **ليست اختبارًا للمنصة أو توافقًا مضمونًا مع الأجهزة**. تبقى CG-001 إلى CG-067 سارية دون تعديل. نواصل الترقيم من CG-068.
+
+## 14 — الحوكمة والمشهد الدفاعي
+- **CG-068** مطلوب — Map Security Outcomes وفق وظائف NIST CSF 2.0 الست: GOVERN/IDENTIFY/PROTECT/DETECT/RESPOND/RECOVER، مع أدلة لكل وظيفة ونقص التغطية.
+- **CG-069** مطلوب — Threat Model لكل بيئة: أصول ذات قيمة، حدود الثقة، سيناريوهات هجوم محتملة، وتأثير توقف الخدمة أو تسرب البيانات.
+- **CG-070** مطلوب — Asset Criticality & Ownership: ربط الأجهزة والخدمات بالمالك، الخدمة التجارية/التشغيلية، الموقع، حساسية البيانات، أوقات الصيانة، ودرجة حرجية الخدمة.
+- **CG-071** مطلوب — Visibility Gap Registry: كل نظام وشبكة وحساب خارج التغطية يظهر سبب عدم الرؤية (لا Agent / لا SPAN / لا سجلات / لا تفويض / انقطاع)، آخر رؤية، وتوصية.
+- **CG-072** مطلوب — External Attack Surface Management للأصول المسجلة والمصرح بها فقط: سجلات DNS، شهادات TLS، الخدمات المكشوفة والملكية والتهيئة؛ لا مسح عشوائي للغير.
+- **CG-073** مطلوب — Risk Register مؤسسي يربط المخاطر بالتغطية والدليل والمالك والتصحيح والاستثناء وقبول المخاطر مع مدة مراجعة.
+- **CG-074** مطلوب — مفاضلة وقائية تستند إلى أهمية الأصول والاستغلال النشط KEV والتعرض والتعويضات الحالية؛ متطلبات حوكمة وقياس جودة لا مجرد قائمة CVE.
+
+## 15 — الأنظمة القديمة والتعافي واستمرارية الأعمال
+- **CG-075** مطلوب — Lifecycle Inventory: إصدار نظام التشغيل/المنتج، تاريخ انتهاء دعم الشركة وتحديثاتها الأمنية، وجود دعم ممتد، وخطة تحديث أو استبدال.
+- **CG-076** مطلوب — Compatibility Matrix للأنظمة القديمة Windows Server 2008 R2 / 2012 R2 وLinux غير المدعوم وأجهزة الشبكة القديمة: Agent متاح؟ قراءة فقط؟ شبكات معزولة؟ مع قيود الأداء والترخيص.
+- **CG-077** مطلوب — Legacy Compensating Controls: عزل شبكي أدق، وصول عبر jump host، منع وصول إنترنت غير لازم، MFA على نقطة الدخول، نسخ احتياطية ومراقبة، إلى حين الترحيل.
+- **CG-078** مطلوب — Backup Security: نسخ احتياطية متعددة ومفصولة/غير قابلة للتغيير حيث تدعم المنصة، ومراقبة تعديل/حذف النسخ وصلاحيات النسخ.
+- **CG-079** مطلوب — Restore Readiness: اختبارات استرجاع دورية موثقة، أهداف RPO/RTO لكل خدمة، وفحص سلامة النسخ، وعدم مساواة وجود Backup بإمكانية التعافي.
+- **CG-080** مطلوب — Incident Recovery Workflows: احتواء ثم استرداد وثائق الهوية والتكوينات والأجهزة، ثم التحقق من خلو البيئة من آثار التهديد قبل إعادة الاتصال.
+- **CG-081** مطلوب — Resilience Controls: نسخ إعدادات الشبكة، خارج النطاق، موصل إدارة بديل، Playbook انقطاع محرك SOC، وحالة Fail-safe للسياسات المؤقتة.
+
+## 16 — الهوية والامتيازات والثقة
+- **CG-082** مطلوب — تدقيق AD/Entra: صلاحيات Tier 0/control plane، تغييرات Domain Admins، المستخدمين الخدميين، trust relationships، وسياسات الدخول.
+- **CG-083** مطلوب — Windows LAPS posture: وجود سياسة تغيير كلمة مرور مسؤول محلي لكل جهاز، مؤشرات فشل التدوير، وتدقيق عرض أسرار LAPS دون جمع كلمات المرور نفسها.
+- **CG-084** مطلوب — حماية AD CS وKerberos: إعدادات شهادات وإصدارها وخدمات AD CS، delegation، مشكلات NTLM القديمة، وتسجيل تغيرات التوثيق حسب صلاحية الوصول.
+- **CG-085** مطلوب — Privileged Access Management: JIT/PIM، أجهزة إدارة محمية PAW، جلسات إدارية مؤقتة، مراجعة وتفويض الوصول العالي الحساسية.
+- **CG-086** مطلوب — SaaS/OAuth/Service Accounts Inventory: تعيين مالك كل تطبيق وهوية خدمية ومفاتيحها وصلاحياتها ومواعيد تدويرها وأعمالها.
+- **CG-087** مطلوب — Identity Attack Correlation: ربط تسجيل الدخول، MFA reset، إنشاء رموز وتغيّر دور Administrator، ثم تغييرات الملفات أو الموارد أو التنقل داخل الشبكة.
+- **CG-088** مطلوب — Help Desk Abuse Controls: موافقة وتدقيق في إعادة ضبط الحسابات أو MFA، التحقق من هوية صاحب الطلب وتسجيل الترخيص المؤقت ومتابعته.
+
+## 17 — حماية الأجهزة والبرمجيات الخبيثة
+- **CG-089** مطلوب — Process Causality: شجرة عمليات وأوامر تنفيذ وتغييرات الخدمات والمهام المجدولة والاتصالات؛ مع إخفاء البيانات الشخصية الحساسة وتحديد الثقة.
+- **CG-090** مطلوب — Defense Tamper Detection: تعطيل AV/EDR/Firewall، حذف Logs، توقف Agent، تغيير الوقت أو السياسات، التفريق بين عطل ونشاط متعمد.
+- **CG-091** مطلوب — Anti-Ransomware Posture: Controlled Folder Access/ASR عند التوفر، سلوك تعديل الملفات غير المعتاد، سلامة النسخ، وحماية مخازن التعافي.
+- **CG-092** بحث — فحص ملفات مشبوهة بقواعد YARA/Hashes وسمعة توقيع/ناشر البرمجيات، وعزل الملف مع حماية سلسلة الأدلة؛ لا تنفيذ ملفات مشبوهة على مضيف الإنتاج.
+- **CG-093** بحث — Sandboxing/Detonation معزول وتحليل سلوكي للبرمجيات في مختبر منفصل، ضوابط تفويض وحظر الاتصال بالإنتاج، وعدم تفعيله تلقائيًا.
+- **CG-094** مطلوب — Linux Security via auditd/journald/eBPF/Falco حيث يسمح Kernel والدعم، بالإضافة إلى مراقبة صلاحيات sudo وتغييرات cron/systemd.
+- **CG-095** بحث — macOS وiOS/Android وBYOD: إشارة التغطية عن طريق MDM/MAM/EDR مع حصر الإمكانات التي توفرها المنصة وخصوصية المستخدم.
+
+## 18 — الشبكات والتقنيات التشغيلية الحساسة
+- **CG-096** مطلوب — Network Posture يشمل IPv4 وIPv6 وWi-Fi وDNS/DHCP وVPN وVLAN وTrunks وACL وNAT وBGP/OSPF posture عند الحاجة والمصرح به، مع عدم افتراض إمكان قراءة كل تكوين.
+- **CG-097** مطلوب — Firewall Review: كشف open-any/any-any وshadowed/overlapping rules والفرق بين ingress/egress وeast-west، مع عرض الأثر قبل التعديل.
+- **CG-098** مطلوب — Zero Trust Segmentation وNAC posture: التحقق من أصالة الجهاز والمستخدم، ووجود سياسة واضحة للأجهزة الجديدة والضيوف والأجهزة غير المُدارة.
+- **CG-099** مطلوب — Network Threat Correlation: DNS وTLS metadata وHTTP proxy وFlow Logs وNetwork IDS، مع شرح حدود التشفير والمراقبة واحترام الخصوصية.
+- **CG-100** مطلوب — OT/ICS Safety Mode: قراءة سلبية أولًا، حظر المسح النشط والتحكم الافتراضي في PLC/SCADA/BMS/الأجهزة الحيوية، واجهة موافقة سلامة منفصلة، إرشادات NIST SP 800-82.
+- **CG-101** مطلوب — Physical/Network Relationship Verification: التحقق IP→MAC→Switch Port→VLAN→User→Asset قبل أي عزل؛ تجنب Trunk/Uplink وVirtualization Hosts المشتركة.
+- **CG-102** مطلوب — Management Plane Protection: رصد وتقييد SSH/RDP/WinRM وSNMP وسياسات VPN، وفرض بروتوكولات آمنة، مع تنبيه استخدام وصول إداري خارج الإجراء المعتمد.
+
+## 19 — السحابة، الحاويات، التطبيقات وسلسلة التوريد
+- **CG-103** مطلوب — OCSF Normalization Layer للأحداث متعددة الشركات، مع تتبع Schema Version ومصدر الحدث والحقول المفقودة وفقد المعنى عند التحويل.
+- **CG-104** مطلوب — Cloud Detection Coverage: مطابقة وصول IAM ومصادر CloudTrail/GuardDuty وAzure Entra/Defender وGCP Audit/SCC مع سلوك الهوية والموارد والتخزين والمفاتيح.
+- **CG-105** مطلوب — Kubernetes/Container Security: K8s audit events وRBAC وAdmission وruntime events، مع Falco وTrivy كمصادر مرشحة، ودعم EKS/AKS/GKE لاحقًا.
+- **CG-106** مطلوب — Software Supply Chain: SBOM وDependency Vulnerabilities وImage Signing وArtifact Provenance وCI/CD Secrets، مع فحص تحديثات البرامج ومصداقية المصدر.
+- **CG-107** مطلوب — API & Web Security: WAF events، اكتشاف ضعف التوثيق/API Keys وCORS وRate Limits، واختبارات مصرح بها ومعزولة لتكوين التطبيقات.
+- **CG-108** بحث — Email Security & Phishing: إشارات SPF/DKIM/DMARC ومرفقات وروابط مشبوهة ومراقبة تغييرات forwarding rules وفق وصلات البريد المصرح بها.
+- **CG-109** بحث — Data Security Posture & DLP: وضع حساسية البيانات ومؤشرات الحركة الكبيرة أو غير المألوفة؛ معالجة خصوصية وقانونية قبل فحص المحتوى.
+
+## 20 — هندسة الكشف والتحقيق القابل للقياس
+- **CG-110** مطلوب — ATT&CK + MITRE D3FEND Mapping لكل استخدام: التقنية الهجومية، الحساس، الحدث الدال، التحليلات، الإجراء الدفاعي، اختبار النجاح.
+- **CG-111** مطلوب — Detection-as-Code: قواعد موقعة ومراجعة مع اختبار وحدة/جودة، Environment Tuning، تحليل false positives، وإرجاع نسخة عند خطأ تحديث.
+- **CG-112** مطلوب — Threat Intelligence Quality: مصدر وتاريخ وتقييم ثقة وتاريخ انتهاء IOC وحقوق إعادة التوزيع؛ عدم الحظر الآلي لمجرد وجود Indicator غير موثوق.
+- **CG-113** مطلوب — Multi-Signal Correlation: ربط endpoint + identity + network + cloud، وتقليل الضوضاء عبر deduplication وتخصيص سياق الأصل دون إسكات الإنذارات المهمة.
+- **CG-114** مطلوب — Evidence Integrity & Chain of Custody: تجميع الدليل الأصلي والتوقيت ومصدره وhash والتغييرات والجهة التي اطلعت عليه مع حماية السجلات.
+- **CG-115** مطلوب — Detection Validation Lab: تشغيل أنماط اختبار دفاعية آمنة ومصرح بها، وإعادة تشغيل أحداث مختبرية مخزنة ومقارنة expected vs observed alerts.
+- **CG-116** مطلوب — Hunt Workbench: استعلامات زمنية عن الحسابات والعمليات والاتصالات والتنقل والتغيرات، مع حفظ الاستعلامات والملاحظات والتقارير.
+
+## 21 — الاستجابة الآمنة والذكاء الاصطناعي
+- **CG-117** مطلوب — Response Preflight: تحديد الهدف المتعدد (IP/MAC/Hostname/CloudID) والتأثير والتراخيص وحالة القناة الإدارية والتبعيات قبل أي إجراء.
+- **CG-118** مطلوب — Control Outcome Verification: إثبات نجاح Block/Isolate/Stop Service/Shutdown ومدة تطبيقه؛ إظهار الخطأ أو فشل الإلغاء دون تمويه.
+- **CG-119** مطلوب — Safety Tiers: قراءة فقط/استجابة منخفضة التأثير/تغيير حساس/إجراء مدمر؛ مع موافقات متفاوتة وتأكيد منفصل وأوقات تغيير.
+- **CG-120** مطلوب — Cross-Provider Playbooks: تسلسل تنسيق Cisco/Huawei/Windows/AWS/Azure حسب القدرة وليس نص أوامر عام؛ Idempotency وRetry وRollback عند الفشل.
+- **CG-121** مطلوب — AI Prompt-Injection Defense: اعتبار السجلات ورسائل البريد والتذاكر ونتائج البحث بيانات غير موثوقة؛ عزل تعليماتها عن سياسات تنفيذ النظام وإخضاع أي إجراء للتحقق.
+- **CG-122** مطلوب — AI Evidence-RAG: ربط الأجوبة بنسخ مؤرخة من المصادر والدليل الفعلي، وإخفاء الأسرار وPII بحسب الدور وإبراز عدم اليقين.
+- **CG-123** مطلوب — AI Evaluation & Guardrails: اختبارات الهلوسة والدقة وتجاوز الصلاحيات والكلفة والتأثير؛ AI لا يمتلك حسابات تعديل حر ولا يستطيع اختيار أمر مدمر من تلقاء نفسه.
+
+## 22 — الحوكمة السعودية ومنتج مؤسسي قابل للنمو
+- **CG-124** مطلوب — Compliance Evidence Mapping لهيئة الأمن السيبراني السعودية NCA ECC 2-2024 وCCC 2:2024، وما ينطبق من OTCC/CSCC/DCC، مع تحديد نطاق الانطباق وليس ادعاء امتثال تلقائي.
+- **CG-125** بحث — عند تحويل المشروع إلى خدمة SOC/MSSP في السعودية، مراجعة National Policy for Managed Security Operations Centers وتراخيص الخدمة والالتزامات التنظيمية السارية قبل التسويق.
+- **CG-126** مطلوب — Multi-Tenant Isolation & Data Residency: تحديد مكان معالجة/تخزين البيانات والأدلة ومفاتيح التشفير، سياسات الاحتفاظ، حق الحذف والتصدير، وحاجز منع اختلاط العملاء.
+- **CG-127** مطلوب — Operational SOC Workflow: التناوب والمناوبات، إدارة التذاكر والتصعيد، سياسات الإغلاق، تمارين tabletop، تقارير Lessons Learned، وتحويل نتائج الحوادث لقواعد كشف محسنة.
+- **CG-128** مطلوب — Product Self-Defense: حماية حسابات الإدارة وAPI وSecrets وUpdate Signatures وSupply Chain والنسخ الاحتياطية للمنصة؛ منصة الأمن نفسها هدف حساس.
+- **CG-129** مطلوب — Budget/Capacity Model: معدل الأحداث EPS/GB-day، التخزين والاحتفاظ، تكلفة السحابات وAPI، متطلبات GPU/CPU/RAM، قياس الضغط ورفع قابلية التوسع دون التضحية بموثوقية الكشف.
+- **CG-130** مطلوب — Research Evidence Register: لكل فكرة مصدر رسمي/مستودع، تاريخ، ملخص دقيق، قابلية التطبيق، تبعيات، مخاطر، أولوية، حالة التحقق، وقرار القبول أو التأجيل؛ معيار توقف البحث هو تضاؤل الأفكار الجديدة ذات القيمة بعد تغطية نطاقات محددة، لا الادعاء باستحالة العثور على أفكار جديدة.
+
+## ي. سيناريوهات أمنية معيارية للمراجعة — ليست وقائع اختراق مُثبتة
+
+| السيناريو | الإشارات الدفاعية | إجراءات الوقاية/الاحتواء | المتطلبات |
+|---|---|---|---|
+| LEGACY-01: Windows Server 2012 R2 قديم في إنتاج | EOL status + listening ports + backup + segmentation + EDR/Logs availability | تحديث أو ترحيل؛ تعويضات مؤقتة وعزل مقيد؛ اختبار استعادة | CG-075–081 |
+| ID-01: تغيير صلاحية إداري واسع | AD/Entra group change + sign-ins + MFA/PIM events | تحقق من طلب تغيير معتمد؛ سحب صلاحية مشبوهة عبر إجراء مخوّل | CG-082–088 |
+| NET-01: خدمة جديدة مكشوفة على Firewall | rule diff + asset owner + connection logs + dependency | مراجعة أثر المنع، تغيير محدود/مؤقت، تحقق وتراجع | CG-096–102, CG-117 |
+| END-01: تعطيل الحماية على مضيف | AV service events + Sysmon/process logs + agent heartbeat | تحقق من التلاعب مقابل عطل الخدمة؛ عزل إذا ثبتت الخطورة وبإذن | CG-089–095 |
+| CLOUD-01: حساب سحابي يستعرض موارد كثيرة فجأة | CloudTrail/Entra/Audit + identity context + resource listing | تحقق من automation مشروعة؛ صلاحيات مؤقتة/تعطيل اعتماد مشبوه بموافقة | CG-104, CG-113 |
+| OT-01: وحدة تحكم صناعية فقدت الاتصال | passive health signals + process owner + safety status | التنبيه وإبلاغ فريق OT؛ لا فحص نشط ولا فصل جهاز دون مراجعة سلامة | CG-100, CG-119 |
+| AI-01: سجل أمني يحتوي تعليمات زائفة للمساعد | untrusted text + policy engine decisions + tool-call audit | منع تحول النص إلى أوامر وتقييد إجراء AI مع فصل سياق المصادر | CG-121–123 |
+
+## ك. مصفوفة المصادر التي راجعتها في الجولة v0.4
+
+| الموضوع | المصدر الرسمي أو المستودع | رابط |
+|---|---|---|
+| NIST CSF 2.0 | NIST | https://www.nist.gov/cyberframework/faqs |
+| كشف أنماط المهاجم | MITRE ATT&CK Detection Strategies | https://attack.mitre.org/detectionstrategies/ |
+| تقنيات الدفاع | MITRE D3FEND | https://d3fend.mitre.org/faq/ |
+| ثغرات مستغلة بالفعل | CISA KEV | https://www.cisa.gov/known-exploited-vulnerabilities-catalog |
+| نهاية دعم Windows Server 2012/R2 | Microsoft Lifecycle | https://learn.microsoft.com/en-us/windows/release-health/status-windows-8.1-and-windows-server-2012-r2 |
+| دعم Windows Server في Defender for Endpoint | Microsoft Learn | https://learn.microsoft.com/en-us/microsoft-365/security/defender-endpoint/onboard-windows-server |
+| حماية الحساب المحلي LAPS | Microsoft Learn | https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview |
+| نموذج امتيازات المؤسسة | Microsoft Learn | https://learn.microsoft.com/en-us/security/privileged-access-workstations/privileged-access-access-model |
+| كشف تهديدات الهوية | Microsoft Defender for Identity | https://learn.microsoft.com/en-us/defender-for-identity/quick-installation-guide |
+| مراقبة تشغيل Linux والحاويات | Falco | https://github.com/falcosecurity/falco |
+| فحص SBOM | Trivy | https://github.com/aquasecurity/trivy/blob/main/docs/guide/target/sbom.md |
+| معيار تطبيع السجلات | OCSF | https://ocsf.io/ |
+| أمن الأنظمة الصناعية | NIST OT Security | https://csrc.nist.gov/pubs/sp/800/82/r3/final |
+| أنظمة OT / مستندات جديدة | NIST OT Publications | https://csrc.nist.gov/projects/operational-technology-security/publications |
+| ضوابط السعودية الأساسية | NCA ECC | https://nca.gov.sa/en/regulatory-documents/controls-list/ecc/ |
+| ضوابط السحابة السعودية | NCA CCC | https://nca.gov.sa/en/regulatory-documents/controls-list/ccc/ |
+| أدلة التطبيق السعودية | NCA Guides | https://nca.gov.sa/en/regulatory-documents/guidelines-list/igcc/ |
+| سياسة SOC المدارة السعودية | NCA MSOC | https://nca.gov.sa/en/regulatory-documents/frameworks-and-standard-list/npmcoc/ |
+| حماية تطبيقات LLM | OWASP LLM Top 10 | https://owasp.org/projects/top-10-for-large-language-model-applications |
+| الحماية من تشفير الملفات | Microsoft Controlled Folder Access | https://learn.microsoft.com/en-us/defender-endpoint/enable-controlled-folders |
+
+## ل. قائمة الدراسات غير المكتملة قبل اتخاذ قرار التطوير
+
+1. تصميم معمارية بيانات وتخزين سجلات على مقاييس: 100، 2,000، 20,000 جهاز (EPS، تكاليف، تخزين، احتفاظ).
+2. اختبار قانوني/ترخيصي لكل أداة مفتوحة المصدر ولكل خدمة سحابية، خاصة عند التوزيع التجاري.
+3. نموذج تهديد مستقل للمنصة ومفاتيح الإدارة وعزل المستأجرين وتحديثات القواعد.
+4. لوحة قياس تغطية MITRE مع قواعد مثبتة عمليًا ومعدل إنذارات كاذبة لكل بيئة.
+5. دراسة حوادث فعلية إضافية بمصادر أولية ووقت الحادث والتكتيك والدليل، وليس مجرد إعادة سرد الأخبار.
+6. دراسة حدود التحكم لكل مزود/طراز/نسخة وترخيص، أولًا Read-Only، ثم وضع مختبر مصرح به لإجراءات التغيير.
+7. دراسة قرار Local/Hybrid/Cloud بحسب متطلبات سيادة البيانات، ووقت الانقطاع، والكلفة، وأداء نماذج AI الصغيرة.
+8. إجراء مراجعة أمنية مستقلة لكل فعل يغيّر خدمة أو منفذًا أو جهازًا أو حسابًا، مع التراجع والحفاظ على اتصال الإدارة.
+9. تغطية Web/SaaS/Email/Databases/Endpoints/Network/OT/Containers/Cloud/AI بنماذج Detection Use Cases وتكاليف مجدية.
+10. تأجيل البرومبت النهائي والبروتوتايب حتى الطلب الصريح من المستخدم.
+
+### ملاحظة زمنية واستمرارية
+
+تمت هذه الجولة في جلسة 2026-11-09. محاولة إنشاء بحث آلي يومي جديد **لم تنجح** لأن الحساب لديه 5 مهام نشطة وهو الحد المتاح. لا توجد مهمة بحث CyberGuard فعالة حاليًا؛ لن تتغير هذه النسخة تلقائيًا في الخلفية. لا توقف أو تعدل أي مهمة قائمة دون موافقة المستخدم. يستكمل السجل عند عودة المستخدم أو بعد تهيئة مهمة جديدة بتفويضه.
+
+---
+
+# ن. الجولة البحثية الخامسة — v0.5 بتاريخ 2026-11-10
+
+**امتداد تراكمي:** لا تحل هذه الجولة محل النسخة v0.4؛ المتطلبات CG-001..CG-130 باقية. أضيف هنا CG-131..CG-180 فقط. **لا كود ولا فحص حقيقي ولا نشر.**  
+**منهج التحقق:** دراسة وثائق رسمية ومشاريع مفتوحة المصدر؛ لا يُعد ذكر أداة إثباتًا لعملها في جهاز أو ترخيص محدد. المصادر أدناه تدعم الاتجاه الفني، ولا تعني تنفيذًا أو تكاملًا مكتملًا.
+
+## 23 — أمان تغييرات الشبكة والأصول والشبكات الكبرى (CG-131–CG-138)
+- **CG-131** مطلوب — **Network Change Safety / Batfish Research:** تحليل Config Snapshots قبل ACL/Firewall/Route Change، والتحقق من Reachability قبل/بعد وتغيّر المسارات والاعتمادات. مصدر مرشح: Batfish؛ تُستبعد النماذج/الميزات غير المدعومة من القرار، ولا نتعامل مع التحليل كضمان أداء الشبكة الفعلي.
+- **CG-132** مطلوب — **Intended vs Observed State:** التمييز بين جرد NetBox/مصدر حقيقة معتمد وبين المكتشف فعليًا، مع مراجعة تضارب IP/VLAN/Interface والمالك وتاريخ تغيّر السجل قبل تحديث مصدر الحقيقة.
+- **CG-133** مطلوب — **Network Change Impact Graph:** ربط كل إجراء بتبعيات DNS/AD/DHCP/Storage/VoIP/Hypervisor/Management وShared Uplink، وعرض خدمة المستخدم المتأثرة قبل تنفيذ السياسة، مع منع تلقائي لأي تغيير لا نعرف أثره على Core أو مسار الإدارة.
+- **CG-134** مطلوب — **Layer-2 Security Posture:** مراقبة ما تدعمه الأجهزة من DHCP Snooping وDynamic ARP Inspection وIP Source Guard و802.1X؛ تنبيه Rogue DHCP وMAC Move وARP Conflict دون افتراض إثبات هجوم من إشارة واحدة.
+- **CG-135** بحث — **Routing Security / RPKI & ROA:** للأطراف التي تشغّل BGP/AS: مراقبة Route Origin Validation، تغيّر Prefix/Route Announcement وPrefix Filters وأثر Hijack/Leak؛ لا تنطبق على كل LAN صغيرة؛ مرجع NIST SP 800-189 Rev.1 لا يزال Draft عند الاستشهاد به.
+- **CG-136** مطلوب — **Wireless & Guest Network Assurance:** جرد SSID وWPA2/3-Enterprise و802.1X/RADIUS وGuest Isolation وRogue AP signals عن طريق متحكمات Wi-Fi المصرح بها؛ قيود تغطية RF واضحة، دون هجوم لاسلكي نشط.
+- **CG-137** مطلوب — **Infrastructure Management-Plane Audit:** مقارنة NTP/AAA/TACACS+/RADIUS/SSH/SNMPv3/Syslog/ACL للوصول الإداري وإعدادات النسخ الاحتياطي مع baseline لكل Vendor/IOS version.
+- **CG-138** مطلوب — **Vendor Adapter Validation Registry:** لكل Cisco/Huawei/Juniper/Fortinet وغيرها: طراز+Firmware+API+ترخيص+Read/Write/Undo+اختبار في المختبر+تاريخ آخر تحقق؛ الادعاء بالدعم يتم على مستوى الوظيفة لا اسم الشركة فقط.
+
+## 24 — نماذج الهجمات وتقييم قابلية كشفها (CG-139–CG-145)
+- **CG-139** مطلوب — **SharePoint ToolShell Case (2025):** نموذج متعدد الإشارات يربط خادم SharePoint exposed + CVE + IIS unusual worker process + تغيّر حماية + تغيّر scheduled tasks/GPO؛ لا يساوي توقيع ملف واحد إثباتًا قاطعًا.
+- **CG-140** مطلوب — **Telecom / Salt Typhoon Defensive Study:** دراسة دليل NSA/CISA/FBI حول الرؤية والتحصين لأجهزة الاتصالات، مع مراقبة التكوين والوصول الإداري ونقل السجلات خارج أجهزة الشبكة؛ لا تُفترض القدرة على فحص المشغلين العموميين أو معدات الاتصالات بدون تصريح.
+- **CG-141** مطلوب — **Remote-Access Session Correlation:** التمييز بين Install/Start/Connect/Authenticated Session/External Peer اعتمادًا على سجلات RDP/AnyDesk/VPN/SSH؛ لا تسمية حادث اختراق بلا إثبات هوية/سلوك.
+- **CG-142** مطلوب — **Identity-to-Endpoint Kill Chain:** تجميع الحساب/Token/OAuth/دخول غير معتاد/عملية على Endpoint/اتصال شبكة/تغيير سياسة في رسم حادث واحد مع تفادي التسلسل السببي الخاطئ.
+- **CG-143** مطلوب — **Hypothesis-based Threat Hunting:** لكل فرضية دخول/استمرار/تنقل/تهريب بيانات: البيانات المطلوبة، استعلام آمن، حالات تجاهل مشروعة، مدة الاحتفاظ، نتيجة مثبتة أو «الرؤية غير كافية».
+- **CG-144** مطلوب — **Past-Compromise Check After Patching:** عند اكتشاف CVE مستغلة ومكشوفة سابقًا لا يكفي تأكيد تثبيت الرقعة؛ يُنشأ تحقيق للأدلة التاريخية والعمليات والحسابات قبل اعتماد الإغلاق.
+- **CG-145** مطلوب — **Attack Technique Coverage by Evidence:** مصفوفة تغطية ATT&CK لا تحتسب قاعدة لمجرد وجودها؛ لا تُعد التقنية مغطاة إلا إذا توفرت Telemetry ونجح اختبار detection وتوثقت قيود الأداء.
+
+## 25 — إدارة الهويات والصلاحيات وSaaS (CG-146–CG-152)
+- **CG-146** مطلوب — **Microsoft 365 Baseline Assessment:** دراسة CISA SCuBA/ScubaGear لفحص إعدادات M365 الأمنية، وإظهار الانحرافات والنسخة المرجعية، مع عمل Read-only ما أمكن وصلاحيات واجهات محدودة.
+- **CG-147** بحث — **Google Workspace Security Baselines:** مقارنة Google Workspace مع خطوط SCuBA المدعومة وفحص MFA والمشاركات وقواعد البريد والتطبيقات الخارجية حسب APIs والتراخيص الفعلية.
+- **CG-148** مطلوب — **AWS IAM Access Analyzer Integration:** اكتشاف External/Internal/Unused Access وتفسير حدود Zone of Trust، وتوضيح أن بعض أنواع التحليل مدفوعة وليست نشطة دون تهيئة.
+- **CG-149** مطلوب — **Entra Workload Identity Security:** رصد Service Principals والتطبيقات والمفاتيح وSign-in deviations وتغير Consent/Permissions؛ التنبيه لنطاقات Conditional Access التي لا تشمل Managed Identities أو Multitenant Apps تلقائيًا.
+- **CG-150** مطلوب — **Phishing-Resistant Authentication Posture:** تمييز MFA عام عن Passkeys/FIDO2/WebAuthn والاعتمادات الصلبة، مع استثناءات Legacy Protocols ونطاق التطبيقات التي لا تدعمها.
+- **CG-151** بحث — **Service-to-Service Zero Trust:** خدمات API وMicroservices عبر mTLS وWorkload Identity وSPIFFE/Service Mesh في البيئات المناسبة، وفق NIST SP 800-207A، مع مراجعة العمر والسرّيات والتجديد.
+- **CG-152** مطلوب — **Permission Reduction Recommendation:** محرك يقترح تقليل صلاحيات زائدة بعد تحليل usage ومالك الحساب وطلب تغيير، مع تقرير Dry Run وعدم سحبها تلقائيًا لمجرد عدم الاستخدام خلال نافذة قصيرة.
+
+## 26 — السحابة وتطبيقات الويب والنسخ الاحتياطية (CG-153–CG-160)
+- **CG-153** مطلوب — **Cloud Attack Path Evidence Graph:** ربط Exposure + Misconfiguration + IAM + Assets + Sensitive Target في مسارات محتملة، مع تمييز المسار الاستدلالي عن validated external reachability؛ مقارنة تصور Microsoft Defender for Cloud.
+- **CG-154** مطلوب — **GCP Attack Exposure Posture:** استيعاب Security Command Center Attack Exposure Score وToxic Combinations إذا كانت الخدمة/الطبقة متاحة، مع تجنب اختراع درجة مشابهة إذا غابت إشاراتها.
+- **CG-155** مطلوب — **AWS Multi-account and Multi-region Completeness:** اكتشاف الحسابات والمناطق غير المفعلة، وبيان أن Security Hub CSPM لا يجمع أحداثًا تاريخية قبل التفعيل ولا يلغي الحاجة لتفعيل وتكوين الخدمات في كل منطقة.
+- **CG-156** مطلوب — **Temporary Azure VM JIT Access:** دراسة تكامل Microsoft Defender for Cloud JIT للتحكم في المصدر والمنفذ والوقت وعمليات التدقيق في VM المستهدف، مع إظهار متطلبات Defender for Servers Plan 2 والأذونات.
+- **CG-157** مطلوب — **Resilient Immutable Backups:** مراقبة حالة Backup Vault Lock، وتصنيف Governance/Compliance والاحتفاظ واحتمال ارتفاع التكلفة وصعوبة التراجع، واختبار الاستعادة قبل الاعتماد على الاستراتيجية.
+- **CG-158** مطلوب — **Signed Artifact Admission:** توثيق سلامة نسخ تطبيق CyberGuard وAgent وقواعد الكشف/الصور بالحزم الموقعة؛ دراسة Sigstore Cosign وKubernetes Policy Controller حيث مناسب.
+- **CG-159** بحث — **SaaS Shadow-IT and App-to-App Access:** جرد تكاملات التطبيقات الخارجية والمشاركة العامة وسياسات الموافقات ونطاقات OAuth، مع عدم فحص محتوى موظفين دون سياسة خصوصية وتفويض.
+- **CG-160** مطلوب — **Cloud Cost & API Permissions Preview:** قبل تفعيل CloudTrail/VPC Flows/SCC وغيرها تُعرض توقعات Data Volume، رسوم API/Storage/Egress، الصلاحيات والمناطق، وآلية إيقاف الجمع دون تعريض سجل الحوادث للفقد.
+
+## 27 — هندسة الكشف وموثوقية تدفق الأحداث (CG-161–CG-169)
+- **CG-161** مطلوب — **Stateful Correlation Rules:** أنماط اكتشاف متعددة الأحداث وTime Windows وThresholds وAllow-lists مع التقييم وفق عينات سليمة وخبيثة؛ مرجع مفيد Google SecOps YARA-L 2.0، وليس شرط دمجه.
+- **CG-162** مطلوب — **Event Data Contract:** لكل موصل Data Schema Version/Time Zone/Clock Source/Event Source/Raw Event Hash/Parser Quality/Field Completeness؛ عرض نسبة الفشل في التحليل.
+- **CG-163** مطلوب — **Tamper-evident Collection:** عند انقطاع/تعطيل Agent أو حذف Logs أو تغيّر ساعة الجهاز أو فشل النقل، يُنشأ حدث فقد رؤية مستقل ويربط بقواعد الكشف، دون اعتبار انقطاع الاتصال اختراقًا مؤكدًا.
+- **CG-164** بحث — **High-Signal Deception:** Honeytokens/Decoy Accounts/Decoy Files بموافقة واضحة وبدون بيانات اعتماد حقيقية، مع عزل آمن؛ مستند إلى MITRE D3FEND Deceive.
+- **CG-165** مطلوب — **Detection Content Lifecycle:** توقيع القواعد، بيئة Test/Canary، backtest على سجلات مختبرية، قياس False Positive قبل النشر، وتراجع تلقائي إلى آخر قاعدة سليمة إذا ارتفع الضجيج.
+- **CG-166** مطلوب — **Incident Confidence Separation:** فصل (Observed Event) و(Suspicious Indicator) و(Verified Security Incident) و(Confirmed Compromise)؛ AI لا يحوّل الشبهة إلى خبر يقيني.
+- **CG-167** مطلوب — **Telemetry Minimization & Privacy:** قواعد حذف بيانات حساسة قبل الفهرسة/الإرسال إلى AI، وتشفير الحقول الحساسة وإدارة retention حسب نوع المصدر والجهة والالتزام القانوني.
+- **CG-168** مطلوب — **Event Volume and Detection Reliability:** إظهار EPS المدخل/المُعالج/المرفوض/المتأخر، Queue Lag، وأخطاء Parser، وتأثير تغيّر معدل البيانات على زمن الكشف.
+- **CG-169** مطلوب — **IOC Feed Change Governance:** تطبيق Diff لمصادر KEV/Threat Intel مع تاريخ مصدر وترخيص وتراجع وموافقة؛ لا يؤدي تغير تغذية خارجية إلى Block جماعي مباشر.
+
+## 28 — إجراءات الحماية الموثوقة والسلامة التشغيلية (CG-170–CG-176)
+- **CG-170** مطلوب — **Isolation Connectivity Survival Test:** قبل عزل مضيف خلف Full Tunnel VPN/Proxy أو Hypervisor Host يتم فحص بقاء قناة إدارة أو تحديد طريقة استعادة خارج النطاق؛ لا تعرض النتيجة كنجاح قبل إثبات العزل الفعلي.
+- **CG-171** مطلوب — **Blast Radius Calculator:** تحذير محدد عند Stop Service / Switch Port Shutdown / Disable User / Security Group Change وفق العلاقات المرئية؛ لو لم تتوفر العلاقات نُصنّف الأثر Unknown ونطلب مراجعة بشرية.
+- **CG-172** مطلوب — **Just-in-Time Rule Lease Engine:** Policy lease به Scope+TTL+Owner+Ticket+Approver+Revocation Deadline، ينتهي على طبقة التنفيذ وليس ساعة الواجهة، مع Reconciliation عقب انقطاع المحرك.
+- **CG-173** مطلوب — **Evidence-backed Action Ledger:** ربط كل أمر بمن أطلقه ولماذا، والسجل/التذكرة والدليل والتفويض والـPreflight ونتيجة API وتحقيق Outcome والتراجع، مع عدم وضع كلمات مرور في السجل.
+- **CG-174** مطلوب — **No-Single-Action Critical Shutdown:** حماية DC وCore/Uplink وBackup Controller وESXi/Hyper-V Hosts ومنصات الأمن من الأوامر المنفردة؛ إجراءات مركبة بموافقتين وMaintenance Window/Out-of-band Recovery.
+- **CG-175** مطلوب — **Adapter Idempotency & Conflict Detection:** منع تكرار الإجراء أو تعارض سياسات من عدة جهات؛ تسجيل Change-ID وProvider Request-ID وأسلوب الاستعادة للموارد المشاركة.
+- **CG-176** بحث — **Network Policy Simulation Coverage:** نُحدِّد مع كل محاكاة نطاق البروتوكولات والموردين المدعومين ومخرجات reachability، ولا نطبّق نتائج محاكاة غير مؤهلة على شبكة إنتاج حساسة.
+
+## 29 — المعمارية والجاهزية المستقبلية (CG-177–CG-180)
+- **CG-177** مطلوب — **Least-Privilege Connector Grants:** منح Read-only كافتراضي وSeparate Write Role+Approval لكل Tenant/Cloud Account/Site مع جرد Token، Expiry وRevocation وتحقق من التفويض على مستوى Target ID.
+- **CG-178** مطلوب — **CIS Benchmark Evidence Mapping:** ربط Baseline كل نظام/إصدار من Windows Server وCisco IOS XE وM365 وFirewall بمعرف مصدر ودليل/تاريخ فحص، والتنبيه أن ملفات PDF المجانية قد تكون مقيدة للاستخدام غير التجاري.
+- **CG-179** بحث — **Crypto-Agility Inventory:** جرد TLS/SSH/VPN والاعتماد على RSA/ECC والخوارزميات القديمة والاستعداد لترحيل Post-Quantum عند نضج المنتجات؛ لا فرض خوارزمية جديدة عشوائيًا على جهاز لا يدعمها؛ مرجع NIST FIPS 203/204/205.
+- **CG-180** مطلوب — **Evidence-to-Requirement Traceability:** لكل CG نربط: السؤال الأمني، الأدلة والمصدر وتاريخ مراجعته، Connector/API، حالة التحقق، الاختبار، تكلفة التشغيل، الأولوية، القيود، مع Dashboard يبين «مدروس/متحقق/مُؤجل/غير مدعوم» قبل اعتماد أي برومبت تنفيذ.
+
+## س. دراسات حالات جديدة وربطها بالمنتج
+
+| الحالة | ما ثبت في مصدر أصلي | سيناريو اختبار دفاعي مستقبلي (ليس منفذًا) | المتطلبات الجديدة |
+|---|---|---|---|
+| CASE-08 — SharePoint ToolShell (2025) | CISA أصدرت تحذيرًا وتحليل Malware حول SharePoint، ومايكروسوفت وثّقت هجمات تضمنت web shell وتغييرات حماية وGPO وانتشار فدية | ربط سيرفر ويب exposed → تغيير عمليات/مهام → تعديل حماية → GPO ثم تدقيق إصلاح + تحقيق تاريخي | CG-139, CG-144, CG-145 |
+| CASE-09 — Salt Typhoon Telecommunications | FBI/NSA وحلفاؤهما نشروا تحذيرات وإرشادات بشأن اختراق مقدمي الاتصالات وضرورة تقوية الرؤية والتحصين | مقارنة إعدادات راوتر/Firewall بـBaseline وتدقيق SSH والنسخ الاحتياطية والسجلات ومراقبة تغيرات ACL والإدارة | CG-135, CG-137, CG-140 |
+| CASE-10 — Risky Workload Identity | Microsoft توثق اكتشاف سلوك Service Principal غير معتاد وConditional Access متاح بشروط ترخيص ونطاق | تغيير غير متوقع في تطبيق Service Principal ثم وصول غير مألوف لبيانات سحابية؛ عرض مصدر الأدلة والتصريح المطلوب قبل الاستجابة | CG-149, CG-152 |
+| CASE-11 — Misconfigured Cloud Path | Microsoft Defender for Cloud يربط exposure وidentity/network permissions في Graph والمسارات المحتملة | شرح مسار تعرض افتراضي بين أصل مكشوف ومخزن حساس وعرض أولوية إصلاح طرف واحد قبل انتشار الخطر | CG-153–155 |
+
+## ع. النتائج التقنية العملية ذات الأولوية في هذه الجولة
+
+1. **ابدأ مستقبلاً بتحليل تغيير الشبكة Offline قبل تفعيل زر الإغلاق:** Batfish مع Source of Truth يمكن أن يبيّنا اعتمادًا حرِجًا ويقللا من خطر قطع الخدمة، لكن لا يغنيان عن اختبار التنفيذ الحقيقي.
+2. **الهوية غير البشرية أصبحت نطاقًا أوليًا:** حسابات التطبيقات/Service Principals وOAuth وCloud IAM ليست مجرد تفاصيل إضافية؛ يمكن أن تكون أساس حادث كبير حتى مع وجود MFA لدى المستخدمين.
+3. **المراجعة الأمنية تأتي بعد التصحيح أيضًا:** إذا استُغلت ثغرة قبل التحديث، فالرقعة لا تزيل تلقائيًا وسائل الاستمرار أو الاعتمادات التي سرقت؛ نحتاج Historical Compromise Assessment.
+4. **بطاقة «نجاح العزل» يجب أن تكون مبنية على قياس:** جهاز خلف Full Tunnel VPN قد يفقد اتصال الإدارة؛ والـHypervisor قد يحمل أجهزة أخرى، لذا قد تكون النتيجة «العزل مطلوب لكنه غير آمن الآن».
+5. **الأدوات المفتوحة المصدر وسيلة لتقليل تكلفة بناء المحركات، وليست سببًا لدمجها جميعًا:** نختار أصغر مجموعة ذات تغطية قابلة للاختبار.
+
+## ف. جدول مراجع جديدة — المصدر وتاريخ التدقيق 2026-11-10
+
+| الرقم | المرجع | مصدر مباشر | الاستفادة | حدود |
+|---|---|---|---|---|
+| SRC-51 | Batfish | https://github.com/batfish/batfish | تحليل Reachability وACL/Firewall قبل/بعد | لا يغطي كل تفاصيل Vendors/Features؛ يحتاج config snapshots |
+| SRC-52 | NetBox | https://github.com/netbox-community/netbox | Source of Truth/IPAM/DCIM | لا يكتشف الأجهزة ذاتيًا بمجرد تثبيته |
+| SRC-53 | CISA SharePoint Malware Report | https://content.govdelivery.com/accounts/USDHSCISA/bulletins/3ecbd7d | قصة اختراق ونقاط كشف | الحالة منشورة 2025، لا تخص شبكتنا |
+| SRC-54 | Microsoft SharePoint exploitation | https://www.microsoft.com/en-us/security/blog/2025/07/22/disrupting-active-exploitation-of-on-premises-sharepoint-vulnerabilities/ | ربط IIS/Webshell وEDR وGPO | لا نحول المؤشرات القديمة لقاعدة حظر أعمى |
+| SRC-55 | NSA Enhanced Visibility Guide | https://www.nsa.gov/Press-Room/Press-Releases-Statements/Press-Release-View/Article/3982793/guidance-urges-visibility-and-device-hardening-against-prc-affiliated-threat-ac/ | تحصين الشبكة وحفظ السجلات | توصيات قطاع اتصالات؛ تُكيّف حسب البيئة |
+| SRC-56 | CISA SCuBA/ScubaGear | https://github.com/cisagov/ScubaGear | تقييم M365 Baselines | أدوات/صلاحيات وربما تغيّر النطاق |
+| SRC-57 | AWS IAM Access Analyzer | https://docs.aws.amazon.com/IAM/latest/UserGuide/access-analyzer-findings.html | External/Internal/Unused | بعض التحليلات مدفوعة وقد تتطلب تفعيلًا منفصلًا |
+| SRC-58 | Microsoft Workload Identity Protection | https://learn.microsoft.com/en-us/azure/active-directory/identity-protection/concept-workload-identity-risk | مخاطـر Service Principals | التغطية والترخيص وشروط النطاق مختلفة |
+| SRC-59 | NIST Zero Trust for Multi-Cloud | https://csrc.nist.gov/pubs/sp/800/207/A/final | mTLS/Service Identity & microservices | توجيه معماري لا Connector |
+| SRC-60 | Microsoft Defender for Cloud Attack Paths | https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path | Exposure Graph ومخاطر السحابة | يعتمد على الاشتراك ونوع الموارد والتفعيل |
+| SRC-61 | GCP Attack Exposure | https://docs.cloud.google.com/security-command-center/docs/attack-exposure-learn | Prioritization | طبقات مدفوعة أو محددة النطاق |
+| SRC-62 | Azure VM JIT | https://learn.microsoft.com/en-us/azure/defender-for-cloud/enable-just-in-time-access | فتح مؤقت مقيد لـRDP/SSH | Defender for Servers Plan 2 وأدوار وأصول مدعومة |
+| SRC-63 | AWS Backup Vault Lock | https://docs.aws.amazon.com/aws-backup/latest/devguide/vault-lock.html | مقاومة الحذف والتغيير | وضع Compliance بالغ الأثر وقد يعجز حتى المالك عن إلغائه بعد grace |
+| SRC-64 | Sigstore Policy Controller | https://github.com/sigstore/policy-controller | التحقق من صور التطبيقات | سياسة admission opt-in وتوافق Kubernetes |
+| SRC-65 | Google SecOps YARA-L | https://docs.cloud.google.com/chronicle/docs/detection/default-rules | أمثلة قواعد correlation | لغة متخصصة، ليست مجانية تلقائيًا |
+| SRC-66 | MITRE D3FEND Decoys | https://d3fend.mitre.org/tactic/d3f%3ADeceive/ | أنماط Deception/Honeytokens | لا تستخدم بيانات اعتماد حقيقية أو إغراء خارجيًا بلا تفويض |
+| SRC-67 | Microsoft Defender Device Isolation | https://learn.microsoft.com/defender-endpoint/respond-machine-alerts | قيود عزل endpoints والتحقق | VPN/Proxy/Hypervisor/OS/license concerns |
+| SRC-68 | CIS Windows Server Benchmarks | https://www.cisecurity.org/benchmark/microsoft_windows_server | Baseline hardening لأنظمة قديمة وحديثة | حقوق إعادة التوزيع والاستخدام التجاري مختلفة |
+| SRC-69 | CIS Cisco Benchmarks | https://www.cisecurity.org/benchmark/cisco | Baseline IOS XE وغيرها | يدقق الطراز والإصدار والترخيص |
+| SRC-70 | NIST PQC Guidance | https://pages.nist.gov/nccoe-migration-post-quantum-cryptography/ | Crypto agility | تدريجي، وليس سببًا لتغيير شامل الآن |
+| SRC-71 | CISA Known Exploited Vulnerabilities | https://www.cisa.gov/known-exploited-vulnerabilities-catalog | تحديثات الاستغلال وتحديد الأولويات | فيض CVEs يحتاج ربطًا بأصول حقيقية وإصدارات |
+
+## ص. قائمة أسئلة مفتوحة تُحسم قبل البرومبت النهائي
+
+1. أول بيئة اختبار ستكون **Read-only** لتوثيق الأصول والضمانات دون تغييرات على إنتاج.
+2. نحدد أين تعمل Batfish وNetBox إن اخترناهما: خدمات منفصلة داخل Linux VM/Server، وليس افتراض أنها تطبيق Windows واحد صغير.
+3. نحتاج خطة حدود أداء دقيقة: موقع واحد، ثم 100/2000/20000 جهاز، ومعدل EPS المتوقع، لا التوسع بالاسم فقط.
+4. تقيّد عمليات Stop/Disable/Remove Service وPort Shutdown وIsolate Device وShutdown بScope وموافقة وخطة استرداد، مع حماية شبكات الإدارة.
+5. نجمع مصفوفة دعم حقيقية لكل Vendor وطراز وإصدار وصلاحيات؛ Huawei تحديدًا يتطلب بحثًا مستقلاً لتغطية واجهاته المحددة.
+6. نمنع استخدام أدوات الكشف أو محاكاة الاختراق على شبكات غير مصرّح بها، أو على OT دون تنسيق سلامة منفصل.
+7. لا نعلن خلو الشبكة من الاختراق إذا كانت هناك فجوات في السجلات أو توقفت أدوات المراقبة.
+8. لا يوجد بحث خلفي جارٍ؛ متابعة هذا الملف تحتاج جلسة جديدة أو مهمة مجدولة متاحة.
+
+**حالة التسليم:** دراسة فقط. استمرارية البحث القادمة تبدأ من **CG-181**، مع الإبقاء على مرجع التصميم الكحلي والبرتقالي واسم CyberGuard AI المؤقت.
