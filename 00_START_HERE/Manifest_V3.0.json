@@ -1,0 +1,24 @@
+{
+  "product": "CyberGuard AI",
+  "abbreviation": "CG AI",
+  "version": "3.0",
+  "generated_at": "2026-11-10",
+  "registered_cg_requirements": 1440,
+  "cg_id_range": "CG-001 through CG-1440 (exact source spelling preserved)",
+  "verification": {
+    "unique_ids": 1440,
+    "all_ids_present": true,
+    "source_exactly_embedded_in_master": true,
+    "gap_report_exactly_embedded_in_master": true
+  },
+  "sha256": {
+    "requirements_v2.9": "88c8ab2a51c61409f49d625bdacfdd686e5331db9e6aeda8d886083fb8808bda",
+    "gap_closure_v2.9": "6109a3437f200236d64c2d53dabfe255de1a4ff6f156eb0a4c109e4cb9690dce",
+    "v3_master_prompt": "f4268dae26b1eb1563d71b584ab5388fb3ffabf2cfa62ea50aa2bdfb8438fbff",
+    "v3_execution_prompt_only": "eef5bf611810cc1662818397789b3e96e899909d7ed8869a2693d33895a20dab",
+    "v3_jsonl": "5001738fb0c1c638c8d024419c5487004310e56cbae6bbc3da38eb3b66bbd015"
+  },
+  "name_precedence": "CyberGuard AI | CG AI is FINAL, overrides provisional historical note",
+  "scope_precedence": "CyberGuard: cybersecurity, AIOps/SOAR, DevSecOps, cyber resilience. NCC: network management. IT Twin: digital twin. Tickets: nonsecurity service desk.",
+  "important": "Historical requirements are not all implemented or independently verified. Count is 1440, not 1470/1500. No runtime security tests executed."
+}
