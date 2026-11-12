@@ -13,11 +13,11 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 
 ## Current state
 - Last agent: Codex
-- Branch: claude/dex-bank-integration-cc2hmy
+- Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: First engineering documentation deliverable: ADR template/ADR-0001, requirements coverage, support matrix, milestones, test strategy, and blockers.
-- In progress: Documentation foundation complete; next is a generated per-ID traceability matrix and implementation planning.
-- Blockers: No runtime/platform evidence yet; all support remains untested. Push attempted 2026-11-12 and blocked because Git has no non-interactive GitHub credential on this device; remote was not changed.
+- Completed: Documentation foundation merged with the runnable local evidence platform; 29/29 unit and HTTP integration tests pass.
+- In progress: Extend semantic traceability from CG-001..300 through CG-600 and activate evidence-backed investigation capabilities.
+- Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
 ## Task for Codex (from Claude Code)
 Read AGENTS.md mandatory reading order first, then start the first engineering deliverable:
@@ -35,6 +35,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-12 | Codex | Merged the runnable SOC/evidence implementation; 29/29 Unit Tested. | pending merge commit |
 | 2026-11-12 | Codex | Added ADR template and evidence-first local architecture decision. | 8e39fda |
 | 2026-11-12 | Codex | Added coverage report, support matrix, milestones, test strategy, and blocker register. | 08f22ca, 0938b27, 17acd34, 798e821, 554f683 |
 | 2026-11-12 | Codex | Documentation verification passed (1,440 IDs); GitHub push blocked by missing Git credential. | 54d3855 |

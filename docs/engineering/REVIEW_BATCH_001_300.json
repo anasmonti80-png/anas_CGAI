@@ -1,0 +1,493 @@
+{
+  "schema_version": 1,
+  "batch_id": "semantic-triage-001-300-v1",
+  "reviewed_at": "2026-11-12",
+  "reviewed_id_range": "CG-001..CG-300",
+  "method": "Manual semantic triage by requirement family: scope ownership, safe delivery phase and evidence boundaries. This does not make a requirement accepted, complete or fully implemented.",
+  "ranges": [
+    {
+      "start": 1,
+      "end": 4,
+      "scope": "CyberGuard",
+      "area": "ui",
+      "milestone": "M1",
+      "reason": "SOC console experience belongs to CyberGuard. Current preview implements only a local evidence UI subset.",
+      "restrictions": [
+        "No claim that all specified modules or full accessibility acceptance are complete."
+      ]
+    },
+    {
+      "start": 5,
+      "end": 9,
+      "scope": "NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "Network discovery and topology remain NCC-owned; CyberGuard will consume approved read-only security context.",
+      "restrictions": [
+        "No autonomous discovery, scanning or 20,000-device capacity claim in the current local preview."
+      ]
+    },
+    {
+      "start": 10,
+      "end": 13,
+      "scope": "CyberGuard",
+      "area": "endpoint",
+      "milestone": "M4",
+      "reason": "Endpoint telemetry and inventory are CyberGuard connector scope.",
+      "restrictions": [
+        "Only a read-only local inventory and synthetic Windows event parser exist; no live agent or vulnerability inventory."
+      ]
+    },
+    {
+      "start": 14,
+      "end": 17,
+      "scope": "CyberGuard",
+      "area": "identity",
+      "milestone": "M4",
+      "reason": "Identity evidence and remote-access correlation belong to CyberGuard; temporary privileged access requires its own approved integration.",
+      "restrictions": [
+        "No AD/LDAP/Entra connector, MFA-state discovery or JIT privilege executor exists."
+      ]
+    },
+    {
+      "start": 18,
+      "end": 23,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "CyberGuard consumes normalized security telemetry while NCC retains network configuration control.",
+      "restrictions": [
+        "No Syslog/Flow listener, firewall analyzer, NAC/NDR connector or device action exists."
+      ]
+    },
+    {
+      "start": 24,
+      "end": 28,
+      "scope": "CyberGuard",
+      "area": "vulnerability",
+      "milestone": "M4",
+      "reason": "Authorized defensive validation and vulnerability prioritization belong to CyberGuard.",
+      "restrictions": [
+        "No scanner, KEV feed, exploitation validation or production-impacting test is implemented."
+      ]
+    },
+    {
+      "start": 29,
+      "end": 35,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "response",
+      "milestone": "M3",
+      "reason": "The safety/approval workflow belongs to CyberGuard; device and network executors require scoped integration.",
+      "restrictions": [
+        "Only local asset-criticality preview/approval/rollback is implemented; no block, quarantine, service stop or switch-port action."
+      ]
+    },
+    {
+      "start": 36,
+      "end": 40,
+      "scope": "CyberGuard",
+      "area": "ai-policy",
+      "milestone": "M5",
+      "reason": "AI interpretation and evidence timelines are CyberGuard capabilities, governed by a typed policy gateway.",
+      "restrictions": [
+        "No LLM, cloud egress, evidence graph or attack-path engine is implemented."
+      ]
+    },
+    {
+      "start": 41,
+      "end": 45,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "Vendor capability contracts and read/write separation are integration concerns; NCC remains the control plane for network changes.",
+      "restrictions": [
+        "No Cisco, Huawei or multi-vendor connector credentials/API calls are present."
+      ]
+    },
+    {
+      "start": 46,
+      "end": 51,
+      "scope": "CyberGuard",
+      "area": "cloud",
+      "milestone": "M6",
+      "reason": "Cloud security evidence belongs to CyberGuard under least-privilege integrations.",
+      "restrictions": [
+        "No cloud connector, cloud credential, external telemetry or provider-specific claim is implemented."
+      ]
+    },
+    {
+      "start": 52,
+      "end": 56,
+      "scope": "CyberGuard",
+      "area": "platform",
+      "milestone": "M1",
+      "reason": "Local platform access, health, secrets and audit are CyberGuard foundations.",
+      "restrictions": [
+        "Current subset is loopback RBAC/session/CSRF, source token hashing and local audit only; HTTPS, SSO/MFA, ABAC and encrypted secret vault remain pending."
+      ]
+    },
+    {
+      "start": 57,
+      "end": 63,
+      "scope": "CyberGuard",
+      "area": "platform",
+      "milestone": "M1",
+      "reason": "Quality measurement, staged validation and scaling decisions remain core platform governance.",
+      "restrictions": [
+        "Score/MTTD/MTTR/multi-tenant/queue requirements are not complete; CG-063 historical no-code direction is superseded by the V3 execution decision but preserved verbatim."
+      ]
+    },
+    {
+      "start": 64,
+      "end": 67,
+      "scope": "CyberGuard",
+      "area": "detection",
+      "milestone": "M2",
+      "reason": "Versioned threat knowledge and human-reviewed detection content are CyberGuard detection engineering.",
+      "restrictions": [
+        "No external knowledge feed, signature workflow or remediation recommender is implemented."
+      ]
+    },
+    {
+      "start": 68,
+      "end": 74,
+      "scope": "CyberGuard",
+      "area": "platform",
+      "milestone": "M2",
+      "reason": "Security outcomes, threat models, visibility and risk evidence are CyberGuard governance.",
+      "restrictions": [
+        "Current source health is only a small visibility subset; no enterprise risk, ownership or authorized external attack-surface workflow exists."
+      ]
+    },
+    {
+      "start": 75,
+      "end": 81,
+      "scope": "CyberGuard",
+      "area": "resilience",
+      "milestone": "M6",
+      "reason": "Legacy-system compatibility and continuity evidence are CyberGuard resilience scope.",
+      "restrictions": [
+        "No legacy platform connector, recovery orchestration or backup validation is implemented."
+      ]
+    },
+    {
+      "start": 82,
+      "end": 88,
+      "scope": "CyberGuard",
+      "area": "identity",
+      "milestone": "M4",
+      "reason": "Privileged identity, trust and account lifecycle controls belong to CyberGuard identity integrations.",
+      "restrictions": [
+        "No live directory, PAM, conditional access or credential-rotation executor exists."
+      ]
+    },
+    {
+      "start": 89,
+      "end": 95,
+      "scope": "CyberGuard",
+      "area": "endpoint",
+      "milestone": "M4",
+      "reason": "Endpoint protection evidence and ransomware controls are CyberGuard endpoint scope.",
+      "restrictions": [
+        "No AV/EDR engine, endpoint agent, quarantine action or prevention validation is implemented."
+      ]
+    },
+    {
+      "start": 96,
+      "end": 102,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "Security monitoring consumes network/OT context; network control belongs to NCC and OT changes require separate authority.",
+      "restrictions": [
+        "No OT/ICS, DNS/DHCP, NAC or switch control connector exists."
+      ]
+    },
+    {
+      "start": 103,
+      "end": 109,
+      "scope": "CyberGuard",
+      "area": "cloud",
+      "milestone": "M6",
+      "reason": "Cloud, application and supply-chain security evidence belong to CyberGuard.",
+      "restrictions": [
+        "No SaaS, container, CI/CD or software-supply-chain connector exists."
+      ]
+    },
+    {
+      "start": 110,
+      "end": 116,
+      "scope": "CyberGuard",
+      "area": "detection",
+      "milestone": "M2",
+      "reason": "Detection quality, investigations and measurable evidence belong to CyberGuard.",
+      "restrictions": [
+        "Current rules are local and deterministic; no broad detection content lifecycle or analyst quality measurement is complete."
+      ]
+    },
+    {
+      "start": 117,
+      "end": 123,
+      "scope": "CyberGuard",
+      "area": "response",
+      "milestone": "M3",
+      "reason": "Safe response and AI policy are CyberGuard capabilities with explicit approval boundaries.",
+      "restrictions": [
+        "No external response executor, AI agent or automated containment action is implemented."
+      ]
+    },
+    {
+      "start": 124,
+      "end": 130,
+      "scope": "CyberGuard",
+      "area": "platform",
+      "milestone": "M6",
+      "reason": "Saudi governance and enterprise product requirements apply to CyberGuard delivery.",
+      "restrictions": [
+        "No legal, compliance, residency or procurement compliance claim is made."
+      ]
+    },
+    {
+      "start": 131,
+      "end": 138,
+      "scope": "NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "Network change safety depends on NCC topology/configuration data and approval workflow.",
+      "restrictions": [
+        "CyberGuard has no port/VLAN/ACL execution or full network inventory."
+      ]
+    },
+    {
+      "start": 139,
+      "end": 145,
+      "scope": "CyberGuard",
+      "area": "detection",
+      "milestone": "M2",
+      "reason": "Attack-model and detection-efficacy analysis belongs to CyberGuard.",
+      "restrictions": [
+        "No ATT&CK model, adversary emulation or detection-gap test harness is implemented."
+      ]
+    },
+    {
+      "start": 146,
+      "end": 152,
+      "scope": "CyberGuard",
+      "area": "identity",
+      "milestone": "M4",
+      "reason": "Identity, SaaS access and privilege review are CyberGuard connector scope.",
+      "restrictions": [
+        "No SaaS/IdP collection or identity action executor is implemented."
+      ]
+    },
+    {
+      "start": 153,
+      "end": 160,
+      "scope": "CyberGuard",
+      "area": "cloud",
+      "milestone": "M6",
+      "reason": "Cloud, web application and backup security evidence belong to CyberGuard.",
+      "restrictions": [
+        "No cloud workload, web scanner or recovery orchestration implementation exists."
+      ]
+    },
+    {
+      "start": 161,
+      "end": 169,
+      "scope": "CyberGuard",
+      "area": "detection",
+      "milestone": "M2",
+      "reason": "Event normalization, reliable collection and detection lineage are CyberGuard foundations.",
+      "restrictions": [
+        "Current contract handles structured local ingestion only; no distributed queue, OCSF adapter or multi-collector reliability proof."
+      ]
+    },
+    {
+      "start": 170,
+      "end": 176,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "response",
+      "milestone": "M3",
+      "reason": "Safety constraints for response belong to CyberGuard policy; device/network actions require approved external executors.",
+      "restrictions": [
+        "No critical asset action, emergency channel validation or production response runbook execution is implemented."
+      ]
+    },
+    {
+      "start": 177,
+      "end": 180,
+      "scope": "CyberGuard",
+      "area": "platform",
+      "milestone": "M6",
+      "reason": "Future architecture, release and ecosystem readiness are CyberGuard platform scope.",
+      "restrictions": [
+        "No production-scale topology, marketplace or signed update channel exists."
+      ]
+    },
+    {
+      "start": 181,
+      "end": 188,
+      "scope": "CyberGuard",
+      "area": "endpoint",
+      "milestone": "M4",
+      "reason": "Windows prevention and endpoint hardening are CyberGuard endpoint capabilities.",
+      "restrictions": [
+        "Windows event-file parser is not a prevention/EDR connector and has only synthetic tests."
+      ]
+    },
+    {
+      "start": 189,
+      "end": 196,
+      "scope": "CyberGuard",
+      "area": "identity",
+      "milestone": "M4",
+      "reason": "Administrative identity, secrets and session protection are CyberGuard identity scope.",
+      "restrictions": [
+        "No enterprise PAM, SSO, MFA or privileged session integration is implemented."
+      ]
+    },
+    {
+      "start": 197,
+      "end": 202,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "DNS, email and web protection need security integrations; network/DNS configuration control remains external.",
+      "restrictions": [
+        "No email gateway, DNS security, proxy or URL filtering connector exists."
+      ]
+    },
+    {
+      "start": 203,
+      "end": 210,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "Firewall and lateral-movement safeguards require approved device telemetry and NCC-controlled changes.",
+      "restrictions": [
+        "No firewall/NAC policy executor or lateral-movement analytics integration exists."
+      ]
+    },
+    {
+      "start": 211,
+      "end": 216,
+      "scope": "CyberGuard",
+      "area": "cloud",
+      "milestone": "M6",
+      "reason": "Multi-cloud defense and data protection are CyberGuard cloud scope.",
+      "restrictions": [
+        "No cloud provider integration or live data-protection workflow exists."
+      ]
+    },
+    {
+      "start": 217,
+      "end": 222,
+      "scope": "CyberGuard",
+      "area": "devsecops",
+      "milestone": "M6",
+      "reason": "Software supply-chain and CyberGuard build security are CyberGuard DevSecOps scope.",
+      "restrictions": [
+        "Current CI validates source/tests only; no SAST/SBOM/signing/release-provenance acceptance exists."
+      ]
+    },
+    {
+      "start": 223,
+      "end": 228,
+      "scope": "CyberGuard",
+      "area": "resilience",
+      "milestone": "M6",
+      "reason": "Ransomware resilience, backups and recovery validation are CyberGuard resilience scope.",
+      "restrictions": [
+        "No backup connector, restore drill or immutable backup verification is implemented."
+      ]
+    },
+    {
+      "start": 229,
+      "end": 232,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "OT/ICS monitoring must be read-only and separately authorized; related network control remains outside CyberGuard.",
+      "restrictions": [
+        "No OT/ICS collector, discovery or action exists."
+      ]
+    },
+    {
+      "start": 233,
+      "end": 238,
+      "scope": "CyberGuard",
+      "area": "platform",
+      "milestone": "M2",
+      "reason": "Effectiveness, evidence and research governance belong to CyberGuard platform quality.",
+      "restrictions": [
+        "No quantitative protection-effectiveness, false-positive budget or external research ledger is complete."
+      ]
+    },
+    {
+      "start": 239,
+      "end": 242,
+      "scope": "CyberGuard",
+      "area": "ai-policy",
+      "milestone": "M5",
+      "reason": "AI safety and mobile step-up policy belong to CyberGuard; console surface hardening is platform work.",
+      "restrictions": [
+        "No AI runtime, mobile step-up MFA or external access proxy is implemented."
+      ]
+    },
+    {
+      "start": 243,
+      "end": 254,
+      "scope": "CyberGuard",
+      "area": "detection",
+      "milestone": "M2",
+      "reason": "Threat knowledge, evidence-first classification and correlation belong to CyberGuard detection engineering.",
+      "restrictions": [
+        "Current rules and source provenance are a limited subset; no ATT&CK graph, feed hygiene lifecycle or analyst feedback loop is complete."
+      ]
+    },
+    {
+      "start": 255,
+      "end": 269,
+      "scope": "CyberGuard",
+      "area": "identity",
+      "milestone": "M4",
+      "reason": "Directory attack detection and recovery planning belong to CyberGuard identity security.",
+      "restrictions": [
+        "No AD/AD CS/Kerberos/Defender identity integration or domain recovery executor exists."
+      ]
+    },
+    {
+      "start": 270,
+      "end": 281,
+      "scope": "CyberGuard/NCC-integration",
+      "area": "network",
+      "milestone": "M4",
+      "reason": "Network-edge detection and safe quarantine selection use CyberGuard policy with NCC/vendor controls.",
+      "restrictions": [
+        "No VPN/firewall/router telemetry, network baseline or quarantine executor exists."
+      ]
+    },
+    {
+      "start": 282,
+      "end": 294,
+      "scope": "CyberGuard",
+      "area": "endpoint",
+      "milestone": "M4",
+      "reason": "Ransomware, malware, server and recovery evidence belong to CyberGuard endpoint/resilience work.",
+      "restrictions": [
+        "No ransomware detector, malware sandbox, hypervisor connector, file quarantine or restore validation is implemented."
+      ]
+    },
+    {
+      "start": 295,
+      "end": 300,
+      "scope": "CyberGuard",
+      "area": "cloud",
+      "milestone": "M6",
+      "reason": "SaaS/cloud identity abuse and cloud incident correlation belong to CyberGuard cloud security.",
+      "restrictions": [
+        "No OAuth, Microsoft 365, AWS or cloud incident connector is implemented."
+      ]
+    }
+  ]
+}

@@ -1,0 +1,356 @@
+{
+  "CG-032": {
+    "reason": "Implemented the approval lifecycle for local asset criticality only.",
+    "code": [
+      "lib/domain.js",
+      "public/app.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: approval requires another administrator",
+      "tests/domain.test.js: expired approvals"
+    ],
+    "remaining": [
+      "Device-impact simulation and device/network execution are not implemented."
+    ]
+  },
+  "CG-034": {
+    "reason": "Independent approver and local append-only audit implemented.",
+    "code": [
+      "lib/domain.js",
+      "lib/store.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: approval requires another administrator",
+      "tests/domain.test.js: database survives reopen"
+    ],
+    "remaining": [
+      "Fresh MFA, break-glass and externally immutable evidence remain pending."
+    ]
+  },
+  "CG-052": {
+    "reason": "Local admin/analyst/viewer RBAC, sessions and CSRF checks.",
+    "code": [
+      "lib/auth.js",
+      "server.js"
+    ],
+    "tests": [
+      "tests/http.test.js: unauthenticated, cross-origin",
+      "tests/http.test.js: unsupported HTTP methods"
+    ],
+    "remaining": [
+      "No HTTPS deployment, SSO, MFA, ABAC, tenant/site/scope isolation."
+    ]
+  },
+  "CG-054": {
+    "reason": "Loopback listener and no outbound network calls in the application.",
+    "code": [
+      "server.js"
+    ],
+    "tests": [
+      "tests/http.test.js: unauthenticated, cross-origin"
+    ],
+    "remaining": [
+      "Host hardening, encrypted storage and deployed exposure audit are pending."
+    ]
+  },
+  "CG-055": {
+    "reason": "Source credentials are hashed, scoped to source ingestion, rotatable and revocable.",
+    "code": [
+      "lib/domain.js",
+      "lib/auth.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: source credentials are hashed"
+    ],
+    "remaining": [
+      "No connector secret vault or encrypted database; operational analysis/execution separation requires further policy."
+    ]
+  },
+  "CG-056": {
+    "reason": "Local audit chain and source receipt health with lost-coverage alerts.",
+    "code": [
+      "lib/store.js",
+      "lib/domain.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: lost source visibility",
+      "tests/domain.test.js: database survives reopen"
+    ],
+    "remaining": [
+      "No live agent fleet, independent watchdog or external notification delivery verification."
+    ]
+  },
+  "CG-057": {
+    "reason": "UI distinguishes source visibility, evidence timestamps and unverified prevention.",
+    "code": [
+      "public/app.js",
+      "lib/domain.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: protection separates",
+      "tests/domain.test.js: lost source visibility"
+    ],
+    "remaining": [
+      "No calibrated confidence score or complete field-level freshness assessment."
+    ]
+  },
+  "CG-060": {
+    "reason": "Offline control plane, idempotent atomic ingest and guarded local rollback.",
+    "code": [
+      "lib/domain.js",
+      "lib/store.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: ingestion is durable",
+      "tests/domain.test.js: approval requires another administrator"
+    ],
+    "remaining": [
+      "Collector spool, retry queue, DLQ and external change reconciliation are pending."
+    ]
+  },
+  "CG-061": {
+    "reason": "Runtime dependency inventory documents Node and bundled dependency licenses.",
+    "code": [
+      "docs/engineering/DEPENDENCIES_AR.md"
+    ],
+    "tests": [],
+    "remaining": [
+      "Commercial distribution/legal review and licensing of future connectors remain pending."
+    ]
+  },
+  "CG-062": {
+    "reason": "Verification uses temporary databases, synthetic fixtures and loopback HTTP.",
+    "code": [
+      "scripts/verify.js",
+      "scripts/ui-lab.js"
+    ],
+    "tests": [
+      "tests/http.test.js: real HTTP ingestion"
+    ],
+    "remaining": [
+      "Authorized real device lab and limited pilot gates remain pending."
+    ]
+  },
+  "CG-897": {
+    "reason": "Stable UUID linked to source plus external ID; IP is never the merge key.",
+    "code": [
+      "lib/domain.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: shared IP does not merge"
+    ],
+    "remaining": [
+      "Cross-source graph, conflict resolution, attestation and identity confidence are pending."
+    ]
+  },
+  "CG-901": {
+    "reason": "Each event retains source, asset, timestamps and separate original/sanitized hashes.",
+    "code": [
+      "lib/domain.js",
+      "lib/windows-events.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: ingestion is durable",
+      "tests/windows-events.test.js: Windows 4624 type10 maps"
+    ],
+    "remaining": [
+      "Service/user/port dependency provenance graph is not implemented."
+    ]
+  },
+  "CG-913": {
+    "scope": "CyberGuard/Tickets-integration",
+    "reason": "CG-940 excludes a local ITSM subsystem; future incident-to-Tickets API integration only.",
+    "remaining": [
+      "Tickets API adapter and deduplication contract are pending."
+    ]
+  },
+  "CG-920": {
+    "reason": "Per-asset deterministic evidence report with limitations and event hashes.",
+    "code": [
+      "lib/domain.js"
+    ],
+    "tests": [
+      "tests/http.test.js: real HTTP ingestion"
+    ],
+    "remaining": [
+      "Full signed audit/policy/response evidence bundle and missing-event reconciliation remain pending."
+    ]
+  },
+  "CG-925": {
+    "scope": "CyberGuard",
+    "reason": "Confidence boundaries still apply to CyberGuard security proposals; CG-939 excludes a full visual digital twin.",
+    "remaining": [
+      "No simulation engine implemented; confidence boundaries need acceptance tests with real proposals."
+    ]
+  },
+  "CG-926": {
+    "scope": "CyberGuard",
+    "reason": "Recovery-path preconditions remain part of CyberGuard response safety; not wholly transferred to IT Twin.",
+    "remaining": [
+      "No risky external executor enabled; recovery channel validation remains pending."
+    ]
+  },
+  "CG-927": {
+    "reason": "Support matrix records actual local Windows test evidence and untested platforms.",
+    "code": [
+      "docs/engineering/SUPPORT_MATRIX.json"
+    ],
+    "tests": [],
+    "remaining": [
+      "Windows Server, macOS, Linux and vendor hardware lab acceptance are not established by this matrix."
+    ]
+  },
+  "CG-928": {
+    "reason": "Only synthetic schema/HTTP contract tests exist; this requirement explicitly asks for real integrations.",
+    "remaining": [
+      "Real API/CLI/Agent samples and provider permission/drift tests are pending."
+    ]
+  },
+  "CG-929": {
+    "reason": "Verification script checks source integrity, syntax and all current tests.",
+    "code": [
+      "scripts/verify.js",
+      "scripts/source-fingerprint.js"
+    ],
+    "tests": [
+      "tests/requirements.test.js: subset evidence"
+    ],
+    "remaining": [
+      "Full agreed product acceptance suite, independent security review and release gate remain pending."
+    ]
+  },
+  "CG-931": {
+    "reason": "Idempotent local criticality execution and version-guarded rollback.",
+    "code": [
+      "lib/domain.js"
+    ],
+    "tests": [
+      "tests/domain.test.js: approval requires another administrator"
+    ],
+    "remaining": [
+      "Network isolation, disconnect recovery and external reconciliation are not implemented."
+    ]
+  },
+  "CG-932": {
+    "reason": "Engineering verification dossier states version, exact environment, source fingerprint and limitations.",
+    "code": [
+      "scripts/verify.js",
+      "docs/engineering/VALIDATION_AR.md"
+    ],
+    "tests": [],
+    "remaining": [
+      "Production evidence, signed release, capacity/security audits and disaster recovery validation are pending."
+    ]
+  },
+  "CG-933": {
+    "reason": "UI labels engineering preview, unsupported capabilities and unverified prevention.",
+    "code": [
+      "public/app.js",
+      "public/styles.css"
+    ],
+    "tests": [
+      "tests/http.test.js: unauthenticated, cross-origin"
+    ],
+    "remaining": [
+      "Manual browser checks are documented separately; full accessibility, device and capability matrix acceptance remain pending."
+    ]
+  },
+  "CG-934": {
+    "reason": "No external command executor; read-only collection requires explicit action; tests use synthetic data.",
+    "code": [
+      "server.js",
+      "lib/local-collector.js"
+    ],
+    "tests": [
+      "tests/http.test.js: unsupported HTTP methods",
+      "tests/local-collector.test.js: local collection requires"
+    ],
+    "remaining": [
+      "Real authorized endpoint lab qualification is pending."
+    ]
+  },
+  "CG-935": {
+    "reason": "The in-process source health timer is not the independent watchdog required here.",
+    "remaining": [
+      "Independent service, separate delivery path and process/database failure drills are pending."
+    ]
+  },
+  "CG-937": {
+    "reason": "NCC remains the exclusive network configuration control plane. CyberGuard has no network executor.",
+    "scope": "CyberGuard/NCC-integration",
+    "remaining": [
+      "Scoped NCC request/approval API and integration tests are pending."
+    ]
+  },
+  "CG-939": {
+    "reason": "IT Twin remains a separate project. No visual digital twin subsystem is created here.",
+    "scope": "IT-Twin-boundary",
+    "remaining": [
+      "Security dependency context and future integration contract remain pending."
+    ]
+  },
+  "CG-940": {
+    "reason": "CyberGuard cases are security investigations. IT service-management tickets remain separate.",
+    "scope": "Tickets-boundary",
+    "remaining": [
+      "External Tickets linking remains pending."
+    ]
+  },
+  "CG-945": {
+    "reason": "Verbatim inventory, reviewed subsets and capabilities distinguish planned/partial/tested boundaries.",
+    "code": [
+      "scripts/requirements.js",
+      "docs/engineering/CAPABILITIES.json"
+    ],
+    "tests": [
+      "tests/requirements.test.js: traceability preserves",
+      "tests/requirements.test.js: subset evidence"
+    ],
+    "remaining": [
+      "Semantic review of all 1440 requirements and every product acceptance decision remains pending."
+    ]
+  },
+  "CG-946": {
+    "reason": "Unified event/audit display retains provenance, timestamp and parser revision.",
+    "code": [
+      "lib/domain.js",
+      "lib/store.js",
+      "public/app.js"
+    ],
+    "tests": [
+      "tests/http.test.js: real HTTP ingestion",
+      "tests/http.test.js: Windows export HTTP import"
+    ],
+    "remaining": [
+      "Advanced resilience/DevSecOps/AI validation event schemas remain pending."
+    ]
+  },
+  "CG-921": {
+    "scope": "IT-Twin",
+    "reason": "CG-939 excludes the full what-if digital twin; NCC owns network execution. CyberGuard may consume bounded security context.",
+    "remaining": [
+      "External IT Twin/NCC integration is not implemented."
+    ]
+  },
+  "CG-922": {
+    "scope": "IT-Twin",
+    "reason": "CG-939 excludes the full what-if digital twin; NCC owns network execution. CyberGuard may consume bounded security context.",
+    "remaining": [
+      "External IT Twin/NCC integration is not implemented."
+    ]
+  },
+  "CG-923": {
+    "scope": "IT-Twin",
+    "reason": "CG-939 excludes the full what-if digital twin; NCC owns network execution. CyberGuard may consume bounded security context.",
+    "remaining": [
+      "External IT Twin/NCC integration is not implemented."
+    ]
+  },
+  "CG-924": {
+    "scope": "IT-Twin",
+    "reason": "CG-939 excludes the full what-if digital twin; NCC owns network execution. CyberGuard may consume bounded security context.",
+    "remaining": [
+      "External IT Twin/NCC integration is not implemented."
+    ]
+  }
+}
