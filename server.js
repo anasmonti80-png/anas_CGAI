@@ -120,6 +120,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       if(p==='/api/overview'&&method==='GET') return send(res,200,domain.summary());
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));
+      if(p==='/api/security-outcomes'&&method==='GET') return send(res,200,domain.securityOutcomes());
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {
         if(method==='GET') return send(res,200,{items:domain.sources()});

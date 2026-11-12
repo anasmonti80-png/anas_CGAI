@@ -32,6 +32,14 @@ test('SOC dashboard uses actual counts and exposes a bounded evidence-readiness 
   const older=d.dashboard();assert.equal(older.mean_acknowledge_minutes,.5);assert.equal(older.mean_detection_minutes,null);assert.ok(older.security_score<dash.security_score);assert.equal(older.security_score_components.freshness,50);
   assert.throws(()=>d.dashboard('invalid'),/invalid_severity/);
 });
+test('NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance',t=>{
+  const {d,event,ingest}=fixture(t);
+  ingest([event('asset'),event('protection','protection.observed',{engine:'Synthetic',installed:true,running:true,collecting:true,mode:'active'}),event('finding','security.finding',{title:'Synthetic finding',severity:'high',description:'Synthetic evidence'})]);
+  const alert=d.list('alerts').items.find(item=>item.rule_id==='CG-REPORTED-FINDING');d.createCase('analyst',{title:'Synthetic response',alert_ids:[alert.id]});
+  const asset=d.list('assets').items[0],action=d.previewAction('admin-a',{type:'asset.set-criticality',asset_id:asset.id,criticality:'important',reason:'Synthetic recovery evidence'});d.approveAction('admin-b',action.id);d.executeAction('admin-a',action.id);d.rollbackAction('admin-b',action.id);
+  const map=d.securityOutcomes();assert.equal(map.framework,'NIST CSF 2.0');assert.match(map.claim,/not a compliance assessment/);assert.deepEqual(map.outcomes.map(item=>item.function),['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER']);
+  assert.ok(map.outcomes.every(item=>Array.isArray(item.evidence)&&Array.isArray(item.gaps)));assert.equal(map.outcomes.find(item=>item.function==='RECOVER').evidence[0].count,1);assert.ok(map.outcomes.find(item=>item.function==='PROTECT').gaps.some(gap=>/not been independently validated/.test(gap)));
+});
 test('source credentials are hashed, scoped, rotatable and revocable',t=>{
   const {s,d,source}=fixture(t);
   assert.notEqual(s.get('SELECT token_hash FROM sources').token_hash,source.token);

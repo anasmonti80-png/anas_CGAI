@@ -63,3 +63,8 @@ test('remote access UI distinguishes application presence, connection phase and 
   for(const marker of ['Application presence','Observed phase','Assessment']) assert.ok(app.includes(marker),marker);
   for(const marker of ['remote.application_present','authorized_remote_requires_reference','suspicious_remote_requires_rationale','CG-REMOTE-SUSPICIOUS']) assert.ok(domain.includes(marker),marker);
 });
+
+test('policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/security-outcomes/);
+  for(const marker of ['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER','Coverage gaps']) assert.ok(app.includes(marker)||fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8').includes(marker),marker);
+});

@@ -102,6 +102,13 @@
       "tests": ["tests/dependency-policy.test.js: the current distributable has no undeclared npm dependency or accidental publish path"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "docs/engineering/DEPENDENCIES_AR.md"],
       "restrictions": ["This is an engineering release gate and current-component review, not legal advice or a certification for future dependencies."]
+    },
+    "CG-068": {
+      "reason": "The Policies view maps GOVERN, IDENTIFY, PROTECT, DETECT, RESPOND and RECOVER to live evidence counts and bounded evidence references from the configured scope, while each function also exposes its current coverage gaps. The API explicitly states that the map is not a compliance assessment or certification.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps", "Browser QA: Policies displayed all six NIST functions with actual counts and explicit gaps"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The map reports CyberGuard evidence and gaps only. It is not a NIST assessment, compliance opinion, certification, or proof that unconfigured environments are covered."]
     }
   }
 }
