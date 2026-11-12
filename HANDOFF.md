@@ -12,12 +12,12 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 6. Do not put secrets, customer data or private inventories in this file.
 
 ## Current state
-- Last agent: (claude | codex)
-- Branch: 
-- Last updated: 
-- Completed: (nothing yet)
-- In progress: 
-- Blockers: 
+- Last agent: Codex
+- Branch: claude/dex-bank-integration-cc2hmy
+- Last updated: 2026-11-12
+- Completed: ADR template and ADR-0001 architecture decision drafted; pending commit.
+- In progress: First documentation deliverable.
+- Blockers: No runtime/platform evidence yet; all support remains untested.
 
 ## Task for Codex (from Claude Code)
 Read AGENTS.md mandatory reading order first, then start the first engineering deliverable:
@@ -35,3 +35,4 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-12 | Codex | Added ADR template and evidence-first local architecture decision. | pending |
