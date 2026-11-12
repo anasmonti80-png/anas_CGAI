@@ -57,3 +57,9 @@ test('source health UI distinguishes managed agents, log forwarders and delivery
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);
 });
+
+test('remote access UI distinguishes application presence, connection phase and evidence assessment',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');
+  for(const marker of ['Application presence','Observed phase','Assessment']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['remote.application_present','authorized_remote_requires_reference','suspicious_remote_requires_rationale','CG-REMOTE-SUSPICIOUS']) assert.ok(domain.includes(marker),marker);
+});

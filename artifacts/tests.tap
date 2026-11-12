@@ -2,273 +2,285 @@ TAP version 13
 # Subtest: the current distributable has no undeclared npm dependency or accidental publish path
 ok 1 - the current distributable has no undeclared npm dependency or accidental publish path
   ---
-  duration_ms: 2.1334
+  duration_ms: 2.7256
   type: 'test'
   ...
 # Subtest: SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security
 ok 2 - SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security
   ---
-  duration_ms: 17.3237
+  duration_ms: 18.1396
   type: 'test'
   ...
 # Subtest: source credentials are hashed, scoped, rotatable and revocable
 ok 3 - source credentials are hashed, scoped, rotatable and revocable
   ---
-  duration_ms: 2.967
+  duration_ms: 3.3552
   type: 'test'
   ...
 # Subtest: ingestion is durable, idempotent, atomic and rejects changed event identifiers
 ok 4 - ingestion is durable, idempotent, atomic and rejects changed event identifiers
   ---
-  duration_ms: 4.4844
+  duration_ms: 6.2735
   type: 'test'
   ...
 # Subtest: shared IP does not merge DHCP identities and older observations do not overwrite new identity
 ok 5 - shared IP does not merge DHCP identities and older observations do not overwrite new identity
   ---
-  duration_ms: 4.3535
+  duration_ms: 5.9597
   type: 'test'
   ...
 # Subtest: authorized passive discovery preserves topology evidence and reports additions, changes and outages
 ok 6 - authorized passive discovery preserves topology evidence and reports additions, changes and outages
   ---
-  duration_ms: 9.0235
+  duration_ms: 7.6568
   type: 'test'
   ...
 # Subtest: network service ports never replace or merge with physical switch interfaces
 ok 7 - network service ports never replace or merge with physical switch interfaces
   ---
-  duration_ms: 4.0123
+  duration_ms: 5.4063
   type: 'test'
   ...
 # Subtest: visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently
 ok 8 - visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently
   ---
-  duration_ms: 4.3413
+  duration_ms: 4.603
   type: 'test'
   ...
 # Subtest: unsupported fields, secret-bearing text and future timestamps are handled safely
 ok 9 - unsupported fields, secret-bearing text and future timestamps are handled safely
   ---
-  duration_ms: 3.4228
+  duration_ms: 2.389
   type: 'test'
   ...
 # Subtest: open port is exposure only; active sessions require session evidence and relay keeps A unknown
 ok 10 - open port is exposure only; active sessions require session evidence and relay keeps A unknown
   ---
-  duration_ms: 5.2051
+  duration_ms: 6.4855
+  type: 'test'
+  ...
+# Subtest: remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment
+ok 11 - remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment
+  ---
+  duration_ms: 4.0757
   type: 'test'
   ...
 # Subtest: protection separates installed/running/collection from independently tested prevention
-ok 11 - protection separates installed/running/collection from independently tested prevention
+ok 12 - protection separates installed/running/collection from independently tested prevention
   ---
-  duration_ms: 2.2509
+  duration_ms: 3.8074
   type: 'test'
   ...
 # Subtest: five failed authentications correlate by target account/source and alerts are deduplicated
-ok 12 - five failed authentications correlate by target account/source and alerts are deduplicated
+ok 13 - five failed authentications correlate by target account/source and alerts are deduplicated
   ---
-  duration_ms: 5.0435
+  duration_ms: 5.8818
   type: 'test'
   ...
 # Subtest: lost source visibility creates a distinct alert, not a healthy no-threat claim
-ok 13 - lost source visibility creates a distinct alert, not a healthy no-threat claim
+ok 14 - lost source visibility creates a distinct alert, not a healthy no-threat claim
   ---
-  duration_ms: 3.081
+  duration_ms: 3.4243
   type: 'test'
   ...
 # Subtest: managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
-ok 14 - managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
+ok 15 - managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
   ---
-  duration_ms: 3.0859
+  duration_ms: 3.0602
   type: 'test'
   ...
 # Subtest: cases preserve notes, audit and evidence links; ACK is not incident closure
-ok 15 - cases preserve notes, audit and evidence links; ACK is not incident closure
+ok 16 - cases preserve notes, audit and evidence links; ACK is not incident closure
   ---
-  duration_ms: 13.5877
+  duration_ms: 13.79
   type: 'test'
   ...
 # Subtest: approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
-ok 16 - approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
+ok 17 - approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
   ---
-  duration_ms: 5.1426
+  duration_ms: 4.5879
   type: 'test'
   ...
 # Subtest: expired approvals and changed preflight state prevent execution
-ok 17 - expired approvals and changed preflight state prevent execution
+ok 18 - expired approvals and changed preflight state prevent execution
   ---
-  duration_ms: 4.0753
+  duration_ms: 2.9185
   type: 'test'
   ...
 # Subtest: 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
-ok 18 - 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
+ok 19 - 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
   ---
-  duration_ms: 354.3964
+  duration_ms: 367.4833
   type: 'test'
   ...
 # Subtest: database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
-ok 19 - database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
+ok 20 - database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
   ---
-  duration_ms: 106.5694
+  duration_ms: 61.3055
   type: 'test'
   ...
 # Subtest: first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
-ok 20 - first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
+ok 21 - first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
   ---
-  duration_ms: 731.8992
+  duration_ms: 774.6372
   type: 'test'
   ...
 # Subtest: unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
-ok 21 - unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
+ok 22 - unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
   ---
-  duration_ms: 886.2163
+  duration_ms: 817.2438
   type: 'test'
   ...
 # Subtest: unsupported HTTP methods cannot mutate routes that accept both reads and writes
-ok 22 - unsupported HTTP methods cannot mutate routes that accept both reads and writes
+ok 23 - unsupported HTTP methods cannot mutate routes that accept both reads and writes
   ---
-  duration_ms: 463.8703
+  duration_ms: 473.1882
   type: 'test'
   ...
 # Subtest: three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
-ok 23 - three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
+ok 24 - three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
   ---
-  duration_ms: 902.9969
+  duration_ms: 804.5262
   type: 'test'
   ...
 # Subtest: Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
-ok 24 - Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
+ok 25 - Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
   ---
-  duration_ms: 512.1515
+  duration_ms: 436.8432
   type: 'test'
   ...
 # Subtest: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
-ok 25 - real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
+ok 26 - real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
   ---
-  duration_ms: 549.9158
+  duration_ms: 456.4131
   type: 'test'
   ...
 # Subtest: login attempts are bounded and unknown accounts use the same public failure
-ok 26 - login attempts are bounded and unknown accounts use the same public failure
+ok 27 - login attempts are bounded and unknown accounts use the same public failure
   ---
-  duration_ms: 2003.2361
+  duration_ms: 1862.4465
   type: 'test'
   ...
 # Subtest: local collection requires no shell and records only available identity without inferring prevention
-ok 27 - local collection requires no shell and records only available identity without inferring prevention
+ok 28 - local collection requires no shell and records only available identity without inferring prevention
   ---
-  duration_ms: 5.0199
+  duration_ms: 6.7779
   type: 'test'
   ...
 # Subtest: all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
-ok 28 - all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
+ok 29 - all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
   ---
-  duration_ms: 225.6818
+  duration_ms: 222.6475
   type: 'test'
   ...
 # Subtest: traceability preserves raw text and never turns inventory into verified product coverage
-ok 29 - traceability preserves raw text and never turns inventory into verified product coverage
+ok 30 - traceability preserves raw text and never turns inventory into verified product coverage
   ---
-  duration_ms: 211.0069
+  duration_ms: 219.7192
   type: 'test'
   ...
 # Subtest: subset evidence does not count as full acceptance and stale evidence is not promoted
-ok 30 - subset evidence does not count as full acceptance and stale evidence is not promoted
+ok 31 - subset evidence does not count as full acceptance and stale evidence is not promoted
   ---
-  duration_ms: 198.9272
+  duration_ms: 206.3044
   type: 'test'
   ...
 # Subtest: full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
-ok 31 - full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
+ok 32 - full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
   ---
-  duration_ms: 196.6717
+  duration_ms: 200.2456
   type: 'test'
   ...
 # Subtest: first 300 requirements receive non-acceptance semantic triage without changing their source text
-ok 32 - first 300 requirements receive non-acceptance semantic triage without changing their source text
+ok 33 - first 300 requirements receive non-acceptance semantic triage without changing their source text
   ---
-  duration_ms: 189.9989
+  duration_ms: 192.0371
   type: 'test'
   ...
 # Subtest: requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
-ok 33 - requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
+ok 34 - requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
   ---
-  duration_ms: 194.0391
+  duration_ms: 187.0453
   type: 'test'
   ...
 # Subtest: SOC shell exposes every required navigation destination as an operable view
-ok 34 - SOC shell exposes every required navigation destination as an operable view
+ok 35 - SOC shell exposes every required navigation destination as an operable view
   ---
-  duration_ms: 3.6905
+  duration_ms: 3.1487
   type: 'test'
   ...
 # Subtest: bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
-ok 35 - bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
+ok 36 - bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
   ---
-  duration_ms: 1.2465
+  duration_ms: 1.4425
   type: 'test'
   ...
 # Subtest: security posture UI keeps unknown, not configured and unverified evidence explicit
-ok 36 - security posture UI keeps unknown, not configured and unverified evidence explicit
+ok 37 - security posture UI keeps unknown, not configured and unverified evidence explicit
   ---
-  duration_ms: 1.8014
+  duration_ms: 2.2597
   type: 'test'
   ...
 # Subtest: discovery view exposes authorization, evidence boundaries and central asset observations
-ok 37 - discovery view exposes authorization, evidence boundaries and central asset observations
+ok 38 - discovery view exposes authorization, evidence boundaries and central asset observations
   ---
-  duration_ms: 0.7655
+  duration_ms: 1.3165
   type: 'test'
   ...
 # Subtest: settings exposes all operating modes and the PC visibility boundary
-ok 38 - settings exposes all operating modes and the PC visibility boundary
+ok 39 - settings exposes all operating modes and the PC visibility boundary
   ---
-  duration_ms: 0.8368
+  duration_ms: 0.7867
   type: 'test'
   ...
 # Subtest: action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
-ok 39 - action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
+ok 40 - action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
   ---
-  duration_ms: 0.8285
+  duration_ms: 0.7675
   type: 'test'
   ...
 # Subtest: source health UI distinguishes managed agents, log forwarders and delivery failures
-ok 40 - source health UI distinguishes managed agents, log forwarders and delivery failures
+ok 41 - source health UI distinguishes managed agents, log forwarders and delivery failures
   ---
-  duration_ms: 0.5656
+  duration_ms: 0.5129
+  type: 'test'
+  ...
+# Subtest: remote access UI distinguishes application presence, connection phase and evidence assessment
+ok 42 - remote access UI distinguishes application presence, connection phase and evidence assessment
+  ---
+  duration_ms: 1.1653
   type: 'test'
   ...
 # Subtest: Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
-ok 41 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
+ok 43 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
   ---
-  duration_ms: 4.1472
+  duration_ms: 5.2939
   type: 'test'
   ...
 # Subtest: non-RDP logons are explicitly skipped; failure without source remains unknown
-ok 42 - non-RDP logons are explicitly skipped; failure without source remains unknown
+ok 44 - non-RDP logons are explicitly skipped; failure without source remains unknown
   ---
-  duration_ms: 0.6016
+  duration_ms: 0.8966
   type: 'test'
   ...
 # Subtest: Windows logon correlation is scoped to boot and rejects records from before boot
-ok 43 - Windows logon correlation is scoped to boot and rejects records from before boot
+ok 45 - Windows logon correlation is scoped to boot and rejects records from before boot
   ---
-  duration_ms: 0.5124
+  duration_ms: 0.7405
   type: 'test'
   ...
 # Subtest: Windows logoff closes the correlated session without erasing previously observed source identity
-ok 44 - Windows logoff closes the correlated session without erasing previously observed source identity
+ok 46 - Windows logoff closes the correlated session without erasing previously observed source identity
   ---
-  duration_ms: 5.3197
+  duration_ms: 8.0478
   type: 'test'
   ...
-1..44
-# tests 44
+1..46
+# tests 46
 # suites 0
-# pass 44
+# pass 46
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 6222.4607
+# duration_ms 5792.1857

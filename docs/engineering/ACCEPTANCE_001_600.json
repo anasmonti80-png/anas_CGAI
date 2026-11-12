@@ -54,6 +54,13 @@
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This validates truthful visibility boundaries and evidence-ingestion contracts. It does not claim bundled packet capture, NetFlow exporters, deployed agents, or live enterprise connector validation."]
     },
+    "CG-016": {
+      "reason": "The remote-access evidence model supports RDP, SSH, AnyDesk and additional named protocols while keeping software presence, exposed port, connection attempt, authentication, active session and ended session as distinct phases. Authorized classification requires an authorization reference; suspicious classification requires a rationale and creates a dedicated alert; unknown remains explicit.",
+      "code": ["lib/domain.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment", "tests/domain.test.js: open port is exposure only; active sessions require session evidence and relay keeps A unknown", "tests/ui-contract.test.js: remote access UI distinguishes application presence, connection phase and evidence assessment", "Browser QA: Remote Access displayed application presence, authorized active RDP and suspicious SSH attempt as separate rows"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Classifications retain the configured source's provenance and are not independent proof of user identity or malicious intent. Live endpoint agents and vendor connectors require separate lab acceptance."]
+    },
     "CG-022": {
       "reason": "The discovery contract and live UI model physical switch interfaces as named interface records with VLAN/state, while TCP/UDP services are separate transport/port records with evidence and observed state. Neither structure can silently accept the other type's fields.",
       "code": ["lib/domain.js", "public/app.js"],

@@ -127,6 +127,19 @@ test('open port is exposure only; active sessions require session evidence and r
   const relay=d.list('remote_sessions').items.find(x=>x.session_key==='s2');
   assert.deepEqual(relay.source_a,{hostname:null,ip:null,account:null});
 });
+test('remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment',t=>{
+  const {d,event,ingest,advance}=fixture(t);
+  const parties={source_a:{ip:'192.0.2.20',account:'synthetic-source'},target_b:{ip:'192.0.2.10',account:'synthetic-target'},relay:false};
+  ingest([event('app-present','remote.application_present',{session_id:'app-anydesk',protocol:'anydesk',...parties,evidence_type:'software_inventory',assessment:'unknown',assessment_basis:'source-report'})]);
+  advance(1);ingest([event('authorized-session','remote.active',{session_id:'authorized-rdp',protocol:'rdp',...parties,evidence_type:'session_log',assessment:'authorized',assessment_basis:'policy-match',authorization_ref:'AUTH-REMOTE-016'})]);
+  advance(1);ingest([event('suspicious-attempt','remote.attempt',{session_id:'suspicious-ssh',protocol:'ssh',...parties,evidence_type:'connection_attempt',assessment:'suspicious',assessment_basis:'analyst-reviewed',rationale:'Synthetic policy mismatch'})]);
+  const sessions=Object.fromEntries(d.list('remote_sessions',{limit:20}).items.map(session=>[session.session_key,session]));
+  assert.equal(sessions['app-anydesk'].phase,'application_present');assert.equal(sessions['app-anydesk'].confidence,'unknown');
+  assert.equal(sessions['authorized-rdp'].phase,'active');assert.equal(sessions['authorized-rdp'].confidence,'authorized');
+  assert.equal(sessions['suspicious-ssh'].phase,'attempt');assert.equal(sessions['suspicious-ssh'].confidence,'suspicious');
+  assert.ok(d.list('alerts',{limit:20}).items.some(alert=>alert.rule_id==='CG-REMOTE-SUSPICIOUS'));
+  assert.throws(()=>ingest([event('bad-authorized','remote.active',{session_id:'bad',protocol:'rdp',...parties,evidence_type:'session_log',assessment:'authorized'})]),/authorized_remote_requires_reference/);
+});
 test('protection separates installed/running/collection from independently tested prevention',t=>{
   const {d,event,ingest}=fixture(t);
   ingest([event('p1','protection.observed',{engine:'Fixture engine',installed:true,running:false,collecting:false,mode:'unknown'})]);

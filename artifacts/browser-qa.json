@@ -21,7 +21,8 @@
     "operating_modes": {"result": "pass", "active": "authorized-defense-validation-lab", "visible_modes": ["pc-local", "enterprise-collectors", "authorized-defense-validation-lab"], "pc_behind_switch_limit_visible": true, "enterprise_paths_visible": ["SPAN/TAP", "flow logs", "managed agents"], "authorization_reference_value_exposed": false},
     "action_lifecycle": {"result": "pass", "dry_run": "passed", "affected_records": 1, "endpoint_changes": 0, "network_changes": 0, "stages": ["previewed", "approved", "executed", "verified", "rollback-executed", "rollback-verified"], "audit_chain_valid": true},
     "source_health": {"result": "pass", "configured": 2, "receiving": 0, "agent_state": "agent-lost", "log_forwarder_state": "log-delivery-failed", "distinct_alerts_visible": true, "audit_chain_valid": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 13, "next": "CG-006"}
+    "remote_access_classification": {"result": "pass", "application_present": {"protocol": "anydesk", "assessment": "unknown"}, "confirmed_session": {"protocol": "rdp", "assessment": "authorized"}, "suspicious_activity": {"protocol": "ssh", "phase": "attempt", "alert_visible": true}},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 14, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
