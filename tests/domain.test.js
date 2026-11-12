@@ -88,6 +88,17 @@ test('authorized passive discovery preserves topology evidence and reports addit
   assert.throws(()=>ingest([event('active-scan','discovery.observed',{...details,acquisition:'active-scan'})]),/invalid_acquisition/);
   assert.equal(redact({authorization:'secret',authorization_ref:'AUTH-REF'}).authorization,'[REDACTED]');assert.equal(redact({authorization_ref:'AUTH-REF'}).authorization_ref,'AUTH-REF');
 });
+test('visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution',t=>{
+  const {d,event,ingest,advance}=fixture(t),lastSeen='2026-11-11T09:59:00.000Z';
+  const gap=(id,entity_type,entity_ref,reason,status='open')=>event(id,'visibility.gap',{entity_type,entity_ref,reason,last_seen:lastSeen,recommendation:`Restore synthetic ${entity_type} visibility`,status});
+  ingest([gap('gap-system','system','LAB-02','no-agent'),gap('gap-network','network','192.0.2.0/24','no-span'),gap('gap-account','account','synthetic-account','no-authorization')]);
+  let registry=d.visibilityGaps({limit:20});assert.equal(registry.items.filter(item=>item.origin==='reported-gap').length,3);assert.match(registry.scope,/Known registered systems, networks, accounts/);
+  for(const item of registry.items.filter(item=>item.origin==='reported-gap')){assert.equal(item.last_seen,lastSeen);assert.match(item.recommendation,/Restore synthetic/);assert.equal(item.status,'open');}
+  advance(1);ingest([gap('gap-system-resolved','system','LAB-02','no-agent','resolved')]);registry=d.visibilityGaps({q:'LAB-02'});assert.equal(registry.items[0].status,'resolved');
+  const resolvedAlert=d.list('alerts',{limit:20}).items.find(alert=>alert.title.includes('no-agent'));assert.equal(resolvedAlert.status,'resolved');
+  assert.throws(()=>ingest([gap('public-network','network','8.8.8.0/24','no-span')]),/public_entity_ref_not_allowed/);
+  assert.throws(()=>ingest([gap('invalid-account','account','synthetic-account','no-agent')]),/invalid_gap_reason/);
+});
 test('network service ports never replace or merge with physical switch interfaces',t=>{
   const {d,event,ingest}=fixture(t);
   const details={authorization_ref:'AUTH-PORT-TYPES',acquisition:'authenticated-collector',availability:'up',networks:['192.0.2.0/24'],routes:[],vlans:[{id:22,name:'Synthetic'}],interfaces:[{name:'Gi1/0/22',status:'up',vlan:22}],services:[{transport:'udp',port:53,state:'observed-open',name:'dns',evidence:'authenticated-observation'}]};

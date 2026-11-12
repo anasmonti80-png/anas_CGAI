@@ -109,6 +109,13 @@
       "tests": ["tests/domain.test.js: NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps", "Browser QA: Policies displayed all six NIST functions with actual counts and explicit gaps"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The map reports CyberGuard evidence and gaps only. It is not a NIST assessment, compliance opinion, certification, or proof that unconfigured environments are covered."]
+    },
+    "CG-071": {
+      "reason": "The visibility-gap registry records known systems, networks and accounts with an explicit reason (no agent, no SPAN, no logs, no authorization or outage), nullable last sighting, actionable recommendation and open/resolved state. Source-health gaps are added automatically, and reported open gaps generate evidence-linked alerts.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: network map view renders a bounded visibility-gap registry without guessed topology", "Browser QA: system, network and account gaps rendered with reason, last sighting, recommendation and state"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The registry covers known entities declared by authorized evidence and configured sources. It cannot enumerate unknown systems, networks or accounts that have never been registered or observed."]
     }
   }
 }

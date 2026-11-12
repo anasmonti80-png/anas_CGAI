@@ -23,7 +23,8 @@
     "source_health": {"result": "pass", "configured": 2, "receiving": 0, "agent_state": "agent-lost", "log_forwarder_state": "log-delivery-failed", "distinct_alerts_visible": true, "audit_chain_valid": true},
     "remote_access_classification": {"result": "pass", "application_present": {"protocol": "anydesk", "assessment": "unknown"}, "confirmed_session": {"protocol": "rdp", "assessment": "authorized"}, "suspicious_activity": {"protocol": "ssh", "phase": "attempt", "alert_visible": true}},
     "nist_csf_outcomes": {"result": "pass", "functions": ["GOVERN", "IDENTIFY", "PROTECT", "DETECT", "RESPOND", "RECOVER"], "actual_counts_visible": true, "coverage_gaps_visible": true, "compliance_claim": false},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 15, "next": "CG-006"}
+    "visibility_gap_registry": {"result": "pass", "known_entities": 3, "entity_types": ["system", "network", "account"], "reasons": ["no-agent", "no-span", "no-authorization"], "last_seen_explicit_when_unknown": true, "recommendations_visible": true, "guessed_topology": false},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 16, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
