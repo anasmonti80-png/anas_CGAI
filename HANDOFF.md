@@ -15,7 +15,7 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-004 are acceptance-verified. The live UI has the requested SOC design, the fourteen requested navigation destinations, Arabic/English RTL/LTR, tested 390/760/desktop layouts, explicit unknown/unverified posture, and a shared Achievements ledger. 34/34 tests pass.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-004, CG-054, CG-057 and CG-061 are acceptance-verified. The live UI has the requested SOC design, fourteen requested navigation destinations, Arabic/English RTL/LTR, tested 390/760/desktop layouts, explicit unknown/unverified posture, an evidence-readiness score with four visible components, and a shared Achievements ledger. 35/35 tests pass.
 - In progress: Authorized discovery/visibility foundations starting at CG-005; external connectors remain gated by authorized labs.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -36,6 +36,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-12 | Codex | Added evidence-readiness scoring, enforced/tested local-only exposure, and established the dependency/license/privacy release gate; 35/35 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added acceptance-gated Achievements ledger and browser-verified CG-001..CG-004; 34/34 Unit Tested. | f479438 |
 | 2026-11-12 | Codex | Merged the runnable SOC/evidence implementation; 29/29 Unit Tested. | 6dbf824 |
 | 2026-11-12 | Codex | Extended semantic scope/delivery triage through CG-600; 30/30 Unit Tested. | e8356d4 |

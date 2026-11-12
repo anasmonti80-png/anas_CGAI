@@ -32,6 +32,27 @@
       "tests": ["tests/domain.test.js: SOC dashboard uses actual daily counts", "tests/ui-contract.test.js: security posture UI keeps unknown and unverified evidence explicit", "Browser QA: empty-data dashboard and achievements ledger inspection"],
       "evidence": ["artifacts/browser-qa.json", "artifacts/tests.tap", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": []
+    },
+    "CG-054": {
+      "reason": "The application listener rejects every non-loopback bind, validates the HTTP Host header, stores SQLite beneath the explicitly selected local data directory, and exposes no database or security-engine network endpoint.",
+      "code": ["server.js", "lib/store.js", "tests/http.test.js"],
+      "tests": ["tests/http.test.js: unsupported HTTP methods cannot mutate routes that accept both reads and writes"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap"],
+      "restrictions": ["This validates the application default and HTTP boundary; operating-system access controls and host hardening remain deployment responsibilities."]
+    },
+    "CG-057": {
+      "reason": "The dashboard computes an evidence-readiness score only when sources, observed assets and evidence events exist; it exposes Coverage, Evidence, Freshness and Confidence separately, decays with stale telemetry, and states that the result is not a security guarantee or environment coverage percentage.",
+      "code": ["lib/domain.js", "public/dashboard.js", "public/soc.css"],
+      "tests": ["tests/domain.test.js: SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: security posture UI keeps unknown, not configured and unverified evidence explicit"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap"],
+      "restrictions": ["The score measures evidence readiness inside the configured source scope; it does not measure absolute security, prevention effectiveness, or unknown environment coverage."]
+    },
+    "CG-061": {
+      "reason": "The current release has no npm runtime or development dependencies, is protected from accidental npm publication, documents Node and embedded SQLite licensing, and defines a blocking license, privacy and legal review gate before future integration or commercial distribution.",
+      "code": ["package.json", "docs/engineering/DEPENDENCIES_AR.md", "tests/dependency-policy.test.js"],
+      "tests": ["tests/dependency-policy.test.js: the current distributable has no undeclared npm dependency or accidental publish path"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "docs/engineering/DEPENDENCIES_AR.md"],
+      "restrictions": ["This is an engineering release gate and current-component review, not legal advice or a certification for future dependencies."]
     }
   }
 }

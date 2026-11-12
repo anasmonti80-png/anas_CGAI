@@ -1,10 +1,10 @@
 {
-  "at": "2026-11-12T03:33:36.077Z",
+  "at": "2026-11-12T12:10:46.160Z",
   "level": "Lab Tested",
   "environment": {
     "platform": "Windows",
     "browser": "Codex in-app Chromium",
-    "application": "http://127.0.0.1:4314/",
+    "application": "isolated loopback QA instance",
     "data": "isolated synthetic QA workspace"
   },
   "checks": {
@@ -15,10 +15,12 @@
     "mobile_390": {"result": "pass", "shell_client_width": 375, "shell_scroll_width": 375, "dashboard_client_width": 329, "dashboard_scroll_width": 329},
     "tablet_760": {"result": "pass", "shell_client_width": 745, "shell_scroll_width": 745, "dashboard_client_width": 699, "dashboard_scroll_width": 699},
     "unknown_and_unverified_states_visible": "pass",
-    "achievements_scope_001_600": "pass"
+    "evidence_readiness_empty_state": {"result": "pass", "score": null, "message": "insufficient evidence"},
+    "evidence_readiness_synthetic_state": {"result": "pass", "score": 1000, "components": {"coverage": 100, "evidence": 100, "freshness": 100, "confidence": 100}, "absolute_security_disclaimer_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified": 7, "partial": 11, "next": "CG-005"}
   },
   "limitations": [
-    "This is a local Chromium lab check with synthetic empty-state data, not production validation.",
+    "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
     "The responsive harness is served only when CG_BROWSER_QA=1."
   ]
 }

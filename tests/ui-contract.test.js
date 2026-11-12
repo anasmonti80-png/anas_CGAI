@@ -27,5 +27,6 @@ test('security posture UI keeps unknown, not configured and unverified evidence 
   const app=read('app.js'),dashboard=read('dashboard.js');
   for(const marker of ['غير معروف','Unknown','لم تُضبط المصادر','Not configured','المنع الأمني غير متحقق','Prevention not verified']) assert.ok(app.includes(marker)||dashboard.includes(marker),marker);
   assert.match(app,/Missing data is never converted into a safe result/);
-  assert.match(dashboard,/No calibrated security score/);
+  assert.match(dashboard,/Insufficient evidence for assessment/);
+  assert.match(dashboard,/not a security guarantee or an environment coverage percentage/);
 });

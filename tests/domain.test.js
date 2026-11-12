@@ -18,16 +18,18 @@ function fixture(t) {
   return {s,d,source,event,ingest,advance:ms=>{now+=ms;}};
 }
 
-test('SOC dashboard uses actual daily counts, keeps unmeasured security metrics null and filters severity',t=>{
+test('SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security',t=>{
   const {d,event,ingest,advance}=fixture(t);
   let dash=d.dashboard();
   assert.equal(dash.daily.length,28);assert.ok(dash.daily.every(day=>day.events===0&&day.alerts===0));
   for(const key of ['security_score','vulnerability_scan','mean_detection_minutes','mean_acknowledge_minutes'])assert.equal(dash[key],null);
   ingest([event('reported','security.finding',{severity:'critical',title:'SYNTHETIC critical',description:'Synthetic only'}),event('observed')]);
   dash=d.dashboard();assert.equal(dash.events,2);assert.equal(dash.daily.at(-1).events,2);assert.equal(dash.severity_counts.critical,1);
+  assert.equal(dash.security_score,1000);assert.deepEqual(dash.security_score_components,{coverage:100,evidence:100,freshness:100,confidence:100});
+  assert.match(dash.security_score_claim,/not a security guarantee/);assert.deepEqual(dash.security_score_scope,{configured_sources:1,observed_assets:1,evidence_events:2});
   assert.equal(d.dashboard('low').recent_alerts.length,0);assert.equal(d.dashboard('critical').recent_alerts.length,1);
   advance(30000);d.acknowledge('admin-a',dash.recent_alerts[0].id);
-  assert.equal(d.dashboard().mean_acknowledge_minutes,.5);assert.equal(d.dashboard().mean_detection_minutes,null);
+  const older=d.dashboard();assert.equal(older.mean_acknowledge_minutes,.5);assert.equal(older.mean_detection_minutes,null);assert.ok(older.security_score<dash.security_score);assert.equal(older.security_score_components.freshness,50);
   assert.throws(()=>d.dashboard('invalid'),/invalid_severity/);
 });
 test('source credentials are hashed, scoped, rotatable and revocable',t=>{

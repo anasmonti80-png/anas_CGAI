@@ -19,7 +19,7 @@ async function fixture(t) {
   }
   async function setup(){return req('/api/auth/setup',{method:'POST',data:{setup_token:setupToken,username:'admin',password}});}
   async function login(username='admin',pass=password){const r=await req('/api/auth/login',{method:'POST',data:{username,password:pass}});assert.equal(r.status,200);return {cookie:r.headers.get('set-cookie').split(';')[0],csrf:r.data.csrf,...r.data.user};}
-  return {app,req,setup,login,password,base,advance:ms=>{now+=ms;}};
+  return {app,dir,req,setup,login,password,base,advance:ms=>{now+=ms;}};
 }
 test('first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes',async t=>{
   const f=await fixture(t);
@@ -57,6 +57,8 @@ test('unauthenticated, cross-origin, forged host, CSRF and viewer mutations are 
 
 test('unsupported HTTP methods cannot mutate routes that accept both reads and writes',async t=>{
   const f=await fixture(t);await f.setup();const admin=await f.login();
+  assert.throws(()=>f.app.listen(0,'0.0.0.0'),/loopback_only/);
+  assert.equal(path.resolve(f.app.store.filename),path.resolve(f.dir,'cyberguard.sqlite'));
   for(const method of ['HEAD','PUT','PATCH','DELETE']) {
     const response=await fetch(f.base+'/api/users',{method,headers:{Cookie:admin.cookie}});
     assert.equal(response.status,405);
@@ -97,7 +99,7 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   const batch={schema_version:'cg.telemetry/1',events:[{event_id:'e1',kind:'asset.observed',observed_at:new Date().toISOString(),asset:{external_id:'test-1',hostname:'LAB-API',addresses:['192.0.2.1']},details:{}}]};
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${source.data.token}`}})).status,200);
   const overview=await f.req('/api/overview',{user:admin});assert.equal(overview.data.assets,1);assert.equal(overview.data.events,1);assert.equal(overview.data.prevention,'not-verified');
-  const dashboard=await f.req('/api/dashboard?severity=critical',{user:admin});assert.equal(dashboard.status,200);assert.equal(dashboard.data.events,1);assert.equal(dashboard.data.security_score,null);assert.equal(dashboard.data.daily.length,28);
+  const dashboard=await f.req('/api/dashboard?severity=critical',{user:admin});assert.equal(dashboard.status,200);assert.equal(dashboard.data.events,1);assert.ok(dashboard.data.security_score>0);assert.equal(dashboard.data.security_score_components.coverage,100);assert.match(dashboard.data.security_score_claim,/not a security guarantee/);assert.equal(dashboard.data.daily.length,28);
   assert.equal((await f.req('/api/dashboard?severity=invalid',{user:admin})).status,400);
   const sources=await f.req('/api/sources',{user:admin});assert.ok(!JSON.stringify(sources.data).includes(source.data.token));assert.ok(!JSON.stringify(sources.data).includes('token_hash'));
   const assets=await f.req('/api/assets',{user:admin});const assetId=assets.data.items[0].id;
