@@ -10,7 +10,7 @@ This repository is an **engineering preview**, not a production cybersecurity pl
 - Foundation: `40e5466` — requirements, architecture and milestones
 - Local evidence API: `b163ba7` — RBAC, event evidence, alerts, cases, guarded local approvals
 - Current implementation: `293b75b` — SOC UI, Windows Security JSON adapter, browser QA and traceability subset
-- First semantic review batch: pending current commit — CG-001..CG-300 triaged in 44 requirement families; this is scope/delivery review, not full acceptance.
+- First semantic review batch: `3779171` — CG-001..CG-300 triaged in 44 requirement families; this is scope/delivery review, not full acceptance.
 
 The local working tree should be clean after the current handoff commit. Do not reset or overwrite a newer branch state.
 
@@ -53,7 +53,7 @@ Latest local result: **29 passed, 0 failed**, Windows x64 / Node 24.21.0 / SQLit
 5. `docs/engineering/REVIEWED_SUBSETS.json`
 6. `docs/engineering/REVIEW_BATCH_001_300.json`
 7. `docs/engineering/BROWSER_QA_AR.md`
-7. `docs/OPERATIONS_AR.md` and `docs/TELEMETRY_AR.md`
+8. `docs/OPERATIONS_AR.md` and `docs/TELEMETRY_AR.md`
 
 Read `00_START_HERE/` and the 12 requirement chunks before expanding a domain. Preserve `TRACEABILITY.jsonl`, regenerate it with `node scripts/requirements.js`, and distinguish partial component evidence from full requirement acceptance.
 

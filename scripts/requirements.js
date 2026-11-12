@@ -135,7 +135,7 @@ export function generate() {
   fs.mkdirSync(path.join(ROOT,'docs/engineering'), {recursive:true});
   fs.writeFileSync(path.join(ROOT,'docs/engineering/TRACEABILITY.jsonl'), rows.map(r => JSON.stringify(r)).join('\n')+'\n');
   fs.writeFileSync(path.join(ROOT,'docs/engineering/COVERAGE.json'), JSON.stringify(coverage,null,2)+'\n');
-  console.log(JSON.stringify({tracked:rows.length,verified:0,source_integrity:'pass',chunks:inventory.chunks.length,history:inventory.history.length,semantic_review:'pending'}));
+  console.log(JSON.stringify({tracked:rows.length,verified:0,source_integrity:'pass',chunks:inventory.chunks.length,history:inventory.history.length,semantic_review_complete:false,semantic_triage_reviewed:coverage.semantic_triage.reviewed_ids}));
   return {rows,coverage};
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) generate();
