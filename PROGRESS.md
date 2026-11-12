@@ -7,7 +7,7 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** current working phase; commit follows this update.
+- **Latest verified implementation checkpoint:** `f479438` — acceptance-gated Achievements ledger and verified CG-001..CG-004.
 - **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-004 additionally have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
 - **Validation:** Unit Tested — `node scripts/verify.js` passed 34/34 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. The UI acceptance subset also passed a local Chromium **Lab Tested** check at desktop, 760 px and 390 px. No connector lab or Production Validated claim.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination and a shared Achievements ledger for CG-001..CG-600. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
