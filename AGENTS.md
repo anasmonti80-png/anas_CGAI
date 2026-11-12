@@ -35,3 +35,11 @@ IT Twin: digital twin. Tickets: IT service management. Do not duplicate either s
 
 ## First engineering deliverable
 Create an architecture decision record (ADRs), requirements coverage report, a support matrix, implementation milestones, test strategy and identified blockers before attempting high-risk functionality.
+
+## Cross-agent GitHub handoff
+- GitHub is the shared handoff point for Codex, Claude, and any other authorized coding agent. Conversation memory is not shared.
+- Before editing, inspect `AI_CLOUD_HANDOFF.md` and `PROGRESS.md`, fetch the working branch, and preserve newer work. Do not force-push, reset, or overwrite another agent's changes.
+- Work on a named branch. After each coherent, verified checkpoint, update `PROGRESS.md`, commit with an agent prefix such as `[Codex]` or `[Claude]`, and push the branch when authorized.
+- Before an agent's context or usage limit ends, it must make a best-effort checkpoint: save safe work, update `PROGRESS.md` with the exact next step and verification state, and commit it. Unverified work must be labelled as unverified.
+- A handoff is complete only when the receiver can identify the branch, latest commit, changed files, validation level, remaining work, and any blocked external dependency from repository files alone.
+- GitHub is a relay, not a live conversation channel. Never store tokens, setup codes, cookies, customer data, or private telemetry in commits or handoff files.
