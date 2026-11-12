@@ -184,13 +184,15 @@ test('approval requires another administrator, binds state/TTL, verifies local c
   const {d,event,ingest}=fixture(t);ingest([event('a')]);
   const asset=d.list('assets').items[0];
   const a=d.previewAction('admin-a',{type:'asset.set-criticality',asset_id:asset.id,criticality:'critical',reason:'Lab impact review'});
+  assert.equal(a.dry_run.result,'passed');assert.equal(a.dry_run.side_effects,false);assert.deepEqual([a.impact_analysis.endpoint_changes,a.impact_analysis.network_changes],[0,0]);assert.equal(a.rollback_plan.before_value,'standard');
   assert.throws(()=>d.executeAction('admin-a',a.id),/action_not_approved/);
   assert.throws(()=>d.approveAction('admin-a',a.id),/independent_approver_required/);
   d.approveAction('admin-b',a.id);
   assert.equal(d.executeAction('admin-a',a.id).status,'verified');
   assert.equal(d.executeAction('admin-a',a.id).status,'verified');
   assert.equal(d.asset(asset.id).criticality,'critical');
-  assert.equal(d.rollbackAction('admin-b',a.id).status,'rolled-back');
+  const rolledBack=d.rollbackAction('admin-b',a.id);assert.equal(rolledBack.status,'rolled-back');assert.equal(rolledBack.audit_chain.valid,true);
+  assert.deepEqual(rolledBack.lifecycle.map(x=>x.action),['action.previewed','action.approved','action.executed','action.verified','action.rollback.executed','action.rollback.verified']);
   assert.equal(d.asset(asset.id).criticality,'standard');
 });
 test('expired approvals and changed preflight state prevent execution',t=>{

@@ -19,7 +19,8 @@
     "evidence_readiness_synthetic_state": {"result": "pass", "score": 1000, "components": {"coverage": 100, "evidence": 100, "freshness": 100, "confidence": 100}, "absolute_security_disclaimer_visible": true},
     "authorized_discovery": {"result": "pass", "asset": "synthetic", "address_scope": "documentation range", "networks": 1, "vlans": 1, "interfaces": 1, "services": 1, "authorization_reference_visible": true, "active_probe_executed": false},
     "operating_modes": {"result": "pass", "active": "authorized-defense-validation-lab", "visible_modes": ["pc-local", "enterprise-collectors", "authorized-defense-validation-lab"], "pc_behind_switch_limit_visible": true, "enterprise_paths_visible": ["SPAN/TAP", "flow logs", "managed agents"], "authorization_reference_value_exposed": false},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 11, "next": "CG-006"}
+    "action_lifecycle": {"result": "pass", "dry_run": "passed", "affected_records": 1, "endpoint_changes": 0, "network_changes": 0, "stages": ["previewed", "approved", "executed", "verified", "rollback-executed", "rollback-verified"], "audit_chain_valid": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 12, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

@@ -157,7 +157,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/actions/preview'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.previewAction(user.id,await body(req)));}
       const action=p.match(/^\/api\/actions\/([a-f0-9-]{36})\/(approve|execute|rollback)$/);
       const actionDetail=p.match(/^\/api\/actions\/([a-f0-9-]{36})$/);
-      if(actionDetail&&method==='GET') return send(res,200,store.require('SELECT * FROM actions WHERE id=?',[actionDetail[1]]));
+      if(actionDetail&&method==='GET') return send(res,200,domain.action(actionDetail[1]));
       if(action&&method==='POST') {roles(['admin']);const fn={approve:'approveAction',execute:'executeAction',rollback:'rollbackAction'}[action[2]];return send(res,200,domain[fn](user.id,action[1]));}
       if(p==='/api/audit/verify'&&method==='GET') {roles(['admin']);return send(res,200,store.verifyAudit());}
       if(p==='/api/coverage'&&method==='GET') return send(res,200,{...coverage,support:readJson('docs/engineering/SUPPORT_MATRIX.json'),capabilities:readJson('docs/engineering/CAPABILITIES.json')});

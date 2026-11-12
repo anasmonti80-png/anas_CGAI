@@ -61,6 +61,13 @@
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The test validates the CyberGuard data boundary and UI. It does not claim a live firewall or switch connector."]
     },
+    "CG-032": {
+      "reason": "Every action in the current catalog is created by a side-effect-free dry run with an immutable preflight hash and explicit impact analysis, requires independent approval, rechecks the bound state before execution, verifies the postcondition, appends each stage to the audit chain, and supports a guarded rollback with its own verification record.",
+      "code": ["lib/domain.js", "lib/store.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback", "tests/domain.test.js: expired approvals and changed preflight state prevent execution", "tests/ui-contract.test.js: action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence", "Browser QA: completed action displayed dry-run, impact, approval, execute, verify, audit and rollback evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The current action catalog contains only a local CyberGuard asset-criticality change. Device and network executors must use the same lifecycle and receive separate connector/lab acceptance before use."]
+    },
     "CG-054": {
       "reason": "The application listener rejects every non-loopback bind, validates the HTTP Host header, stores SQLite beneath the explicitly selected local data directory, and exposes no database or security-engine network endpoint.",
       "code": ["server.js", "lib/store.js", "tests/http.test.js"],
