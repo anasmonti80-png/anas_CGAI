@@ -93,6 +93,12 @@ test('reports view exposes evidence-backed legacy compensating controls through 
   for(const marker of ['asset.compensating_controls','enforced_segmentation_requires_boundary','enforced_jump_host_requires_host','enforced_mfa_requires_method','passed_restore_test_requires_evidence','migration_plan_requires_owner_target_due']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view exposes backup copy separation, immutability, change monitoring and permission review',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/backup-security/);
+  for(const marker of ['Backup security','Copies / separation','Immutability','Modification / deletion monitoring','Backup permissions','Backup-security evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['resilience.backup_security','backup_security_requires_multiple_copies','unsupported_immutability_must_be_not_applicable','monitored_backup_changes_require_signal_and_evidence','current_backup_permission_review_requires_evidence']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

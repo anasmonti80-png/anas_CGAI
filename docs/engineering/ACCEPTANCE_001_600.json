@@ -158,6 +158,13 @@
       "tests": ["tests/domain.test.js: legacy compensating controls require evidence for segmentation, jump host, internet restriction, MFA, backup and monitoring until migration", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes evidence-backed legacy compensating controls through migration", "Browser QA: Reports displayed segmentation, jump host, MFA, restricted Internet, operational backup and monitoring, not-tested restore, migration owner, target and deadline"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["These are source-reported control records. CyberGuard does not itself configure the firewall, jump host, MFA provider, backup system or monitor, and no real legacy environment was lab validated in this phase."]
+    },
+    "CG-078": {
+      "reason": "The platform requires each backup-security record to contain multiple uniquely identified copies and exposes their platform, separation, retention, encryption, immutability support and state independently. Modification and deletion monitoring require a current signal and evidence, while a current least-privilege review requires its own date and evidence.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: backup security keeps multiple separated copies, platform immutability, change monitoring and permissions explicit", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes backup copy separation, immutability, change monitoring and permission review", "Browser QA: Reports displayed three copies, account/offline/offsite separation, platform-specific immutability, modification/deletion monitoring and least-privilege review evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["All backup-security states are source-reported. This phase did not connect to a real backup platform, enforce immutability or access, or prove that any stored copy can be restored."]
     }
   }
 }
