@@ -69,6 +69,12 @@ test('policies view maps all six NIST CSF 2.0 functions to evidence and coverage
   for(const marker of ['GOVERN','IDENTIFY','PROTECT','DETECT','RESPOND','RECOVER','Coverage gaps']) assert.ok(app.includes(marker)||fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8').includes(marker),marker);
 });
 
+test('policies view exposes a versioned threat model for every registered environment',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/threat-models/);
+  for(const marker of ['Threat models by environment','Valuable assets','Trust boundaries','Attack scenarios','Service outage impact','Data disclosure impact','Threat-model evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['governance.threat_model','unknown_scenario_asset_ref','Latest versioned threat model per registered environment']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

@@ -110,6 +110,13 @@
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The map reports CyberGuard evidence and gaps only. It is not a NIST assessment, compliance opinion, certification, or proof that unconfigured environments are covered."]
     },
+    "CG-069": {
+      "reason": "The platform stores the latest versioned threat model for each registered environment. Every accepted model requires valuable assets, trust boundaries, attack scenarios with valid internal references, and explicit service-outage and data-disclosure impact. Asset references resolve back to existing central device records when present, and every model retains its source event reference.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: versioned threat model covers valuable assets, trust boundaries, attack scenarios and both impact classes per environment", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: policies view exposes a versioned threat model for every registered environment", "Browser QA: Policies displayed the environment scope, valuable central asset, trust boundary, attack scenario, both impact classes and evidence link"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The registry covers environments that have submitted a threat-model evidence event. Source-reported scenarios, likelihood and impact remain subject to governance review and are not independent proof of exposure or business impact."]
+    },
     "CG-070": {
       "reason": "The central asset record consumes versioned asset.context evidence linking a device to its accountable owner, business or operational service, optional service name, site, data sensitivity, maintenance windows and service criticality. The newest accepted context is displayed with its timestamp and a direct evidence reference.",
       "code": ["lib/domain.js", "server.js", "public/app.js"],
