@@ -257,6 +257,12 @@ test('5,000 synthetic assets have bounded pages, escaped search, stable identiti
   assert.equal(d.list('assets',{q:'HOST-04999'}).total,1);
   assert.equal(d.list('assets',{q:'%'}).total,0);
 });
+test('asset context links the central device to owner, service, site, sensitivity, maintenance and service criticality evidence',t=>{
+  const {d,event,ingest,advance}=fixture(t),details={owner:{owner_id:'team-soc',display_name:'Synthetic SOC owner',contact:'soc@example.invalid'},business_service:'Synthetic monitoring',service_name:'Evidence API',site:'Synthetic Riyadh lab',data_sensitivity:'confidential',maintenance_windows:['Friday 02:00-03:00 UTC'],service_criticality:'high'};
+  ingest([event('context-1','asset.context',details)]);let asset=d.asset(d.list('assets').items[0].id);assert.equal(asset.governance_context.owner.owner_id,'team-soc');assert.equal(asset.governance_context.business_service,'Synthetic monitoring');assert.equal(asset.governance_context.site,'Synthetic Riyadh lab');assert.equal(asset.governance_context.data_sensitivity,'confidential');assert.deepEqual(asset.governance_context.maintenance_windows,['Friday 02:00-03:00 UTC']);assert.equal(asset.governance_context.service_criticality,'high');
+  advance(1);ingest([event('context-2','asset.context',{...details,service_criticality:'critical'})]);asset=d.asset(asset.id);assert.equal(asset.governance_context.service_criticality,'critical');assert.equal(asset.governance_context.event_id,d.list('events').items[0].id);
+  assert.throws(()=>ingest([event('bad-context','asset.context',{...details,data_sensitivity:'secret'})]),/invalid_data_sensitivity/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

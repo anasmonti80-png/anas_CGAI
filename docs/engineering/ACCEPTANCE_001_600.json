@@ -110,6 +110,13 @@
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The map reports CyberGuard evidence and gaps only. It is not a NIST assessment, compliance opinion, certification, or proof that unconfigured environments are covered."]
     },
+    "CG-070": {
+      "reason": "The central asset record consumes versioned asset.context evidence linking a device to its accountable owner, business or operational service, optional service name, site, data sensitivity, maintenance windows and service criticality. The newest accepted context is displayed with its timestamp and a direct evidence reference.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: asset context links the central device to owner, service, site, sensitivity, maintenance and service criticality evidence", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence", "Browser QA: central asset detail displayed every governance-context field and the context evidence link"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Context remains source-reported evidence for a known central asset. It does not independently prove organizational ownership, data classification, maintenance authorization or service criticality."]
+    },
     "CG-071": {
       "reason": "The visibility-gap registry records known systems, networks and accounts with an explicit reason (no agent, no SPAN, no logs, no authorization or outage), nullable last sighting, actionable recommendation and open/resolved state. Source-health gaps are added automatically, and reported open gaps generate evidence-linked alerts.",
       "code": ["lib/domain.js", "server.js", "public/app.js"],

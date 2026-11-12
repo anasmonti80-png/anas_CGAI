@@ -74,3 +74,8 @@ test('network map view renders a bounded visibility-gap registry without guessed
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
   for(const marker of ['no-agent','no-span','no-logs','no-authorization','outage']) assert.ok(domain.includes(marker),marker);
 });
+
+test('asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence',()=>{
+  const app=read('app.js');
+  for(const marker of ['Owner','Business / operational service','Site','Data sensitivity','Maintenance windows','Service criticality','Context evidence']) assert.ok(app.includes(marker),marker);
+});
