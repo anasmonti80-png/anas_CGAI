@@ -30,3 +30,12 @@ test('security posture UI keeps unknown, not configured and unverified evidence 
   assert.match(dashboard,/Insufficient evidence for assessment/);
   assert.match(dashboard,/not a security guarantee or an environment coverage percentage/);
 });
+
+test('discovery view exposes authorization, evidence boundaries and central asset observations',()=>{
+  const app=read('app.js');
+  assert.match(app,/\/api\/discovery/);
+  assert.match(app,/Public discovery addresses are rejected/);
+  assert.match(app,/this path performs no network probe/);
+  assert.match(app,/authorization_ref:'SYNTHETIC-AUTHORIZATION-REFERENCE'/);
+  for(const field of ['networks','routes','vlans','interfaces','services']) assert.ok(app.includes(field),field);
+});

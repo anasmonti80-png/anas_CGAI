@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-12T12:10:46.160Z",
+  "at": "2026-11-12T14:49:07.797Z",
   "level": "Lab Tested",
   "environment": {
     "platform": "Windows",
@@ -17,7 +17,8 @@
     "unknown_and_unverified_states_visible": "pass",
     "evidence_readiness_empty_state": {"result": "pass", "score": null, "message": "insufficient evidence"},
     "evidence_readiness_synthetic_state": {"result": "pass", "score": 1000, "components": {"coverage": 100, "evidence": 100, "freshness": 100, "confidence": 100}, "absolute_security_disclaimer_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified": 7, "partial": 11, "next": "CG-005"}
+    "authorized_discovery": {"result": "pass", "asset": "synthetic", "address_scope": "documentation range", "networks": 1, "vlans": 1, "interfaces": 1, "services": 1, "authorization_reference_visible": true, "active_probe_executed": false},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_before_this_promotion": 7, "next_before_this_promotion": "CG-005"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

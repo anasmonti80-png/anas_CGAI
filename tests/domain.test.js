@@ -66,6 +66,29 @@ test('shared IP does not merge DHCP identities and older observations do not ove
   assert.equal(d.list('assets').total,2);
   assert.equal(d.list('assets',{q:'NEW-NAME'}).total,1);
 });
+test('authorized passive discovery preserves topology evidence and reports additions, changes and outages',t=>{
+  const {d,event,ingest,advance}=fixture(t);
+  const details={authorization_ref:'AUTH-LAB-001',acquisition:'passive-import',availability:'up',networks:['192.0.2.0/24'],routes:[{destination:'0.0.0.0/0',gateway:'192.0.2.1',interface:'uplink'}],vlans:[{id:10,name:'Synthetic lab'}],interfaces:[{name:'Gi1/0/1',status:'up',vlan:10}],services:[{transport:'tcp',port:443,state:'observed-open',name:'https',evidence:'source-report'}]};
+  ingest([event('discovery-1','discovery.observed',details,{device_type:'switch',os_family:'network'})]);
+  let discovered=d.discovery();assert.equal(discovered.total,1);assert.equal(discovered.items[0].change,'added');assert.equal(discovered.items[0].observation.authorization_ref,'AUTH-LAB-001');assert.equal(discovered.items[0].observation.routes[0].destination,'0.0.0.0/0');assert.equal(discovered.items[0].observation.services[0].port,443);
+  assert.ok(d.list('alerts',{limit:20}).items.some(alert=>alert.rule_id==='CG-ASSET-ADDED'));
+  advance(1000);ingest([event('discovery-2','discovery.observed',{...details,vlans:[...details.vlans,{id:20,name:'Synthetic guest'}]},{device_type:'switch',os_family:'network'})]);
+  discovered=d.discovery({q:'LAB-01'});assert.equal(discovered.items[0].change,'changed');assert.equal(discovered.items[0].observation.vlans.length,2);
+  advance(1000);ingest([event('discovery-3','discovery.observed',{...details,availability:'down'},{device_type:'switch',os_family:'network'})]);
+  discovered=d.discovery();assert.equal(discovered.items[0].change,'unavailable');assert.ok(d.list('alerts',{limit:20}).items.some(alert=>alert.rule_id==='CG-ASSET-UNREACHABLE'));
+  assert.throws(()=>ingest([event('public-discovery','discovery.observed',details,{addresses:['8.8.8.8']})]),/public_discovery_address_not_allowed/);
+  assert.throws(()=>ingest([event('active-scan','discovery.observed',{...details,acquisition:'active-scan'})]),/invalid_acquisition/);
+  assert.equal(redact({authorization:'secret',authorization_ref:'AUTH-REF'}).authorization,'[REDACTED]');assert.equal(redact({authorization_ref:'AUTH-REF'}).authorization_ref,'AUTH-REF');
+});
+test('network service ports never replace or merge with physical switch interfaces',t=>{
+  const {d,event,ingest}=fixture(t);
+  const details={authorization_ref:'AUTH-PORT-TYPES',acquisition:'authenticated-collector',availability:'up',networks:['192.0.2.0/24'],routes:[],vlans:[{id:22,name:'Synthetic'}],interfaces:[{name:'Gi1/0/22',status:'up',vlan:22}],services:[{transport:'udp',port:53,state:'observed-open',name:'dns',evidence:'authenticated-observation'}]};
+  ingest([event('typed-ports','discovery.observed',details,{device_type:'switch',os_family:'network'})]);
+  const observation=d.discovery().items[0].observation;
+  assert.deepEqual(observation.interfaces,[{name:'Gi1/0/22',status:'up',vlan:22}]);
+  assert.deepEqual(observation.services,[{transport:'udp',port:53,state:'observed-open',name:'dns',evidence:'authenticated-observation'}]);
+  assert.equal(Object.hasOwn(observation.interfaces[0],'port'),false);assert.equal(Object.hasOwn(observation.services[0],'vlan'),false);
+});
 test('unsupported fields, secret-bearing text and future timestamps are handled safely',t=>{
   const {s,event,ingest}=fixture(t);
   assert.throws(()=>ingest([{...event('invalid'),command:'whoami'}]),/unknown_event_field/);

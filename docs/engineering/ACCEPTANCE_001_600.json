@@ -33,6 +33,20 @@
       "evidence": ["artifacts/browser-qa.json", "artifacts/tests.tap", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": []
     },
+    "CG-005": {
+      "reason": "Authorized discovery observations attach devices, addresses, networks, routes, VLANs, physical interfaces and observed services to the central asset record; additions, material changes, source-reported outages and restores create evidence-linked alerts. Public discovery addresses and unsupported active-scan acquisition are rejected.",
+      "code": ["lib/domain.js", "lib/common.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: authorized passive discovery preserves topology evidence and reports additions, changes and outages", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: discovery view exposes authorization, evidence boundaries and central asset observations", "Browser QA: authorized discovery observation and scope reference visible in the live Discover view"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This acceptance covers authorized passive/imported and authenticated-collector observations. It does not claim an active network scanner, SNMP/LLDP connector, or production network validation."]
+    },
+    "CG-022": {
+      "reason": "The discovery contract and live UI model physical switch interfaces as named interface records with VLAN/state, while TCP/UDP services are separate transport/port records with evidence and observed state. Neither structure can silently accept the other type's fields.",
+      "code": ["lib/domain.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: network service ports never replace or merge with physical switch interfaces", "tests/ui-contract.test.js: discovery view exposes authorization, evidence boundaries and central asset observations", "Browser QA: Discover view rendered physical interface and network service counts in separate fields"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The test validates the CyberGuard data boundary and UI. It does not claim a live firewall or switch connector."]
+    },
     "CG-054": {
       "reason": "The application listener rejects every non-loopback bind, validates the HTTP Host header, stores SQLite beneath the explicitly selected local data directory, and exposes no database or security-engine network endpoint.",
       "code": ["server.js", "lib/store.js", "tests/http.test.js"],

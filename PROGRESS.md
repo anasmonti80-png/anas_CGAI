@@ -7,16 +7,16 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** evidence-readiness scoring, local-only exposure tests, and dependency/license release gate; ready in the current branch.
-- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-004, CG-054, CG-057 and CG-061 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
-- **Validation:** Unit Tested — `node scripts/verify.js` passed 35/35 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. UI checks passed in local Chromium at desktop, 760 px and 390 px, including the evidence-readiness empty and synthetic states. No connector lab or Production Validated claim.
-- **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, and an evidence-readiness score with Coverage, Evidence, Freshness and Confidence. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
+- **Latest verified implementation checkpoint:** `156aab5` plus the current authorized-discovery phase: central-asset discovery observations, change/outage alerts, typed physical interfaces and TCP/UDP services, and the evidence-readiness/local release gates.
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-005, CG-022, CG-054, CG-057 and CG-061 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — `node scripts/verify.js` passed 38/38 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. UI checks passed in local Chromium at desktop, 760 px and 390 px, including evidence readiness and an authorized synthetic discovery observation. No connector lab or Production Validated claim.
+- **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, an evidence-readiness score, and a Discover view for authorized passive/imported observations. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
 - **Published state:** local branch only. GitHub publishing still requires a working credential.
 
 ## Safe next work
 
-1. Implement the authorized discovery and visibility data contracts for CG-005 onward without active network scanning outside an approved scope.
+1. Continue CG-006 onward with authenticated connector contracts and visibility boundaries; do not execute active network scanning outside an approved scope.
 2. Promote only requirements whose complete acceptance boundary has current code, test and platform evidence.
 3. Keep the Achievements ledger and Claude handoff current after every implementation phase.
 
