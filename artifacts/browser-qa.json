@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-12T19:54:00.000Z",
+  "at": "2026-11-12T20:00:00.000Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -26,7 +26,8 @@
     "visibility_gap_registry": {"result": "pass", "known_entities": 3, "entity_types": ["system", "network", "account"], "reasons": ["no-agent", "no-span", "no-authorization"], "last_seen_explicit_when_unknown": true, "recommendations_visible": true, "guessed_topology": false},
     "asset_context": {"result": "pass", "asset": "ASSET-QA-070", "owner_visible": true, "business_service_visible": true, "site_visible": true, "data_sensitivity": "confidential", "service_criticality": "critical", "maintenance_window_visible": true, "evidence_link_visible": true},
     "environment_threat_model": {"result": "pass", "environment": "riyadh-prod", "valuable_assets": 1, "central_asset_link_visible": true, "trust_boundaries": 1, "attack_scenarios": 1, "service_outage_impact_visible": true, "data_disclosure_impact_visible": true, "evidence_link_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 18, "next": "CG-006"}
+    "institutional_risk_register": {"result": "pass", "risk": "RISK-QA-073", "coverage_links_visible": true, "resolved_evidence_visible": true, "owner_visible": true, "remediation_due_visible": true, "active_exception_expiry_visible": true, "risk_acceptance_visible": true, "scheduled_review_days": 30},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 19, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

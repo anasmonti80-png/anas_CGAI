@@ -75,6 +75,12 @@ test('policies view exposes a versioned threat model for every registered enviro
   for(const marker of ['governance.threat_model','unknown_scenario_asset_ref','Latest versioned threat model per registered environment']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view exposes the institutional risk register and review deadlines',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/risk-register/);
+  for(const marker of ['Versioned institutional risk register','Risk / owner','Coverage','Evidence','Remediation','Exception','Risk acceptance / review','Review due','Risk-record evidence','Active exception','Risk accepted','Review scheduled']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['governance.risk_record','accepted_risk_requires_review','invalid_risk_review_window','Latest versioned record per risk']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

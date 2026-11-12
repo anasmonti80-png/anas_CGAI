@@ -15,7 +15,7 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061 and CG-068..CG-071 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 54/54 tests pass.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071 and CG-073 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, an institutional risk register, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 56/56 tests pass.
 - In progress: Sequential authenticated discovery for CG-006; external connectors remain gated by authorized labs.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working. GitHub push also requires a working credential on this host; the non-interactive push after `2f8d54b` was rejected.
 
@@ -36,6 +36,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-12 | Codex | Added a versioned institutional risk register with coverage, resolved evidence, ownership, remediation deadlines, exceptions and time-bounded acceptance reviews; 56/56 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added a versioned threat model per registered environment with valuable assets, trust boundaries, attack scenarios, outage/disclosure impacts and central-asset links; 54/54 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Linked the central asset to versioned owner, business-service, site, sensitivity, maintenance-window and service-criticality evidence; 52/52 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added a known-scope visibility-gap registry for systems, networks, accounts and source outages with reasons, last sighting, recommendations and resolution; 50/50 Unit Tested and Chromium checked. | current checkpoint |

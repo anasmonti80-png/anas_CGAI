@@ -130,6 +130,13 @@
       "tests": ["tests/domain.test.js: visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: network map view renders a bounded visibility-gap registry without guessed topology", "Browser QA: system, network and account gaps rendered with reason, last sighting, recommendation and state"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The registry covers known entities declared by authorized evidence and configured sources. It cannot enumerate unknown systems, networks or accounts that have never been registered or observed."]
+    },
+    "CG-073": {
+      "reason": "The institutional risk register keeps the latest versioned record per risk and requires explicit links to coverage requirements or controls, resolvable evidence references, an accountable owner, remediation plan and deadline, exception state and expiry, plus structured risk acceptance. Accepted risks cannot be stored without an approver, rationale and bounded review window.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: institutional risk register links coverage, resolved evidence, owner, remediation, exception and time-bounded acceptance", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes the institutional risk register and review deadlines", "Browser QA: Reports displayed coverage, resolved evidence, owner, remediation due date, active exception expiry, accepted risk and scheduled review"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Risk values, owners, control coverage and approvals are source-reported governance evidence. The register does not independently approve an exception, certify a control, or quantify financial loss."]
     }
   }
 }
