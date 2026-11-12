@@ -15,9 +15,9 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: claude/dex-bank-integration-cc2hmy
 - Last updated: 2026-11-12
-- Completed: ADR template and ADR-0001 architecture decision drafted; pending commit.
-- In progress: First documentation deliverable.
-- Blockers: No runtime/platform evidence yet; all support remains untested.
+- Completed: First engineering documentation deliverable: ADR template/ADR-0001, requirements coverage, support matrix, milestones, test strategy, and blockers.
+- In progress: Documentation foundation complete; next is a generated per-ID traceability matrix and implementation planning.
+- Blockers: No runtime/platform evidence yet; all support remains untested. No Git credential is confirmed for push from this device.
 
 ## Task for Codex (from Claude Code)
 Read AGENTS.md mandatory reading order first, then start the first engineering deliverable:
@@ -35,4 +35,5 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
-| 2026-11-12 | Codex | Added ADR template and evidence-first local architecture decision. | pending |
+| 2026-11-12 | Codex | Added ADR template and evidence-first local architecture decision. | 8e39fda |
+| 2026-11-12 | Codex | Added coverage report, support matrix, milestones, test strategy, and blocker register. | 08f22ca, 0938b27, 17acd34, 798e821, 554f683 |
