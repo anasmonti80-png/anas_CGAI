@@ -92,6 +92,25 @@ export function applyReview(rows,review,verification=null,fingerprint=null) {
       evidence:item.tests?.length&&fresh?['artifacts/verification.json','artifacts/tests.tap']:[],restrictions:[...row.restrictions,...item.remaining]};
   });
 }
+export function applyAcceptance(rows,acceptance,verification=null,fingerprint=null) {
+  const entries=acceptance?.entries||{};
+  const fresh=verification?.passed===true&&verification.source?.sha256===fingerprint?.sha256;
+  const ids=new Set(rows.map(r=>r.id));
+  for(const [id,item] of Object.entries(entries)) {
+    if(!ids.has(id)) throw new Error(`Unknown accepted requirement ${id}`);
+    if(Number(id.slice(3))>600) throw new Error(`Acceptance ledger is limited to CG-001..CG-600: ${id}`);
+    if(!Array.isArray(item.code)||!item.code.length||!Array.isArray(item.tests)||!item.tests.length) throw new Error(`Acceptance evidence is incomplete: ${id}`);
+  }
+  return rows.map(row=>{
+    const item=entries[row.id];if(!item)return row;
+    return {...row,review_status:'acceptance-verified',classification_method:'acceptance-ledger-v1',decision_reason:item.reason,
+      code_reference:item.code,test_id:item.tests,status:fresh?'acceptance-verified':'implemented-unverified',
+      test_result:fresh?'passed-acceptance':'stale-or-missing-verification',last_verified:fresh?verification.at:null,
+      platform_coverage:{...row.platform_coverage,...(fresh&&verification.environment.platform==='win32'?{windows:'unit-tested'}:{})},
+      evidence:fresh?['artifacts/verification.json','artifacts/tests.tap',...(item.evidence||[])]:[],
+      restrictions:item.restrictions||[]};
+  });
+}
 export function applyBatchReview(rows,batch) {
   if (!batch || !Array.isArray(batch.ranges)) return rows;
   const used=new Set();
@@ -119,24 +138,26 @@ export function applyBatchReview(rows,batch) {
 export function generate() {
   const inventory = sourceInventory();
   const reviewed=JSON.parse(read('docs/engineering/REVIEWED_SUBSETS.json'));
+  const acceptance=JSON.parse(read('docs/engineering/ACCEPTANCE_001_600.json'));
   const batches=['docs/engineering/REVIEW_BATCH_001_300.json','docs/engineering/REVIEW_BATCH_301_600.json'].map(p=>JSON.parse(read(p)));
   const verification=fs.existsSync(path.join(ROOT,'artifacts/verification.json'))?JSON.parse(read('artifacts/verification.json')):null;
   const triaged=batches.reduce((rows,batch)=>applyBatchReview(rows,batch),classify(inventory.requirements));
-  const rows = applyReview(triaged,reviewed,verification,sourceFingerprint());
+  const fingerprint=sourceFingerprint();
+  const rows = applyAcceptance(applyReview(triaged,reviewed,verification,fingerprint),acceptance,verification,fingerprint);
   const group = key => Object.fromEntries([...new Set(rows.map(r => r[key]))].sort().map(k => [k, rows.filter(r => r[key] === k).length]));
   const coverage = {
-    schema_version:1, registered:1440, tracked:rows.length, verified:0, production_ready:false,
+    schema_version:1, registered:1440, tracked:rows.length, verified:rows.filter(r=>r.status==='acceptance-verified').length, production_ready:false,
     semantic_review_complete:false, by_area:group('area'), by_scope:group('current_scope'),
     by_status:group('status'), reviewed_subset_boundaries:Object.keys(reviewed).length,
     semantic_triage:{batch_ids:batches.map(b=>b.batch_id),reviewed_ids:batches.reduce((total,b)=>total+b.ranges.reduce((n,r)=>n+r.end-r.start+1,0),0),methods:batches.map(b=>b.method)},
     by_milestone:group('milestone'), source_integrity:'pass-normalized-lf',
     files:inventory.files, chunks:inventory.chunks, history:inventory.history,
-    caveats:['CG-001..CG-600 received scope and delivery semantic triage by domain. This is not a full acceptance review or implementation claim.', 'Remaining routing is an initial automated classification, not a completed manual semantic review.', 'No requirement is fully verified by inventory or a unit test of a subset.'],
+    caveats:['CG-001..CG-600 received scope and delivery semantic triage by domain. Triage alone is not an implementation claim.', 'Only rows marked acceptance-verified have current requirement-specific evidence; partial component tests do not satisfy a whole requirement.', 'Remaining routing is an initial automated classification, not a completed manual semantic review.'],
   };
   fs.mkdirSync(path.join(ROOT,'docs/engineering'), {recursive:true});
   fs.writeFileSync(path.join(ROOT,'docs/engineering/TRACEABILITY.jsonl'), rows.map(r => JSON.stringify(r)).join('\n')+'\n');
   fs.writeFileSync(path.join(ROOT,'docs/engineering/COVERAGE.json'), JSON.stringify(coverage,null,2)+'\n');
-  console.log(JSON.stringify({tracked:rows.length,verified:0,source_integrity:'pass',chunks:inventory.chunks.length,history:inventory.history.length,semantic_review_complete:false,semantic_triage_reviewed:coverage.semantic_triage.reviewed_ids}));
+  console.log(JSON.stringify({tracked:rows.length,verified:coverage.verified,source_integrity:'pass',chunks:inventory.chunks.length,history:inventory.history.length,semantic_review_complete:false,semantic_triage_reviewed:coverage.semantic_triage.reviewed_ids}));
   return {rows,coverage};
 }
 if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.meta.url)) generate();

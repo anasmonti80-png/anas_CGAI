@@ -2,7 +2,7 @@
   "schema_version": 1,
   "registered": 1440,
   "tracked": 1440,
-  "verified": 0,
+  "verified": 4,
   "production_ready": false,
   "semantic_review_complete": false,
   "by_area": {
@@ -32,8 +32,9 @@
     "Tickets-boundary": 1
   },
   "by_status": {
+    "acceptance-verified": 4,
     "partially-implemented": 25,
-    "planned": 1415
+    "planned": 1411
   },
   "reviewed_subset_boundaries": 37,
   "semantic_triage": {
@@ -244,8 +245,8 @@
     }
   ],
   "caveats": [
-    "CG-001..CG-600 received scope and delivery semantic triage by domain. This is not a full acceptance review or implementation claim.",
-    "Remaining routing is an initial automated classification, not a completed manual semantic review.",
-    "No requirement is fully verified by inventory or a unit test of a subset."
+    "CG-001..CG-600 received scope and delivery semantic triage by domain. Triage alone is not an implementation claim.",
+    "Only rows marked acceptance-verified have current requirement-specific evidence; partial component tests do not satisfy a whole requirement.",
+    "Remaining routing is an initial automated classification, not a completed manual semantic review."
   ]
 }

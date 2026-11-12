@@ -1,7 +1,7 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
-import { sourceInventory, classify, applyReview, applyBatchReview } from '../scripts/requirements.js';
+import { sourceInventory, classify, applyReview, applyBatchReview, applyAcceptance } from '../scripts/requirements.js';
 
 test('all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content', () => {
   const inventory = sourceInventory();
@@ -33,6 +33,16 @@ test('subset evidence does not count as full acceptance and stale evidence is no
   const fresh=applyReview(source,review,evidence,{sha256:'tested'})[31];
   assert.equal(fresh.test_result,'passed-for-subset');assert.equal(fresh.platform_coverage.macos,'not-tested');
   assert.equal(fresh.status,'partially-implemented');
+});
+
+test('full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint',()=>{
+  const source=classify(sourceInventory().requirements),entry={entries:{'CG-001':{reason:'Verified UI contract',code:['public/app.js'],tests:['tests/ui-contract.test.js'],evidence:[],restrictions:[]}}};
+  const verification={passed:true,source:{sha256:'current'},at:'2026-11-12T00:00:00Z',environment:{platform:'win32'}};
+  const stale=applyAcceptance(source,entry,verification,{sha256:'changed'})[0];
+  assert.equal(stale.status,'implemented-unverified');assert.equal(stale.last_verified,null);
+  const fresh=applyAcceptance(source,entry,verification,{sha256:'current'})[0];
+  assert.equal(fresh.status,'acceptance-verified');assert.equal(fresh.test_result,'passed-acceptance');assert.equal(fresh.platform_coverage.windows,'unit-tested');
+  assert.throws(()=>applyAcceptance(source,{entries:{'CG-601':entry.entries['CG-001']}},verification,{sha256:'current'}),/limited to CG-001/);
 });
 
 test('first 300 requirements receive non-acceptance semantic triage without changing their source text',()=>{

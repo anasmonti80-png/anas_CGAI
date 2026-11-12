@@ -68,6 +68,7 @@ test('unsupported HTTP methods cannot mutate routes that accept both reads and w
     assert.equal(r.headers.get('x-content-type-options'),'nosniff');
     assert.match(r.headers.get('content-security-policy'),/default-src 'none'/);
   }
+  assert.equal((await f.req('/qa/responsive',{user:admin})).status,404);
   const refused=await f.req('/api/collectors/local',{method:'POST',user:admin,data:{confirm_read_only:false}});
   assert.equal(refused.status,400);assert.equal(f.app.store.get('SELECT COUNT(*) n FROM assets').n,0);
 });
@@ -109,7 +110,12 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   const revoked=await f.req(`/api/sources/${source.data.id}/revoke`,{method:'POST',user:admin,data:{}});assert.equal(revoked.status,200);
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${source.data.token}`}})).status,401);
   assert.equal((await f.req('/api/audit/verify',{user:admin})).data.valid,true);
-  assert.equal((await f.req('/api/coverage',{user:admin})).data.verified,0);
+  const coverage=await f.req('/api/coverage',{user:admin});
+  const accomplishments=await f.req('/api/accomplishments?from=1&to=600&limit=10',{user:admin});
+  assert.equal(accomplishments.status,200);assert.equal(accomplishments.data.scope.total,600);assert.equal(accomplishments.data.items.length,10);
+  assert.equal(accomplishments.data.summary.completed,coverage.data.verified);assert.match(accomplishments.data.next_requirement,/^CG-\d{3,4}$/);
+  assert.equal((await f.req('/api/accomplishments?from=0&to=600',{user:admin})).status,400);
+  assert.equal((await f.req('/api/accomplishments?from=500&to=601',{user:admin})).status,400);
   assert.equal((await f.req('/api/requirements?q=CG-1440',{user:admin})).data.items[0].id,'CG-1440');
   assert.equal((await f.req('/api/auth/logout',{method:'POST',user:admin,data:{}})).status,200);
   assert.equal((await f.req('/api/assets',{user:admin})).status,401);

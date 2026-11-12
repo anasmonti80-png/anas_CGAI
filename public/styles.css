@@ -8,3 +8,4 @@
 @media(max-width:760px){.shell{grid-template-columns:minmax(0,1fr)}.topbar{height:auto;min-height:60px;padding-block:12px}.top-actions{gap:7px;flex-wrap:wrap}.nav-item{flex-shrink:0}.banner>div:not(.banner-action){flex:1;min-width:0}}
 @media(max-width:760px){.banner>div:not(.banner-action){flex:1 1 calc(100% - 40px)}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}}
+.capability-page{max-width:900px}.capability-page .panel-head{align-items:center}.requirement-links{display:flex;gap:8px;flex-wrap:wrap;margin:12px 0 20px}.requirement-links button{direction:ltr}

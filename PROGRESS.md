@@ -7,19 +7,18 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** `293b75b`
-- **Latest requirements checkpoint:** CG-001..CG-600 now have semantic scope/delivery triage; it is not full acceptance or a claim that 600 integrations are implemented.
-- **Latest handoff checkpoint:** `29ac10c` — refreshed handoff, documentation, and Unit Tested evidence.
-- **Validation:** Unit Tested — `node scripts/verify.js` passed 30/30 tests on Windows x64, Node 24.21.0, SQLite 3.53.4, using synthetic data and loopback HTTP. No Lab Tested or Production Validated claim.
-- **Current integration:** the Claude documentation branch and Codex runnable foundation are merged locally. Verification passes 30/30 tests at Unit Tested level.
-- **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. Case views can download deterministic JSON evidence packs after setup and data ingestion.
+- **Latest verified implementation checkpoint:** current working phase; commit follows this update.
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-004 additionally have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — `node scripts/verify.js` passed 34/34 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. The UI acceptance subset also passed a local Chromium **Lab Tested** check at desktop, 760 px and 390 px. No connector lab or Production Validated claim.
+- **Current integration:** the live UI includes every required CG-002 sidebar destination and a shared Achievements ledger for CG-001..CG-600. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
+- **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
 - **Published state:** local branch only. GitHub publishing still requires a working credential.
 
 ## Safe next work
 
-1. Review CG-301 and onward in small evidence-backed semantic batches, preserving all 1,440 original requirement records.
-2. Design read-only, authorized lab contracts for Windows/Defender/Sysmon before representing any live connector as available.
-3. Add disabled-safe capability contracts for later EDR, identity, cloud and NCC integrations.
+1. Implement the authorized discovery and visibility data contracts for CG-005 onward without active network scanning outside an approved scope.
+2. Promote only requirements whose complete acceptance boundary has current code, test and platform evidence.
+3. Keep the Achievements ledger and Claude handoff current after every implementation phase.
 
 ## Handoff checklist
 

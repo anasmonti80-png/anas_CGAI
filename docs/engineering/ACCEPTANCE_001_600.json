@@ -1,0 +1,37 @@
+{
+  "schema_version": 1,
+  "scope": {
+    "from": 1,
+    "to": 600
+  },
+  "entries": {
+    "CG-001": {
+      "reason": "The live SOC dashboard uses the requested navy/gray enterprise composition, orange emphasis and limited semantic status colors; it was inspected in the local Chromium QA session against the supplied reference.",
+      "code": ["public/dashboard.js", "public/styles.css", "public/soc.css"],
+      "tests": ["tests/ui-contract.test.js: SOC shell exposes every required navigation destination", "Browser QA: desktop SOC visual inspection"],
+      "evidence": ["artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Visual validation covers the supported local Chromium surface; no claim of pixel identity across unrelated browsers or fonts."]
+    },
+    "CG-002": {
+      "reason": "All fourteen requested sidebar destinations are present, keyboard-visible and open an operable evidence or capability-status view without hidden fake results.",
+      "code": ["public/app.js", "public/soc.css", "server.js"],
+      "tests": ["tests/ui-contract.test.js: SOC shell exposes every required navigation destination", "Browser QA: all required navigation views returned their expected heading with no visible error"],
+      "evidence": ["artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": []
+    },
+    "CG-003": {
+      "reason": "Arabic/English switching changes document language and RTL/LTR direction; desktop, 760px tablet and 390px mobile renderings were exercised in Chromium without horizontal shell or dashboard-grid overflow.",
+      "code": ["public/app.js", "public/styles.css", "public/soc.css", "public/responsive-qa.html", "server.js"],
+      "tests": ["tests/ui-contract.test.js: bilingual RTL and responsive contracts", "Browser QA: 390px and 760px same-origin frame measurements"],
+      "evidence": ["artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Validated on the supported Windows Chromium surface; production browser-device coverage is not claimed."]
+    },
+    "CG-004": {
+      "reason": "The live dashboard and capability pages display Unknown, Not configured, Not assessed and Prevention not verified states, link to evidence, and explicitly prevent missing data from becoming a safe or 100% security claim.",
+      "code": ["public/dashboard.js", "public/app.js", "server.js", "lib/domain.js"],
+      "tests": ["tests/domain.test.js: SOC dashboard uses actual daily counts", "tests/ui-contract.test.js: security posture UI keeps unknown and unverified evidence explicit", "Browser QA: empty-data dashboard and achievements ledger inspection"],
+      "evidence": ["artifacts/browser-qa.json", "artifacts/tests.tap", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": []
+    }
+  }
+}

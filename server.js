@@ -24,7 +24,7 @@ async function body(req) {
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
-export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken}={}) {
+export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1'}={}) {
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
   const auth=new Auth(store,{clock}), domain=new Domain(store,{clock});
@@ -54,7 +54,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
     res.setHeader('Referrer-Policy','no-referrer');
     res.setHeader('X-Frame-Options','DENY');
     res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=()');
-    res.setHeader('Content-Security-Policy',"default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors 'none'");
+    res.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors ${browserQa?"'self'":"'none'"}`);
     try {
       const port=server.address()?.port;
       fail([`127.0.0.1:${port}`,`localhost:${port}`,`[::1]:${port}`].includes(req.headers.host),403,'host_not_allowed');
@@ -71,6 +71,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(method==='GET' && STATIC.has(p)) {
         const file=path.join(ROOT,'public',p==='/'?'index.html':p.slice(1));
         res.writeHead(200,{'Content-Type':MIME[path.extname(file)]}); res.end(fs.readFileSync(file)); return;
+      }
+      if(method==='GET'&&p==='/qa/responsive'&&browserQa) {
+        res.setHeader('Content-Security-Policy',"default-src 'none'; frame-src 'self'; base-uri 'none'; frame-ancestors 'none'");
+        res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(fs.readFileSync(path.join(ROOT,'public','responsive-qa.html')));return;
       }
       if(p==='/api/health'&&method==='GET') return send(res,monitorError?503:200,{status:monitorError?'health-monitor-failed':'running',stage:'engineering-preview',version:'0.1.0',network_access:'loopback-only'});
       if(p==='/api/setup/status'&&method==='GET') return send(res,200,{setup_required:!store.get('SELECT id FROM users LIMIT 1')});
@@ -148,6 +152,17 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(action&&method==='POST') {roles(['admin']);const fn={approve:'approveAction',execute:'executeAction',rollback:'rollbackAction'}[action[2]];return send(res,200,domain[fn](user.id,action[1]));}
       if(p==='/api/audit/verify'&&method==='GET') {roles(['admin']);return send(res,200,store.verifyAudit());}
       if(p==='/api/coverage'&&method==='GET') return send(res,200,{...coverage,support:readJson('docs/engineering/SUPPORT_MATRIX.json'),capabilities:readJson('docs/engineering/CAPABILITIES.json')});
+      if(p==='/api/accomplishments'&&method==='GET') {
+        const from=Number(url.searchParams.get('from')||1),to=Number(url.searchParams.get('to')||600);
+        fail(Number.isInteger(from)&&Number.isInteger(to)&&from>=1&&to<=600&&from<=to,400,'invalid_accomplishment_range');
+        const {limit,offset,q}=page(url.searchParams),query=q.toLowerCase();
+        const scoped=requirements.filter(r=>r.number>=from&&r.number<=to);
+        const matching=scoped.filter(r=>!query||`${r.id} ${r.raw_requirement} ${r.area} ${r.status}`.toLowerCase().includes(query));
+        const count=status=>scoped.filter(r=>r.status===status).length;
+        const completed=count('acceptance-verified'),partial=count('partially-implemented')+count('implemented-unverified');
+        const next=scoped.find(r=>r.status!=='acceptance-verified')||null;
+        return send(res,200,{scope:{from,to,total:scoped.length},summary:{completed,partial,pending:scoped.length-completed-partial,validation_level:'Unit Tested',production_validated:false},next_requirement:next?.id||null,items:matching.slice(offset,offset+limit),total:matching.length,limit,offset});
+      }
       if(p==='/api/requirements'&&method==='GET') {
         const {limit,offset,q}=page(url.searchParams), query=q.toLowerCase();
         const matching=requirements.filter(r=>!query||`${r.id} ${r.raw_requirement} ${r.area}`.toLowerCase().includes(query));

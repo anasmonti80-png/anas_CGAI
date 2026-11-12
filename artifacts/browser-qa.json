@@ -1,0 +1,24 @@
+{
+  "at": "2026-11-12T03:33:36.077Z",
+  "level": "Lab Tested",
+  "environment": {
+    "platform": "Windows",
+    "browser": "Codex in-app Chromium",
+    "application": "http://127.0.0.1:4314/",
+    "data": "isolated synthetic QA workspace"
+  },
+  "checks": {
+    "desktop_soc_visual": "pass",
+    "required_navigation_views": {"result": "pass", "count": 15, "visible_errors": 0},
+    "arabic_rtl": "pass",
+    "english_ltr": "pass",
+    "mobile_390": {"result": "pass", "shell_client_width": 375, "shell_scroll_width": 375, "dashboard_client_width": 329, "dashboard_scroll_width": 329},
+    "tablet_760": {"result": "pass", "shell_client_width": 745, "shell_scroll_width": 745, "dashboard_client_width": 699, "dashboard_scroll_width": 699},
+    "unknown_and_unverified_states_visible": "pass",
+    "achievements_scope_001_600": "pass"
+  },
+  "limitations": [
+    "This is a local Chromium lab check with synthetic empty-state data, not production validation.",
+    "The responsive harness is served only when CG_BROWSER_QA=1."
+  ]
+}
