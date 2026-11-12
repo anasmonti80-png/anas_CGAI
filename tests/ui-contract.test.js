@@ -91,3 +91,9 @@ test('asset detail renders ownership, business context, site, sensitivity, maint
   const app=read('app.js');
   for(const marker of ['Owner','Business / operational service','Site','Data sensitivity','Maintenance windows','Service criticality','Context evidence']) assert.ok(app.includes(marker),marker);
 });
+
+test('asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');
+  for(const marker of ['Product / version','OS lifecycle version','Vendor support status','Standard support end','Security updates end','Extended support','Upgrade / replacement plan','Lifecycle evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['asset.lifecycle','extended_support_enrollment_requires_availability','lifecycle_plan_action']) assert.ok(domain.includes(marker),marker);
+});

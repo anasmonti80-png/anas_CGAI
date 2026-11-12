@@ -137,6 +137,13 @@
       "tests": ["tests/domain.test.js: institutional risk register links coverage, resolved evidence, owner, remediation, exception and time-bounded acceptance", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes the institutional risk register and review deadlines", "Browser QA: Reports displayed coverage, resolved evidence, owner, remediation due date, active exception expiry, accepted risk and scheduled review"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Risk values, owners, control coverage and approvals are source-reported governance evidence. The register does not independently approve an exception, certify a control, or quantify financial loss."]
+    },
+    "CG-075": {
+      "reason": "The central asset record consumes the latest versioned lifecycle evidence with product and operating-system versions, standard-support and security-update end dates, structured extended-support availability and enrollment, and an owned upgrade, replacement or retirement plan with target, deadline and status.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan", "Browser QA: central asset detail displayed versions, support dates, extended-support enrollment, translated plan state and lifecycle evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Lifecycle and support dates are source-reported evidence. They are not a live vendor entitlement check and must be refreshed by an authorized inventory or governance source."]
     }
   }
 }

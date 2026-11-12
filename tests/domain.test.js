@@ -277,6 +277,12 @@ test('asset context links the central device to owner, service, site, sensitivit
   advance(1);ingest([event('context-2','asset.context',{...details,service_criticality:'critical'})]);asset=d.asset(asset.id);assert.equal(asset.governance_context.service_criticality,'critical');assert.equal(asset.governance_context.event_id,d.list('events').items[0].id);
   assert.throws(()=>ingest([event('bad-context','asset.context',{...details,data_sensitivity:'secret'})]),/invalid_data_sensitivity/);
 });
+test('asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan',t=>{
+  const {d,event,ingest,advance}=fixture(t),details={product:{vendor:'Synthetic Vendor',name:'Synthetic Server',version:'12.0',edition:'Enterprise'},operating_system:{name:'Synthetic OS',version:'2022',build:'20348'},vendor_support:{status:'extended',standard_support_end:'2026-01-01T00:00:00.000Z',security_updates_end:'2028-01-01T00:00:00.000Z',extended_support:{available:true,enrolled:true,end_at:'2030-01-01T00:00:00.000Z'}},plan:{action:'upgrade',target:'Synthetic OS 2028',owner_id:'platform-team',due_at:'2027-06-01T00:00:00.000Z',status:'approved'}};
+  ingest([event('lifecycle-1','asset.lifecycle',details)]);let asset=d.asset(d.list('assets').items[0].id);assert.equal(asset.lifecycle.product.version,'12.0');assert.equal(asset.lifecycle.operating_system.build,'20348');assert.equal(asset.lifecycle.vendor_support.security_updates_end,'2028-01-01T00:00:00.000Z');assert.equal(asset.lifecycle.vendor_support.extended_support.enrolled,true);assert.equal(asset.lifecycle.plan.owner_id,'platform-team');
+  advance(1);ingest([event('lifecycle-2','asset.lifecycle',{...details,plan:{...details.plan,status:'in-progress'}})]);asset=d.asset(asset.id);assert.equal(asset.lifecycle.plan.status,'in-progress');assert.equal(asset.lifecycle.event_id,d.list('events').items[0].id);
+  assert.throws(()=>ingest([event('bad-lifecycle','asset.lifecycle',{...details,vendor_support:{...details.vendor_support,extended_support:{available:false,enrolled:true,end_at:null}}})]),/extended_support_enrollment_requires_availability/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;
