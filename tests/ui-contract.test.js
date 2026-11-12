@@ -81,6 +81,12 @@ test('reports view exposes the institutional risk register and review deadlines'
   for(const marker of ['governance.risk_record','accepted_risk_requires_review','invalid_risk_review_window','Latest versioned record per risk']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view exposes a legacy compatibility matrix without converting not-tested into support',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/compatibility-matrix/);
+  for(const marker of ['Legacy compatibility matrix','Agent availability / access','Read-only support / network isolation','Tested capabilities / evidence basis','Performance / licensing constraints','Compatibility evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['windows-server-2008-r2','windows-server-2012-r2','unsupported-linux','legacy-network-device','not_tested_cannot_claim_capability']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

@@ -144,6 +144,13 @@
       "tests": ["tests/domain.test.js: asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan", "Browser QA: central asset detail displayed versions, support dates, extended-support enrollment, translated plan state and lifecycle evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Lifecycle and support dates are source-reported evidence. They are not a live vendor entitlement check and must be refreshed by an authorized inventory or governance source."]
+    },
+    "CG-076": {
+      "reason": "The platform keeps the latest compatibility record per central asset for explicit Windows Server 2008 R2, Windows Server 2012 R2, unsupported Linux and legacy network-device profiles. Every record states vendor-support status, agent availability, read-only capability or access mode, network-isolation state, tested capabilities, performance and licensing constraints, recommendation and evidence basis; a not-tested record cannot claim a tested capability.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: legacy compatibility matrix keeps agent, read-only, isolation, tested capability, performance and licensing evidence explicit", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes a legacy compatibility matrix without converting not-tested into support", "Browser QA: Reports displayed four legacy profiles with support, agent, read-only, isolation, not-tested capability, performance, licensing and evidence fields"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Compatibility values are source-reported. Only authorized-lab evidence may claim tested capabilities; no real legacy platform connector was lab validated in this phase."]
     }
   }
 }
