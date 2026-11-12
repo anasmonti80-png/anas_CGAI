@@ -11,7 +11,7 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 - **Latest requirements checkpoint:** `3779171` — semantic scope/delivery triage for CG-001..CG-300 in 44 families; it is not full acceptance.
 - **Latest handoff checkpoint:** `29ac10c` — refreshed handoff, documentation, and Unit Tested evidence.
 - **Validation:** Unit Tested — `node scripts/verify.js` passed 29/29 tests on Windows x64, Node 24.21.0, SQLite 3.53.4, using synthetic data and loopback HTTP. No Lab Tested or Production Validated claim.
-- **Published state:** local branch only. No remote push has been performed from this session.
+- **Published state:** local branch only. A push attempt on 2026-11-12 was blocked because Git has no non-interactive GitHub credential on this device; the remote repository was not changed.
 
 ## Safe next work
 
