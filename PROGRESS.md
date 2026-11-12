@@ -12,6 +12,7 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 - **Latest handoff checkpoint:** `29ac10c` — refreshed handoff, documentation, and Unit Tested evidence.
 - **Validation:** Unit Tested — `node scripts/verify.js` passed 30/30 tests on Windows x64, Node 24.21.0, SQLite 3.53.4, using synthetic data and loopback HTTP. No Lab Tested or Production Validated claim.
 - **Current integration:** the Claude documentation branch and Codex runnable foundation are merged locally. Verification passes 30/30 tests at Unit Tested level.
+- **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. Case views can download deterministic JSON evidence packs after setup and data ingestion.
 - **Published state:** local branch only. GitHub publishing still requires a working credential.
 
 ## Safe next work

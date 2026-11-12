@@ -325,6 +325,34 @@
       "Advanced resilience/DevSecOps/AI validation event schemas remain pending."
     ]
   },
+  "CG-321": {
+    "scope": "CyberGuard",
+    "reason": "The case evidence pack collects linked, already-ingested local event metadata and hashes without modifying source evidence.",
+    "code": ["lib/domain.js:caseReport", "server.js:/api/cases/:id/report"],
+    "tests": ["tests/domain.test.js: case evidence report", "tests/http.test.js: case report HTTP flow"],
+    "remaining": ["No live endpoint, network, cloud, memory, file, or forensic acquisition connector is implemented."]
+  },
+  "CG-322": {
+    "scope": "CyberGuard",
+    "reason": "The report includes SHA-256 references and local append-only audit-chain entries with explicit local-only custody limits.",
+    "code": ["lib/domain.js:caseReport", "lib/store.js:verifyAudit"],
+    "tests": ["tests/domain.test.js: case evidence report", "tests/http.test.js: case report HTTP flow"],
+    "remaining": ["External timestamping, WORM anchoring, encrypted evidence vaults, and formal legal custody procedures are not implemented."]
+  },
+  "CG-323": {
+    "scope": "CyberGuard",
+    "reason": "Cases preserve linked alerts, assets, deterministic timelines, analyst notes, evidence references, status, and unknowns.",
+    "code": ["lib/domain.js:createCase", "lib/domain.js:updateCase", "lib/domain.js:caseReport", "public/app.js:caseModal"],
+    "tests": ["tests/domain.test.js: cases preserve notes audit and evidence links", "tests/http.test.js: case report HTTP flow"],
+    "remaining": ["ATT&CK technique mapping, assigned owners, SLA workflow, and multi-tenant case permissions remain pending."]
+  },
+  "CG-324": {
+    "scope": "CyberGuard",
+    "reason": "The UI downloads a deterministic redacted JSON evidence pack with hashes, actions, limitations, and sensitivity boundaries.",
+    "code": ["lib/domain.js:caseReport", "server.js:/api/cases/:id/report", "public/app.js:case-report"],
+    "tests": ["tests/domain.test.js: case evidence report", "tests/http.test.js: case report HTTP flow"],
+    "remaining": ["PDF and ZIP packaging, attachment encryption, configurable classification labels, and recipient authorization remain pending."]
+  },
   "CG-921": {
     "scope": "IT-Twin",
     "reason": "CG-939 excludes the full what-if digital twin; NCC owns network execution. CyberGuard may consume bounded security context.",

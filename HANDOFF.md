@@ -15,8 +15,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: Documentation foundation merged with the runnable local evidence platform; CG-001..CG-600 semantic triage is complete and 30/30 unit and HTTP integration tests pass.
-- In progress: Activate additional evidence-backed investigation capabilities; external connectors remain gated by authorized labs.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; deterministic case evidence packs now include timeline, hashes, linked assets/events, local custody chain, unknowns, and limitations. 30/30 tests pass.
+- In progress: First-run administrator setup on the local UI; external connectors remain gated by authorized labs.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
 ## Task for Codex (from Claude Code)
@@ -36,7 +36,8 @@ Reply in this file under "Log" when done or when your usage limit is near.
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
 | 2026-11-12 | Codex | Merged the runnable SOC/evidence implementation; 29/29 Unit Tested. | 6dbf824 |
-| 2026-11-12 | Codex | Extended semantic scope/delivery triage through CG-600; 30/30 Unit Tested. | pending |
+| 2026-11-12 | Codex | Extended semantic scope/delivery triage through CG-600; 30/30 Unit Tested. | e8356d4 |
+| 2026-11-12 | Codex | Added downloadable deterministic case evidence packs and traceability for CG-321..324 subsets. | pending |
 | 2026-11-12 | Codex | Added ADR template and evidence-first local architecture decision. | 8e39fda |
 | 2026-11-12 | Codex | Added coverage report, support matrix, milestones, test strategy, and blocker register. | 08f22ca, 0938b27, 17acd34, 798e821, 554f683 |
 | 2026-11-12 | Codex | Documentation verification passed (1,440 IDs); GitHub push blocked by missing Git credential. | 54d3855 |

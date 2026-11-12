@@ -101,6 +101,11 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   const sources=await f.req('/api/sources',{user:admin});assert.ok(!JSON.stringify(sources.data).includes(source.data.token));assert.ok(!JSON.stringify(sources.data).includes('token_hash'));
   const assets=await f.req('/api/assets',{user:admin});const assetId=assets.data.items[0].id;
   const report=await f.req(`/api/assets/${assetId}/report`,{user:admin});assert.equal(report.data.asset_id,assetId);assert.match(report.data.method,/no language model/);
+  const finding={schema_version:'cg.telemetry/1',events:[{...batch.events[0],event_id:'finding-1',kind:'security.finding',details:{title:'Synthetic API finding',severity:'high',description:'Synthetic evidence only'}}]};
+  assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:finding,headers:{Authorization:`Bearer ${source.data.token}`}})).status,200);
+  const alert=(await f.req('/api/alerts',{user:admin})).data.items[0];
+  const investigation=await f.req('/api/cases',{method:'POST',user:admin,data:{title:'Synthetic investigation',alert_ids:[alert.id]}});assert.equal(investigation.status,201);
+  const caseReport=await f.req(`/api/cases/${investigation.data.id}/report`,{user:admin});assert.equal(caseReport.status,200);assert.equal(caseReport.data.events.length,1);assert.equal(caseReport.data.chain_of_custody.verification.valid,true);
   const revoked=await f.req(`/api/sources/${source.data.id}/revoke`,{method:'POST',user:admin,data:{}});assert.equal(revoked.status,200);
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${source.data.token}`}})).status,401);
   assert.equal((await f.req('/api/audit/verify',{user:admin})).data.valid,true);

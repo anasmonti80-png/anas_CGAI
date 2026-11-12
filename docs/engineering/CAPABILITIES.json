@@ -55,7 +55,7 @@
     {
       "name": "Deterministic investigation reports",
       "status": "unit-tested",
-      "limitations": "Not an LLM or AI inference engine"
+      "limitations": "Asset and case JSON evidence packs with local hashes/timeline/custody references; no PDF/ZIP, external WORM anchor, legal attribution or LLM inference"
     },
     {
       "name": "EDR prevention, cloud, NCC execution, LLM, restore, Red Team",

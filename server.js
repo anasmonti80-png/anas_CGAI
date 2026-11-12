@@ -135,9 +135,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(alertRoute&&method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM alerts WHERE id=?',[alertRoute[1]])));
       if(ack&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.acknowledge(user.id,ack[1]));}
       if(p==='/api/cases'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.createCase(user.id,await body(req)));}
-      const caseRoute=p.match(/^\/api\/cases\/([a-f0-9-]{36})$/);
+      const caseRoute=p.match(/^\/api\/cases\/([a-f0-9-]{36})(\/report)?$/);
       if(caseRoute) {
-        if(method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM cases WHERE id=?',[caseRoute[1]])));
+        if(method==='GET') return send(res,200,caseRoute[2]?domain.caseReport(caseRoute[1]):domain.decode(store.require('SELECT * FROM cases WHERE id=?',[caseRoute[1]])));
+        fail(!caseRoute[2],405,'method_not_allowed');
         roles(['admin','analyst']); return send(res,200,domain.updateCase(user.id,caseRoute[1],await body(req)));
       }
       if(p==='/api/actions/preview'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.previewAction(user.id,await body(req)));}

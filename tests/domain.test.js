@@ -138,6 +138,12 @@ test('cases preserve notes, audit and evidence links; ACK is not incident closur
   assert.equal(d.list('cases').items[0].status,'open');
   const changed=d.updateCase('analyst',c.id,{status:'investigating',note:'Review password=secret-note'});
   assert.equal(changed.notes.length,1); assert.ok(!changed.notes[0].text.includes('secret-note'));
+  const report=d.caseReport(c.id);
+  assert.equal(report.schema_version,'cg.case-report/1');assert.equal(report.case.id,c.id);
+  assert.equal(report.alerts.length,1);assert.equal(report.events.length,1);assert.equal(report.assets.length,1);
+  assert.ok(report.timeline.some(item=>item.type==='evidence-observed'));
+  assert.equal(report.chain_of_custody.verification.valid,true);
+  assert.ok(!JSON.stringify(report).includes('secret-note'));
   assert.throws(()=>d.createCase('analyst',{title:'Invalid',alert_ids:['missing']}),/not_found/);
 });
 test('approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback',t=>{

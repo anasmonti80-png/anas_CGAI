@@ -32,10 +32,10 @@
     "Tickets-boundary": 1
   },
   "by_status": {
-    "partially-implemented": 21,
-    "planned": 1419
+    "partially-implemented": 25,
+    "planned": 1415
   },
-  "reviewed_subset_boundaries": 33,
+  "reviewed_subset_boundaries": 37,
   "semantic_triage": {
     "batch_ids": [
       "semantic-triage-001-300-v1",
