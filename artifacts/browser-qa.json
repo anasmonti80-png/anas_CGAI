@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-12T22:10:00.000Z",
+  "at": "2026-11-12T22:23:00.000Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -29,7 +29,8 @@
     "institutional_risk_register": {"result": "pass", "risk": "RISK-QA-073", "coverage_links_visible": true, "resolved_evidence_visible": true, "owner_visible": true, "remediation_due_visible": true, "active_exception_expiry_visible": true, "risk_acceptance_visible": true, "scheduled_review_days": 30},
     "asset_lifecycle": {"result": "pass", "asset": "ASSET-QA-075", "product_version_visible": true, "os_version_visible": true, "standard_support_end_visible": true, "security_updates_end_visible": true, "extended_support_enrollment_visible": true, "owned_upgrade_plan_visible": true, "evidence_link_visible": true},
     "legacy_compatibility_matrix": {"result": "pass", "profiles": ["windows-server-2008-r2", "windows-server-2012-r2", "unsupported-linux", "legacy-network-device"], "support_state_visible": true, "agent_availability_visible": true, "read_only_and_access_mode_visible": true, "network_isolation_visible": true, "not_tested_visible": true, "performance_constraints_visible": true, "licensing_constraints_visible": true, "evidence_basis_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 21, "next": "CG-006"}
+    "legacy_compensating_controls": {"result": "pass", "asset": "LEGACY-CONTROL-01", "network_segmentation_visible": true, "jump_host_visible": true, "entry_mfa_visible": true, "internet_restriction_visible": true, "backup_status_visible": true, "restore_test_explicitly_not_tested": true, "monitoring_status_visible": true, "migration_owner_target_and_due_visible": true, "evidence_link_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 22, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

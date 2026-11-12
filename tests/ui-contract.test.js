@@ -87,6 +87,12 @@ test('reports view exposes a legacy compatibility matrix without converting not-
   for(const marker of ['windows-server-2008-r2','windows-server-2012-r2','unsupported-linux','legacy-network-device','not_tested_cannot_claim_capability']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view exposes evidence-backed legacy compensating controls through migration',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/compensating-controls/);
+  for(const marker of ['Legacy compensating controls','Network segmentation','Jump host / MFA','Internet access','Backup / restore','Monitoring','Migration','Controls evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['asset.compensating_controls','enforced_segmentation_requires_boundary','enforced_jump_host_requires_host','enforced_mfa_requires_method','passed_restore_test_requires_evidence','migration_plan_requires_owner_target_due']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

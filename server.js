@@ -124,6 +124,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/threat-models'&&method==='GET') return send(res,200,domain.threatModels(page(url.searchParams)));
       if(p==='/api/risk-register'&&method==='GET') return send(res,200,domain.riskRegister(page(url.searchParams)));
       if(p==='/api/compatibility-matrix'&&method==='GET') return send(res,200,domain.compatibilityMatrix(page(url.searchParams)));
+      if(p==='/api/compensating-controls'&&method==='GET') return send(res,200,domain.compensatingControls(page(url.searchParams)));
       if(p==='/api/visibility-gaps'&&method==='GET') return send(res,200,domain.visibilityGaps(page(url.searchParams)));
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {

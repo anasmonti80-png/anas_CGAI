@@ -15,7 +15,7 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073, CG-075 and CG-076 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, an institutional risk register, asset lifecycle/support plans, a legacy compatibility matrix, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 60/60 tests pass.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-077 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, an institutional risk register, asset lifecycle/support plans, a legacy compatibility matrix and compensating-control registry, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 62/62 tests pass.
 - In progress: Sequential authenticated discovery for CG-006; external connectors remain gated by authorized labs.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working. GitHub push also requires a working credential on this host; the non-interactive push after `2f8d54b` was rejected.
 
@@ -36,6 +36,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-12 | Codex | Added evidence-gated legacy compensating controls for segmentation, jump hosts, Internet restriction, MFA, backup/restore, monitoring and owned migration; 62/62 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added the per-asset legacy compatibility matrix with explicit support, agent, read-only/access, isolation, tested-capability, performance, licensing and evidence-basis fields; 60/60 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added versioned product/OS lifecycle, support and security-update end dates, extended-support enrollment and owned upgrade/replacement plans to central assets; 58/58 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added a versioned institutional risk register with coverage, resolved evidence, ownership, remediation deadlines, exceptions and time-bounded acceptance reviews; 56/56 Unit Tested and Chromium checked. | current checkpoint |
