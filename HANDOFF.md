@@ -15,9 +15,9 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-022, CG-032, CG-054, CG-057 and CG-061 are acceptance-verified. The live UI has the requested SOC design, bilingual responsive navigation, explicit unknown states, evidence readiness, authorized discovery observations, typed switch interfaces/services, three explicit operating modes, an evidence-visible action lifecycle and the shared Achievements ledger. 42/42 tests pass.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-022, CG-032, CG-054, CG-056, CG-057 and CG-061 are acceptance-verified. The live UI has the requested SOC design, bilingual responsive navigation, explicit unknown states, evidence readiness, authorized discovery observations, typed switch interfaces/services, operating modes, an evidence-visible action lifecycle, typed source-health monitoring and the shared Achievements ledger. 44/44 tests pass.
 - In progress: Sequential authenticated discovery for CG-006; external connectors remain gated by authorized labs.
-- Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
+- Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working. GitHub push also requires a working credential on this host; the non-interactive push after `2f8d54b` was rejected.
 
 ## Task for Codex (from Claude Code)
 Read AGENTS.md mandatory reading order first, then start the first engineering deliverable:
@@ -36,6 +36,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-12 | Codex | Added typed managed-agent/log-forwarder health, coverage statistics and distinct loss/delivery-failure alerts; 44/44 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Completed the current-catalog action lifecycle with dry run, impact, independent approval, execute, verify, audit and guarded rollback evidence; 42/42 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added PC Local, Enterprise Collectors and authorized validation-lab modes with truthful PC blind spots and SPAN/TAP, flow-log and agent evidence paths; 41/41 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added authorized passive discovery, change/outage evidence, and strict physical-interface versus TCP/UDP service types; 38/38 Unit Tested and Chromium checked. | current checkpoint |

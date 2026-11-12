@@ -163,6 +163,16 @@ test('lost source visibility creates a distinct alert, not a healthy no-threat c
   assert.equal(d.list('alerts').items[0].rule_id,'CG-LOST-COVERAGE');
   ingest([event('b')]); assert.equal(d.sources()[0].health,'receiving');
 });
+test('managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics',t=>{
+  const {s,d,advance}=fixture(t);
+  d.createSource('admin-a',{name:'Synthetic managed agent',source_type:'managed-agent',stale_seconds:30});
+  d.createSource('admin-a',{name:'Synthetic log forwarder',source_type:'log-forwarder',stale_seconds:30});
+  let summary=d.summary();assert.deepEqual(summary.coverage_health.agents,{configured:1,online:0,lost:0});assert.deepEqual(summary.coverage_health.log_forwarders,{configured:1,flowing:0,failed:0});
+  advance(31000);summary=d.summary();assert.equal(summary.coverage_health.visibility_gaps,2);assert.equal(summary.coverage_health.agents.lost,1);assert.equal(summary.coverage_health.log_forwarders.failed,1);
+  const states=Object.fromEntries(d.sources().map(source=>[source.source_type,source.monitor_state]));assert.equal(states['managed-agent'],'agent-lost');assert.equal(states['log-forwarder'],'log-delivery-failed');
+  const rules=new Set(d.list('alerts',{limit:20}).items.map(alert=>alert.rule_id));assert.ok(rules.has('CG-AGENT-LOST'));assert.ok(rules.has('CG-LOG-DELIVERY-FAILED'));
+  const healthAudit=s.all("SELECT action,details FROM audit WHERE actor='health-service'");assert.equal(healthAudit.length,2);assert.ok(healthAudit.every(row=>JSON.parse(row.details).source_type));assert.equal(s.verifyAudit().valid,true);
+});
 test('cases preserve notes, audit and evidence links; ACK is not incident closure',t=>{
   const {d,event,ingest}=fixture(t);
   ingest([event('finding','security.finding',{title:'Lab finding',severity:'critical',description:'Synthetic evidence'})]);

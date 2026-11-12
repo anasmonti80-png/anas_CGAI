@@ -52,3 +52,8 @@ test('action review exposes dry run, impact, approval lifecycle, verification, a
   for(const marker of ['Dry-run result','Affected records','Rollback plan','Action lifecycle and audit','Local audit-chain integrity']) assert.ok(app.includes(marker),marker);
   for(const stage of ['action.previewed','action.approved','action.executed','action.verified','action.rollback.executed','action.rollback.verified']) assert.ok(domain.includes(stage),stage);
 });
+
+test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
+  const app=read('app.js');
+  for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);
+});

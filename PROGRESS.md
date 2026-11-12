@@ -8,11 +8,11 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 
 - **Branch:** `codex/cg001-600`
 - **Latest verified implementation checkpoint:** `6ec2ac7` plus the current operating-mode phase: three explicit modes, startup gating for the authorized validation lab, central-asset discovery observations, change/outage alerts, typed physical interfaces and TCP/UDP services, and evidence-readiness/local release gates.
-- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-005, CG-007, CG-008, CG-022, CG-032, CG-054, CG-057 and CG-061 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
-- **Validation:** Unit Tested — `node scripts/verify.js` passed 42/42 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. UI checks passed in local Chromium at desktop, 760 px and 390 px, including evidence readiness, authorized synthetic discovery, the three operating modes and a complete local action lifecycle. No live connector lab or Production Validated claim.
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-005, CG-007, CG-008, CG-022, CG-032, CG-054, CG-056, CG-057 and CG-061 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — `node scripts/verify.js` passed 44/44 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. UI checks passed in local Chromium at desktop, 760 px and 390 px, including evidence readiness, authorized synthetic discovery, operating modes, a complete local action lifecycle, managed-agent loss and log-delivery failure. No live connector lab or Production Validated claim.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, an evidence-readiness score, a Discover view for authorized observations, and a Settings view that states actual PC/collector/lab visibility boundaries. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
-- **Published state:** local branch only. GitHub publishing still requires a working credential.
+- **Published state:** local branch only. A push after commit `2f8d54b` failed because no non-interactive GitHub credential is configured on this host.
 
 ## Safe next work
 

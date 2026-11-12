@@ -75,6 +75,13 @@
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap"],
       "restrictions": ["This validates the application default and HTTP boundary; operating-system access controls and host hardening remain deployment responsibilities."]
     },
+    "CG-056": {
+      "reason": "The platform keeps a hash-chained append-only local audit log with integrity verification, exposes configured/receiving/gap health statistics, classifies managed-agent and log-forwarder states independently, and creates distinct high-severity alerts when a managed agent is lost or log delivery stops beyond its configured threshold.",
+      "code": ["lib/store.js", "lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics", "tests/domain.test.js: lost source visibility creates a distinct alert, not a healthy no-threat claim", "tests/domain.test.js: database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: source health UI distinguishes managed agents, log forwarders and delivery failures", "Browser QA: dashboard and Sources view displayed separate agent-loss and log-delivery-failure evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Audit integrity is enforced and verified inside the local database; an external WORM or timestamp anchor is not configured. Health means receipt freshness for explicitly configured sources, not proof that every endpoint or log path is covered."]
+    },
     "CG-057": {
       "reason": "The dashboard computes an evidence-readiness score only when sources, observed assets and evidence events exist; it exposes Coverage, Evidence, Freshness and Confidence separately, decays with stale telemetry, and states that the result is not a security guarantee or environment coverage percentage.",
       "code": ["lib/domain.js", "public/dashboard.js", "public/soc.css"],

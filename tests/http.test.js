@@ -112,7 +112,7 @@ test('Windows export HTTP import records parser provenance, reports skipped reco
 });
 test('real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads',async t=>{
   const f=await fixture(t);await f.setup();const admin=await f.login();
-  const source=await f.req('/api/sources',{method:'POST',user:admin,data:{name:'API fixture'}});assert.equal(source.status,201);
+  const source=await f.req('/api/sources',{method:'POST',user:admin,data:{name:'API fixture',source_type:'managed-agent'}});assert.equal(source.status,201);assert.equal(source.data.source_type,'managed-agent');
   const batch={schema_version:'cg.telemetry/1',events:[{event_id:'e1',kind:'asset.observed',observed_at:new Date().toISOString(),asset:{external_id:'test-1',hostname:'LAB-API',addresses:['192.0.2.1']},details:{}}]};
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${source.data.token}`}})).status,200);
   const overview=await f.req('/api/overview',{user:admin});assert.equal(overview.data.assets,1);assert.equal(overview.data.events,1);assert.equal(overview.data.prevention,'not-verified');
@@ -121,7 +121,7 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   const discovery={schema_version:'cg.telemetry/1',events:[{...batch.events[0],event_id:'discovery-api-1',kind:'discovery.observed',details:{authorization_ref:'SYNTHETIC-HTTP-AUTH',acquisition:'passive-import',availability:'up',networks:['192.0.2.0/24'],routes:[{destination:'0.0.0.0/0',gateway:'192.0.2.254',interface:'uplink'}],vlans:[{id:10,name:'Synthetic'}],interfaces:[{name:'eth0',status:'up',vlan:10}],services:[{transport:'tcp',port:443,state:'observed-open',name:'https',evidence:'source-report'}]}}]};
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:discovery,headers:{Authorization:`Bearer ${source.data.token}`}})).status,200);
   const discoveryView=await f.req('/api/discovery?q=LAB-API',{user:admin});assert.equal(discoveryView.status,200);assert.equal(discoveryView.data.total,1);assert.equal(discoveryView.data.items[0].change,'added');assert.equal(discoveryView.data.items[0].observation.vlans[0].id,10);assert.match(discoveryView.data.scope,/no network probe/);
-  const sources=await f.req('/api/sources',{user:admin});assert.ok(!JSON.stringify(sources.data).includes(source.data.token));assert.ok(!JSON.stringify(sources.data).includes('token_hash'));
+  const sources=await f.req('/api/sources',{user:admin});assert.ok(!JSON.stringify(sources.data).includes(source.data.token));assert.ok(!JSON.stringify(sources.data).includes('token_hash'));assert.equal(sources.data.items[0].monitor_state,'agent-online');
   const assets=await f.req('/api/assets',{user:admin});const assetId=assets.data.items[0].id;
   const report=await f.req(`/api/assets/${assetId}/report`,{user:admin});assert.equal(report.data.asset_id,assetId);assert.match(report.data.method,/no language model/);
   const finding={schema_version:'cg.telemetry/1',events:[{...batch.events[0],event_id:'finding-1',kind:'security.finding',details:{title:'Synthetic API finding',severity:'high',description:'Synthetic evidence only'}}]};
