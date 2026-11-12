@@ -19,6 +19,15 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - In progress: 
 - Blockers: 
 
+## Task for Codex (from Claude Code)
+Read AGENTS.md mandatory reading order first, then start the first engineering deliverable:
+1. `docs/adr/ADR-0001-architecture.md` (+ ADR template).
+2. `docs/requirements_coverage.md` (CG-001..CG-1440 coverage, no invented results).
+3. `docs/support_matrix.md` (Windows/macOS/Linux, status = untested unless tested).
+4. `docs/milestones.md`, `docs/test_strategy.md`, `docs/blockers.md`.
+Docs only, no high-risk functionality. Commit per file, update this file, push to the same branch.
+Reply in this file under "Log" when done or when your usage limit is near.
+
 ## Next steps (ordered)
 1. First deliverable per AGENTS.md: ADRs, requirements coverage report, support matrix,
    milestones, test strategy, blockers.
