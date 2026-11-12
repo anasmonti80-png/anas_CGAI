@@ -92,19 +92,45 @@ export function applyReview(rows,review,verification=null,fingerprint=null) {
       evidence:item.tests?.length&&fresh?['artifacts/verification.json','artifacts/tests.tap']:[],restrictions:[...row.restrictions,...item.remaining]};
   });
 }
+export function applyBatchReview(rows,batch) {
+  if (!batch || !Array.isArray(batch.ranges)) return rows;
+  const used=new Set();
+  for (const range of batch.ranges) {
+    if (!Number.isInteger(range.start)||!Number.isInteger(range.end)||range.start<1||range.end<range.start||range.end>1440) throw new Error('Invalid review batch range');
+    for(let number=range.start;number<=range.end;number++) {
+      if(used.has(number)) throw new Error(`Overlapping review batch range: CG-${String(number).padStart(3,'0')}`);
+      used.add(number);
+    }
+  }
+  return rows.map(row=>{
+    const range=batch.ranges.find(r=>row.number>=r.start&&row.number<=r.end);
+    if(!range)return row;
+    return {...row,
+      review_status:'reviewed-semantic-triage',
+      classification_method:'semantic-batch-001-300-v1',
+      current_scope:range.scope||row.current_scope,
+      area:range.area||row.area,
+      milestone:range.milestone||row.milestone,
+      decision_reason:range.reason,
+      restrictions:[...row.restrictions,...range.restrictions],
+    };
+  });
+}
 export function generate() {
   const inventory = sourceInventory();
   const reviewed=JSON.parse(read('docs/engineering/REVIEWED_SUBSETS.json'));
+  const batch=JSON.parse(read('docs/engineering/REVIEW_BATCH_001_300.json'));
   const verification=fs.existsSync(path.join(ROOT,'artifacts/verification.json'))?JSON.parse(read('artifacts/verification.json')):null;
-  const rows = applyReview(classify(inventory.requirements),reviewed,verification,sourceFingerprint());
+  const rows = applyReview(applyBatchReview(classify(inventory.requirements),batch),reviewed,verification,sourceFingerprint());
   const group = key => Object.fromEntries([...new Set(rows.map(r => r[key]))].sort().map(k => [k, rows.filter(r => r[key] === k).length]));
   const coverage = {
     schema_version:1, registered:1440, tracked:rows.length, verified:0, production_ready:false,
     semantic_review_complete:false, by_area:group('area'), by_scope:group('current_scope'),
     by_status:group('status'), reviewed_subset_boundaries:Object.keys(reviewed).length,
+    semantic_triage:{batch_id:batch.batch_id,reviewed_ids:batch.ranges.reduce((n,r)=>n+r.end-r.start+1,0),method:batch.method},
     by_milestone:group('milestone'), source_integrity:'pass-normalized-lf',
     files:inventory.files, chunks:inventory.chunks, history:inventory.history,
-    caveats:['Routing is an initial automated classification, not a completed manual semantic review.', 'No requirement is fully verified by inventory or a unit test of a subset.'],
+    caveats:['CG-001..CG-300 received a scope and delivery semantic triage by domain. This is not a full acceptance review or implementation claim.', 'Remaining routing is an initial automated classification, not a completed manual semantic review.', 'No requirement is fully verified by inventory or a unit test of a subset.'],
   };
   fs.mkdirSync(path.join(ROOT,'docs/engineering'), {recursive:true});
   fs.writeFileSync(path.join(ROOT,'docs/engineering/TRACEABILITY.jsonl'), rows.map(r => JSON.stringify(r)).join('\n')+'\n');
