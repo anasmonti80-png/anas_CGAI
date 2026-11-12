@@ -13,6 +13,7 @@ const ROOT=fileURLToPath(new URL('./',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
 const STATIC=new Set(['/','/app.js','/dashboard.js','/styles.css','/soc.css','/icon.svg']);
 const COOKIE='Path=/; HttpOnly; SameSite=Strict';
+const OPERATING_MODES=['pc-local','enterprise-collectors','authorized-defense-validation-lab'];
 const readJson=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
 const trace=()=>fs.readFileSync(path.join(ROOT,'docs/engineering/TRACEABILITY.jsonl'),'utf8').trim().split('\n').map(JSON.parse);
 
@@ -24,7 +25,9 @@ async function body(req) {
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
-export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1'}={}) {
+export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null}={}) {
+  fail(OPERATING_MODES.includes(mode),400,'invalid_operating_mode');
+  fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
   const auth=new Auth(store,{clock}), domain=new Domain(store,{clock});
@@ -76,7 +79,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         res.setHeader('Content-Security-Policy',"default-src 'none'; frame-src 'self'; base-uri 'none'; frame-ancestors 'none'");
         res.writeHead(200,{'Content-Type':'text/html; charset=utf-8'});res.end(fs.readFileSync(path.join(ROOT,'public','responsive-qa.html')));return;
       }
-      if(p==='/api/health'&&method==='GET') return send(res,monitorError?503:200,{status:monitorError?'health-monitor-failed':'running',stage:'engineering-preview',version:'0.1.0',network_access:'loopback-only'});
+      if(p==='/api/health'&&method==='GET') return send(res,monitorError?503:200,{status:monitorError?'health-monitor-failed':'running',stage:'engineering-preview',version:'0.1.0',network_access:'loopback-only',operating_mode:mode});
       if(p==='/api/setup/status'&&method==='GET') return send(res,200,{setup_required:!store.get('SELECT id FROM users LIMIT 1')});
       if(p==='/api/auth/setup'&&method==='POST') {
         auth.limit(req.socket.remoteAddress||'setup');
@@ -103,6 +106,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const roles=(allowed)=>auth.require(user,allowed);
       if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role},csrf:user.csrf});
       if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${COOKIE}; Max-Age=0`);return send(res,200,{logged_out:true});}
+      if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
+        {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
+        {id:'enterprise-collectors',status:mode==='enterprise-collectors'?'active':'available',capabilities:['independently authenticated source identities','passive import','SPAN/TAP observations','flow logs','managed agents'],limitations:['Visibility is limited to configured and currently receiving sources.','Connector availability is reported independently.']},
+        {id:'authorized-defense-validation-lab',status:mode==='authorized-defense-validation-lab'?'active':'requires-explicit-authorization',capabilities:['isolated synthetic validation data','responsive browser QA harness'],limitations:['Requires CG_BROWSER_QA and a non-secret authorization reference at process start.','Never represents production validation.']}
+      ]});
       if(p==='/api/users') {
         roles(['admin']);
         if(method==='GET') return send(res,200,{items:store.all('SELECT id,username,role,created_at FROM users ORDER BY username')});
@@ -180,7 +188,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   });
   server.requestTimeout=15000; server.headersTimeout=10000; server.keepAliveTimeout=5000; server.maxHeadersCount=50;
   const monitor=setInterval(()=>{try{domain.checkHealth();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
-  return {server,store,auth,domain,setupFile,listen(port=4310,host='127.0.0.1'){
+  return {server,store,auth,domain,setupFile,operatingMode:mode,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>{server.removeListener('error',reject);resolve(server.address());});});

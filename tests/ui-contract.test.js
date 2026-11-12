@@ -39,3 +39,10 @@ test('discovery view exposes authorization, evidence boundaries and central asse
   assert.match(app,/authorization_ref:'SYNTHETIC-AUTHORIZATION-REFERENCE'/);
   for(const field of ['networks','routes','vlans','interfaces','services']) assert.ok(app.includes(field),field);
 });
+
+test('settings exposes all operating modes and the PC visibility boundary',()=>{
+  const app=read('app.js'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');
+  assert.match(app,/\/api\/modes/);
+  for(const mode of ['PC Local','Enterprise Collectors','Authorized Defense Validation Lab']) assert.ok(app.includes(mode),mode);
+  for(const marker of ['behind a switch','SPAN/TAP observations','flow logs','managed agents']) assert.ok(server.includes(marker),marker);
+});

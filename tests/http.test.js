@@ -7,10 +7,10 @@ import http from 'node:http';
 import { randomBytes } from 'node:crypto';
 import { createApp } from '../server.js';
 
-async function fixture(t) {
+async function fixture(t,options={}) {
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-http-test-'));
   const setupToken=randomBytes(32).toString('hex'),password=randomBytes(20).toString('hex');
-  let now=Date.now(); const app=createApp({dataDir:dir,setupToken,clock:()=>now});
+  let now=Date.now(); const app=createApp({...options,dataDir:dir,setupToken,clock:()=>now});
   const address=await app.listen(0), base=`http://127.0.0.1:${address.port}`;
   t.after(async()=>{await app.close();fs.rmSync(dir,{recursive:true,force:true});});
   async function req(p,{method='GET',data,user,headers={}}={}) {
@@ -73,6 +73,23 @@ test('unsupported HTTP methods cannot mutate routes that accept both reads and w
   assert.equal((await f.req('/qa/responsive',{user:admin})).status,404);
   const refused=await f.req('/api/collectors/local',{method:'POST',user:admin,data:{confirm_read_only:false}});
   assert.equal(refused.status,400);assert.equal(f.app.store.get('SELECT COUNT(*) n FROM assets').n,0);
+});
+
+test('three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization',async t=>{
+  const local=await fixture(t);await local.setup();const localAdmin=await local.login();
+  const health=await local.req('/api/health');assert.equal(health.data.operating_mode,'pc-local');
+  const localModes=await local.req('/api/modes',{user:localAdmin});assert.equal(localModes.status,200);assert.equal(localModes.data.active_mode,'pc-local');assert.equal(localModes.data.items.length,3);
+  const pc=localModes.data.items.find(x=>x.id==='pc-local'),enterprise=localModes.data.items.find(x=>x.id==='enterprise-collectors');
+  assert.match(pc.limitations.join(' '),/cannot see device-to-device traffic behind a switch/);
+  for(const capability of ['SPAN/TAP observations','flow logs','managed agents']) assert.ok(enterprise.capabilities.includes(capability));
+
+  assert.throws(()=>createApp({mode:'invalid-mode'}),/invalid_operating_mode/);
+  assert.throws(()=>createApp({mode:'authorized-defense-validation-lab',browserQa:true,labAuthorizationRef:null}),/lab_authorization_required/);
+  assert.throws(()=>createApp({mode:'authorized-defense-validation-lab',browserQa:false,labAuthorizationRef:'AUTH-LAB-007'}),/lab_authorization_required/);
+
+  const lab=await fixture(t,{mode:'authorized-defense-validation-lab',browserQa:true,labAuthorizationRef:'AUTH-LAB-007'});await lab.setup();const labAdmin=await lab.login();
+  const labModes=await lab.req('/api/modes',{user:labAdmin});assert.equal(labModes.data.active_mode,'authorized-defense-validation-lab');assert.equal(labModes.data.lab_authorization_configured,true);
+  assert.equal(labModes.data.items.find(x=>x.id==='authorized-defense-validation-lab').status,'active');assert.ok(!JSON.stringify(labModes.data).includes('AUTH-LAB-007'));
 });
 
 test('Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely',async t=>{

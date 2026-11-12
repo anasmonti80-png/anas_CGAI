@@ -40,6 +40,20 @@
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This acceptance covers authorized passive/imported and authenticated-collector observations. It does not claim an active network scanner, SNMP/LLDP connector, or production network validation."]
     },
+    "CG-007": {
+      "reason": "The runtime implements PC Local, Enterprise Collectors and Authorized Defense Validation Lab as explicit operating modes. Health and authenticated mode APIs expose the active mode; Settings renders all three. Lab mode refuses to start unless browser QA and a non-secret authorization reference are both explicitly configured.",
+      "code": ["server.js", "public/app.js"],
+      "tests": ["tests/http.test.js: three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization", "tests/ui-contract.test.js: settings exposes all operating modes and the PC visibility boundary", "Browser QA: Authorized Defense Validation Lab active in Settings with all three modes visible"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Changing mode is a process-start configuration and requires an explicit safe restart. The validation-lab mode uses isolated synthetic data and never implies production validation."]
+    },
+    "CG-008": {
+      "reason": "The live Settings view states that a PC-only deployment cannot see device-to-device traffic behind a switch, identifies configured-source visibility limits, and lists SPAN/TAP, flow logs and managed agents as enterprise evidence paths. The discovery contract accepts each path as a separately typed acquisition method.",
+      "code": ["server.js", "lib/domain.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently", "tests/http.test.js: three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization", "tests/ui-contract.test.js: settings exposes all operating modes and the PC visibility boundary", "Browser QA: Settings rendered the PC blind spot and enterprise evidence paths"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This validates truthful visibility boundaries and evidence-ingestion contracts. It does not claim bundled packet capture, NetFlow exporters, deployed agents, or live enterprise connector validation."]
+    },
     "CG-022": {
       "reason": "The discovery contract and live UI model physical switch interfaces as named interface records with VLAN/state, while TCP/UDP services are separate transport/port records with evidence and observed state. Neither structure can silently accept the other type's fields.",
       "code": ["lib/domain.js", "public/app.js"],

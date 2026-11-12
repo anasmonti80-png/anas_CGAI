@@ -89,6 +89,15 @@ test('network service ports never replace or merge with physical switch interfac
   assert.deepEqual(observation.services,[{transport:'udp',port:53,state:'observed-open',name:'dns',evidence:'authenticated-observation'}]);
   assert.equal(Object.hasOwn(observation.interfaces[0],'port'),false);assert.equal(Object.hasOwn(observation.services[0],'vlan'),false);
 });
+test('visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently',t=>{
+  const {d,event,ingest,advance}=fixture(t);
+  const base={authorization_ref:'AUTH-VISIBILITY-008',availability:'up',networks:['192.0.2.0/24'],routes:[],vlans:[],interfaces:[],services:[]};
+  for(const [index,acquisition] of ['span-tap','flow-logs','agent'].entries()) {
+    ingest([event(`visibility-${index}`,'discovery.observed',{...base,acquisition},{external_id:`visibility-${index}`,hostname:`VISIBILITY-${index}`})]);
+    advance(1);
+  }
+  const items=d.discovery({limit:10}).items;assert.equal(items.length,3);assert.deepEqual(new Set(items.map(x=>x.observation.acquisition)),new Set(['span-tap','flow-logs','agent']));
+});
 test('unsupported fields, secret-bearing text and future timestamps are handled safely',t=>{
   const {s,event,ingest}=fixture(t);
   assert.throws(()=>ingest([{...event('invalid'),command:'whoami'}]),/unknown_event_field/);
