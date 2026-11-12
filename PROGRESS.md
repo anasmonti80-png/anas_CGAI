@@ -8,10 +8,10 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 
 - **Branch:** `codex/cg001-600`
 - **Latest verified implementation checkpoint:** `293b75b`
-- **Latest requirements checkpoint:** `3779171` — semantic scope/delivery triage for CG-001..CG-300 in 44 families; it is not full acceptance.
+- **Latest requirements checkpoint:** CG-001..CG-600 now have semantic scope/delivery triage; it is not full acceptance or a claim that 600 integrations are implemented.
 - **Latest handoff checkpoint:** `29ac10c` — refreshed handoff, documentation, and Unit Tested evidence.
-- **Validation:** Unit Tested — `node scripts/verify.js` passed 29/29 tests on Windows x64, Node 24.21.0, SQLite 3.53.4, using synthetic data and loopback HTTP. No Lab Tested or Production Validated claim.
-- **Current integration:** the Claude documentation branch and Codex runnable foundation are merged locally. Verification passes 29/29 tests at Unit Tested level.
+- **Validation:** Unit Tested — `node scripts/verify.js` passed 30/30 tests on Windows x64, Node 24.21.0, SQLite 3.53.4, using synthetic data and loopback HTTP. No Lab Tested or Production Validated claim.
+- **Current integration:** the Claude documentation branch and Codex runnable foundation are merged locally. Verification passes 30/30 tests at Unit Tested level.
 - **Published state:** local branch only. GitHub publishing still requires a working credential.
 
 ## Safe next work

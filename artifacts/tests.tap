@@ -2,183 +2,189 @@ TAP version 13
 # Subtest: SOC dashboard uses actual daily counts, keeps unmeasured security metrics null and filters severity
 ok 1 - SOC dashboard uses actual daily counts, keeps unmeasured security metrics null and filters severity
   ---
-  duration_ms: 14.1527
+  duration_ms: 14.2656
   type: 'test'
   ...
 # Subtest: source credentials are hashed, scoped, rotatable and revocable
 ok 2 - source credentials are hashed, scoped, rotatable and revocable
   ---
-  duration_ms: 2.5618
+  duration_ms: 2.8271
   type: 'test'
   ...
 # Subtest: ingestion is durable, idempotent, atomic and rejects changed event identifiers
 ok 3 - ingestion is durable, idempotent, atomic and rejects changed event identifiers
   ---
-  duration_ms: 4.547
+  duration_ms: 3.1578
   type: 'test'
   ...
 # Subtest: shared IP does not merge DHCP identities and older observations do not overwrite new identity
 ok 4 - shared IP does not merge DHCP identities and older observations do not overwrite new identity
   ---
-  duration_ms: 3.1785
+  duration_ms: 3.5278
   type: 'test'
   ...
 # Subtest: unsupported fields, secret-bearing text and future timestamps are handled safely
 ok 5 - unsupported fields, secret-bearing text and future timestamps are handled safely
   ---
-  duration_ms: 2.9238
+  duration_ms: 2.3608
   type: 'test'
   ...
 # Subtest: open port is exposure only; active sessions require session evidence and relay keeps A unknown
 ok 6 - open port is exposure only; active sessions require session evidence and relay keeps A unknown
   ---
-  duration_ms: 4.7205
+  duration_ms: 5.7507
   type: 'test'
   ...
 # Subtest: protection separates installed/running/collection from independently tested prevention
 ok 7 - protection separates installed/running/collection from independently tested prevention
   ---
-  duration_ms: 2.5666
+  duration_ms: 3.6311
   type: 'test'
   ...
 # Subtest: five failed authentications correlate by target account/source and alerts are deduplicated
 ok 8 - five failed authentications correlate by target account/source and alerts are deduplicated
   ---
-  duration_ms: 4.0661
+  duration_ms: 5.4223
   type: 'test'
   ...
 # Subtest: lost source visibility creates a distinct alert, not a healthy no-threat claim
 ok 9 - lost source visibility creates a distinct alert, not a healthy no-threat claim
   ---
-  duration_ms: 2.2322
+  duration_ms: 2.5129
   type: 'test'
   ...
 # Subtest: cases preserve notes, audit and evidence links; ACK is not incident closure
 ok 10 - cases preserve notes, audit and evidence links; ACK is not incident closure
   ---
-  duration_ms: 3.0959
+  duration_ms: 3.7686
   type: 'test'
   ...
 # Subtest: approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
 ok 11 - approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
   ---
-  duration_ms: 3.4155
+  duration_ms: 3.2348
   type: 'test'
   ...
 # Subtest: expired approvals and changed preflight state prevent execution
 ok 12 - expired approvals and changed preflight state prevent execution
   ---
-  duration_ms: 4.9388
+  duration_ms: 4.267
   type: 'test'
   ...
 # Subtest: 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
 ok 13 - 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
   ---
-  duration_ms: 315.4882
+  duration_ms: 331.495
   type: 'test'
   ...
 # Subtest: database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
 ok 14 - database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
   ---
-  duration_ms: 125.6017
+  duration_ms: 98.9066
   type: 'test'
   ...
 # Subtest: first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
 ok 15 - first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
   ---
-  duration_ms: 645.467
+  duration_ms: 673.5356
   type: 'test'
   ...
 # Subtest: unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
 ok 16 - unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
   ---
-  duration_ms: 773.7724
+  duration_ms: 848.9686
   type: 'test'
   ...
 # Subtest: unsupported HTTP methods cannot mutate routes that accept both reads and writes
 ok 17 - unsupported HTTP methods cannot mutate routes that accept both reads and writes
   ---
-  duration_ms: 392.5895
+  duration_ms: 457.7811
   type: 'test'
   ...
 # Subtest: Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
 ok 18 - Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
   ---
-  duration_ms: 381.5258
+  duration_ms: 444.7329
   type: 'test'
   ...
 # Subtest: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
 ok 19 - real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
   ---
-  duration_ms: 406.1886
+  duration_ms: 481.8856
   type: 'test'
   ...
 # Subtest: login attempts are bounded and unknown accounts use the same public failure
 ok 20 - login attempts are bounded and unknown accounts use the same public failure
   ---
-  duration_ms: 1682.8485
+  duration_ms: 1773.8561
   type: 'test'
   ...
 # Subtest: local collection requires no shell and records only available identity without inferring prevention
 ok 21 - local collection requires no shell and records only available identity without inferring prevention
   ---
-  duration_ms: 4.1867
+  duration_ms: 4.6664
   type: 'test'
   ...
 # Subtest: all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
 ok 22 - all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
   ---
-  duration_ms: 189.8246
+  duration_ms: 200.1885
   type: 'test'
   ...
 # Subtest: traceability preserves raw text and never turns inventory into verified product coverage
 ok 23 - traceability preserves raw text and never turns inventory into verified product coverage
   ---
-  duration_ms: 189.5236
+  duration_ms: 190.155
   type: 'test'
   ...
 # Subtest: subset evidence does not count as full acceptance and stale evidence is not promoted
 ok 24 - subset evidence does not count as full acceptance and stale evidence is not promoted
   ---
-  duration_ms: 187.6965
+  duration_ms: 190.4705
   type: 'test'
   ...
 # Subtest: first 300 requirements receive non-acceptance semantic triage without changing their source text
 ok 25 - first 300 requirements receive non-acceptance semantic triage without changing their source text
   ---
-  duration_ms: 182.0657
+  duration_ms: 176.6601
+  type: 'test'
+  ...
+# Subtest: requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
+ok 26 - requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
+  ---
+  duration_ms: 181.8146
   type: 'test'
   ...
 # Subtest: Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
-ok 26 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
+ok 27 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
   ---
-  duration_ms: 4.5063
+  duration_ms: 5.3553
   type: 'test'
   ...
 # Subtest: non-RDP logons are explicitly skipped; failure without source remains unknown
-ok 27 - non-RDP logons are explicitly skipped; failure without source remains unknown
+ok 28 - non-RDP logons are explicitly skipped; failure without source remains unknown
   ---
-  duration_ms: 0.5278
+  duration_ms: 0.5806
   type: 'test'
   ...
 # Subtest: Windows logon correlation is scoped to boot and rejects records from before boot
-ok 28 - Windows logon correlation is scoped to boot and rejects records from before boot
+ok 29 - Windows logon correlation is scoped to boot and rejects records from before boot
   ---
-  duration_ms: 0.7736
+  duration_ms: 0.6362
   type: 'test'
   ...
 # Subtest: Windows logoff closes the correlated session without erasing previously observed source identity
-ok 29 - Windows logoff closes the correlated session without erasing previously observed source identity
+ok 30 - Windows logoff closes the correlated session without erasing previously observed source identity
   ---
-  duration_ms: 4.1802
+  duration_ms: 4.8721
   type: 'test'
   ...
-1..29
-# tests 29
+1..30
+# tests 30
 # suites 0
-# pass 29
+# pass 30
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 4411.533
+# duration_ms 4822.2249

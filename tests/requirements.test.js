@@ -47,3 +47,16 @@ test('first 300 requirements receive non-acceptance semantic triage without chan
   assert.equal(rows[0].current_scope,'CyberGuard');
   assert.equal(rows[4].current_scope,'NCC-integration');
 });
+
+test('requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage',()=>{
+  const requirements=sourceInventory().requirements;
+  const first=JSON.parse(fs.readFileSync(new URL('../docs/engineering/REVIEW_BATCH_001_300.json',import.meta.url),'utf8'));
+  const second=JSON.parse(fs.readFileSync(new URL('../docs/engineering/REVIEW_BATCH_301_600.json',import.meta.url),'utf8'));
+  const rows=applyBatchReview(applyBatchReview(classify(requirements),first),second);
+  assert.equal(rows.slice(0,600).filter(r=>r.review_status==='reviewed-semantic-triage').length,600);
+  assert.equal(rows[300].raw_requirement,requirements[300].text_verbatim);
+  assert.equal(rows[599].raw_requirement,requirements[599].text_verbatim);
+  assert.equal(rows[600].review_status,'needs-semantic-review');
+  assert.equal(rows[599].current_scope,'CyberGuard');
+  assert.equal(rows[572].current_scope,'CyberGuard/NCC-integration');
+});

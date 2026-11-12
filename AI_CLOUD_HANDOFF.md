@@ -10,7 +10,7 @@ This repository is an **engineering preview**, not a production cybersecurity pl
 - Foundation: `40e5466` — requirements, architecture and milestones
 - Local evidence API: `b163ba7` — RBAC, event evidence, alerts, cases, guarded local approvals
 - Current implementation: `293b75b` — SOC UI, Windows Security JSON adapter, browser QA and traceability subset
-- First semantic review batch: `3779171` — CG-001..CG-300 triaged in 44 requirement families; this is scope/delivery review, not full acceptance.
+- Semantic review batches: CG-001..CG-600 have scope/delivery triage; this is not full acceptance or implementation evidence.
 
 The local working tree should be clean after the current handoff commit. Do not reset or overwrite a newer branch state.
 
@@ -27,7 +27,7 @@ node scripts/verify.js
 node scripts/requirements.js
 ```
 
-Latest local result: **29 passed, 0 failed**, Windows x64 / Node 24.21.0 / SQLite 3.53.4. This is **Unit Tested** using temporary databases, synthetic records and loopback HTTP. It is not Lab Tested or Production Validated.
+Latest local result: **30 passed, 0 failed**, Windows x64 / Node 24.21.0 / SQLite 3.53.4. This is **Unit Tested** using temporary databases, synthetic records and loopback HTTP. It is not Lab Tested or Production Validated.
 
 ## Product state
 
@@ -52,8 +52,9 @@ Latest local result: **29 passed, 0 failed**, Windows x64 / Node 24.21.0 / SQLit
 4. `docs/engineering/VALIDATION_AR.md`
 5. `docs/engineering/REVIEWED_SUBSETS.json`
 6. `docs/engineering/REVIEW_BATCH_001_300.json`
-7. `docs/engineering/BROWSER_QA_AR.md`
-8. `docs/OPERATIONS_AR.md` and `docs/TELEMETRY_AR.md`
+7. `docs/engineering/REVIEW_BATCH_301_600.json`
+8. `docs/engineering/BROWSER_QA_AR.md`
+9. `docs/OPERATIONS_AR.md` and `docs/TELEMETRY_AR.md`
 
 Read `00_START_HERE/` and the 12 requirement chunks before expanding a domain. Preserve `TRACEABILITY.jsonl`, regenerate it with `node scripts/requirements.js`, and distinguish partial component evidence from full requirement acceptance.
 

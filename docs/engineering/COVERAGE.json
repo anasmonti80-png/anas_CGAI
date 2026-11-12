@@ -6,25 +6,25 @@
   "production_ready": false,
   "semantic_review_complete": false,
   "by_area": {
-    "ai-policy": 74,
+    "ai-policy": 80,
     "alerts": 41,
-    "assets": 141,
+    "assets": 113,
     "cloud": 63,
-    "detection": 105,
-    "devsecops": 40,
-    "endpoint": 198,
-    "identity": 73,
-    "network": 139,
-    "platform": 378,
+    "detection": 144,
+    "devsecops": 46,
+    "endpoint": 206,
+    "identity": 77,
+    "network": 157,
+    "platform": 334,
     "remote-access": 12,
-    "resilience": 66,
-    "response": 85,
+    "resilience": 62,
+    "response": 70,
     "ui": 4,
-    "vulnerability": 21
+    "vulnerability": 31
   },
   "by_scope": {
-    "CyberGuard": 1357,
-    "CyberGuard/NCC-integration": 63,
+    "CyberGuard": 1301,
+    "CyberGuard/NCC-integration": 119,
     "CyberGuard/Tickets-integration": 1,
     "IT-Twin": 4,
     "IT-Twin-boundary": 1,
@@ -37,17 +37,23 @@
   },
   "reviewed_subset_boundaries": 33,
   "semantic_triage": {
-    "batch_id": "semantic-triage-001-300-v1",
-    "reviewed_ids": 300,
-    "method": "Manual semantic triage by requirement family: scope ownership, safe delivery phase and evidence boundaries. This does not make a requirement accepted, complete or fully implemented."
+    "batch_ids": [
+      "semantic-triage-001-300-v1",
+      "semantic-batch-301-600-v1"
+    ],
+    "reviewed_ids": 600,
+    "methods": [
+      "Manual semantic triage by requirement family: scope ownership, safe delivery phase and evidence boundaries. This does not make a requirement accepted, complete or fully implemented.",
+      "Manual domain and delivery-gate triage from the canonical section and requirement text. This assigns ownership and evidence boundaries; it does not claim implementation or acceptance."
+    ]
   },
   "by_milestone": {
-    "M1": 239,
-    "M2": 171,
-    "M3": 85,
-    "M4": 691,
-    "M5": 74,
-    "M6": 180
+    "M1": 207,
+    "M2": 186,
+    "M3": 76,
+    "M4": 706,
+    "M5": 80,
+    "M6": 185
   },
   "source_integrity": "pass-normalized-lf",
   "files": [
@@ -238,7 +244,7 @@
     }
   ],
   "caveats": [
-    "CG-001..CG-300 received a scope and delivery semantic triage by domain. This is not a full acceptance review or implementation claim.",
+    "CG-001..CG-600 received scope and delivery semantic triage by domain. This is not a full acceptance review or implementation claim.",
     "Remaining routing is an initial automated classification, not a completed manual semantic review.",
     "No requirement is fully verified by inventory or a unit test of a subset."
   ]
