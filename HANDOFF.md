@@ -1,3 +1,5 @@
+STOPPED — limit reached. Next: CG-086
+
 # HANDOFF — shared state between Claude Code and Codex
 
 Either agent may stop at any time (usage limit). The next agent resumes from this file.
