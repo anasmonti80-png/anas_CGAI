@@ -273,6 +273,13 @@ test('every browser script parses as valid JavaScript',async()=>{
   for(const file of fs.readdirSync(new URL('../public/',import.meta.url)).filter(name=>name.endsWith('.js')))assert.doesNotThrow(()=>execFileSync(process.execPath,['--check',fileURLToPath(new URL('../public/'+file,import.meta.url))],{stdio:'pipe'}),file);
 });
 
+test('policies view shows the firewall rule analyzer and the Windows rule exporter is read only',()=>{
+  const app=read('app.js'),exporter=fs.readFileSync(new URL('../scripts/Export-FirewallRules.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/firewall-rules/);
+  for(const marker of ['Firewall rule analyzer','Shadowed by an earlier rule','Allow overridden by block','Any-any allow','Admin port open to any','Expired exception','Change since previous ruleset','unreadable without elevation','CG-020']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['Get-NetFirewallRule','Get-NetFirewallPortFilter','Get-NetFirewallAddressFilter','deny-overrides','filters_readable','No upload performed']) assert.ok(exporter.includes(marker),marker);
+  for(const forbidden of ['Set-NetFirewall','New-NetFirewall','Remove-NetFirewall','Enable-NetFirewall','Disable-NetFirewall','Invoke-WebRequest']) assert.ok(!exporter.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

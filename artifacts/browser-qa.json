@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T19:29:00.092Z",
+  "at": "2026-11-13T19:42:28.956Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -55,7 +55,8 @@
     "just_in_time_privileges": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-017", "ui_request_by_analyst": true, "ui_approval_by_separate_admin": true, "real_time_expiry_observed": "grant expired at its end time; analyst returned to 403 on /api/audit", "live_elevation": {"role_now": "admin", "base_role": "analyst", "actions_left": 5, "audit_log_status": 200}, "audit_entries": ["jit.requested", "jit.approved"], "defect_fixed": "Settings was hidden from non-admins, so they could not request elevation", "evidence_visible": true},
     "normalised_logs": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-018", "formats_converted_by_real_script": 7, "categories_visible": ["syslog", "flow", "ids", "dns", "dhcp", "vpn", "firewall"], "records": 8, "ids_alert": "CG-LOG-IDS-014 high", "raw_lines_stored": false, "evidence_visible": true},
     "network_connection_analysis": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-019", "real_host_evidence": {"tcp_connections": 79, "dns_names": 43}, "lateral_movement": "10.0.0.66 to 8 hosts on RDP/SMB", "exposure": "RDP on 10.0.0.30 from 2 public sources (high)", "unusual_dns": "TXT queries and many subdomains under data-exfil.example", "alerts": ["CG-NET-LATERAL-015", "CG-NET-EXPOSE-016", "CG-NET-DNS-017"], "defects_fixed": ["documentation ranges were treated as internal", "a quote broke app.js; added a parse test for every browser script"], "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 47, "next": "CG-006"}
+    "firewall_rule_analyzer": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-020", "real_windows": {"rules": 807, "enabled": 580, "analysed": 364, "unreadable": 216, "admin_exposure": 6, "duplicates": 57, "remote_desktop_open_to_any": true}, "synthetic_pfsense": {"shadowed": "allow-smb-lab by block-smb", "expired_exception": "vendor-temp 12 days", "stale": "old-ftp 257 days", "change_impact": "increases-exposure (quick-rdp-fix)"}, "alerts": ["CG-FW-EXPOSE-020", "CG-FW-EXPIRED-019"], "false_positives_removed": ["user-scoped sandbox block rule", "app-container any-any rules", "ICMP-type duplicates", "protocol/keyword any-port exposure"], "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 48, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

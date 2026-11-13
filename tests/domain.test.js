@@ -507,6 +507,16 @@ test('network analysis runs over stored normalised logs and raises lateral-movem
   const r=d.networkAnalysis();assert.equal(r.records_analysed,6);assert.equal(r.lateral_movement.length,1);assert.equal(r.exposure[0].service,'RDP');
   const rules=s.all("SELECT rule_id FROM alerts WHERE rule_id LIKE 'CG-NET-%' ORDER BY rule_id").map(x=>x.rule_id);assert.deepEqual(rules,['CG-NET-EXPOSE-016','CG-NET-LATERAL-015']);
 });
+test('firewall rulesets are validated, analysed per device against the previous ruleset and raise any-any, expired-exception and new-exposure alerts',t=>{
+  const {d,s,event,ingest,advance}=fixture(t),rule=(rule_id,position,action,extra={})=>({rule_id,name:rule_id,position,enabled:true,direction:'in',action,protocol:'tcp',src:['any'],dst:['10.0.0.0/24'],src_ports:['any'],dst_ports:['443'],application:null,profile:null,last_hit_at:null,hit_count:null,expires_at:null,owner:null,created_at:null,...extra});
+  ingest([event('fw-1','firewall.ruleset',{ruleset_id:'FW-1',device_ref:'pfsense:edge',vendor:'pfsense',evaluation:'first-match',rules:[rule('web',1,'allow')]})]);assert.equal(s.all("SELECT * FROM alerts WHERE rule_id LIKE 'CG-FW-%'").length,0);
+  advance(60000);ingest([event('fw-2','firewall.ruleset',{ruleset_id:'FW-2',device_ref:'pfsense:edge',vendor:'pfsense',evaluation:'first-match',rules:[rule('web',1,'allow'),rule('rdp-any',2,'allow',{dst_ports:['3389']}),rule('any-any',3,'allow',{protocol:'any',dst:['any'],dst_ports:['any']}),rule('temp',4,'allow',{dst_ports:['8443'],src:['192.168.2.0/24'],expires_at:'2026-11-01T00:00:00.000Z'})]})]);
+  const r=d.firewallRuleAnalysis();assert.equal(r.total,1);assert.equal(r.items[0].change.impact,'increases-exposure');assert.equal(r.items[0].changes_applied_by_cyberguard,false);
+  assert.deepEqual(s.all("SELECT DISTINCT rule_id FROM alerts WHERE rule_id LIKE 'CG-FW-%' ORDER BY rule_id").map(x=>x.rule_id),['CG-FW-ANYANY-018','CG-FW-EXPIRED-019','CG-FW-EXPOSE-020']);assert.equal(s.all("SELECT * FROM alerts WHERE rule_id='CG-FW-EXPOSE-020'").length,2,'rdp-any and any-any both newly expose admin ports');
+  assert.throws(()=>ingest([event('fw-bad-cidr','firewall.ruleset',{ruleset_id:'X',device_ref:'x',vendor:'other',evaluation:'first-match',rules:[rule('x',1,'allow',{src:['10.0.0.0/40']})]})]),/invalid_firewall_rule_0_src_0/);
+  assert.throws(()=>ingest([event('fw-bad-port','firewall.ruleset',{ruleset_id:'X',device_ref:'x',vendor:'other',evaluation:'first-match',rules:[rule('x',1,'allow',{dst_ports:['70000']})]})]),/invalid_firewall_rule_0_dst_ports_0/);
+  assert.throws(()=>ingest([event('fw-dup','firewall.ruleset',{ruleset_id:'X',device_ref:'x',vendor:'other',evaluation:'first-match',rules:[rule('x',1,'allow'),rule('x',2,'deny')]})]),/duplicate_firewall_rule_id/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;
