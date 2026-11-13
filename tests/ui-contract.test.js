@@ -105,6 +105,12 @@ test('reports view keeps backup presence separate from restore readiness and mea
   for(const marker of ['resilience.restore_readiness','passed_restore_test_requires_measurements_and_evidence','verified_backup_integrity_requires_evidence','recoverability_state']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view exposes ordered incident recovery and blocks reconnection before threat clearance',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/incident-recovery/);
+  for(const marker of ['Incident recovery workflows','Containment','Identity / configuration / device recovery','Threat clearance','Reconnection','Recovery-workflow evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['resilience.incident_recovery','recovery_requires_completed_containment','threat_clearance_requires_recovered_identity_configuration_and_devices','threat_clearance_requires_zero_findings','reconnection_requires_completed_threat_clearance','completed_reconnection_requires_approval']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

@@ -172,6 +172,13 @@
       "tests": ["tests/domain.test.js: restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view keeps backup presence separate from restore readiness and measured RPO or RTO", "Browser QA: Reports displayed a ready service with measured RPO/RTO beside a backup-present service that remained unverified without integrity or restore-test evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Restore tests and integrity checks are source-reported evidence. No real restore was executed, no production RPO/RTO was validated, and CyberGuard does not orchestrate recovery in this phase."]
+    },
+    "CG-080": {
+      "reason": "The incident-recovery registry enforces the ordered evidence path: containment, then identity/configuration/device recovery, then zero-finding threat clearance, and finally independently approved reconnection. Completed phases require timestamps and evidence; reconnection cannot start early and cannot complete without an approver and approval time.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: incident recovery enforces containment, identity configuration and device recovery, threat clearance, then approved reconnection", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes ordered incident recovery and blocks reconnection before threat clearance", "Browser QA: Reports displayed containment, identity/configuration/device recovery, zero-finding clearance and approved reconnection with evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is a source-reported workflow and sequencing gate. It does not execute containment, restore identities/configurations/devices, scan the environment, or reconnect a real system."]
     }
   }
 }

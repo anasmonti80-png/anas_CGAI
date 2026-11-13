@@ -15,7 +15,7 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-12
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-079 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, an institutional risk register, asset lifecycle/support plans, a legacy compatibility matrix, compensating-control, backup-security and restore-readiness registries, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 66/66 tests pass.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-080 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, an institutional risk register, asset lifecycle/support plans, a legacy compatibility matrix, compensating-control, backup-security, restore-readiness and incident-recovery registries, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 68/68 tests pass.
 - In progress: Sequential authenticated discovery for CG-006; external connectors remain gated by authorized labs.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working. GitHub push also requires a working credential on this host; the non-interactive push after `2f8d54b` was rejected.
 
@@ -36,6 +36,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Codex | Added ordered incident recovery with containment, identity/configuration/device restore, zero-finding threat clearance and approved reconnection gates; 68/68 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Codex | Added per-service restore readiness with periodic documented tests, measured RPO/RTO, integrity evidence and explicit separation from backup presence; 66/66 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added evidence-gated backup security with multiple separated copies, platform immutability support, modification/deletion monitoring and permission review; 64/64 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-12 | Codex | Added evidence-gated legacy compensating controls for segmentation, jump hosts, Internet restriction, MFA, backup/restore, monitoring and owned migration; 62/62 Unit Tested and Chromium checked. | current checkpoint |
