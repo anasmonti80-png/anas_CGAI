@@ -68,7 +68,7 @@ foreach ($k in $old.Keys) { if (-not $snapshot.ContainsKey($k)) { $changes += @{
 $hostName = [System.Net.Dns]::GetHostName()
 $hostKey = (Get-Hash ($hostName + '|windows')).Substring(0, 24)
 $addresses = @(Get-NetIPAddress -AddressFamily IPv4 -ErrorAction SilentlyContinue | Where-Object { $_.IPAddress -match '^(10\.|192\.168\.|172\.(1[6-9]|2\d|3[01])\.)' } | ForEach-Object { $_.IPAddress } | Select-Object -Unique)
-function Limit([string]$text) { if ($null -eq $text) { return $null }; if ($text.Length -gt 500) { return $text.Substring(0, 500) }; return $text }
+function Limit([string]$text) { if ($null -eq $text) { return $null }; $text = ($text -replace '[\x00-\x1F\x7F]', ' ').Trim(); if ($text.Length -eq 0) { return $null }; if ($text.Length -gt 500) { return $text.Substring(0, 500) }; return $text }
 $events = @($changes | Select-Object -First 250 | ForEach-Object {
     $c = $_
     [ordered]@{

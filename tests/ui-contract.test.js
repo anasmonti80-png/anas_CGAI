@@ -217,6 +217,14 @@ test('threats view lists the versioned malware, ransomware and tamper detection 
   for(const marker of ['CG-MAL-LOLBIN-001','CG-MAL-PERSIST-002','CG-MAL-USERPATH-003','CG-TAMPER-004','CG-RAN-005','CG-AGENT-NOAV-006','vssadmin','encodedcommand','they never act']) assert.ok(rules.includes(marker),marker);
 });
 
+test('vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),exporter=fs.readFileSync(new URL('../scripts/Export-SoftwareInventory.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/software-vulnerabilities/);assert.match(app,/state\.view==='vulnerabilities'\?await vulnerabilitiesView\(\)/);
+  for(const marker of ['Software, update and vulnerability inventory','Device / OS','Software / updates','Version-linked vulnerabilities','Fixed by update','Version unknown','Inventory evidence','CG-013']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['software.inventory','vulnerability.catalog','vulnerability_requires_affected_range_or_fixing_update','fixed-by-update','version-unknown','nothing is scanned or exploited']) assert.ok(domain.includes(marker),marker);
+  for(const marker of ['Uninstall','Win32_QuickFixEngineering','Win32_OperatingSystem','software.inventory','No upload performed']) assert.ok(exporter.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Install-','Uninstall-','Start-Process']) assert.ok(!exporter.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

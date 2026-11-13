@@ -29,3 +29,35 @@ jobs:
           $parseTokens = $null
           [System.Management.Automation.Language.Parser]::ParseFile((Join-Path $PWD 'scripts/Export-WindowsEvents.ps1'), [ref]$parseTokens, [ref]$parseErrors) | Out-Null
           if ($parseErrors.Count -gt 0) { throw 'PowerShell syntax validation failed' }
+      - name: Validate every PowerShell script
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $bad = 0
+          foreach ($file in Get-ChildItem -Path scripts -Recurse -Filter *.ps1) {
+            $parseErrors = $null; $parseTokens = $null
+            [System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$parseTokens, [ref]$parseErrors) | Out-Null
+            if ($parseErrors.Count -gt 0) { Write-Error "$($file.Name): $($parseErrors[0].Message)"; $bad++ } else { Write-Output "syntax ok: $($file.Name)" }
+          }
+          if ($bad -gt 0) { throw 'PowerShell syntax validation failed' }
+      - name: Run Windows collectors for real and ingest their output
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'cg-collectors'; New-Item -ItemType Directory -Force $out | Out-Null
+          ./scripts/agent/CyberGuard-Agent.ps1 -OutputPath "$out/agent.json" -EnrolledBy 'github-actions'
+          ./scripts/Export-SoftwareInventory.ps1 -OutputPath "$out/software.json"
+          $watched = Join-Path $out 'watched'; New-Item -ItemType Directory -Force $watched | Out-Null
+          'v1' | Out-File "$watched/a.txt"; 'old' | Out-File "$watched/old.txt"
+          ./scripts/Watch-SensitiveChanges.ps1 -StatePath "$out/state.json" -OutputPath "$out/changes-baseline.json" -WatchPath $watched
+          'v2' | Out-File "$watched/a.txt"; 'new' | Out-File "$watched/new.txt"; Remove-Item "$watched/old.txt"
+          ./scripts/Watch-SensitiveChanges.ps1 -StatePath "$out/state.json" -OutputPath "$out/changes.json" -WatchPath $watched
+          $files = @("$out/agent.json", "$out/software.json", "$out/changes.json")
+          try { ./scripts/Export-LocalDiscovery.ps1 -OutputPath "$out/discovery.json" -AuthorizationRef 'github-actions-runner-self'; $files += "$out/discovery.json" } catch { Write-Output "discovery skipped: $($_.Exception.Message)" }
+          node scripts/ci-collector-check.js @files
+      - name: Run the Linux agent for real and ingest its output
+        if: runner.os == 'Linux'
+        run: |
+          bash -n scripts/agent/cyberguard-agent.sh
+          bash scripts/agent/cyberguard-agent.sh "$RUNNER_TEMP/agent.json" github-actions 60
+          node scripts/ci-collector-check.js "$RUNNER_TEMP/agent.json"

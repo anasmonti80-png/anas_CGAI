@@ -15,6 +15,7 @@ $ErrorActionPreference = 'Stop'
 $destination = [System.IO.Path]::GetFullPath($OutputPath)
 if (Test-Path -LiteralPath $destination) { throw 'Output already exists. Choose a new private file path.' }
 if (-not (Test-Path -LiteralPath (Split-Path -Parent $destination) -PathType Container)) { throw 'Output directory must exist and be private.' }
+function Clean([string]$text) { if ($null -eq $text) { return $null }; return ($text -replace '[\x00-\x1F\x7F]', '').Trim() }
 function Get-Iso($date) { if ($null -eq $date) { return $null }; return ([datetime]$date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ') }
 $now = Get-Date
 $since = $now.AddHours(-1)
@@ -45,9 +46,9 @@ if (-not $sysmonService -and $channels[3].status -ne 'collected') { $channels[3]
 
 # Services and processes (names only).
 $services = @(Get-CimInstance -ClassName Win32_Service | Sort-Object Name)
-$serviceItems = @($services | Select-Object -First 1000 | ForEach-Object { [ordered]@{ name = [string]$_.Name; state = ([string]$_.State).ToLower(); start_mode = ([string]$_.StartMode).ToLower() } })
+$serviceItems = @($services | Select-Object -First 1000 | ForEach-Object { [ordered]@{ name = (Clean ([string]$_.Name)); state = ([string]$_.State).ToLower(); start_mode = ([string]$_.StartMode).ToLower() } })
 $processes = @(Get-Process | Sort-Object ProcessName, Id)
-$processItems = @($processes | Select-Object -First 2000 | ForEach-Object { [ordered]@{ name = [string]$_.ProcessName; pid = [int]$_.Id } })
+$processItems = @($processes | Select-Object -First 2000 | ForEach-Object { [ordered]@{ name = (Clean ([string]$_.ProcessName)); pid = [int]$_.Id } })
 
 # Protection status from Windows Security Center and Defender.
 $products = @()
@@ -55,7 +56,7 @@ try {
     foreach ($p in @(Get-CimInstance -Namespace 'root/SecurityCenter2' -ClassName AntiVirusProduct -ErrorAction Stop)) {
         $hex = '{0:X6}' -f [int]$p.productState
         $state = switch ($hex.Substring(2, 2)) { '10' { 'on' } '11' { 'on' } '00' { 'off' } '01' { 'snoozed' } default { 'unknown' } }
-        $products += [ordered]@{ name = [string]$p.displayName; type = 'av'; state = $state; signatures_age_days = $null; realtime = $null }
+        $products += [ordered]@{ name = (Clean ([string]$p.displayName)); type = 'av'; state = $state; signatures_age_days = $null; realtime = $null }
     }
 } catch { }
 try {
