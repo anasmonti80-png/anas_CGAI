@@ -10,14 +10,17 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 4. Record decisions in ADRs (when created), not only in chat.
 5. Never claim "implemented" without passing tests (see AGENTS.md).
 6. Do not put secrets, customer data or private inventories in this file.
+7. `HANDOFF.md` is the single canonical coordination notebook for Codex and Claude. Record the active owner, exact CG range, validation result, commit and push state here; do not create agent-specific handoff files.
+8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
 - Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-081 are acceptance-verified. The UI has the requested SOC design, bilingual responsive navigation, evidence readiness, discovery, typed interfaces/services, remote access, operating modes, actions, source health, NIST mapping, versioned environment threat models, an institutional risk register, asset lifecycle/support plans, a legacy compatibility matrix, compensating-control, backup-security, restore-readiness, incident-recovery and resilience-control registries, a visibility-gap registry, evidence-linked asset context and the Achievements ledger. 70/70 tests pass.
-- In progress: Sequential authenticated discovery for CG-006; external connectors remain gated by authorized labs.
-- Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working. GitHub push also requires a working credential on this host; the non-interactive push after `2f8d54b` was rejected.
+- In progress: Codex has local CG-082 work marked NOT_TESTED and not yet published. Sequential authenticated discovery for CG-006 remains the first ordered item in this handoff; external connectors remain gated by authorized labs.
+- GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. Commit `9b292da` is the latest verified implementation checkpoint currently available to Claude.
+- Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
 ## Task for Codex (from Claude Code)
 Read AGENTS.md mandatory reading order first, then start the first engineering deliverable:
@@ -36,6 +39,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Codex | Activated the shared GitHub branch and made this file the single canonical Codex/Claude coordination notebook. | current checkpoint |
 | 2026-11-13 | Codex | Added evidence-gated network/SOC resilience controls for separated configuration backups, tested out-of-band and alternate management, an exercised SOC outage playbook and an expiring automatic temporary-policy fail-safe; 70/70 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Codex | Added ordered incident recovery with containment, identity/configuration/device restore, zero-finding threat clearance and approved reconnection gates; 68/68 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Codex | Added per-service restore readiness with periodic documented tests, measured RPO/RTO, integrity evidence and explicit separation from backup presence; 66/66 Unit Tested and Chromium checked. | current checkpoint |

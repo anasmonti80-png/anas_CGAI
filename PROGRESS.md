@@ -12,7 +12,7 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 - **Validation:** Unit Tested — `node scripts/verify.js` passed 70/70 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. UI checks passed in local Chromium at desktop, 760 px and 390 px, including resilience controls, incident recovery, restore readiness, backup security, legacy compensating controls, the compatibility matrix, asset lifecycle, the risk register, environment threat models, central asset context, evidence readiness, discovery, operating modes, actions, source health, remote access, NIST mapping and the visibility-gap registry. No live connector lab or Production Validated claim.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, a central asset record with evidence-linked governance context, an evidence-readiness score, a Discover view for authorized observations, and a Settings view that states actual PC/collector/lab visibility boundaries. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
-- **Published state:** local branch only. A push after commit `2f8d54b` failed because no non-interactive GitHub credential is configured on this host.
+- **Published state:** `codex/cg001-600` is published on `origin` and is the shared Codex/Claude handoff branch. `HANDOFF.md` is the single canonical coordination notebook.
 
 ## Safe next work
 
