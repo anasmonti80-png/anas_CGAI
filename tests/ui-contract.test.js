@@ -247,6 +247,13 @@ test('no evidence schema field name is one that the secret redactor would erase'
   assert.ok(keys.size>100,'schema keys found');assert.deepEqual(erased,[]);
 });
 
+test('settings view offers just-in-time privilege requests with approval, revocation and visible expiry',()=>{
+  const app=read('app.js'),auth=fs.readFileSync(new URL('../lib/auth.js',import.meta.url),'utf8'),store=fs.readFileSync(new URL('../lib/store.js',import.meta.url),'utf8');assert.match(app,/\/api\/jit/);
+  for(const marker of ['Just-in-time privileges','Request temporary privilege','Requested role','Action cap','Approve','Deny','Revoke','temporary until','CG-017']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['jit_self_approval_forbidden','jit_approver_must_be_standing_admin','jit_role_must_exceed_current_role','jit.requested','jit.used','exhausted','expired']) assert.ok(auth.includes(marker),marker);
+  assert.match(store,/CREATE TABLE jit_grants/);assert.ok(app.includes("nav.filter(n=>state.user.role==='admin'||n[0]!=='audit')"),'settings reachable by every role for JIT requests');
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

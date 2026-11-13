@@ -2,657 +2,669 @@ TAP version 13
 # Subtest: the current distributable has no undeclared npm dependency or accidental publish path
 ok 1 - the current distributable has no undeclared npm dependency or accidental publish path
   ---
-  duration_ms: 4.9233
+  duration_ms: 3.8589
   type: 'test'
   ...
 # Subtest: SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security
 ok 2 - SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security
   ---
-  duration_ms: 26.2559
+  duration_ms: 27.8701
   type: 'test'
   ...
 # Subtest: NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance
 ok 3 - NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance
   ---
-  duration_ms: 7.6532
+  duration_ms: 14.1213
   type: 'test'
   ...
 # Subtest: versioned threat model covers valuable assets, trust boundaries, attack scenarios and both impact classes per environment
 ok 4 - versioned threat model covers valuable assets, trust boundaries, attack scenarios and both impact classes per environment
   ---
-  duration_ms: 6.9619
+  duration_ms: 5.995
   type: 'test'
   ...
 # Subtest: institutional risk register links coverage, resolved evidence, owner, remediation, exception and time-bounded acceptance
 ok 5 - institutional risk register links coverage, resolved evidence, owner, remediation, exception and time-bounded acceptance
   ---
-  duration_ms: 7.3286
+  duration_ms: 7.0698
   type: 'test'
   ...
 # Subtest: source credentials are hashed, scoped, rotatable and revocable
 ok 6 - source credentials are hashed, scoped, rotatable and revocable
   ---
-  duration_ms: 2.7265
+  duration_ms: 3.1063
   type: 'test'
   ...
 # Subtest: ingestion is durable, idempotent, atomic and rejects changed event identifiers
 ok 7 - ingestion is durable, idempotent, atomic and rejects changed event identifiers
   ---
-  duration_ms: 3.4798
+  duration_ms: 3.1283
   type: 'test'
   ...
 # Subtest: shared IP does not merge DHCP identities and older observations do not overwrite new identity
 ok 8 - shared IP does not merge DHCP identities and older observations do not overwrite new identity
   ---
-  duration_ms: 3.8598
+  duration_ms: 4.2319
   type: 'test'
   ...
 # Subtest: authorized passive discovery preserves topology evidence and reports additions, changes and outages
 ok 9 - authorized passive discovery preserves topology evidence and reports additions, changes and outages
   ---
-  duration_ms: 7.1511
+  duration_ms: 6.8057
   type: 'test'
   ...
 # Subtest: visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution
 ok 10 - visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution
   ---
-  duration_ms: 14.2785
+  duration_ms: 16.7047
   type: 'test'
   ...
 # Subtest: network service ports never replace or merge with physical switch interfaces
 ok 11 - network service ports never replace or merge with physical switch interfaces
   ---
-  duration_ms: 2.8634
+  duration_ms: 2.4199
   type: 'test'
   ...
 # Subtest: visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently
 ok 12 - visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently
   ---
-  duration_ms: 3.3362
+  duration_ms: 3.8024
   type: 'test'
   ...
 # Subtest: unsupported fields, secret-bearing text and future timestamps are handled safely
 ok 13 - unsupported fields, secret-bearing text and future timestamps are handled safely
   ---
-  duration_ms: 1.7858
+  duration_ms: 2.1795
   type: 'test'
   ...
 # Subtest: open port is exposure only; active sessions require session evidence and relay keeps A unknown
 ok 14 - open port is exposure only; active sessions require session evidence and relay keeps A unknown
   ---
-  duration_ms: 4.2962
+  duration_ms: 5.5018
   type: 'test'
   ...
 # Subtest: remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment
 ok 15 - remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment
   ---
-  duration_ms: 5.3194
+  duration_ms: 4.1188
   type: 'test'
   ...
 # Subtest: protection separates installed/running/collection from independently tested prevention
 ok 16 - protection separates installed/running/collection from independently tested prevention
   ---
-  duration_ms: 2.374
+  duration_ms: 2.8737
   type: 'test'
   ...
 # Subtest: five failed authentications correlate by target account/source and alerts are deduplicated
 ok 17 - five failed authentications correlate by target account/source and alerts are deduplicated
   ---
-  duration_ms: 4.8889
+  duration_ms: 5.3763
   type: 'test'
   ...
 # Subtest: lost source visibility creates a distinct alert, not a healthy no-threat claim
 ok 18 - lost source visibility creates a distinct alert, not a healthy no-threat claim
   ---
-  duration_ms: 6.1951
+  duration_ms: 4.7663
   type: 'test'
   ...
 # Subtest: managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
 ok 19 - managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
   ---
-  duration_ms: 3.7378
+  duration_ms: 3.5843
   type: 'test'
   ...
 # Subtest: cases preserve notes, audit and evidence links; ACK is not incident closure
 ok 20 - cases preserve notes, audit and evidence links; ACK is not incident closure
   ---
-  duration_ms: 3.1372
+  duration_ms: 3.2216
   type: 'test'
   ...
 # Subtest: approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
 ok 21 - approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
   ---
-  duration_ms: 4.189
+  duration_ms: 4.0545
   type: 'test'
   ...
 # Subtest: expired approvals and changed preflight state prevent execution
 ok 22 - expired approvals and changed preflight state prevent execution
   ---
-  duration_ms: 4.3567
+  duration_ms: 2.6975
   type: 'test'
   ...
 # Subtest: 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
 ok 23 - 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
   ---
-  duration_ms: 357.7214
+  duration_ms: 359.8029
   type: 'test'
   ...
 # Subtest: asset context links the central device to owner, service, site, sensitivity, maintenance and service criticality evidence
 ok 24 - asset context links the central device to owner, service, site, sensitivity, maintenance and service criticality evidence
   ---
-  duration_ms: 3.4501
+  duration_ms: 3.5388
   type: 'test'
   ...
 # Subtest: asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan
 ok 25 - asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan
   ---
-  duration_ms: 3.0237
+  duration_ms: 3.1177
   type: 'test'
   ...
 # Subtest: legacy compatibility matrix keeps agent, read-only, isolation, tested capability, performance and licensing evidence explicit
 ok 26 - legacy compatibility matrix keeps agent, read-only, isolation, tested capability, performance and licensing evidence explicit
   ---
-  duration_ms: 2.8616
+  duration_ms: 3.1733
   type: 'test'
   ...
 # Subtest: legacy compensating controls require evidence for segmentation, jump host, internet restriction, MFA, backup and monitoring until migration
 ok 27 - legacy compensating controls require evidence for segmentation, jump host, internet restriction, MFA, backup and monitoring until migration
   ---
-  duration_ms: 2.8217
+  duration_ms: 3.0968
   type: 'test'
   ...
 # Subtest: backup security keeps multiple separated copies, platform immutability, change monitoring and permissions explicit
 ok 28 - backup security keeps multiple separated copies, platform immutability, change monitoring and permissions explicit
   ---
-  duration_ms: 2.3411
+  duration_ms: 3.874
   type: 'test'
   ...
 # Subtest: restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent
 ok 29 - restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent
   ---
-  duration_ms: 4.5249
+  duration_ms: 4.2409
   type: 'test'
   ...
 # Subtest: incident recovery enforces containment, identity configuration and device recovery, threat clearance, then approved reconnection
 ok 30 - incident recovery enforces containment, identity configuration and device recovery, threat clearance, then approved reconnection
   ---
-  duration_ms: 2.7469
+  duration_ms: 4.1399
   type: 'test'
   ...
 # Subtest: resilience controls require separated configuration backups, tested alternate paths, an exercised SOC outage playbook and active automatic fail-safe evidence
 ok 31 - resilience controls require separated configuration backups, tested alternate paths, an exercised SOC outage playbook and active automatic fail-safe evidence
   ---
-  duration_ms: 2.5784
+  duration_ms: 2.3437
   type: 'test'
   ...
 # Subtest: AD and Entra audit separates Tier 0, Domain Admin changes, service accounts, trusts and sign-in policy evidence without secrets
 ok 32 - AD and Entra audit separates Tier 0, Domain Admin changes, service accounts, trusts and sign-in policy evidence without secrets
   ---
-  duration_ms: 3.1886
+  duration_ms: 3.5241
   type: 'test'
   ...
 # Subtest: Windows LAPS posture tracks per-device policy, rotation failures and secret-view audits without collecting passwords
 ok 33 - Windows LAPS posture tracks per-device policy, rotation failures and secret-view audits without collecting passwords
   ---
-  duration_ms: 2.863
+  duration_ms: 2.8994
   type: 'test'
   ...
 # Subtest: AD CS and Kerberos posture keeps certificate services, issuance, delegation, NTLM and access-decided authentication changes explicit
 ok 34 - AD CS and Kerberos posture keeps certificate services, issuance, delegation, NTLM and access-decided authentication changes explicit
   ---
-  duration_ms: 2.8071
+  duration_ms: 4.19
   type: 'test'
   ...
 # Subtest: privileged access requires bounded JIT or PIM, compliant dedicated PAW, controlled temporary session and independent authorization
 ok 35 - privileged access requires bounded JIT or PIM, compliant dedicated PAW, controlled temporary session and independent authorization
   ---
-  duration_ms: 2.4112
+  duration_ms: 3.2035
   type: 'test'
   ...
 # Subtest: SaaS OAuth and service identity inventory tracks owners, credential rotation, permissions and activities without credential values
 ok 36 - SaaS OAuth and service identity inventory tracks owners, credential rotation, permissions and activities without credential values
   ---
-  duration_ms: 2.6338
+  duration_ms: 2.8336
   type: 'test'
   ...
 # Subtest: identity attack correlation orders sign-in and identity changes before file resource and network movement without claiming an attack
 ok 37 - identity attack correlation orders sign-in and identity changes before file resource and network movement without claiming an attack
   ---
-  duration_ms: 4.327
+  duration_ms: 3.3265
   type: 'test'
   ...
 # Subtest: help desk reset controls require requester verification, independent approval, audit and temporary-access follow-up without secret values
 ok 38 - help desk reset controls require requester verification, independent approval, audit and temporary-access follow-up without secret values
   ---
-  duration_ms: 4.3024
+  duration_ms: 3.3288
   type: 'test'
   ...
 # Subtest: process causality builds a parent-child tree with services tasks and connections, masks personal data and states confidence without a verdict
 ok 39 - process causality builds a parent-child tree with services tasks and connections, masks personal data and states confidence without a verdict
   ---
-  duration_ms: 7.6875
+  duration_ms: 7.0567
   type: 'test'
   ...
 # Subtest: defense tamper detection separates authorized change, likely fault and suspected deliberate tampering without responding
 ok 40 - defense tamper detection separates authorized change, likely fault and suspected deliberate tampering without responding
   ---
-  duration_ms: 5.6038
+  duration_ms: 5.3534
   type: 'test'
   ...
 # Subtest: anti-ransomware posture flags file-activity indicators, platform limits, backup integrity and recovery-store gaps without a verdict
 ok 41 - anti-ransomware posture flags file-activity indicators, platform limits, backup integrity and recovery-store gaps without a verdict
   ---
-  duration_ms: 3.2517
+  duration_ms: 3.793
   type: 'test'
   ...
 # Subtest: sequential discovery runs every method in order, merges devices across methods, keeps neighbour links and rejects out-of-scope or unordered evidence
 ok 42 - sequential discovery runs every method in order, merges devices across methods, keeps neighbour links and rejects out-of-scope or unordered evidence
   ---
-  duration_ms: 4.1643
+  duration_ms: 5.8888
   type: 'test'
   ...
 # Subtest: distributed collector capacity plan checks the 20,000-device target, overload, uncovered sites, single points of failure and upstreams
 ok 43 - distributed collector capacity plan checks the 20,000-device target, overload, uncovered sites, single points of failure and upstreams
   ---
-  duration_ms: 6.7863
+  duration_ms: 7.4042
   type: 'test'
   ...
 # Subtest: scale benchmark stores and pages 2,000 devices correctly with bounded view latency
 ok 44 - scale benchmark stores and pages 2,000 devices correctly with bounded view latency
   ---
-  duration_ms: 238.8624
+  duration_ms: 301.9182
   type: 'test'
   ...
 # Subtest: optional agents report event-log channels, Sysmon, services, processes and AV/EDR state with explicit gaps and no command lines
 ok 45 - optional agents report event-log channels, Sysmon, services, processes and AV/EDR state with explicit gaps and no command lines
   ---
-  duration_ms: 3.584
+  duration_ms: 6.7749
   type: 'test'
   ...
 # Subtest: sensitive change monitoring records registry, file, service, software, firewall, account and policy changes with before/after state and risk
 ok 46 - sensitive change monitoring records registry, file, service, software, firewall, account and policy changes with before/after state and risk
   ---
-  duration_ms: 3.5994
+  duration_ms: 5.888
   type: 'test'
   ...
 # Subtest: versioned detection rules raise evidence-linked alerts for malicious commands, unsigned persistence, tampering, ransomware and unprotected devices
 ok 47 - versioned detection rules raise evidence-linked alerts for malicious commands, unsigned persistence, tampering, ransomware and unprotected devices
   ---
-  duration_ms: 3.7044
+  duration_ms: 6.3978
   type: 'test'
   ...
 # Subtest: software and update inventory links installed versions to imported vulnerability catalogs, honours fixing updates and reports unknown versions
 ok 48 - software and update inventory links installed versions to imported vulnerability catalogs, honours fixing updates and reports unknown versions
   ---
-  duration_ms: 3.6508
+  duration_ms: 6.0046
   type: 'test'
   ...
 # Subtest: identity directory snapshots integrate local, AD, Entra and cloud IAM read-only and alert on privileged group additions and privilege grants
 ok 49 - identity directory snapshots integrate local, AD, Entra and cloud IAM read-only and alert on privileged group additions and privilege grants
   ---
-  duration_ms: 4.3603
+  duration_ms: 6.5761
   type: 'test'
   ...
 # Subtest: identity threat detection finds missing MFA, stale accounts, spraying, brute force, impossible travel, risky OAuth and unauthorized IdP changes
 ok 50 - identity threat detection finds missing MFA, stale accounts, spraying, brute force, impossible travel, risky OAuth and unauthorized IdP changes
   ---
-  duration_ms: 8.3841
+  duration_ms: 7.2274
   type: 'test'
   ...
 # Subtest: database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
 ok 51 - database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
   ---
-  duration_ms: 105.0541
+  duration_ms: 40.6733
   type: 'test'
   ...
 # Subtest: first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
 ok 52 - first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
   ---
-  duration_ms: 739.5739
+  duration_ms: 708.9321
   type: 'test'
   ...
 # Subtest: unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
 ok 53 - unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
   ---
-  duration_ms: 913.5948
+  duration_ms: 832.8798
   type: 'test'
   ...
 # Subtest: unsupported HTTP methods cannot mutate routes that accept both reads and writes
 ok 54 - unsupported HTTP methods cannot mutate routes that accept both reads and writes
   ---
-  duration_ms: 505.2625
+  duration_ms: 416.3199
   type: 'test'
   ...
 # Subtest: three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
 ok 55 - three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
   ---
-  duration_ms: 933.0512
+  duration_ms: 765.2945
   type: 'test'
   ...
 # Subtest: Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
 ok 56 - Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
   ---
-  duration_ms: 481.9364
+  duration_ms: 421.5442
   type: 'test'
   ...
 # Subtest: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
 ok 57 - real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
   ---
-  duration_ms: 843.8388
+  duration_ms: 1133.537
   type: 'test'
   ...
 # Subtest: login attempts are bounded and unknown accounts use the same public failure
 ok 58 - login attempts are bounded and unknown accounts use the same public failure
   ---
-  duration_ms: 2049.6433
+  duration_ms: 1765.2694
+  type: 'test'
+  ...
+# Subtest: just-in-time elevation needs a reason, a higher role, a different standing admin, and ends at expiry or the action cap with audit
+ok 59 - just-in-time elevation needs a reason, a higher role, a different standing admin, and ends at expiry or the action cap with audit
+  ---
+  duration_ms: 16.1428
   type: 'test'
   ...
 # Subtest: local collection requires no shell and records only available identity without inferring prevention
-ok 59 - local collection requires no shell and records only available identity without inferring prevention
+ok 60 - local collection requires no shell and records only available identity without inferring prevention
   ---
-  duration_ms: 13.2436
+  duration_ms: 11.2777
   type: 'test'
   ...
 # Subtest: all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
-ok 60 - all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
+ok 61 - all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
   ---
-  duration_ms: 213.8168
+  duration_ms: 199.5187
   type: 'test'
   ...
 # Subtest: traceability preserves raw text and never turns inventory into verified product coverage
-ok 61 - traceability preserves raw text and never turns inventory into verified product coverage
+ok 62 - traceability preserves raw text and never turns inventory into verified product coverage
   ---
-  duration_ms: 190.8639
+  duration_ms: 195.2793
   type: 'test'
   ...
 # Subtest: subset evidence does not count as full acceptance and stale evidence is not promoted
-ok 62 - subset evidence does not count as full acceptance and stale evidence is not promoted
+ok 63 - subset evidence does not count as full acceptance and stale evidence is not promoted
   ---
-  duration_ms: 176.5
+  duration_ms: 193.6717
   type: 'test'
   ...
 # Subtest: full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
-ok 63 - full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
+ok 64 - full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
   ---
-  duration_ms: 179.696
+  duration_ms: 215.0208
   type: 'test'
   ...
 # Subtest: first 300 requirements receive non-acceptance semantic triage without changing their source text
-ok 64 - first 300 requirements receive non-acceptance semantic triage without changing their source text
+ok 65 - first 300 requirements receive non-acceptance semantic triage without changing their source text
   ---
-  duration_ms: 188.3981
+  duration_ms: 202.207
   type: 'test'
   ...
 # Subtest: requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
-ok 65 - requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
+ok 66 - requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
   ---
-  duration_ms: 175.0581
+  duration_ms: 170.0105
   type: 'test'
   ...
 # Subtest: SOC shell exposes every required navigation destination as an operable view
-ok 66 - SOC shell exposes every required navigation destination as an operable view
+ok 67 - SOC shell exposes every required navigation destination as an operable view
   ---
-  duration_ms: 3.8903
+  duration_ms: 3.1247
   type: 'test'
   ...
 # Subtest: bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
-ok 67 - bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
+ok 68 - bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
   ---
-  duration_ms: 4.7004
+  duration_ms: 3.1221
   type: 'test'
   ...
 # Subtest: security posture UI keeps unknown, not configured and unverified evidence explicit
-ok 68 - security posture UI keeps unknown, not configured and unverified evidence explicit
+ok 69 - security posture UI keeps unknown, not configured and unverified evidence explicit
   ---
-  duration_ms: 3.1685
+  duration_ms: 2.028
   type: 'test'
   ...
 # Subtest: discovery view exposes authorization, evidence boundaries and central asset observations
-ok 69 - discovery view exposes authorization, evidence boundaries and central asset observations
+ok 70 - discovery view exposes authorization, evidence boundaries and central asset observations
   ---
-  duration_ms: 2.2921
+  duration_ms: 1.6887
   type: 'test'
   ...
 # Subtest: settings exposes all operating modes and the PC visibility boundary
-ok 70 - settings exposes all operating modes and the PC visibility boundary
+ok 71 - settings exposes all operating modes and the PC visibility boundary
   ---
-  duration_ms: 2.8565
+  duration_ms: 2.4389
   type: 'test'
   ...
 # Subtest: action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
-ok 71 - action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
+ok 72 - action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
   ---
-  duration_ms: 3.6088
+  duration_ms: 2.9686
   type: 'test'
   ...
 # Subtest: source health UI distinguishes managed agents, log forwarders and delivery failures
-ok 72 - source health UI distinguishes managed agents, log forwarders and delivery failures
+ok 73 - source health UI distinguishes managed agents, log forwarders and delivery failures
   ---
-  duration_ms: 1.7465
+  duration_ms: 1.8173
   type: 'test'
   ...
 # Subtest: remote access UI distinguishes application presence, connection phase and evidence assessment
-ok 73 - remote access UI distinguishes application presence, connection phase and evidence assessment
+ok 74 - remote access UI distinguishes application presence, connection phase and evidence assessment
   ---
-  duration_ms: 3.4401
+  duration_ms: 3.947
   type: 'test'
   ...
 # Subtest: policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps
-ok 74 - policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps
+ok 75 - policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps
   ---
-  duration_ms: 6.5008
+  duration_ms: 8.7603
   type: 'test'
   ...
 # Subtest: policies view exposes a versioned threat model for every registered environment
-ok 75 - policies view exposes a versioned threat model for every registered environment
+ok 76 - policies view exposes a versioned threat model for every registered environment
   ---
-  duration_ms: 2.2059
+  duration_ms: 2.8558
   type: 'test'
   ...
 # Subtest: reports view exposes the institutional risk register and review deadlines
-ok 76 - reports view exposes the institutional risk register and review deadlines
+ok 77 - reports view exposes the institutional risk register and review deadlines
   ---
-  duration_ms: 1.9333
+  duration_ms: 2.3088
   type: 'test'
   ...
 # Subtest: reports view exposes a legacy compatibility matrix without converting not-tested into support
-ok 77 - reports view exposes a legacy compatibility matrix without converting not-tested into support
+ok 78 - reports view exposes a legacy compatibility matrix without converting not-tested into support
   ---
-  duration_ms: 2.5826
+  duration_ms: 3.6962
   type: 'test'
   ...
 # Subtest: reports view exposes evidence-backed legacy compensating controls through migration
-ok 78 - reports view exposes evidence-backed legacy compensating controls through migration
+ok 79 - reports view exposes evidence-backed legacy compensating controls through migration
   ---
-  duration_ms: 2.3863
+  duration_ms: 2.2291
   type: 'test'
   ...
 # Subtest: reports view exposes backup copy separation, immutability, change monitoring and permission review
-ok 79 - reports view exposes backup copy separation, immutability, change monitoring and permission review
+ok 80 - reports view exposes backup copy separation, immutability, change monitoring and permission review
   ---
-  duration_ms: 3.3432
+  duration_ms: 4.6587
   type: 'test'
   ...
 # Subtest: reports view keeps backup presence separate from restore readiness and measured RPO or RTO
-ok 80 - reports view keeps backup presence separate from restore readiness and measured RPO or RTO
+ok 81 - reports view keeps backup presence separate from restore readiness and measured RPO or RTO
   ---
-  duration_ms: 2.551
+  duration_ms: 2.5517
   type: 'test'
   ...
 # Subtest: reports view exposes ordered incident recovery and blocks reconnection before threat clearance
-ok 81 - reports view exposes ordered incident recovery and blocks reconnection before threat clearance
+ok 82 - reports view exposes ordered incident recovery and blocks reconnection before threat clearance
   ---
-  duration_ms: 2.2763
+  duration_ms: 2.5625
   type: 'test'
   ...
 # Subtest: reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe
-ok 82 - reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe
+ok 83 - reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe
   ---
-  duration_ms: 2.3426
+  duration_ms: 3.0374
   type: 'test'
   ...
 # Subtest: identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence
-ok 83 - identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence
+ok 84 - identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence
   ---
-  duration_ms: 1.6627
+  duration_ms: 2.8756
   type: 'test'
   ...
 # Subtest: identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values
-ok 84 - identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values
+ok 85 - identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values
   ---
-  duration_ms: 2.7161
+  duration_ms: 2.345
   type: 'test'
   ...
 # Subtest: identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes
-ok 85 - identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes
+ok 86 - identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes
   ---
-  duration_ms: 2.2959
+  duration_ms: 2.732
   type: 'test'
   ...
 # Subtest: identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence
-ok 86 - identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence
+ok 87 - identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence
   ---
-  duration_ms: 2.1363
+  duration_ms: 2.0208
   type: 'test'
   ...
 # Subtest: identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities
-ok 87 - identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities
+ok 88 - identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities
   ---
-  duration_ms: 2.1982
+  duration_ms: 2.7663
   type: 'test'
   ...
 # Subtest: identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack
-ok 88 - identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack
+ok 89 - identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack
   ---
-  duration_ms: 2.3965
+  duration_ms: 2.2815
   type: 'test'
   ...
 # Subtest: identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values
-ok 89 - identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values
+ok 90 - identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values
   ---
-  duration_ms: 2.2456
+  duration_ms: 2.0289
   type: 'test'
   ...
 # Subtest: threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict
-ok 90 - threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict
+ok 91 - threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict
   ---
-  duration_ms: 2.0332
+  duration_ms: 3.2392
   type: 'test'
   ...
 # Subtest: threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering
-ok 91 - threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering
+ok 92 - threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering
   ---
-  duration_ms: 2.4127
+  duration_ms: 3.7429
   type: 'test'
   ...
 # Subtest: threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store
-ok 92 - threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store
+ok 93 - threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store
   ---
-  duration_ms: 2.5107
+  duration_ms: 3.5029
   type: 'test'
   ...
 # Subtest: discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter
-ok 93 - discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter
+ok 94 - discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter
   ---
-  duration_ms: 3.4326
+  duration_ms: 3.1582
   type: 'test'
   ...
 # Subtest: data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark
-ok 94 - data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark
+ok 95 - data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark
   ---
-  duration_ms: 3.186
+  duration_ms: 2.7524
   type: 'test'
   ...
 # Subtest: data sources view shows optional managed-device agents and both agents stay read only
-ok 95 - data sources view shows optional managed-device agents and both agents stay read only
+ok 96 - data sources view shows optional managed-device agents and both agents stay read only
   ---
-  duration_ms: 1.9568
+  duration_ms: 3.3009
   type: 'test'
   ...
 # Subtest: policies view shows sensitive change monitoring and the snapshot monitor stays read only
-ok 96 - policies view shows sensitive change monitoring and the snapshot monitor stays read only
+ok 97 - policies view shows sensitive change monitoring and the snapshot monitor stays read only
   ---
-  duration_ms: 3.675
+  duration_ms: 3.1668
   type: 'test'
   ...
 # Subtest: threats view lists the versioned malware, ransomware and tamper detection rules with alert counts
-ok 97 - threats view lists the versioned malware, ransomware and tamper detection rules with alert counts
+ok 98 - threats view lists the versioned malware, ransomware and tamper detection rules with alert counts
   ---
-  duration_ms: 2.9727
+  duration_ms: 2.3072
   type: 'test'
   ...
 # Subtest: vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only
-ok 98 - vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only
+ok 99 - vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only
   ---
-  duration_ms: 2.9551
+  duration_ms: 3.7278
   type: 'test'
   ...
 # Subtest: identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only
-ok 99 - identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only
+ok 100 - identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only
   ---
-  duration_ms: 3.0493
+  duration_ms: 3.9365
   type: 'test'
   ...
 # Subtest: identity view shows identity threat findings and the account posture exporter is read only
-ok 100 - identity view shows identity threat findings and the account posture exporter is read only
+ok 101 - identity view shows identity threat findings and the account posture exporter is read only
   ---
-  duration_ms: 2.0433
+  duration_ms: 2.5909
   type: 'test'
   ...
 # Subtest: no evidence schema field name is one that the secret redactor would erase
-ok 101 - no evidence schema field name is one that the secret redactor would erase
+ok 102 - no evidence schema field name is one that the secret redactor would erase
   ---
-  duration_ms: 1.809
+  duration_ms: 3.0844
+  type: 'test'
+  ...
+# Subtest: settings view offers just-in-time privilege requests with approval, revocation and visible expiry
+ok 103 - settings view offers just-in-time privilege requests with approval, revocation and visible expiry
+  ---
+  duration_ms: 2.5674
   type: 'test'
   ...
 # Subtest: network map view renders a bounded visibility-gap registry without guessed topology
-ok 102 - network map view renders a bounded visibility-gap registry without guessed topology
+ok 104 - network map view renders a bounded visibility-gap registry without guessed topology
   ---
-  duration_ms: 2.4897
+  duration_ms: 2.4991
   type: 'test'
   ...
 # Subtest: asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence
-ok 103 - asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence
+ok 105 - asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence
   ---
-  duration_ms: 1.5674
+  duration_ms: 1.4755
   type: 'test'
   ...
 # Subtest: asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan
-ok 104 - asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan
+ok 106 - asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan
   ---
-  duration_ms: 1.8116
+  duration_ms: 2.0538
   type: 'test'
   ...
 # Subtest: Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
-ok 105 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
+ok 107 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
   ---
-  duration_ms: 10.4922
+  duration_ms: 10.0262
   type: 'test'
   ...
 # Subtest: non-RDP logons are explicitly skipped; failure without source remains unknown
-ok 106 - non-RDP logons are explicitly skipped; failure without source remains unknown
+ok 108 - non-RDP logons are explicitly skipped; failure without source remains unknown
   ---
-  duration_ms: 0.9072
+  duration_ms: 0.816
   type: 'test'
   ...
 # Subtest: Windows logon correlation is scoped to boot and rejects records from before boot
-ok 107 - Windows logon correlation is scoped to boot and rejects records from before boot
+ok 109 - Windows logon correlation is scoped to boot and rejects records from before boot
   ---
-  duration_ms: 0.7183
+  duration_ms: 0.8242
   type: 'test'
   ...
 # Subtest: Windows logoff closes the correlated session without erasing previously observed source identity
-ok 108 - Windows logoff closes the correlated session without erasing previously observed source identity
+ok 110 - Windows logoff closes the correlated session without erasing previously observed source identity
   ---
-  duration_ms: 5.7147
+  duration_ms: 6.5947
   type: 'test'
   ...
-1..108
-# tests 108
+1..110
+# tests 110
 # suites 0
-# pass 108
+# pass 110
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 6638.9633
+# duration_ms 6216.3589

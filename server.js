@@ -104,7 +104,12 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       authenticatedActor=user.id;
       if(mutation) fail(equal(req.headers['x-csrf-token']||'',user.csrf),403,'csrf_required');
       const roles=(allowed)=>auth.require(user,allowed);
-      if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role},csrf:user.csrf});
+      if(mutation&&user.jit&&!p.startsWith('/api/jit')&&p!=='/api/auth/logout') auth.recordJitUse(user,p);
+      if(p==='/api/jit'&&method==='GET') return send(res,200,auth.listJit(user));
+      if(p==='/api/jit'&&method==='POST') return send(res,201,auth.requestJit(user,await body(req)));
+      const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
+      if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
+      if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit},csrf:user.csrf});
       if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${COOKIE}; Max-Age=0`);return send(res,200,{logged_out:true});}
       if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
         {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
