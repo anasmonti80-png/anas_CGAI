@@ -14,11 +14,11 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
-- Last agent: Codex
+- Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-087 are acceptance-verified. The UI includes the requested SOC design and evidence registries through identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 82/82 tests pass.
-- In progress: no unpublished requirement checkpoint after CG-087. CG-088 is the next sequential requirement; sequential authenticated discovery for CG-006 also remains open. External connectors remain gated by authorized labs.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-088 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 84/84 tests pass.
+- In progress: no unpublished requirement checkpoint after CG-088. CG-089 is the next sequential requirement; sequential authenticated discovery for CG-006 also remains open. External connectors remain gated by authorized labs.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -39,6 +39,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Claude | Added help-desk abuse controls (CG-088): requester identity verification, independent approval, operator and audit reference, temporary password/access-pass/bypass-code expiry and follow-up, with explicit control gaps and rejection of temporary secret values; 84/84 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Codex | Added evidence-only identity attack correlation across sign-in, MFA reset, token creation, Administrator-role change, file/resource change and network movement with sequence gaps and missing evidence explicit; 82/82 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Codex | Added a read-only SaaS/OAuth/service-identity inventory with explicit application and identity owners, credential rotation metadata, permissions, observed activities and rejection of credential values; 80/80 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Codex | Added PAM evidence for bounded JIT/PIM, MFA, compliant dedicated PAW, temporary recorded administrative sessions and independent high-sensitivity authorization without executing privilege grants; 78/78 Unit Tested and Chromium checked. | current checkpoint |

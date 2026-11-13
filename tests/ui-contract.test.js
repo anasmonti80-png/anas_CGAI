@@ -154,6 +154,12 @@ test('identity view correlates sign-in MFA token privilege file resource and net
   for(const marker of ['identity.attack_correlation','correlation_requires_identity_and_downstream_signal','missing_signal_types','sequence_valid','unapproved_sensitive_changes','token_values_collected:false','attack_confirmed:false','does not confirm an attack']) assert.ok(domain.includes(marker),marker);
 });
 
+test('identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/helpdesk-resets/);
+  for(const marker of ['Help desk abuse controls','Identity verification','Approval','Execution / audit','Temporary access / follow-up','Approver is the operator','Temporary secret values','Executed by CyberGuard','Help-desk request evidence','CG-088']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.helpdesk_reset','verified_requester_requires_method_verifier_time_evidence','approved_reset_requires_approver_time_authorization_evidence','approver-not-independent','follow-up-overdue','secret_values_collected:false','reset_executed_by_cyberguard:false','performs no reset']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
