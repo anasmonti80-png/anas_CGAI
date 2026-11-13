@@ -143,6 +143,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/collector-capacity'&&method==='GET') return send(res,200,domain.collectorCapacity());
       if(p==='/api/agents'&&method==='GET') return send(res,200,domain.agentInventory(page(url.searchParams)));
       if(p==='/api/sensitive-changes'&&method==='GET') return send(res,200,domain.sensitiveChanges(page(url.searchParams)));
+      if(p==='/api/detection-rules'&&method==='GET') return send(res,200,domain.detectionRulesStatus());
       if(p==='/api/visibility-gaps'&&method==='GET') return send(res,200,domain.visibilityGaps(page(url.searchParams)));
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {

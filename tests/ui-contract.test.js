@@ -211,6 +211,12 @@ test('policies view shows sensitive change monitoring and the snapshot monitor s
   for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Stop-','Start-Service','New-NetFirewallRule','Disable-','Enable-']) assert.ok(!monitor.includes(forbidden),forbidden);
 });
 
+test('threats view lists the versioned malware, ransomware and tamper detection rules with alert counts',()=>{
+  const app=read('app.js'),rules=fs.readFileSync(new URL('../lib/detection-rules.js',import.meta.url),'utf8');assert.match(app,/\/api\/detection-rules/);
+  for(const marker of ['Malware, ransomware and tamper detection rules','Rule / version','What it detects','Evidence source','CG-012']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['CG-MAL-LOLBIN-001','CG-MAL-PERSIST-002','CG-MAL-USERPATH-003','CG-TAMPER-004','CG-RAN-005','CG-AGENT-NOAV-006','vssadmin','encodedcommand','they never act']) assert.ok(rules.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
