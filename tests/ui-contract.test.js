@@ -280,6 +280,13 @@ test('policies view shows the firewall rule analyzer and the Windows rule export
   for(const forbidden of ['Set-NetFirewall','New-NetFirewall','Remove-NetFirewall','Enable-NetFirewall','Disable-NetFirewall','Invoke-WebRequest']) assert.ok(!exporter.includes(forbidden),forbidden);
 });
 
+test('network map view shows device versions, DNS, VPN and management monitoring and both collectors keep secrets out',()=>{
+  const app=read('app.js'),conv=fs.readFileSync(new URL('../scripts/convert-cisco-config.js',import.meta.url),'utf8'),host=fs.readFileSync(new URL('../scripts/Export-HostNetworkConfig.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/device-configs/);
+  for(const marker of ['Network device versions, DNS, VPN and management','Insecure management protocol','Management exposed','Vulnerable firmware','DNS changed','Firmware downgraded','CG-021']) assert.ok(app.includes(marker),marker);
+  assert.match(conv,/Secrets were not copied/);for(const marker of ['Get-DnsClientServerAddress','Get-VpnConnection','fDenyTSConnections','WinRM','network.device_config','No upload performed']) assert.ok(host.includes(marker),marker);
+  for(const forbidden of ['Set-','Remove-','Enable-','Disable-','Invoke-WebRequest']) assert.ok(!host.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

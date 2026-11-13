@@ -517,6 +517,14 @@ test('firewall rulesets are validated, analysed per device against the previous 
   assert.throws(()=>ingest([event('fw-bad-port','firewall.ruleset',{ruleset_id:'X',device_ref:'x',vendor:'other',evaluation:'first-match',rules:[rule('x',1,'allow',{dst_ports:['70000']})]})]),/invalid_firewall_rule_0_dst_ports_0/);
   assert.throws(()=>ingest([event('fw-dup','firewall.ruleset',{ruleset_id:'X',device_ref:'x',vendor:'other',evaluation:'first-match',rules:[rule('x',1,'allow'),rule('x',2,'deny')]})]),/duplicate_firewall_rule_id/);
 });
+test('device configuration snapshots are monitored per device and DNS, management and firmware downgrade changes raise alerts',t=>{
+  const {d,s,event,ingest,advance}=fixture(t),snap=(id,extra={})=>({snapshot_id:id,device_ref:'cisco:edge-rtr-01',device_type:'router',vendor:'cisco',model:'ISR4331/K9',firmware_version:'17.3.4a',dns_servers:['10.0.0.53'],ntp_servers:[],vpn_profiles:[],management:[{protocol:'ssh',enabled:true,exposed_to:'internal',restricted_sources:true}],config_sha256:'a'.repeat(64),...extra});
+  ingest([event('cfg-1','network.device_config',snap('S1'))]);assert.equal(s.all("SELECT * FROM alerts WHERE rule_id LIKE 'CG-NETDEV-%'").length,0);
+  advance(60000);ingest([event('cfg-2','network.device_config',snap('S2',{firmware_version:'16.9.1',dns_servers:['198.51.100.53'],management:[{protocol:'ssh',enabled:true,exposed_to:'internal',restricted_sources:true},{protocol:'http',enabled:true,exposed_to:'any',restricted_sources:false}],config_sha256:'b'.repeat(64)}))]);
+  const r=d.deviceConfigMonitoring();assert.equal(r.total,1);assert.equal(r.items[0].config_changed,true);assert.ok(r.items[0].findings.some(f=>f.type==='management-exposed'));
+  assert.deepEqual(s.all("SELECT rule_id FROM alerts WHERE rule_id LIKE 'CG-NETDEV-%' ORDER BY rule_id").map(x=>x.rule_id),['CG-NETDEV-DNS-021','CG-NETDEV-DOWNGRADE-023','CG-NETDEV-MGMT-022']);
+  assert.throws(()=>ingest([event('cfg-bad','network.device_config',snap('X',{management:[{protocol:'ssh',enabled:true,exposed_to:'internal',restricted_sources:true,password:'x'}]}))]),/unknown_device_management_0_field/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

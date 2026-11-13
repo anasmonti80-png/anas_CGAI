@@ -1,0 +1,3 @@
+Cisco IOS XE Software, Version 17.03.04a
+Cisco IOS Software [Amsterdam], ISR Software (X86_64_LINUX_IOSD-UNIVERSALK9-M), Version 17.3.4a, RELEASE SOFTWARE (fc3)
+cisco ISR4331/K9 (1RU) processor with 1795999K/6147K bytes of memory.
