@@ -160,6 +160,12 @@ test('identity view shows help desk reset verification approval audit and tempor
   for(const marker of ['identity.helpdesk_reset','verified_requester_requires_method_verifier_time_evidence','approved_reset_requires_approver_time_authorization_evidence','approver-not-independent','follow-up-overdue','secret_values_collected:false','reset_executed_by_cyberguard:false','performs no reset']) assert.ok(domain.includes(marker),marker);
 });
 
+test('threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/process-causality/);assert.match(app,/state\.view==='threats'\?await threatsView\(\)/);
+  for(const marker of ['Process causality','Process tree','Services / scheduled tasks','Connections','Confidence / privacy','Personal data masked','Malicious verdict','Parent not observed','Process-causality evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['endpoint.process_causality','causality_record_references_unknown_process','causality_record_outside_window','[EMAIL]','[NATIONAL-ID]','[PHONE]','raw_personal_data_stored:false','malicious_verdict:false','not a malware verdict']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

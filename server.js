@@ -136,6 +136,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/saas-service-inventory'&&method==='GET') return send(res,200,domain.saasServiceInventory(page(url.searchParams)));
       if(p==='/api/identity-attack-correlations'&&method==='GET') return send(res,200,domain.identityAttackCorrelations(page(url.searchParams)));
       if(p==='/api/helpdesk-resets'&&method==='GET') return send(res,200,domain.helpdeskResets(page(url.searchParams)));
+      if(p==='/api/process-causality'&&method==='GET') return send(res,200,domain.processCausality(page(url.searchParams)));
       if(p==='/api/visibility-gaps'&&method==='GET') return send(res,200,domain.visibilityGaps(page(url.searchParams)));
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {

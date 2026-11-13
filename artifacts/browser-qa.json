@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T15:55:07.483Z",
+  "at": "2026-11-13T15:59:27.471Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -41,7 +41,8 @@
     "saas_service_identity_inventory": {"result": "pass", "requirement_link_visible": "CG-086", "application": "Synthetic QA SaaS", "application_owner_visible": true, "service_identity": "qa-svc-086", "service_identity_owner_visible": true, "credential_metadata_visible": true, "rotation_dates_visible": true, "expired_credential_gap_visible": true, "permission_visible": true, "activity_visible": true, "credential_values_collected": false, "evidence_visible": true},
     "identity_attack_correlation": {"result": "pass", "requirement_link_visible": "CG-087", "principal": "qa-user-087", "signal_types_visible": ["sign-in", "mfa-reset", "token-created", "administrator-role-change", "file-change", "resource-change", "network-movement"], "correlation_state": "complete", "chronology_consistent": true, "missing_signal_types": 0, "unapproved_sensitive_changes": 3, "review_priority": "high", "attack_confirmed": false, "token_values_collected": false, "evidence_visible": true},
     "helpdesk_abuse_controls": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-088", "controlled_record": "privileged mfa-reset verified, independently approved, audited, temporary access pass followed up", "gap_record_visible": true, "gaps_visible": ["requester-not-verified", "approver-not-independent", "approved-after-reset", "audit-missing", "temporary-without-expiry"], "review_priority": "high", "secret_values_collected": false, "reset_executed_by_cyberguard": false, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 33, "next": "CG-006"}
+    "process_causality": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-089", "tree_depth": 2, "processes": 3, "masked_markers_visible": ["[USER]", "[EMAIL]", "[NATIONAL-ID]"], "persistence_changes": 2, "external_connections": 1, "confidence": "high", "malicious_verdict": false, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 34, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
