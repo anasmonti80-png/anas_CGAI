@@ -233,6 +233,20 @@ test('identity view shows directory integration with group and privilege change 
   for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Add-LocalGroupMember','New-LocalUser','Disable-','Enable-']) assert.ok(!exporter.includes(forbidden),forbidden);
 });
 
+test('identity view shows identity threat findings and the account posture exporter is read only',()=>{
+  const app=read('app.js'),lib=fs.readFileSync(new URL('../lib/identity-threats.js',import.meta.url),'utf8'),exporter=fs.readFileSync(new URL('../scripts/Export-AccountPosture.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/identity-threats/);
+  for(const marker of ['Identity threat detection','Password spraying','Impossible travel','Risky OAuth consent','Unauthorized IdP change','Account without MFA','Stale account','CG-015']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['password-spraying','brute-force-then-success','impossible-travel','risky-oauth-consent','idp-change-unauthorized','mfa-not-registered','stale-account','CG-IDENT-SPRAY-009']) assert.ok(lib.includes(marker),marker);
+  for(const marker of ['Get-LocalUser','LastLogon','PasswordLastSet','4625','identity.account_posture','No upload performed']) assert.ok(exporter.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Disable-','Enable-']) assert.ok(!exporter.includes(forbidden),forbidden);
+});
+
+test('no evidence schema field name is one that the secret redactor would erase',()=>{
+  const domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),keys=new Set([...domain.matchAll(/object\([a-zA-Z.]*,\[([^\]]*)\]/g)].flatMap(m=>[...m[1].matchAll(/'([a-z_]+)'/g)].map(k=>k[1])));
+  const erased=[...keys].filter(k=>/password|passwd|secret|token|api.?key|authorization|cookie|community|private.?key/i.test(k)&&k!=='authorization_ref');
+  assert.ok(keys.size>100,'schema keys found');assert.deepEqual(erased,[]);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
