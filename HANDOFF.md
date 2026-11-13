@@ -17,8 +17,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-090 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 88/88 tests pass.
-- In progress: no unpublished requirement checkpoint after CG-090. CG-091 is the next sequential requirement; sequential authenticated discovery for CG-006 also remains open. External connectors remain gated by authorized labs.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 90/90 tests pass.
+- In progress: no unpublished requirement checkpoint after CG-091. CG-092 is the next sequential requirement; sequential authenticated discovery for CG-006 also remains open. External connectors remain gated by authorized labs.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -39,6 +39,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Claude | Added anti-ransomware posture (CG-091): CFA/ASR where available, file-modification spike, mass rename, high-entropy and ransom-note indicators against a baseline, backup verification and immutability, and recovery-store separation, without a ransomware verdict; 90/90 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Added defense tamper detection (CG-090): AV/EDR/firewall disablement, log clearing, agent stop, time skew and policy changes with method, actor, authorization context, preceding errors and recovery, classified as authorized change, likely fault, suspected deliberate or undetermined without attribution; 88/88 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Added process causality (CG-089): parent/child process tree with command lines, signer and integrity, service and scheduled-task changes and connections, personal-data masking before storage and an explicit confidence without a malware verdict; 86/86 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Added help-desk abuse controls (CG-088): requester identity verification, independent approval, operator and audit reference, temporary password/access-pass/bypass-code expiry and follow-up, with explicit control gaps and rejection of temporary secret values; 84/84 Unit Tested and Chromium checked. | current checkpoint |

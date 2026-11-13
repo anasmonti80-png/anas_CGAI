@@ -172,6 +172,12 @@ test('threats view shows defense tamper classification between authorized change
   for(const marker of ['endpoint.defense_tamper','tamper_action_not_valid_for_control','time_change_requires_skew','tamper_recovery_requires_evidence_after_change','suspected-deliberate','likely-fault','response_executed_by_cyberguard:false','it is not attribution']) assert.ok(domain.includes(marker),marker);
 });
 
+test('threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/ransomware-posture/);
+  for(const marker of ['Anti-ransomware posture','CFA / ASR','File activity','Backup integrity','Recovery store','Indicators / gaps','Not available on platform','Ransomware confirmed','Ransomware-posture evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['endpoint.ransomware_posture','backup_verification_requires_time_and_evidence','modification-spike','shadow-copies-deleted','recovery-store-not-isolated','ransomware_confirmed:false','not a ransomware verdict']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
