@@ -492,6 +492,15 @@ test('identity threat detection finds missing MFA, stale accounts, spraying, bru
   assert.throws(()=>ingest([event('bad-signin-window','identity.signin_activity',{batch_id:'X',directory_ref:'x',window:{starts_at:'2026-11-11T09:00:00.000Z',ends_at:'2026-11-11T10:00:00.000Z'},signins:[{...ok('x','user:x',1,'SA'),at:'2026-11-12T00:00:00.000Z'}]})]),/signin_outside_window/);
   assert.throws(()=>ingest([event('bad-posture-secret','identity.account_posture',{posture_id:'X',directory_ref:'x',source:'other',accounts:[{principal_ref:'user:x',enabled:true,mfa_registered:null,last_signin_at:null,credential_changed_at:null,privileged:false,password:'x'}]})]),/unknown_posture_account_0_field/);
 });
+test('log batches are normalised on ingest, raw lines are not stored, IDS severity raises alerts and the common model is searchable',t=>{
+  const {d,s,event,ingest}=fixture(t);
+  ingest([event('logs-ids','log.batch',{batch_id:'LOGS-018-IDS',source_name:'synthetic suricata',format:'suricata-eve',lines:[JSON.stringify({timestamp:'2026-11-11T09:00:00Z',event_type:'alert',src_ip:'203.0.113.5',src_port:4444,dest_ip:'10.0.0.5',dest_port:445,proto:'TCP',alert:{action:'allowed',signature:'ET EXPLOIT SMB',category:'Attempted Admin',severity:1}}),'garbage']}),event('logs-fw','log.batch',{batch_id:'LOGS-018-FW',source_name:'synthetic gw',format:'iptables',lines:['Nov 11 09:00:00 gw kernel: [1.0] UFW BLOCK IN=eth0 OUT= SRC=203.0.113.7 DST=10.0.0.2 PROTO=TCP SPT=40000 DPT=22']})]);
+  const r=d.normalizedLogs();assert.equal(r.total,2);assert.equal(r.by_category.ids,1);assert.equal(r.by_category.firewall,1);assert.equal(r.batches.find(b=>b.batch_id==='LOGS-018-IDS').rejected_count,1);assert.equal(d.normalizedLogs({category:'firewall'}).items[0].dst_port,22);assert.equal(d.normalizedLogs({q:'203.0.113.5'}).total,1);
+  const stored=s.get("SELECT payload FROM events WHERE kind='log.batch' AND payload LIKE '%LOGS-018-IDS%'").payload;assert.ok(!stored.includes('garbage'));assert.ok(!JSON.parse(stored).details.lines);
+  assert.equal(s.all("SELECT * FROM alerts WHERE rule_id='CG-LOG-IDS-014'").length,1);
+  assert.throws(()=>ingest([event('logs-bad','log.batch',{batch_id:'X',source_name:'x',format:'syslog',lines:['nothing parseable here']})]),/log_batch_has_no_parseable_line/);
+  assert.throws(()=>ingest([event('logs-fmt','log.batch',{batch_id:'X',source_name:'x',format:'cisco-asa',lines:['x']})]),/invalid_log_format/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

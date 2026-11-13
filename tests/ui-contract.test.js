@@ -254,6 +254,13 @@ test('settings view offers just-in-time privilege requests with approval, revoca
   assert.match(store,/CREATE TABLE jit_grants/);assert.ok(app.includes("nav.filter(n=>state.user.role==='admin'||n[0]!=='audit')"),'settings reachable by every role for JIT requests');
 });
 
+test('events view shows normalised logs from every supported source family',()=>{
+  const app=read('app.js'),norm=fs.readFileSync(new URL('../lib/log-normalizer.js',import.meta.url),'utf8'),conv=fs.readFileSync(new URL('../scripts/logs-to-telemetry.js',import.meta.url),'utf8');assert.match(app,/\/api\/normalized-logs/);assert.match(app,/state\.view==='events'\?await eventsView\(\)/);
+  for(const marker of ['Normalised logs','Time / category','Source → destination','NetFlow/IPFIX','IDS/IPS','CG-018']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['syslog','journal','nfdump-csv','goflow-json','suricata-eve','bind-query','isc-dhcpd','openvpn','iptables','windows-firewall','pfsense-filterlog']) assert.ok(norm.includes(marker),marker);
+  assert.match(conv,/No upload performed/);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

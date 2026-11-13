@@ -25,7 +25,7 @@ for (const file of files) {
     console.error(`REJECTED ${path.basename(file)}: ${error.code || error.message}`);
   }
 }
-const summary = { agents: domain.agentInventory().total, software: domain.softwareVulnerabilities().total, changes: domain.sensitiveChanges().total, discovery: domain.discoverySequences().total, identity: domain.identityDirectories().total };
+const summary = { agents: domain.agentInventory().total, software: domain.softwareVulnerabilities().total, changes: domain.sensitiveChanges().total, discovery: domain.discoverySequences().total, identity: domain.identityDirectories().total, normalized_log_records: domain.normalizedLogs().total };
 console.log('Registries after ingest:', JSON.stringify(summary));
 store.close(); fs.rmSync(dir, { recursive: true, force: true });
 if (failed) process.exit(1);

@@ -62,4 +62,6 @@ jobs:
         run: |
           bash -n scripts/agent/cyberguard-agent.sh
           bash scripts/agent/cyberguard-agent.sh "$RUNNER_TEMP/agent.json" github-actions 60
-          node scripts/ci-collector-check.js "$RUNNER_TEMP/agent.json"
+          journalctl -n 500 -o short-iso --no-pager > "$RUNNER_TEMP/journal.log" || true
+          node scripts/logs-to-telemetry.js journal "$RUNNER_TEMP/journal.log" "$RUNNER_TEMP/journal.json" github-runner-journal
+          node scripts/ci-collector-check.js "$RUNNER_TEMP/agent.json" "$RUNNER_TEMP/journal.json"
