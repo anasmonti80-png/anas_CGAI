@@ -124,6 +124,12 @@ test('identity view exposes AD and Entra privilege, change, service-account, tru
   for(const marker of ['identity.directory_audit','reviewed_tier0_control_plane_requires_evidence','tier0_principal_status_requires_evidence','service_account_posture_requires_evidence','known_trust_relationship_requires_review_evidence','known_sign_in_policy_requires_evidence','unapproved_domain_admin_changes','audit_state']) assert.ok(domain.includes(marker),marker);
 });
 
+test('identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/laps-posture/);
+  for(const marker of ['Windows LAPS posture','Password-rotation policy','Local administrator','Rotation status','Secret-view audit','Secret values','Not collected','LAPS-posture evidence','CG-083','configured:[','managed:[','enabled:[','failed:[']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.laps_posture','configured_laps_policy_requires_rotation_and_evidence','failed_laps_rotation_requires_failure_evidence','enabled_laps_access_audit_requires_review_evidence','secret_values_collected:false','does not retrieve a LAPS secret']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

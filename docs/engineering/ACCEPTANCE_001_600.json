@@ -193,6 +193,13 @@
       "tests": ["tests/domain.test.js: AD and Entra audit separates Tier 0, Domain Admin changes, service accounts, trusts and sign-in policy evidence without secrets", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence", "Browser QA: Identity displayed Tier 0 principals, an unapproved Domain Admin addition, service-account rotation gap, an active reviewed trust and partial conditional sign-in policy with evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This is a source-reported read-only evidence registry. No live AD, LDAP or Microsoft Graph connector was lab tested, and CyberGuard does not change group membership, service accounts, trusts or sign-in policies in this phase."]
+    },
+    "CG-083": {
+      "reason": "The Windows LAPS posture registry keeps the latest source-reported record per central device and exposes policy configuration and rotation interval, local-administrator management state, current/failed/overdue rotation evidence, and audited LAPS-access metadata. The strict schema rejects password fields, stores no LAPS password value, and computes managed, gaps or unverified without retrieving a secret.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: Windows LAPS posture tracks per-device policy, rotation failures and secret-view audits without collecting passwords", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values", "Browser QA: Identity displayed CG-083, a configured 30-day policy, managed local administrator, explicit failed rotation, authorized access-audit metadata, evidence references and Not collected for secret values"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is a source-reported read-only posture registry. No live Microsoft LAPS connector or directory/device write was lab tested, CyberGuard does not retrieve or store LAPS passwords, and the browser check used isolated synthetic evidence only."]
     }
   }
 }
