@@ -203,6 +203,14 @@ test('data sources view shows optional managed-device agents and both agents sta
   for(const forbidden of ['curl ','wget ','systemctl stop','systemctl start','systemctl enable','systemctl disable','rm -']) assert.ok(!lnx.includes(forbidden),forbidden);
 });
 
+test('policies view shows sensitive change monitoring and the snapshot monitor stays read only',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),monitor=fs.readFileSync(new URL('../scripts/Watch-SensitiveChanges.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/sensitive-changes/);
+  for(const marker of ['Sensitive change monitoring','Host / category','Before → after','Detection','Risk / review','Change evidence','CG-011']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['change.sensitive','added_change_requires_only_after_state','modified_change_requires_different_states','persistence-location','reverted_by_cyberguard:false','CyberGuard reverts nothing']) assert.ok(domain.includes(marker),marker);
+  for(const marker of ['CurrentVersion\\Run','Win32_Service','Uninstall','Get-NetFirewallRule','Get-LocalUser','Policies','Get-FileHash','change.sensitive','No upload performed']) assert.ok(monitor.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Stop-','Start-Service','New-NetFirewallRule','Disable-','Enable-']) assert.ok(!monitor.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

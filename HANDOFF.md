@@ -18,8 +18,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-010, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 97/97 tests pass.
-- In progress: no unpublished requirement checkpoint after CG-010. Next is the lowest unaccepted ID: CG-011, then the remaining CG-012..CG-074 gaps in order, then CG-092. External connectors without a lab keep explicit restrictions.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-011, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 99/99 tests pass.
+- In progress: no unpublished requirement checkpoint after CG-011. Next is the lowest unaccepted ID: CG-012, then the remaining CG-013..CG-074 gaps in order, then CG-092. External connectors without a lab keep explicit restrictions.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -40,6 +40,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Claude | Completed CG-011 sensitive change monitoring: registry autostarts, files, services, software, firewall rules, accounts and policies via a read-only snapshot-diff monitor with before/after hashes and risk; verified on a real PC (1,301-item baseline, 3 exact changes, no false positives); 99/99 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-010 optional device agents: read-only Windows (event logs, Sysmon, services, processes, AV/EDR/firewall) and Linux (auditd, journald, syslog, systemd, processes, AV/EDR) collectors with an opt-in report contract and explicit gaps; Windows agent verified on a real PC, Linux agent syntax-checked; 97/97 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-009 distributed scale: collector capacity plan (site collectors → regional relays → central, offline excluded, overload/uncovered/SPOF/upstream gaps) and a real 20000-device single-node benchmark at 5696 devices/s within the 500 ms view budget; 95/95 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-006 sequential discovery: fixed ARP→DNS→DHCP→AD→LLDP/CDP→SNMPv3→API order with explicit reasons, credential references only, scope-checked private findings merged across methods and LLDP/CDP links, plus a read-only Windows exporter verified on a real host; 92/92 Unit Tested and Chromium checked. | current checkpoint |
