@@ -142,6 +142,12 @@ test('identity view exposes JIT and PIM, PAW posture, temporary administrative s
   for(const marker of ['identity.privileged_access','approved_privileged_activation_requires_bounded_reviewed_mfa_evidence','known_paw_posture_requires_device_evidence','approved_privileged_review_requires_authorization_evidence','session_controlled','privilege_grant_executed:false','does not grant privilege']) assert.ok(domain.includes(marker),marker);
 });
 
+test('identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/saas-service-inventory/);
+  for(const marker of ['SaaS, OAuth and service identity inventory','Application / owner','Service identity','Credentials / rotation','Permissions','Observed activities','Sensitive values / evidence','Identity-inventory evidence','CG-086']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.saas_service_inventory','current_service_credential_requires_rotation_dates','admin_service_permission_requires_review_authorization','credential_gaps','permission_gaps','credential_values_collected:false','Credential values are rejected']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

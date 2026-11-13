@@ -214,6 +214,13 @@
       "tests": ["tests/domain.test.js: privileged access requires bounded JIT or PIM, compliant dedicated PAW, controlled temporary session and independent authorization", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence", "Browser QA: Identity displayed CG-085 with bounded approved JIT, passed MFA, compliant dedicated PAW, ended recorded session, independent authorization evidence, Controlled state and Not executed"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This is a source-reported read-only PAM evidence registry. No live PIM/PAM provider, PAW or administrative session was lab tested, and CyberGuard does not grant roles, start sessions or retrieve credentials."]
+    },
+    "CG-086": {
+      "reason": "The SaaS, OAuth and service-identity inventory keeps the latest source-reported record per inventory item and requires explicit application and service-identity owners, credential metadata with rotation dates, permission grants and observed activities. Expired credentials, incomplete permission review and failed activities remain visible gaps. The strict schema rejects credential values and the registry executes no rotation, grant or application action.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: SaaS OAuth and service identity inventory tracks owners, credential rotation, permissions and activities without credential values", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities", "Browser QA: Identity displayed CG-086, application and service-identity owners, expired credential metadata and rotation dates, permission and activity evidence, explicit gaps and Not collected for credential values"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is a source-reported read-only inventory. No live SaaS or OAuth provider was lab tested, CyberGuard stores no credential value, and it does not rotate a key, change a permission or act on an application in this phase."]
     }
   }
 }

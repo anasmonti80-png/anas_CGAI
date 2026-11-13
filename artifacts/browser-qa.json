@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T17:44:00.000+03:00",
+  "at": "2026-11-13T18:00:00.000+03:00",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -38,7 +38,8 @@
     "laps_posture": {"result": "pass", "device": "qa-win-083", "requirement_link_visible": "CG-083", "policy_status": "configured", "rotation_days": 30, "local_administrator_management": "managed", "rotation_status": "failed", "failure_code_visible": true, "access_audit_status": "enabled", "authorization_reference_visible": true, "secret_values_collected": false, "evidence_visible": true},
     "adcs_kerberos_posture": {"result": "pass", "directory": "qa.synthetic.invalid", "requirement_link_visible": "CG-084", "ca_service": "running", "weak_template_visible": true, "unauthorized_issuance_visible": true, "kerberos_encryption": "legacy-enabled", "unconstrained_unapproved_delegation_visible": true, "ntlm_status": "enabled", "legacy_ntlm_observations": 2, "denied_authentication_change_visible": true, "credential_material_collected": false, "evidence_visible": true},
     "privileged_access_management": {"result": "pass", "requirement_link_visible": "CG-085", "principal": "qa-admin", "role": "Domain Admin", "activation": "jit", "activation_bounded": true, "mfa": "passed", "paw": "compliant-dedicated", "session": "ended-recorded", "independent_review_visible": true, "authorization_reference_visible": true, "control_state": "controlled", "privilege_grant_executed": false, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 30, "next": "CG-006"}
+    "saas_service_identity_inventory": {"result": "pass", "requirement_link_visible": "CG-086", "application": "Synthetic QA SaaS", "application_owner_visible": true, "service_identity": "qa-svc-086", "service_identity_owner_visible": true, "credential_metadata_visible": true, "rotation_dates_visible": true, "expired_credential_gap_visible": true, "permission_visible": true, "activity_visible": true, "credential_values_collected": false, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 31, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
