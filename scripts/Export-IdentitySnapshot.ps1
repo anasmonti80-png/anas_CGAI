@@ -14,7 +14,7 @@ $ErrorActionPreference = 'Stop'
 $destination = [System.IO.Path]::GetFullPath($OutputPath)
 if (Test-Path -LiteralPath $destination) { throw 'Output already exists. Choose a new private file path.' }
 if (-not (Test-Path -LiteralPath (Split-Path -Parent $destination) -PathType Container)) { throw 'Output directory must exist and be private.' }
-function Clean([string]$text) { if ($null -eq $text) { return $null }; $t = ($text -replace '[\x00-\x1F\x7F]', '').Trim(); if ($t.Length -gt 300) { $t = $t.Substring(0, 300) }; return $t }
+function Get-SafeText([string]$text) { if ($null -eq $text) { return $null }; $t = ($text -replace '[\x00-\x1F\x7F]', '').Trim(); if ($t.Length -gt 300) { $t = $t.Substring(0, 300) }; return $t }
 function Get-Iso($date) { return ([datetime]$date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ') }
 $now = Get-Date
 $hostName = [System.Net.Dns]::GetHostName()
@@ -28,11 +28,11 @@ $events = @()
 
 # Windows local directory
 $principals = @(); $memberships = @()
-foreach ($u in @(Get-LocalUser)) { $principals += [ordered]@{ principal_ref = (Clean ('user:' + $u.Name)); type = 'user'; enabled = [bool]$u.Enabled; privileged = $false } }
+foreach ($u in @(Get-LocalUser)) { $principals += [ordered]@{ principal_ref = (Get-SafeText ('user:' + $u.Name)); type = 'user'; enabled = [bool]$u.Enabled; privileged = $false } }
 foreach ($g in @(Get-LocalGroup)) {
     $isPrivileged = $privilegedSids -contains $g.SID.Value
-    $principals += [ordered]@{ principal_ref = (Clean ('group:' + $g.Name)); type = 'group'; enabled = $null; privileged = $isPrivileged }
-    try { foreach ($m in @(Get-LocalGroupMember -Group $g -ErrorAction Stop)) { $memberships += [ordered]@{ group_ref = (Clean ('group:' + $g.Name)); member_ref = (Clean ('member:' + $m.Name)); privileged_group = $isPrivileged } } } catch { }
+    $principals += [ordered]@{ principal_ref = (Get-SafeText ('group:' + $g.Name)); type = 'group'; enabled = $null; privileged = $isPrivileged }
+    try { foreach ($m in @(Get-LocalGroupMember -Group $g -ErrorAction Stop)) { $memberships += [ordered]@{ group_ref = (Get-SafeText ('group:' + $g.Name)); member_ref = (Get-SafeText ('member:' + $m.Name)); privileged_group = $isPrivileged } } } catch { }
 }
 $privilegedMembers = @($memberships | Where-Object { $_.privileged_group } | ForEach-Object { $_.member_ref -replace '^member:.*\\', 'user:' } | Select-Object -Unique)
 foreach ($p in $principals) { if ($p.type -eq 'user' -and $privilegedMembers -contains $p.principal_ref) { $p.privileged = $true } }
@@ -48,13 +48,13 @@ if ($IncludeActiveDirectory) {
     $adPrincipals = @(); $adMemberships = @()
     $users = [adsisearcher]'(&(objectCategory=person)(objectClass=user))'; $users.PageSize = 500; $users.SizeLimit = 20000
     foreach ($p in @('samaccountname', 'useraccountcontrol')) { [void]$users.PropertiesToLoad.Add($p) }
-    foreach ($r in $users.FindAll()) { $uac = [int]($r.Properties['useraccountcontrol'] | Select-Object -First 1); $adPrincipals += [ordered]@{ principal_ref = (Clean ('user:' + ($r.Properties['samaccountname'] | Select-Object -First 1))); type = 'user'; enabled = -not ($uac -band 2); privileged = $false } }
+    foreach ($r in $users.FindAll()) { $uac = [int]($r.Properties['useraccountcontrol'] | Select-Object -First 1); $adPrincipals += [ordered]@{ principal_ref = (Get-SafeText ('user:' + ($r.Properties['samaccountname'] | Select-Object -First 1))); type = 'user'; enabled = -not ($uac -band 2); privileged = $false } }
     $groups = [adsisearcher]'(&(objectCategory=group)(adminCount=1))'; $groups.PageSize = 500
     foreach ($p in @('samaccountname', 'member')) { [void]$groups.PropertiesToLoad.Add($p) }
     foreach ($r in $groups.FindAll()) {
-        $gname = Clean ('group:' + ($r.Properties['samaccountname'] | Select-Object -First 1))
+        $gname = Get-SafeText ('group:' + ($r.Properties['samaccountname'] | Select-Object -First 1))
         $adPrincipals += [ordered]@{ principal_ref = $gname; type = 'group'; enabled = $null; privileged = $true }
-        foreach ($dn in @($r.Properties['member'])) { $cn = ([string]$dn -split ',')[0] -replace '^CN=', ''; $adMemberships += [ordered]@{ group_ref = $gname; member_ref = (Clean ('member:' + $cn)); privileged_group = $true } }
+        foreach ($dn in @($r.Properties['member'])) { $cn = ([string]$dn -split ',')[0] -replace '^CN=', ''; $adMemberships += [ordered]@{ group_ref = $gname; member_ref = (Get-SafeText ('member:' + $cn)); privileged_group = $true } }
     }
     $events += [ordered]@{
         event_id = 'identity-' + [guid]::NewGuid().ToString(); kind = 'identity.directory_snapshot'; observed_at = (Get-Iso $now); asset = $asset

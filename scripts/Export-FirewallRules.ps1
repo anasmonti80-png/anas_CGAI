@@ -10,7 +10,7 @@ $ErrorActionPreference = 'Stop'
 $destination = [System.IO.Path]::GetFullPath($OutputPath)
 if (Test-Path -LiteralPath $destination) { throw 'Output already exists. Choose a new private file path.' }
 if (-not (Test-Path -LiteralPath (Split-Path -Parent $destination) -PathType Container)) { throw 'Output directory must exist and be private.' }
-function Clean([string]$text) { if ($null -eq $text) { return $null }; $t = ($text -replace '[\x00-\x1F\x7F]', '').Trim(); $t = $t -replace '(?i)(\\Users\\)[^\\]+', '$1[USER]'; if ($t.Length -gt 300) { $t = $t.Substring(0, 300) }; return $t }
+function Get-SafeText([string]$text) { if ($null -eq $text) { return $null }; $t = ($text -replace '[\x00-\x1F\x7F]', '').Trim(); $t = $t -replace '(?i)(\\Users\\)[^\\]+', '$1[USER]'; if ($t.Length -gt 300) { $t = $t.Substring(0, 300) }; return $t }
 $private = @('10.0.0.0/8', '172.16.0.0/12', '192.168.0.0/16', 'fc00::/7', 'fe80::/10')
 function Convert-Address($values) {
     $out = @()
@@ -61,11 +61,11 @@ $out = @($rules | Select-Object -First 5000 | ForEach-Object {
     $scope = @(); if ($keyword) { $scope += 'port-keyword:' + $keyword }; $icmp = @($pf.IcmpType | Where-Object { $_ -and [string]$_ -ne 'Any' }); if ($icmp.Count) { $scope += 'icmp-type:' + (($icmp | ForEach-Object { [string]$_ }) -join ',') }; if ($r.Owner) { $scope += 'owner:' + [string]$r.Owner }; if ($ap.Package) { $scope += 'package:' + [string]$ap.Package }; $svc = [string]$svcs[$r.InstanceID].Service; if ($svc -and $svc -ne 'Any') { $scope += 'service:' + $svc }; $sec = $secs[$r.InstanceID]; if ($sec -and [string]$sec.LocalUser -and [string]$sec.LocalUser -ne 'Any') { $scope += 'local-user:' + [string]$sec.LocalUser }; if ($sec -and [string]$sec.RemoteUser -and [string]$sec.RemoteUser -ne 'Any') { $scope += 'remote-user:' + [string]$sec.RemoteUser }; $if = [string]$ifaces[$r.InstanceID].InterfaceType; if ($if -and $if -ne 'Any') { $scope += 'interface:' + $if }
     $profile = [string]$r.Profile; $profile = if ($profile -eq 'Any') { 'any' } else { $profile.ToLower().Replace(', ', '+') }
     [ordered]@{
-        rule_id = [string]$r.Name; name = (Clean ([string]$r.DisplayName)); position = $i; enabled = ([string]$r.Enabled -eq 'True')
+        rule_id = [string]$r.Name; name = (Get-SafeText ([string]$r.DisplayName)); position = $i; enabled = ([string]$r.Enabled -eq 'True')
         direction = $(if ($inbound) { 'in' } else { 'out' }); action = $(if ([string]$r.Action -eq 'Block') { 'deny' } else { 'allow' }); protocol = $protocol
         src = [object[]]@(if ($inbound) { $remote } else { $local }); dst = [object[]]@(if ($inbound) { $local } else { $remote })
         src_ports = [object[]]@(if ($inbound) { $rport } else { $lport }); dst_ports = [object[]]@(if ($inbound) { $lport } else { $rport })
-        application = (Clean $program); profile = $profile; filters_readable = ($null -ne $pf -and $null -ne $af); scope_constraints = [object[]]@($scope | ForEach-Object { Clean $_ } | Select-Object -First 20); last_hit_at = $null; hit_count = $null; expires_at = $null; owner = $null; created_at = $null
+        application = (Get-SafeText $program); profile = $profile; filters_readable = ($null -ne $pf -and $null -ne $af); scope_constraints = [object[]]@($scope | ForEach-Object { Get-SafeText $_ } | Select-Object -First 20); last_hit_at = $null; hit_count = $null; expires_at = $null; owner = $null; created_at = $null
     }
 })
 $hostName = [System.Net.Dns]::GetHostName()
