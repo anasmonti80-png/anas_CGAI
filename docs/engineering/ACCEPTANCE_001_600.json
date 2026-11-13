@@ -186,6 +186,13 @@
       "tests": ["tests/domain.test.js: resilience controls require separated configuration backups, tested alternate paths, an exercised SOC outage playbook and active automatic fail-safe evidence", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe", "Browser QA: Reports displayed current separated network-configuration backups, tested out-of-band and alternate paths, an exercised SOC outage playbook, and an armed automatic fail-safe with expiry and evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["All states are source-reported evidence. CyberGuard does not back up a real network device, operate an out-of-band path, switch connectors, execute the outage playbook, or change a temporary policy in this phase."]
+    },
+    "CG-082": {
+      "reason": "The identity audit registry keeps the latest source-reported record per AD, Entra ID or hybrid directory and exposes Tier 0/control-plane principals, Domain Admin membership changes and authorization references, service-account interactive sign-in and rotation posture, reviewed trust relationships, and sign-in policy/MFA state as distinct evidence categories. Unknown and gap states remain explicit, and the schema accepts no password, token or credential value.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: AD and Entra audit separates Tier 0, Domain Admin changes, service accounts, trusts and sign-in policy evidence without secrets", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence", "Browser QA: Identity displayed Tier 0 principals, an unapproved Domain Admin addition, service-account rotation gap, an active reviewed trust and partial conditional sign-in policy with evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is a source-reported read-only evidence registry. No live AD, LDAP or Microsoft Graph connector was lab tested, and CyberGuard does not change group membership, service accounts, trusts or sign-in policies in this phase."]
     }
   }
 }

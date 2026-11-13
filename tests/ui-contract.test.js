@@ -117,6 +117,13 @@ test('reports view exposes evidence-gated network and SOC resilience controls wi
   for(const marker of ['resilience.controls','current_network_configuration_backup_requires_separated_evidence','pathControl','alternate_management_connector_ready_requires_test_evidence','ready_soc_engine_outage_playbook_requires_exercise_evidence','armed_temporary_policy_fail_safe_requires_automatic_expiry_evidence','fail_safe_active','resilience_state']) assert.ok(domain.includes(marker),marker);
 });
 
+test('identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/directory-audits/);
+  for(const marker of ['AD / Entra audit','Tier 0 / control plane','Domain Admin changes','Service accounts','Trust relationships','Sign-in policies','Directory-audit evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['directoryLabel','Member added','Bidirectional','Conditional','Unreviewed']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.directory_audit','reviewed_tier0_control_plane_requires_evidence','tier0_principal_status_requires_evidence','service_account_posture_requires_evidence','known_trust_relationship_requires_review_evidence','known_sign_in_policy_requires_evidence','unapproved_domain_admin_changes','audit_state']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

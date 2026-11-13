@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T09:47:00.000+03:00",
+  "at": "2026-11-13T17:12:00.000+03:00",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -34,7 +34,8 @@
     "restore_readiness": {"result": "pass", "services": 2, "ready_service": {"backup_present": true, "integrity_verified": true, "restore_test_passed": true, "rpo_target_minutes": 60, "rpo_actual_minutes": 30, "rto_target_minutes": 120, "rto_actual_minutes": 90, "state": "ready"}, "backup_only_service": {"backup_present": true, "integrity_status": "not-tested", "restore_test_status": "not-run", "state": "unverified"}, "backup_presence_equals_recoverability": false},
     "incident_recovery_workflow": {"result": "pass", "workflow": "RECOVERY-QA-080", "incident": "INCIDENT-QA-080", "containment_completed": true, "identity_recovered": true, "configuration_recovered": true, "devices_recovered": true, "threat_findings_remaining": 0, "reconnection_approved": true, "final_state": "reconnected", "evidence_visible": true},
     "resilience_controls": {"result": "pass", "control": "RESILIENCE-QA-081", "network_configuration_backup": "current", "backup_separation": "offline", "out_of_band_management": "ready", "alternate_management_connector": "ready", "soc_engine_outage_playbook": "ready", "temporary_policy_fail_safe": "armed", "fail_safe_mode": "restore-baseline", "fail_safe_expiry_visible": true, "final_state": "ready", "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 26, "next": "CG-006"}
+    "directory_audit": {"result": "pass", "directory": "qa.synthetic.invalid", "type": "hybrid", "tier0_principals_visible": 2, "domain_admin_change_without_authorization_visible": true, "service_account_rotation_gap_visible": true, "reviewed_active_trust_visible": true, "partial_conditional_sign_in_policy_visible": true, "secrets_collected": false, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 27, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
