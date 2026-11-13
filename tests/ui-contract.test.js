@@ -148,6 +148,12 @@ test('identity view inventories SaaS OAuth applications and service identities w
   for(const marker of ['identity.saas_service_inventory','current_service_credential_requires_rotation_dates','admin_service_permission_requires_review_authorization','credential_gaps','permission_gaps','credential_values_collected:false','Credential values are rejected']) assert.ok(domain.includes(marker),marker);
 });
 
+test('identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/identity-attack-correlations/);
+  for(const marker of ['Identity attack correlation','Sign-in / MFA','Tokens / privilege','Files / resources','Movement / sequence','Attack confirmed','Token values','Identity-correlation evidence','CG-087']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.attack_correlation','correlation_requires_identity_and_downstream_signal','missing_signal_types','sequence_valid','unapproved_sensitive_changes','token_values_collected:false','attack_confirmed:false','does not confirm an attack']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

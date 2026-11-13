@@ -221,6 +221,13 @@
       "tests": ["tests/domain.test.js: SaaS OAuth and service identity inventory tracks owners, credential rotation, permissions and activities without credential values", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities", "Browser QA: Identity displayed CG-086, application and service-identity owners, expired credential metadata and rotation dates, permission and activity evidence, explicit gaps and Not collected for credential values"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This is a source-reported read-only inventory. No live SaaS or OAuth provider was lab tested, CyberGuard stores no credential value, and it does not rotate a key, change a permission or act on an application in this phase."]
+    },
+    "CG-087": {
+      "reason": "The identity-attack correlation registry keeps the latest source-reported chain per correlation ID and preserves sign-in, MFA reset, token creation, Administrator-role change, file/resource change and network movement as separate time-ordered evidence signals. Complete, partial and sequence-gap states, missing signal types and successful sensitive changes without authorization remain explicit. The schema rejects token values, and correlation never becomes attack confirmation or attribution.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: identity attack correlation orders sign-in and identity changes before file resource and network movement without claiming an attack", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack", "Browser QA: Identity displayed CG-087 with a complete seven-signal chain, consistent chronology, high review priority, three sensitive changes without authorization, Not confirmed and Not collected for token values"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is source-reported correlation evidence, not an attack verdict or attribution. No live identity, file, cloud-resource or network connector was lab tested, and no token value or response action is accepted or executed."]
     }
   }
 }
