@@ -200,6 +200,13 @@
       "tests": ["tests/domain.test.js: Windows LAPS posture tracks per-device policy, rotation failures and secret-view audits without collecting passwords", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values", "Browser QA: Identity displayed CG-083, a configured 30-day policy, managed local administrator, explicit failed rotation, authorized access-audit metadata, evidence references and Not collected for secret values"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This is a source-reported read-only posture registry. No live Microsoft LAPS connector or directory/device write was lab tested, CyberGuard does not retrieve or store LAPS passwords, and the browser check used isolated synthetic evidence only."]
+    },
+    "CG-084": {
+      "reason": "The AD CS and Kerberos posture registry keeps the latest source-reported record per directory and exposes certificate-service state, template issuance mode and subject supply, issuance authorization metadata, Kerberos encryption and delegation, legacy NTLM observations, and authentication-setting changes with access decisions. It computes explicit gap counts and rejects private-key fields without retrieving certificates, keys or credentials.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: AD CS and Kerberos posture keeps certificate services, issuance, delegation, NTLM and access-decided authentication changes explicit", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes", "Browser QA: Identity displayed CG-084, running CA service, weak automatic requester-supplied template, unauthorized issuance, unconstrained unapproved delegation, legacy Kerberos/NTLM and denied authentication change with evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is a source-reported read-only posture registry. No live AD CS, Kerberos, domain-controller or NTLM connector was lab tested; CyberGuard does not retrieve certificates, private keys or credentials and performs no directory or certificate-service change."]
     }
   }
 }

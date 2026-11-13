@@ -131,6 +131,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/resilience-controls'&&method==='GET') return send(res,200,domain.resilienceControls(page(url.searchParams)));
       if(p==='/api/directory-audits'&&method==='GET') return send(res,200,domain.directoryAudits(page(url.searchParams)));
       if(p==='/api/laps-posture'&&method==='GET') return send(res,200,domain.lapsPosture(page(url.searchParams)));
+      if(p==='/api/adcs-kerberos-posture'&&method==='GET') return send(res,200,domain.adcsKerberosPosture(page(url.searchParams)));
       if(p==='/api/visibility-gaps'&&method==='GET') return send(res,200,domain.visibilityGaps(page(url.searchParams)));
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {
