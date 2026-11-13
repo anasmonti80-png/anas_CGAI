@@ -1,0 +1,59 @@
+{
+  "requirement": "CG-009",
+  "at": "2026-11-13T16:16:03.921Z",
+  "devices_requested": 20000,
+  "devices_stored": 20000,
+  "environment": {
+    "platform": "win32",
+    "arch": "x64",
+    "node": "v24.21.0",
+    "cpus": 12,
+    "memory_gb": 32
+  },
+  "ingest": {
+    "batches": 80,
+    "batch_size": 250,
+    "total_ms": 3512,
+    "devices_per_second": 5696
+  },
+  "views": [
+    {
+      "name": "assets first page",
+      "median_ms": 7.5,
+      "max_ms": 8.2
+    },
+    {
+      "name": "assets last page",
+      "median_ms": 199.4,
+      "max_ms": 243.9
+    },
+    {
+      "name": "assets search by hostname",
+      "median_ms": 9,
+      "max_ms": 10.7
+    },
+    {
+      "name": "dashboard",
+      "median_ms": 109,
+      "max_ms": 118.7
+    },
+    {
+      "name": "summary",
+      "median_ms": 0.3,
+      "max_ms": 0.4
+    },
+    {
+      "name": "evidence readiness",
+      "median_ms": 84.3,
+      "max_ms": 93.1
+    },
+    {
+      "name": "discovery sequences registry",
+      "median_ms": 9.7,
+      "max_ms": 10.6
+    }
+  ],
+  "budget_ms": 500,
+  "within_budget": true,
+  "scope": "Single-node engineering benchmark with synthetic devices. It measures this PC; distributed collector capacity is planned separately in the collector capacity registry."
+}

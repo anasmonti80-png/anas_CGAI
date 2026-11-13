@@ -186,6 +186,13 @@ test('discover view shows the sequential discovery run with ordered stages, merg
   for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Test-Connection','Test-NetConnection','Set-','New-NetFirewall','Remove-','ping ']) assert.ok(!exporter.includes(forbidden),forbidden);
 });
 
+test('data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),bench=fs.readFileSync(new URL('../scripts/scale-benchmark.js',import.meta.url),'utf8');assert.match(app,/\/api\/collector-capacity/);
+  for(const marker of ['Distributed scale to 20,000 devices','Usable capacity','Headroom','Collector / site','Role / upstream','Capacity / utilization','Single-node benchmark','CG-009']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['scale.collector_capacity','capacity-below-target','site-single-point-of-failure','non_central_collector_requires_upstream','never a single PC for every device']) assert.ok(domain.includes(marker),marker);
+  for(const marker of ['20000','devices_per_second','within_budget','Synthetic documentation-range data only']) assert.ok(bench.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
