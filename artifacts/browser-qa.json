@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T16:17:42.757Z",
+  "at": "2026-11-13T16:22:17.964Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -46,7 +46,8 @@
     "anti_ransomware_posture": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-091", "protected_record": "CFA enabled, ASR block, verified immutable backup, isolated vault", "indicator_record": "x45 modification spike, 850 renamed, 700 high-entropy writes, 12 ransom notes, shadow copies deleted", "gaps_visible": true, "ransomware_confirmed": false, "evidence_visible": true},
     "sequential_discovery": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-006", "data": "real run from the owner Windows PC (not stored in the repository)", "findings": 26, "merged_devices": 24, "completed_methods": ["arp", "dns", "dhcp"], "not_completed_with_reason": ["ad", "lldp-cdp", "snmpv3", "api"], "coverage": "partial 3/7", "active_scan_performed": false, "evidence_visible": true},
     "distributed_scale_20000": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-009", "collectors": 7, "usable_capacity": 23000, "assigned_devices": 18600, "headroom": 4400, "gap_visible": "site-single-point-of-failure (Madinah)", "near_capacity_visible": "MED-1 87%", "benchmark_devices": 20000, "benchmark_rate_per_second": 5696, "within_budget": true, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 38, "next": "CG-006"}
+    "optional_device_agents": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-010", "windows_real_run": {"services": 308, "running": 154, "processes": 521, "security_log": "access-denied", "sysmon": "not-installed", "defender": "on, signatures 13 days", "firewall_profiles_on": 3}, "linux_gitbash_run": "valid report, all Linux channels not-installed", "gaps_visible": ["windows-security-access-denied", "sysmon-not-installed", "signatures-older-than-7-days"], "command_lines_collected": false, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 39, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

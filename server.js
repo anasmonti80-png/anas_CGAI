@@ -141,6 +141,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/ransomware-posture'&&method==='GET') return send(res,200,domain.ransomwarePosture(page(url.searchParams)));
       if(p==='/api/discovery-sequences'&&method==='GET') return send(res,200,domain.discoverySequences(page(url.searchParams)));
       if(p==='/api/collector-capacity'&&method==='GET') return send(res,200,domain.collectorCapacity());
+      if(p==='/api/agents'&&method==='GET') return send(res,200,domain.agentInventory(page(url.searchParams)));
       if(p==='/api/visibility-gaps'&&method==='GET') return send(res,200,domain.visibilityGaps(page(url.searchParams)));
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {

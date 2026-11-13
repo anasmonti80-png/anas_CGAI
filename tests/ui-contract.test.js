@@ -193,6 +193,16 @@ test('data sources view shows the distributed 20,000-device collector plan and t
   for(const marker of ['20000','devices_per_second','within_budget','Synthetic documentation-range data only']) assert.ok(bench.includes(marker),marker);
 });
 
+test('data sources view shows optional managed-device agents and both agents stay read only',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),win=fs.readFileSync(new URL('../scripts/agent/CyberGuard-Agent.ps1',import.meta.url),'utf8'),lnx=fs.readFileSync(new URL('../scripts/agent/cyberguard-agent.sh',import.meta.url),'utf8');assert.match(app,/\/api\/agents/);
+  for(const marker of ['Optional managed-device agents','Log channels','Services / processes','Protection status','State / gaps','Command lines','Agent evidence','CG-010']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['agent.inventory_report','agent_enrollment_must_be_optional','collected_agent_channel_requires_event_count','signatures-older-than-7-days','command_lines_collected:false','Agents change nothing']) assert.ok(domain.includes(marker),marker);
+  for(const marker of ['Get-WinEvent','Sysmon','Win32_Service','Get-MpComputerStatus','No upload performed']) assert.ok(win.includes(marker),marker);
+  for(const marker of ['auditd','journalctl','syslog','systemctl list-units','ps -eo pid=,comm=','No upload performed']) assert.ok(lnx.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Stop-','Start-Service','Restart-']) assert.ok(!win.includes(forbidden),forbidden);
+  for(const forbidden of ['curl ','wget ','systemctl stop','systemctl start','systemctl enable','systemctl disable','rm -']) assert.ok(!lnx.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
