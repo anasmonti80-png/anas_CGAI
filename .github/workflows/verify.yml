@@ -37,7 +37,7 @@ jobs:
           foreach ($file in Get-ChildItem -Path scripts -Recurse -Filter *.ps1) {
             $parseErrors = $null; $parseTokens = $null
             [System.Management.Automation.Language.Parser]::ParseFile($file.FullName, [ref]$parseTokens, [ref]$parseErrors) | Out-Null
-            if ($parseErrors.Count -gt 0) { Write-Error "$($file.Name): $($parseErrors[0].Message)"; $bad++ } else { Write-Output "syntax ok: $($file.Name)" }
+            if ($parseErrors.Count -gt 0) { foreach ($pe in $parseErrors) { Write-Output "::error file=scripts/$($file.Name),line=$($pe.Extent.StartLineNumber),title=PowerShell $($PSVersionTable.PSVersion) parse error::$($pe.Message)" }; $bad++ } else { Write-Output "syntax ok: $($file.Name)" }
           }
           if ($bad -gt 0) { throw 'PowerShell syntax validation failed' }
       - name: Run Windows collectors for real and ingest their output

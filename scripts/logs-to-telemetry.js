@@ -1,7 +1,8 @@
 // Convert a raw log file into a cg.telemetry/1 log.batch file (read only; no upload).
 // Usage: node scripts/logs-to-telemetry.js <format> <input.log> <output.json> [source-name]
 // Formats: syslog, journal, nfdump-csv, goflow-json, suricata-eve, bind-query, isc-dhcpd, openvpn,
-//          iptables, windows-firewall, pfsense-filterlog
+//          iptables, windows-firewall, pfsense-filterlog, modsecurity-json, aws-waf-json, dnsmasq,
+//          zeek-conn, freeradius, cloudflare-access-json
 import fs from 'node:fs';
 import os from 'node:os';
 import { randomUUID } from 'node:crypto';

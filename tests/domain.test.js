@@ -525,6 +525,17 @@ test('device configuration snapshots are monitored per device and DNS, managemen
   assert.deepEqual(s.all("SELECT rule_id FROM alerts WHERE rule_id LIKE 'CG-NETDEV-%' ORDER BY rule_id").map(x=>x.rule_id),['CG-NETDEV-DNS-021','CG-NETDEV-DOWNGRADE-023','CG-NETDEV-MGMT-022']);
   assert.throws(()=>ingest([event('cfg-bad','network.device_config',snap('X',{management:[{protocol:'ssh',enabled:true,exposed_to:'internal',restricted_sources:true,password:'x'}]}))]),/unknown_device_management_0_field/);
 });
+test('security integrations compare declared controls with received logs and alert on WAF critical blocks and repeated NAC/ZTNA failures',t=>{
+  const {d,s,event,ingest}=fixture(t),declare=(integration_id,control_type,product,expected_formats,status='active')=>event(`decl-${integration_id}`,'integration.declared',{integration_id,control_type,product,expected_formats,environment_scope:'HQ',owner:'secops',max_silence_minutes:60,status});
+  ingest([declare('waf-1','waf','ModSecurity',['modsecurity-json']),declare('nac-1','nac','FreeRADIUS',['freeradius']),declare('ztna-1','ztna','Cloudflare Access',['cloudflare-access-json'],'planned')]);
+  const ms=JSON.stringify({transaction:{client_ip:'203.0.113.9',time_stamp:'2026-11-11T09:59:00Z',request:{method:'GET',uri:'/x'},response:{http_code:403},messages:[{message:'SQLi',details:{ruleId:'942100',severity:'2'}}]}});
+  const radiusLines=Array.from({length:6},(_,i)=>`Wed Nov 11 09:5${i}:00 2026 : Auth: (1${i}) Login incorrect: [mallory/<via Auth-Type = eap>] (from client sw1 port 1 cli 11-22-33-44-55-66)`);
+  ingest([event('waf-logs','log.batch',{batch_id:'WAF-023',source_name:'modsec hq',format:'modsecurity-json',lines:[ms]}),event('nac-logs','log.batch',{batch_id:'NAC-023',source_name:'radius hq',format:'freeradius',lines:radiusLines}),event('ndr-logs','log.batch',{batch_id:'NDR-023',source_name:'zeek hq',format:'zeek-conn',lines:['#fields\tts\tid.orig_h\tid.orig_p\tid.resp_h\tid.resp_p\tproto','1794301140\t10.0.0.5\t1\t10.0.0.9\t445\ttcp']})]);
+  const r=d.securityIntegrations(),by=Object.fromEntries(r.controls.map(c=>[c.control,c]));
+  assert.equal(by.waf.state,'receiving');assert.equal(by.nac.state,'receiving');assert.equal(by.ztna.state,'planned');assert.equal(by.ndr.state,'receiving-undeclared');assert.equal(by['dns-security'].state,'not-configured');assert.equal(by.nac.observed.blocked_or_failed,6);
+  assert.deepEqual(s.all("SELECT DISTINCT rule_id FROM alerts WHERE rule_id IN ('CG-WAF-025','CG-ACCESS-FAIL-026') ORDER BY rule_id").map(x=>x.rule_id),['CG-ACCESS-FAIL-026','CG-WAF-025']);
+  assert.throws(()=>ingest([event('decl-bad','integration.declared',{integration_id:'x',control_type:'siem',product:'x',expected_formats:['syslog'],environment_scope:'x',owner:'x',max_silence_minutes:60,status:'active'})]),/invalid_integration_control_type/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;
