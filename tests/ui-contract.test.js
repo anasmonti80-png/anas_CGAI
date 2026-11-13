@@ -178,6 +178,14 @@ test('threats view shows anti-ransomware posture with CFA/ASR availability, file
   for(const marker of ['endpoint.ransomware_posture','backup_verification_requires_time_and_evidence','modification-spike','shadow-copies-deleted','recovery-store-not-isolated','ransomware_confirmed:false','not a ransomware verdict']) assert.ok(domain.includes(marker),marker);
 });
 
+test('discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),exporter=fs.readFileSync(new URL('../scripts/Export-LocalDiscovery.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/discovery-sequences/);
+  for(const marker of ['Sequential discovery','Discovery stages in order','Merged devices','Neighbour links','Coverage / evidence','Active scan','Discovery evidence','CG-006']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['discovery.sequence','discovery_stages_out_of_sequence','discovery_sequence_requires_every_method','discovery_finding_outside_scope','credentialed_discovery_stage_requires_credential_reference','active_scan_performed:false','No active scan is performed']) assert.ok(domain.includes(marker),marker);
+  for(const marker of ['Get-NetNeighbor','Get-DnsClientCache','Win32_NetworkAdapterConfiguration','discovery.sequence','No upload performed']) assert.ok(exporter.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Test-Connection','Test-NetConnection','Set-','New-NetFirewall','Remove-','ping ']) assert.ok(!exporter.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

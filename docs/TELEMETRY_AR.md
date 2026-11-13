@@ -67,3 +67,11 @@
 ## قواعد الإصدار
 
 خمس محاولات دخول فاشلة خلال خمس دقائق لنفس المصدر/الأصل/الحساب/IP تنتج تنبيهًا. حماية مبلغ عنها مثبتة ومتوقفة تنتج تنبيهًا. منفذ وصول بعيد ينتج Exposure فقط. security.finding يبقى تقرير مصدر، لا إثبات استغلال. مصدر لا يستقبل خلال stale_seconds ينتج Lost Coverage. التنبيهات تُجمع لكل مفتاح/يوم، وإعادة occurrence تفتحها لإقرار جديد. الأدلة الأخيرة حتى 100 مرجع في التنبيه، بينما جميع الأحداث محفوظة في جدولها.
+
+## الاكتشاف المتسلسل المحلي (CG-006)
+
+يقرأ `scripts/Export-LocalDiscovery.ps1` ما يعرفه جهاز Windows نفسه فقط: ذاكرة ARP وذاكرة DNS وإعداد DHCP والبوابة، ولا يرسل أي حزمة أو يغيّر أي إعداد. يُقرأ AD فقط مع `-IncludeActiveDirectory` على جهاز منضم لنطاق. تظهر LLDP/CDP وSNMPv3 وAPI «غير متاحة» مع السبب حتى يتوفر مجمّع مصرح به. الناتج ملف `cg.telemetry/1` يُرسل يدويًا إلى مصدر بيانات.
+
+```powershell
+.\scripts\Export-LocalDiscovery.ps1 -OutputPath 'C:\PrivateTelemetry\discovery.json' -AuthorizationRef 'APPROVED-SCOPE-REF'
+```

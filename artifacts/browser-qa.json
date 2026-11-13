@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T16:05:22.691Z",
+  "at": "2026-11-13T16:12:43.394Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -44,7 +44,8 @@
     "process_causality": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-089", "tree_depth": 2, "processes": 3, "masked_markers_visible": ["[USER]", "[EMAIL]", "[NATIONAL-ID]"], "persistence_changes": 2, "external_connections": 1, "confidence": "high", "malicious_verdict": false, "evidence_visible": true},
     "defense_tamper_detection": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-090", "records": 3, "suspected_deliberate": "edr stopped via service control, critical", "likely_fault": "agent crash with preceding errors, restored", "authorized_change": "firewall policy change with change ticket in maintenance window", "response_executed_by_cyberguard": false, "evidence_visible": true},
     "anti_ransomware_posture": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-091", "protected_record": "CFA enabled, ASR block, verified immutable backup, isolated vault", "indicator_record": "x45 modification spike, 850 renamed, 700 high-entropy writes, 12 ransom notes, shadow copies deleted", "gaps_visible": true, "ransomware_confirmed": false, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 36, "next": "CG-006"}
+    "sequential_discovery": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-006", "data": "real run from the owner Windows PC (not stored in the repository)", "findings": 26, "merged_devices": 24, "completed_methods": ["arp", "dns", "dhcp"], "not_completed_with_reason": ["ad", "lldp-cdp", "snmpv3", "api"], "coverage": "partial 3/7", "active_scan_performed": false, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 37, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

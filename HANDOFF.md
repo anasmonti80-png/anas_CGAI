@@ -11,14 +11,15 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 5. Never claim "implemented" without passing tests (see AGENTS.md).
 6. Do not put secrets, customer data or private inventories in this file.
 7. `HANDOFF.md` is the single canonical coordination notebook for Codex and Claude. Record the active owner, exact CG range, validation result, commit and push state here; do not create agent-specific handoff files.
+9. No skipping (owner rule, 2026-11-13): never start a new CG number while any lower number is not `acceptance-verified`. Always resume from the LOWEST unaccepted ID in `docs/engineering/TRACEABILITY.jsonl`. Nothing is "deferred": if a requirement needs a real lab, build the full contract, UI and tests, run whatever can run for real, and state the remaining lab limit in its restrictions.
 8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
 - Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-005, CG-007, CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 90/90 tests pass.
-- In progress: no unpublished requirement checkpoint after CG-091. CG-092 is the next sequential requirement; sequential authenticated discovery for CG-006 also remains open. External connectors remain gated by authorized labs.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-008, CG-016, CG-022, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 92/92 tests pass.
+- In progress: no unpublished requirement checkpoint after CG-006. Next is the lowest unaccepted ID: CG-009, then CG-010..CG-074 gaps in order, then CG-092. External connectors without a lab keep explicit restrictions.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -39,6 +40,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Claude | Completed CG-006 sequential discovery: fixed ARP→DNS→DHCP→AD→LLDP/CDP→SNMPv3→API order with explicit reasons, credential references only, scope-checked private findings merged across methods and LLDP/CDP links, plus a read-only Windows exporter verified on a real host; 92/92 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Added anti-ransomware posture (CG-091): CFA/ASR where available, file-modification spike, mass rename, high-entropy and ransom-note indicators against a baseline, backup verification and immutability, and recovery-store separation, without a ransomware verdict; 90/90 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Added defense tamper detection (CG-090): AV/EDR/firewall disablement, log clearing, agent stop, time skew and policy changes with method, actor, authorization context, preceding errors and recovery, classified as authorized change, likely fault, suspected deliberate or undetermined without attribution; 88/88 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Added process causality (CG-089): parent/child process tree with command lines, signer and integrity, service and scheduled-task changes and connections, personal-data masking before storage and an explicit confidence without a malware verdict; 86/86 Unit Tested and Chromium checked. | current checkpoint |
