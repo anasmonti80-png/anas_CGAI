@@ -166,6 +166,12 @@ test('threats view shows process causality tree, persistence changes, connection
   for(const marker of ['endpoint.process_causality','causality_record_references_unknown_process','causality_record_outside_window','[EMAIL]','[NATIONAL-ID]','[PHONE]','raw_personal_data_stored:false','malicious_verdict:false','not a malware verdict']) assert.ok(domain.includes(marker),marker);
 });
 
+test('threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/defense-tamper/);
+  for(const marker of ['Defense tamper detection','Host / control','Actor / method','Classification','Recovery / evidence','Suspected deliberate tampering','Likely fault','Authorized change','Response by CyberGuard','Tamper evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['endpoint.defense_tamper','tamper_action_not_valid_for_control','time_change_requires_skew','tamper_recovery_requires_evidence_after_change','suspected-deliberate','likely-fault','response_executed_by_cyberguard:false','it is not attribution']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
