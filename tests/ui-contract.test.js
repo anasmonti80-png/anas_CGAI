@@ -136,6 +136,12 @@ test('identity view exposes AD CS services and issuance, Kerberos delegation, le
   for(const marker of ['identity.adcs_kerberos_posture','deployed_adcs_requires_service_template_evidence','known_adcs_service_requires_evidence','allowed_authentication_change_requires_authorization','delegation_gaps','ntlm_gaps','credential_material_collected:false','No private keys']) assert.ok(domain.includes(marker),marker);
 });
 
+test('identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/privileged-access/);
+  for(const marker of ['Privileged Access Management','JIT / PIM','PAW device','Administrative session','Review / authorization','Not executed','PAM evidence','CG-085']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.privileged_access','approved_privileged_activation_requires_bounded_reviewed_mfa_evidence','known_paw_posture_requires_device_evidence','approved_privileged_review_requires_authorization_evidence','session_controlled','privilege_grant_executed:false','does not grant privilege']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

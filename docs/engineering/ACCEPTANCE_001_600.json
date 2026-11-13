@@ -207,6 +207,13 @@
       "tests": ["tests/domain.test.js: AD CS and Kerberos posture keeps certificate services, issuance, delegation, NTLM and access-decided authentication changes explicit", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes", "Browser QA: Identity displayed CG-084, running CA service, weak automatic requester-supplied template, unauthorized issuance, unconstrained unapproved delegation, legacy Kerberos/NTLM and denied authentication change with evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This is a source-reported read-only posture registry. No live AD CS, Kerberos, domain-controller or NTLM connector was lab tested; CyberGuard does not retrieve certificates, private keys or credentials and performs no directory or certificate-service change."]
+    },
+    "CG-085": {
+      "reason": "The privileged-access registry keeps the latest source-reported record per request and requires a bounded JIT/PIM activation, successful MFA, independent authorization review, a compliant dedicated PAW, and a controlled temporary administrative session before reporting Controlled. Standing access, noncompliant or shared PAW use, failed MFA, rejected review and disabled session recording remain explicit gaps, and the registry executes no privilege grant.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: privileged access requires bounded JIT or PIM, compliant dedicated PAW, controlled temporary session and independent authorization", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence", "Browser QA: Identity displayed CG-085 with bounded approved JIT, passed MFA, compliant dedicated PAW, ended recorded session, independent authorization evidence, Controlled state and Not executed"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["This is a source-reported read-only PAM evidence registry. No live PIM/PAM provider, PAW or administrative session was lab tested, and CyberGuard does not grant roles, start sessions or retrieve credentials."]
     }
   }
 }
