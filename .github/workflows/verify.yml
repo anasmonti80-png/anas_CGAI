@@ -49,12 +49,13 @@ jobs:
           ./scripts/Export-SoftwareInventory.ps1 -OutputPath "$out/software.json"
           ./scripts/Export-IdentitySnapshot.ps1 -OutputPath "$out/identity.json"
           ./scripts/Export-AccountPosture.ps1 -OutputPath "$out/posture.json"
+          ./scripts/Export-ConnectionEvidence.ps1 -OutputPath "$out/connections.json"
           $watched = Join-Path $out 'watched'; New-Item -ItemType Directory -Force $watched | Out-Null
           'v1' | Out-File "$watched/a.txt"; 'old' | Out-File "$watched/old.txt"
           ./scripts/Watch-SensitiveChanges.ps1 -StatePath "$out/state.json" -OutputPath "$out/changes-baseline.json" -WatchPath $watched
           'v2' | Out-File "$watched/a.txt"; 'new' | Out-File "$watched/new.txt"; Remove-Item "$watched/old.txt"
           ./scripts/Watch-SensitiveChanges.ps1 -StatePath "$out/state.json" -OutputPath "$out/changes.json" -WatchPath $watched
-          $files = @("$out/agent.json", "$out/software.json", "$out/identity.json", "$out/posture.json", "$out/changes.json")
+          $files = @("$out/agent.json", "$out/software.json", "$out/identity.json", "$out/posture.json", "$out/connections.json", "$out/changes.json")
           try { ./scripts/Export-LocalDiscovery.ps1 -OutputPath "$out/discovery.json" -AuthorizationRef 'github-actions-runner-self'; $files += "$out/discovery.json" } catch { Write-Output "discovery skipped: $($_.Exception.Message)" }
           node scripts/ci-collector-check.js @files
       - name: Run the Linux agent for real and ingest its output

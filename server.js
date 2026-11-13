@@ -152,6 +152,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/software-vulnerabilities'&&method==='GET') return send(res,200,domain.softwareVulnerabilities(page(url.searchParams)));
       if(p==='/api/identity-directories'&&method==='GET') return send(res,200,domain.identityDirectories(page(url.searchParams)));
       if(p==='/api/identity-threats'&&method==='GET') return send(res,200,domain.identityThreats(page(url.searchParams)));
+      if(p==='/api/network-analysis'&&method==='GET') return send(res,200,domain.networkAnalysis());
       if(p==='/api/normalized-logs'&&method==='GET') return send(res,200,domain.normalizedLogs({...page(url.searchParams),category:String(url.searchParams.get('category')||'').slice(0,20)}));
       if(p==='/api/visibility-gaps'&&method==='GET') return send(res,200,domain.visibilityGaps(page(url.searchParams)));
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));

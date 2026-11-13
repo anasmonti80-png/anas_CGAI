@@ -501,6 +501,12 @@ test('log batches are normalised on ingest, raw lines are not stored, IDS severi
   assert.throws(()=>ingest([event('logs-bad','log.batch',{batch_id:'X',source_name:'x',format:'syslog',lines:['nothing parseable here']})]),/log_batch_has_no_parseable_line/);
   assert.throws(()=>ingest([event('logs-fmt','log.batch',{batch_id:'X',source_name:'x',format:'cisco-asa',lines:['x']})]),/invalid_log_format/);
 });
+test('network analysis runs over stored normalised logs and raises lateral-movement and exposure alerts',t=>{
+  const {d,s,event,ingest}=fixture(t),line=(src,dst,port)=>JSON.stringify({TimeFlowStart:1794301200,SrcAddr:src,DstAddr:dst,SrcPort:50000,DstPort:port,Proto:6,Bytes:10,Packets:1});
+  ingest([event('net-flows','log.batch',{batch_id:'NET-019',source_name:'synthetic flows',format:'goflow-json',lines:[...Array.from({length:5},(_,i)=>line('10.0.0.50',`10.0.2.${i+1}`,445)),line('203.0.113.9','10.0.0.20',3389)]})]);
+  const r=d.networkAnalysis();assert.equal(r.records_analysed,6);assert.equal(r.lateral_movement.length,1);assert.equal(r.exposure[0].service,'RDP');
+  const rules=s.all("SELECT rule_id FROM alerts WHERE rule_id LIKE 'CG-NET-%' ORDER BY rule_id").map(x=>x.rule_id);assert.deepEqual(rules,['CG-NET-EXPOSE-016','CG-NET-LATERAL-015']);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

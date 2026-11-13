@@ -261,6 +261,18 @@ test('events view shows normalised logs from every supported source family',()=>
   assert.match(conv,/No upload performed/);
 });
 
+test('network map view shows connection zones, Internet exposure, unusual DNS and lateral movement, and the connection exporter is read only',()=>{
+  const app=read('app.js'),exporter=fs.readFileSync(new URL('../scripts/Export-ConnectionEvidence.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/network-analysis/);
+  for(const marker of ['Connections, exposure, DNS and lateral movement','Lateral-movement indicators','Internet exposure','Unusual DNS','Top connections','CG-019']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['Get-NetTCPConnection','Get-DnsClientCache','goflow-json','suricata-eve','No upload performed']) assert.ok(exporter.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Test-Connection','Test-NetConnection','Set-','Remove-','Stop-']) assert.ok(!exporter.includes(forbidden),forbidden);
+});
+
+test('every browser script parses as valid JavaScript',async()=>{
+  const {execFileSync}=await import('node:child_process'),{fileURLToPath}=await import('node:url');
+  for(const file of fs.readdirSync(new URL('../public/',import.meta.url)).filter(name=>name.endsWith('.js')))assert.doesNotThrow(()=>execFileSync(process.execPath,['--check',fileURLToPath(new URL('../public/'+file,import.meta.url))],{stdio:'pipe'}),file);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
