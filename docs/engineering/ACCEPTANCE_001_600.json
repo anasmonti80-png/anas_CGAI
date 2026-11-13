@@ -165,6 +165,13 @@
       "tests": ["tests/domain.test.js: backup security keeps multiple separated copies, platform immutability, change monitoring and permissions explicit", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes backup copy separation, immutability, change monitoring and permission review", "Browser QA: Reports displayed three copies, account/offline/offsite separation, platform-specific immutability, modification/deletion monitoring and least-privilege review evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["All backup-security states are source-reported. This phase did not connect to a real backup platform, enforce immutability or access, or prove that any stored copy can be restored."]
+    },
+    "CG-079": {
+      "reason": "The platform keeps the latest restore-readiness record per service with owned RPO/RTO targets, a periodic test schedule, documented test history, measured recovery point and duration, and independent backup-integrity evidence. Backup presence remains a separate field and can only become ready when a current passed test, intact backup, and measured RPO/RTO all satisfy the service targets.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view keeps backup presence separate from restore readiness and measured RPO or RTO", "Browser QA: Reports displayed a ready service with measured RPO/RTO beside a backup-present service that remained unverified without integrity or restore-test evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Restore tests and integrity checks are source-reported evidence. No real restore was executed, no production RPO/RTO was validated, and CyberGuard does not orchestrate recovery in this phase."]
     }
   }
 }

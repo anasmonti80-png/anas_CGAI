@@ -303,6 +303,13 @@ test('backup security keeps multiple separated copies, platform immutability, ch
   assert.throws(()=>ingest([event('bad-backup-count','resilience.backup_security',{...details,copies:[details.copies[0]]})]),/backup_security_requires_multiple_copies/);
   assert.throws(()=>ingest([event('bad-backup-monitor','resilience.backup_security',{...details,monitoring:{...details.monitoring,evidence_ref:null}})]),/monitored_backup_changes_require_signal_and_evidence/);
 });
+test('restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent',t=>{
+  const {d,event,ingest,advance}=fixture(t),base={service:{service_id:'SERVICE-079',name:'Synthetic critical service',owner_id:'service-owner'},objectives:{rpo_minutes:60,rto_minutes:120},backup_presence:'present',integrity:{status:'intact',checked_at:'2026-11-10T00:00:00.000Z',evidence_ref:'SYNTHETIC-INTEGRITY-079'},schedule:{frequency_days:30,next_due_at:'2027-01-01T00:00:00.000Z'},restore_tests:[{test_id:'RESTORE-079-A',scheduled_at:'2026-11-12T00:00:00.000Z',executed_at:null,status:'not-run',scope:'Synthetic service restore',recovered_to_time:null,duration_minutes:null,evidence_ref:null}]};
+  ingest([event('readiness-1','resilience.restore_readiness',base,{device_type:'server'})]);let rows=d.restoreReadiness();assert.equal(rows.total,1);assert.equal(rows.items[0].backup_presence,'present');assert.equal(rows.items[0].recoverability_state,'unverified');assert.equal(rows.items[0].rpo_actual_minutes,null);
+  const passed={...base,restore_tests:[{...base.restore_tests[0],executed_at:'2026-11-12T02:00:00.000Z',status:'passed',recovered_to_time:'2026-11-12T01:30:00.000Z',duration_minutes:90,evidence_ref:'SYNTHETIC-RESTORE-079'}]};advance(1);ingest([event('readiness-2','resilience.restore_readiness',passed,{device_type:'server'})]);rows=d.restoreReadiness({q:'SERVICE-079'});assert.equal(rows.items[0].recoverability_state,'ready');assert.equal(rows.items[0].rpo_actual_minutes,30);assert.equal(rows.items[0].rto_actual_minutes,90);assert.equal(rows.items[0].event_id,d.list('events').items[0].id);
+  assert.throws(()=>ingest([event('bad-readiness','resilience.restore_readiness',{...base,restore_tests:[{...base.restore_tests[0],status:'passed'}]})]),/passed_restore_test_requires_measurements_and_evidence/);
+  assert.throws(()=>ingest([event('bad-integrity','resilience.restore_readiness',{...base,integrity:{status:'intact',checked_at:null,evidence_ref:null}})]),/verified_backup_integrity_requires_evidence/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

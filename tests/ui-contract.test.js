@@ -99,6 +99,12 @@ test('reports view exposes backup copy separation, immutability, change monitori
   for(const marker of ['resilience.backup_security','backup_security_requires_multiple_copies','unsupported_immutability_must_be_not_applicable','monitored_backup_changes_require_signal_and_evidence','current_backup_permission_review_requires_evidence']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view keeps backup presence separate from restore readiness and measured RPO or RTO',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/restore-readiness/);
+  for(const marker of ['Restore readiness','Backup presence / readiness','Target / measured RPO','Target / measured RTO','Backup integrity','Periodic restore test','Restore-readiness evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['resilience.restore_readiness','passed_restore_test_requires_measurements_and_evidence','verified_backup_integrity_requires_evidence','recoverability_state']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
