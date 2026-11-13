@@ -15,10 +15,10 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
-- Last agent: Claude
+- Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-023, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. 137/137 tests pass.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-023, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. Codex independently reproduced the merged verification: 138/138 tests pass, 50 acceptance records resolve, and CG-024 is the first unaccepted ID.
 - In progress: no unpublished requirement checkpoint after CG-023. Next is the lowest unaccepted ID: CG-024; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
@@ -40,6 +40,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Codex | Pulled Claude's CG-006/009..023 and CG-088..091 checkpoints, independently reproduced 138/138 Unit Tests, regenerated all 1,440 traceability rows with 50 accepted requirements, and confirmed CG-001..CG-023 are contiguous with CG-024 as the first gap. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-023 security-control integrations: declared-versus-received status per environment for DNS security, WAF, IDS/IPS, NAC, NDR and ZTNA with native parsers (ModSecurity, AWS WAF, dnsmasq, Zeek, FreeRADIUS, Cloudflare Access) and alerts; CI syntax step now reports exact PowerShell parse errors; 137/137 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-021 network device monitoring: Cisco IOS/IOS-XE parsing without secrets, firmware advisories, insecure/exposed management, and DNS/VPN/management/firmware change detection with alerts; real Windows host config verified; 133/133 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-020 firewall rule analyzer: duplicates, shadowed/redundant and overridden rules, any-any and admin exposure, stale rules, expired exceptions and change impact with scope-aware coverage; verified on 807 real Windows rules after removing false positives; flaky HTTP test fixed separately; 129/129 Unit Tested and Chromium checked. | current checkpoint |
