@@ -179,6 +179,13 @@
       "tests": ["tests/domain.test.js: incident recovery enforces containment, identity configuration and device recovery, threat clearance, then approved reconnection", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes ordered incident recovery and blocks reconnection before threat clearance", "Browser QA: Reports displayed containment, identity/configuration/device recovery, zero-finding clearance and approved reconnection with evidence"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["This is a source-reported workflow and sequencing gate. It does not execute containment, restore identities/configurations/devices, scan the environment, or reconnect a real system."]
+    },
+    "CG-081": {
+      "reason": "The resilience-control registry keeps network-configuration backups, out-of-band management, an alternate management connector, the SOC-engine outage playbook and the temporary-policy fail-safe independently visible. Ready is computed only when configuration backups are current and separated, both management paths have test evidence, the outage playbook has exercise evidence, and an evidenced automatic fail-safe remains within its expiry window.",
+      "code": ["lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/domain.test.js: resilience controls require separated configuration backups, tested alternate paths, an exercised SOC outage playbook and active automatic fail-safe evidence", "tests/http.test.js: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads", "tests/ui-contract.test.js: reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe", "Browser QA: Reports displayed current separated network-configuration backups, tested out-of-band and alternate paths, an exercised SOC outage playbook, and an armed automatic fail-safe with expiry and evidence"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["All states are source-reported evidence. CyberGuard does not back up a real network device, operate an out-of-band path, switch connectors, execute the outage playbook, or change a temporary policy in this phase."]
     }
   }
 }

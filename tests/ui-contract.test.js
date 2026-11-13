@@ -111,6 +111,12 @@ test('reports view exposes ordered incident recovery and blocks reconnection bef
   for(const marker of ['resilience.incident_recovery','recovery_requires_completed_containment','threat_clearance_requires_recovered_identity_configuration_and_devices','threat_clearance_requires_zero_findings','reconnection_requires_completed_threat_clearance','completed_reconnection_requires_approval']) assert.ok(domain.includes(marker),marker);
 });
 
+test('reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/resilience-controls/);
+  for(const marker of ['Resilience controls','Network configuration backups','Out-of-band management','Alternate management connector','SOC engine outage playbook','Temporary-policy fail-safe','Resilience-control evidence']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['resilience.controls','current_network_configuration_backup_requires_separated_evidence','pathControl','alternate_management_connector_ready_requires_test_evidence','ready_soc_engine_outage_playbook_requires_exercise_evidence','armed_temporary_policy_fail_safe_requires_automatic_expiry_evidence','fail_safe_active','resilience_state']) assert.ok(domain.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
