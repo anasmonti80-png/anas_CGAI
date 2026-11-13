@@ -225,6 +225,14 @@ test('vulnerabilities view shows software and update inventory linked to importe
   for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Install-','Uninstall-','Start-Process']) assert.ok(!exporter.includes(forbidden),forbidden);
 });
 
+test('identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),exporter=fs.readFileSync(new URL('../scripts/Export-IdentitySnapshot.ps1',import.meta.url),'utf8');assert.match(app,/\/api\/identity-directories/);
+  for(const marker of ['Identity directory integration and group/privilege change monitoring','Directory / connector','Privileged group members','Changes since previous snapshot','Microsoft Entra ID','AWS IAM','Identity snapshot evidence','CG-014']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['identity.directory_snapshot','identity_connector_must_be_read_only','remote_identity_connector_requires_credential_reference','CG-IDENT-PRIVADD-007','CG-IDENT-PRIVGRANT-008','write_access_used:false']) assert.ok(domain.includes(marker),marker);
+  for(const marker of ['Get-LocalUser','Get-LocalGroupMember','S-1-5-32-544','adsisearcher','identity.directory_snapshot','No upload performed']) assert.ok(exporter.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Invoke-RestMethod','Set-','Remove-','Add-LocalGroupMember','New-LocalUser','Disable-','Enable-']) assert.ok(!exporter.includes(forbidden),forbidden);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T16:34:48.476Z",
+  "at": "2026-11-13T16:40:52.224Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -50,7 +50,8 @@
     "sensitive_change_monitoring": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-011", "real_baseline_items": 1301, "real_changes_detected": ["file modified", "file added", "file removed"], "false_positives": 0, "needs_review_count_visible": true, "reverted_by_cyberguard": false, "evidence_visible": true},
     "detection_rules": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-012", "rules": 6, "alerts_from_attack_chain": ["CG-MAL-LOLBIN-001 x2", "CG-MAL-PERSIST-002", "CG-MAL-USERPATH-003", "CG-TAMPER-004"], "real_agent_report_alerts": 0, "rule_version_visible": true, "evidence_visible": true},
     "software_vulnerability_inventory": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-013", "real_inventory": {"programs": 78, "updates": 4}, "synthetic_catalog_entries": 5, "vulnerable": 4, "kev": 1, "max_cvss": 9.8, "fixed_by_installed_update_visible": true, "real_data_defects_fixed": ["NUL character in a registry DisplayName", "non-Gregorian InstallDate"], "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 42, "next": "CG-006"}
+    "identity_directory_integration": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-014", "real_snapshot": {"principals": 32, "privileged_groups": 6, "privileged_memberships": 4}, "change_detected": "membership-added to Administrators (QA-injected between two real snapshots)", "alert": "CG-IDENT-PRIVADD-007 high", "write_access_used": false, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 43, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
