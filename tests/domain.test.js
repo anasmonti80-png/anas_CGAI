@@ -606,6 +606,30 @@ test('vulnerability risk ranks by exploitation evidence, exposure, asset importa
   assert.equal(d.vulnerabilityRisk({band:'low'}).items.every(x=>x.risk_band==='low'),true);
   assert.equal(s.all("SELECT * FROM alerts WHERE rule_id='CG-VULN-RISK-025'").length,1);
 });
+test('validation tiers enforce passive, low-impact and lab-only adversary emulation rules and flag runs outside their approved plan',t=>{
+  const {d,s,event,ingest}=fixture(t),plan=(plan_id,tier,extra={})=>event(`plan-${plan_id}`,'validation.test_plan',{plan_id,tier,title:`Synthetic ${tier}`,authorization_ref:'CHG-026',approved_by:'ciso',second_approver:null,window_start:'2026-11-11T08:00:00.000Z',window_end:'2026-11-11T18:00:00.000Z',environment:'production',targets:{asset_refs:['synthetic-01'],networks:[]},techniques:[{id:'registry-policy-check',name:null}],safeguards:{rate_limit_per_minute:30,stop_conditions:['service degradation'],rollback:null,isolation_evidence_ref:null},status:'approved',...extra});
+  const bad=(extra,re,tier='low-impact-validation')=>assert.throws(()=>ingest([plan(`bad-${Math.random()}`,tier,extra)]),re);
+  bad({techniques:[{id:'T1003.001',name:'LSASS dump'}]},/technique_not_allowed_in_low_impact_validation/);
+  bad({safeguards:{rate_limit_per_minute:500,stop_conditions:['x'],rollback:null,isolation_evidence_ref:null}},/low_impact_requires_rate_limit_at_most_60/);
+  bad({safeguards:{rate_limit_per_minute:10,stop_conditions:[],rollback:null,isolation_evidence_ref:null}},/low_impact_requires_stop_conditions/);
+  bad({window_end:'2026-12-11T18:00:00.000Z'},/validation_window_exceeds_14_days/);
+  bad({techniques:[{id:'T1059.001',name:'PowerShell'}]},/adversary_emulation_not_allowed_in_production/,'adversary-emulation');
+  bad({environment:'lab',techniques:[{id:'T1059.001',name:'PowerShell'}],second_approver:'CISO',safeguards:{rate_limit_per_minute:null,stop_conditions:[],rollback:'reimage lab',isolation_evidence_ref:'LAB-ISO-1'}},/emulation_requires_two_different_approvers/,'adversary-emulation');
+  bad({environment:'lab',techniques:[{id:'T1059.001',name:'PowerShell'}],second_approver:'soc-lead',safeguards:{rate_limit_per_minute:null,stop_conditions:[],rollback:null,isolation_evidence_ref:'LAB-ISO-1'}},/emulation_requires_rollback_plan/,'adversary-emulation');
+  bad({techniques:[{id:'safe-port-reachability',name:null}]},/technique_not_allowed_in_passive/,'passive');
+  ingest([plan('VAL-P','passive',{techniques:[{id:'log-analysis',name:null}],authorization_ref:null,approved_by:null,safeguards:{rate_limit_per_minute:null,stop_conditions:[],rollback:null,isolation_evidence_ref:null}}),plan('VAL-L','low-impact-validation'),
+    plan('VAL-E','adversary-emulation',{environment:'lab',targets:{asset_refs:[],networks:['10.66.0.0/24']},techniques:[{id:'T1059.001',name:'PowerShell'},{id:'T1021.001',name:'RDP'}],second_approver:'soc-lead',safeguards:{rate_limit_per_minute:null,stop_conditions:['lab isolation lost'],rollback:'reimage lab hosts',isolation_evidence_ref:'LAB-ISO-026'}})]);
+  const run=(run_id,plan_id,results,extra={})=>event(`run-${run_id}`,'validation.test_run',{run_id,plan_id,started_at:'2026-11-11T09:00:00.000Z',ended_at:'2026-11-11T09:05:00.000Z',executed_by:'tester',results,...extra});
+  const r1=(technique_id,target_ref='synthetic-01',outcome='pass')=>({technique_id,target_ref,outcome,observation:null,evidence_ref:null});
+  ingest([run('ok','VAL-L',[r1('registry-policy-check'),r1('registry-policy-check','synthetic-01','fail')]),run('wrong-tech','VAL-L',[r1('safe-port-reachability')]),run('wrong-target','VAL-L',[r1('registry-policy-check','other-host')]),run('late','VAL-L',[r1('registry-policy-check')],{started_at:'2026-11-11T19:00:00.000Z',ended_at:'2026-11-11T19:10:00.000Z'}),run('lab','VAL-E',[r1('T1059.001','10.66.0.7','blocked')]),run('ghost','VAL-X',[r1('registry-policy-check')])]);
+  const p=d.validationProgram(),plan_=id=>p.items.find(x=>x.plan_id===id),runOf=id=>[...p.items.flatMap(x=>x.runs),...p.orphan_runs].find(x=>x.run_id===id);
+  assert.deepEqual(p.by_tier,{passive:1,'low-impact-validation':1,'adversary-emulation':1});
+  assert.equal(runOf('ok').compliance,'within-plan');assert.deepEqual(plan_('VAL-L').results,{pass:1,fail:1,blocked:0,error:0,'not-run':0});
+  assert.deepEqual(runOf('wrong-tech').reasons,['technique-not-in-plan:safe-port-reachability']);assert.deepEqual(runOf('wrong-target').reasons,['target-not-in-plan:other-host']);assert.deepEqual(runOf('late').reasons,['outside-plan-window']);
+  assert.equal(runOf('lab').compliance,'within-plan','lab network target matched by CIDR');assert.deepEqual(runOf('ghost').reasons,['no-such-plan']);
+  assert.equal(p.out_of_plan_runs,4);assert.equal(s.all("SELECT * FROM alerts WHERE rule_id='CG-VALIDATION-OUT-OF-PLAN-026'").length,4);
+  assert.equal(plan_('VAL-E').window_state,'open');
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

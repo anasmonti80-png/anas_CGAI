@@ -188,6 +188,7 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   const netRows=await f.req('/api/network-analysis',{user:admin});assert.equal(netRows.status,200);assert.ok(netRows.data.records_analysed>=1);assert.ok(Array.isArray(netRows.data.lateral_movement));
   const fwRows=await f.req('/api/firewall-rules',{user:admin});assert.equal(fwRows.status,200);assert.ok(Array.isArray(fwRows.data.items));
   const cfgRows=await f.req('/api/device-configs',{user:admin});assert.equal(cfgRows.status,200);assert.ok(Array.isArray(cfgRows.data.items));
+  const validationRows=await f.req('/api/validation-program',{user:admin});assert.equal(validationRows.status,200);assert.deepEqual(Object.keys(validationRows.data.tiers),['passive','low-impact-validation','adversary-emulation']);
   const riskRows=await f.req('/api/vulnerability-risk?band=critical',{user:admin});assert.equal(riskRows.status,200);assert.ok(riskRows.data.model.exploitation);assert.deepEqual(Object.keys(riskRows.data.by_band),['critical','high','medium','low']);
   const assessmentRows=await f.req('/api/vulnerability-assessments',{user:admin});assert.equal(assessmentRows.status,200);assert.equal(assessmentRows.data.feeds.length,3);assert.ok(Array.isArray(assessmentRows.data.outside_authorized_scope));
   const integrationRows=await f.req('/api/security-integrations',{user:admin});assert.equal(integrationRows.status,200);assert.equal(integrationRows.data.controls.length,6);

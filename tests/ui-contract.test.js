@@ -292,6 +292,14 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('vulnerabilities view shows the three validation tiers, their enforced rules and out-of-plan runs',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/validation-program/);
+  for(const marker of ['Validation tiers','Passive','Low-impact authorized validation','Adversary emulation (lab only)','Out of plan','Within plan','CG-026']) assert.ok(app.includes(marker),marker);
+  const script=fs.readFileSync(new URL('../scripts/Invoke-LowImpactValidation.ps1',import.meta.url),'utf8');
+  for(const marker of ['validation.test_run','registry-policy-check','credentialed-config-check','No upload performed']) assert.ok(script.includes(marker),marker);
+  for(const forbidden of ['Invoke-WebRequest','Set-ItemProperty','New-ItemProperty','Remove-Item','Start-Process','Invoke-Command']) assert.ok(!script.includes(forbidden),`low-impact script must stay read-only and local: ${forbidden}`);
+});
+
 test('vulnerabilities view ranks risk with visible factors, evidence and the CVSS-only rank for comparison',()=>{
   const app=read('app.js');assert.match(app,/\/api\/vulnerability-risk/);
   for(const marker of ['Vulnerability risk ranking','CVSS-only rank','Why','Missing inputs','How the score is built','CG-025']) assert.ok(app.includes(marker),marker);
