@@ -15,11 +15,11 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
-- Last agent: Codex
+- Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-13
 - Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-023, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. The UI includes the requested SOC design and evidence registries through help-desk abuse controls, identity attack correlation, SaaS/OAuth/service-identity inventory, PAM, directory audit, Windows LAPS and AD CS/Kerberos/NTLM posture. Codex independently reproduced the merged verification: 138/138 tests pass, 50 acceptance records resolve, and CG-024 is the first unaccepted ID.
-- In progress: no unpublished requirement checkpoint after CG-023. Next is the lowest unaccepted ID: CG-024; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
+- In progress: Claude is working on CG-024 (vulnerability assessment within authorized scope; CVE/CVSS/EPSS/KEV and exposure) since 2026-11-14 04:56 +0300. Codex: do not start CG-024; wait for the [Claude] CG-024 commit, then continue from CG-025; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
