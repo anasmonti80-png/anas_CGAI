@@ -22,7 +22,18 @@ for (const file of files) {
     const bytes = fs.statSync(file).size;
     if (bytes > MAX_INGEST_BYTES) throw new Error(`file is ${bytes} bytes; the ingest API accepts at most ${MAX_INGEST_BYTES}`);
     const batch = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^﻿/, ''));
-    // cg.windows-export/1 files go through the same normalizer the HTTP endpoint uses.
+    // cg.windows-export/1 files go through the same normalizer the HTTP endpoint uses. That parser keeps only
+    // remote-interactive (RDP, type 10) logons and failed logons; a host without them yields
+    // no_supported_windows_events, which is a correct result, so it is reported (with the logon types seen) and
+    // not counted as a failure. Any other error (format, provider, fields) still fails the check.
+    if (batch.schema_version === 'cg.windows-export/1') {
+      try { normalizeWindowsExport(batch); } catch (error) {
+        if (error.code !== 'no_supported_windows_events') throw error;
+        const types = {}; for (const e of batch.events) { const key = `${e.event_id}/type ${e.data?.LogonType ?? '-'}`; types[key] = (types[key] || 0) + 1; }
+        console.log(`PARSED ${path.basename(file)}: ${batch.events.length} record(s) valid, none remote-interactive or failed; logon types seen ${JSON.stringify(types)}`);
+        continue;
+      }
+    }
     const result = batch.schema_version === 'cg.windows-export/1' ? domain.ingest('ci-admin', source.id, normalizeWindowsExport(batch).batch) : domain.ingest('ci-admin', source.id, batch);
     const kinds = batch.schema_version === 'cg.windows-export/1' ? 'windows security events' : [...new Set(batch.events.map(e => e.kind))].join(', ');
     console.log(`ACCEPTED ${path.basename(file)}: ${batch.events.length} event(s) [${kinds}]`, JSON.stringify(result).slice(0, 200));
