@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-13T19:55:33.763Z",
+  "at": "2026-11-14T02:01:50.394Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -58,7 +58,8 @@
     "firewall_rule_analyzer": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-020", "real_windows": {"rules": 807, "enabled": 580, "analysed": 364, "unreadable": 216, "admin_exposure": 6, "duplicates": 57, "remote_desktop_open_to_any": true}, "synthetic_pfsense": {"shadowed": "allow-smb-lab by block-smb", "expired_exception": "vendor-temp 12 days", "stale": "old-ftp 257 days", "change_impact": "increases-exposure (quick-rdp-fix)"}, "alerts": ["CG-FW-EXPOSE-020", "CG-FW-EXPIRED-019"], "false_positives_removed": ["user-scoped sandbox block rule", "app-container any-any rules", "ICMP-type duplicates", "protocol/keyword any-port exposure"], "evidence_visible": true},
     "network_device_config_monitoring": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-021", "real_host": {"build": "10.0.26200.9711", "dns_servers": 1, "vpn_profiles": 0, "rdp": "enabled, reachable from any"}, "cisco_change": {"dns": "10.0.0.53,10.0.0.54 -> 198.51.100.66", "management": "internal -> external", "firmware": "17.03.04a -> 16.09.01 (downgrade, vulnerable to a synthetic KEV advisory)"}, "alerts": ["CG-NETDEV-DNS-021", "CG-NETDEV-MGMT-022", "CG-NETDEV-DOWNGRADE-023"], "secrets_copied": false, "evidence_visible": true},
     "security_control_integrations": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-023", "states": {"waf": "receiving", "nac": "receiving", "ids-ips": "silent", "ndr": "receiving-undeclared", "ztna": "planned", "dns-security": "not-configured"}, "alerts": ["CG-WAF-025", "CG-ACCESS-FAIL-026"], "defects_fixed": ["FreeRADIUS reasons containing colons", "ModSecurity legacy timestamps parsed in local time instead of UTC", "untranslated state label"], "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 50, "next": "CG-006"}
+    "authorized_vulnerability_assessment": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-024", "real_inputs": {"software_programs": 78, "firewall_rules": 807}, "findings": 3, "kev": 1, "remote_reachable": 1, "outside_scope_listed": 1, "false_match_rejected": "Chrome Remote Desktop Host vs chrome", "defects_fixed": ["NVD timestamps without zone read as local time", "single-word CPE products (winrar) not matched", "regex escape lost in matcher", "VirtualBox CPE name differs from Windows display name", "overview card ignored assessment results", "English hint and method ids in the Arabic view"], "mobile_overflow": false, "english_view_clean": true, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 51, "next": "CG-006"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

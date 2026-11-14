@@ -292,6 +292,11 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('vulnerabilities view shows authorized assessment scopes, feed freshness, KEV/EPSS/CVSS enrichment and exposure evidence',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/vulnerability-assessments/);
+  for(const marker of ['Authorized vulnerability assessment','Intelligence feeds','CISA KEV','EPSS','Attack vector','Exposure','Outside authorized scope','Not assessed in window','CG-024']) assert.ok(app.includes(marker),marker);
+});
+
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');assert.match(app,/\/api\/visibility-gaps/);
   for(const marker of ['Visibility reason','Last seen','Recommendation','no guessed network links']) assert.ok(app.includes(marker),marker);
