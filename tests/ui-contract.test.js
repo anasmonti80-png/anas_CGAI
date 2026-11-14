@@ -297,6 +297,13 @@ test('vulnerabilities view measures detection during tests and lists detection g
   for(const marker of ['Detection measurement and gaps','Detection rate','Rule gap','Visibility gap','Settling','CG-027']) assert.ok(app.includes(marker),marker);
 });
 
+test('vulnerabilities view shows the non-bypassable critical production validation safety floor',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),tiers=fs.readFileSync(new URL('../lib/validation-tiers.js',import.meta.url),'utf8');assert.match(app,/\/api\/critical-production-protection/);
+  for(const marker of ['Critical production asset protection','Administrator bypass','Broad network targets','CG-028']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['critical_production_requires_explicit_asset_targets','critical_production_rate_limit_exceeded','criticalProductionFloor']) assert.ok(domain.includes(marker)||tiers.includes(marker),marker);
+  assert.match(tiers,/administrator_bypass:\s*false/);assert.match(tiers,/max_rate_per_minute:\s*6/);
+});
+
 test('vulnerabilities view shows the three validation tiers, their enforced rules and out-of-plan runs',()=>{
   const app=read('app.js');assert.match(app,/\/api\/validation-program/);
   for(const marker of ['Validation tiers','Passive','Low-impact authorized validation','Adversary emulation (lab only)','Out of plan','Within plan','CG-026']) assert.ok(app.includes(marker),marker);

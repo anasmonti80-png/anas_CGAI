@@ -645,6 +645,19 @@ test('detection coverage measures alerts during validation runs and records rule
   assert.equal(by('T1082','lab-win-01').expected_detection,'log');assert.equal(by('T1082','lab-win-01').gap,null,'telemetry satisfies a log expectation');
   assert.deepEqual(c.summary,{executions:4,expected_alert:3,detected:1,detection_rate:33.3,gaps:2,rule_gaps:1,visibility_gaps:1,settling:0});
 });
+test('critical production assets enforce a non-bypassable validation safety floor even for administrators',t=>{
+  const {d,event,ingest}=fixture(t),context={owner:{owner_id:'prod-owner',display_name:'Production Owner',contact:null},business_service:'Critical payments',service_name:null,site:'Primary site',data_sensitivity:'restricted',maintenance_windows:['Approved window only'],service_criticality:'critical'};
+  ingest([event('critical-context','asset.context',context)]);
+  const plan=(id,extra={})=>event(`plan-${id}`,'validation.test_plan',{plan_id:id,tier:'low-impact-validation',title:'Critical production validation',authorization_ref:'CHG-028',approved_by:'ciso',second_approver:null,window_start:'2026-11-11T08:00:00.000Z',window_end:'2026-11-11T18:00:00.000Z',environment:'production',targets:{asset_refs:['synthetic-01'],networks:[]},techniques:[{id:'credentialed-config-check',name:'Read-only configuration check'}],safeguards:{rate_limit_per_minute:6,stop_conditions:['service degradation'],rollback:null,isolation_evidence_ref:null},status:'approved',...extra});
+  ingest([plan('CRIT-SAFE')]);
+  const protection=d.criticalProductionProtection();assert.equal(protection.total,1);assert.equal(protection.policy.role_bypass,false);assert.equal(protection.policy.max_rate_per_minute,6);assert.deepEqual(protection.items[0].approved_production_plans.map(item=>item.plan_id),['CRIT-SAFE']);
+  assert.throws(()=>ingest([plan('CRIT-FAST',{safeguards:{rate_limit_per_minute:7,stop_conditions:['service degradation'],rollback:null,isolation_evidence_ref:null}})]),/critical_production_rate_limit_exceeded/,'the admin ingestion actor cannot bypass the critical-production rate floor');
+  assert.throws(()=>ingest([plan('CRIT-NET',{targets:{asset_refs:[],networks:['192.0.2.0/24']}})]),/critical_production_requires_explicit_asset_targets/);
+  assert.throws(()=>ingest([plan('CRIT-OVERRIDE',{safety_override:true})]),/unknown_details_field/,'no administrator override field is accepted');
+  assert.throws(()=>ingest([plan('CRIT-EMU',{tier:'adversary-emulation',techniques:[{id:'T1110.001',name:'Password guessing'}],second_approver:'soc-lead',safeguards:{rate_limit_per_minute:null,stop_conditions:['isolation lost'],rollback:'restore',isolation_evidence_ref:'LAB-ISO'}})]),/adversary_emulation_not_allowed_in_production/);
+  ingest([plan('CRIT-LAB',{tier:'adversary-emulation',environment:'lab',techniques:[{id:'T1110.001',name:'Password guessing'}],second_approver:'soc-lead',safeguards:{rate_limit_per_minute:null,stop_conditions:['isolation lost'],rollback:'destroy lab',isolation_evidence_ref:'LAB-ISO'}})]);
+  assert.equal(d.validationProgram().items.some(item=>item.plan_id==='CRIT-LAB'),true,'the production floor does not falsely block an authorized isolated lab');
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

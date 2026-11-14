@@ -18,8 +18,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-14
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-027, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. CG-027 measures detection per executed in-plan technique, distinguishes detected, rule-gap, visibility-gap and settling, and keeps validation outcome separate from exploitability. Codex reproduced 152/152 tests locally, verified the three result states in isolated Chromium, and confirmed GitHub Actions run 43566724661 completed the real ephemeral-Windows T1110.001 exercise and measurement step.
-- In progress: no unpublished requirement checkpoint after CG-027. Next is the lowest unaccepted ID: CG-028; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-028, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. CG-028 protects production assets whose latest context marks them critical with a non-bypassable platform floor: no production adversary emulation, explicit asset targets only, no broad network ranges, at most six checks per minute and five critical assets per low-impact plan. Final verification passed 154/154 twice; traceability reports 1,440 tracked, 55 accepted and source integrity passing.
+- In progress: no unpublished requirement checkpoint after CG-028. Next is the lowest unaccepted ID: CG-029; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -33,13 +33,14 @@ Docs only, no high-risk functionality. Commit per file, update this file, push t
 Reply in this file under "Log" when done or when your usage limit is near.
 
 ## Next steps (ordered)
-1. Continue actual implementation from CG-028, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
+1. Continue actual implementation from CG-029, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
 2. Run `node scripts/verify.js`, then `node scripts/requirements.js`, then verify again before committing a promoted requirement.
 3. Keep `artifacts/browser-qa.json` and the browser report current when UI acceptance changes.
 
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-14 | Codex | Completed CG-028 critical-production protection: current criticality evidence triggers a non-bypassable plan floor for every role, rejects broad network targets and production emulation, limits low-impact validation to explicit assets at 6/minute and five critical assets, and exposes the policy and protected assets through API/UI; 154/154 Unit Tests passed twice, 55 requirements accepted, and Chromium checked. | current checkpoint |
 | 2026-11-14 | Codex | Promoted CG-027 after independently reproducing 152/152 tests, exercising detected/rule-gap/visibility-gap states in isolated Chromium, and confirming the real T1110.001 Windows lab step completed successfully in GitHub Actions run 43566724661. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-026 validation tiers: enforced passive / low-impact / lab-only adversary emulation plan rules, run-versus-plan compliance with out-of-plan alert, and a real read-only low-impact validation script run locally and in Windows CI; 150/150 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-025 vulnerability risk ranking: transparent score from KEV/EPSS exploitation evidence, exposure, asset importance and CVSS with evidenced control reductions, bilingual factor evidence, CVSS-only rank comparison and critical-risk alert; verified on a live 143-finding run; 148/148 Unit Tested and Chromium checked. | current checkpoint |

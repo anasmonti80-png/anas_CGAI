@@ -208,6 +208,7 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${source.data.token}`}})).status,401);
   assert.equal((await f.req('/api/audit/verify',{user:admin})).data.valid,true);
   const coverage=await f.req('/api/coverage',{user:admin});
+  const criticalProtection=await f.req('/api/critical-production-protection',{user:admin});assert.equal(criticalProtection.status,200);assert.equal(criticalProtection.data.policy.role_bypass,false);assert.equal(criticalProtection.data.policy.max_rate_per_minute,6);
   const accomplishments=await f.req('/api/accomplishments?from=1&to=600&limit=10',{user:admin});
   assert.equal(accomplishments.status,200);assert.equal(accomplishments.data.scope.total,600);assert.equal(accomplishments.data.items.length,10);
   assert.equal(accomplishments.data.summary.completed,coverage.data.verified);assert.match(accomplishments.data.next_requirement,/^CG-\d{3,4}$/);
