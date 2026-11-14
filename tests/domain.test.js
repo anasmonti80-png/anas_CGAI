@@ -630,6 +630,21 @@ test('validation tiers enforce passive, low-impact and lab-only adversary emulat
   assert.equal(p.out_of_plan_runs,4);assert.equal(s.all("SELECT * FROM alerts WHERE rule_id='CG-VALIDATION-OUT-OF-PLAN-026'").length,4);
   assert.equal(plan_('VAL-E').window_state,'open');
 });
+test('detection coverage measures alerts during validation runs and records rule and visibility gaps instead of assuming exploitability',t=>{
+  const {d,event,ingest,advance}=fixture(t),lab={external_id:'lab-win-01',hostname:'LAB-WIN-01',addresses:['10.66.0.7']},quiet={external_id:'lab-win-02',hostname:'LAB-WIN-02',addresses:['10.66.0.8']};
+  ingest([event('plan-027','validation.test_plan',{plan_id:'LAB-027',tier:'adversary-emulation',title:'Lab password guessing',authorization_ref:'CHG-027',approved_by:'ciso',second_approver:'soc-lead',window_start:'2026-11-11T08:00:00.000Z',window_end:'2026-11-11T18:00:00.000Z',environment:'lab',targets:{asset_refs:['lab-win-01','lab-win-02','lab-win-03'],networks:[]},techniques:[{id:'T1110.001',name:'Password guessing',detection_rules:['CG-AUTH-FAILURES-5-IN-5M']},{id:'T1082',name:'System discovery',expected_detection:'log'}],safeguards:{rate_limit_per_minute:null,stop_conditions:['isolation lost'],rollback:'reimage',isolation_evidence_ref:'LAB-ISO'},status:'approved'})]);
+  const fails=(asset,n,prefix)=>Array.from({length:n},(_,i)=>event(`${prefix}-${i}`,'auth.failed',{account:'LAB\\nouser',source_ip:'10.66.0.99',protocol:'unknown'},asset));
+  ingest(fails(lab,6,'f1'));ingest(fails(quiet,3,'f2'));
+  const r1=(technique_id,target_ref)=>({technique_id,target_ref,outcome:'pass',observation:null,evidence_ref:null});
+  ingest([event('run-027','validation.test_run',{run_id:'RUN-027',plan_id:'LAB-027',started_at:'2026-11-11T09:58:00.000Z',ended_at:'2026-11-11T10:00:00.000Z',executed_by:'red-team',results:[r1('T1110.001','lab-win-01'),r1('T1110.001','lab-win-02'),r1('T1110.001','lab-win-03'),r1('T1082','lab-win-01')]})]);
+  let c=d.detectionCoverage();assert.equal(c.summary.settling,2,'gaps are not final inside the 15-minute window');assert.equal(c.summary.gaps,0);
+  advance(20*60000);c=d.detectionCoverage();const by=(t,ref)=>c.items.find(x=>x.technique_id===t&&x.target_ref===ref);
+  assert.equal(by('T1110.001','lab-win-01').detection,'detected');assert.deepEqual(by('T1110.001','lab-win-01').alerts.map(a=>a.rule_id),['CG-AUTH-FAILURES-5-IN-5M']);
+  assert.equal(by('T1110.001','lab-win-02').detection,'telemetry-only');assert.equal(by('T1110.001','lab-win-02').gap,'rule-gap','3 failures arrived but no rule fired');
+  assert.equal(by('T1110.001','lab-win-03').gap,'visibility-gap');assert.equal(by('T1110.001','lab-win-03').target_reporting,false);
+  assert.equal(by('T1082','lab-win-01').expected_detection,'log');assert.equal(by('T1082','lab-win-01').gap,null,'telemetry satisfies a log expectation');
+  assert.deepEqual(c.summary,{executions:4,expected_alert:3,detected:1,detection_rate:33.3,gaps:2,rule_gaps:1,visibility_gaps:1,settling:0});
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;

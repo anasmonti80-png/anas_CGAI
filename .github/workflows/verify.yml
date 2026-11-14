@@ -62,6 +62,18 @@ jobs:
           try { ./scripts/Export-WindowsEvents.ps1 -OutputPath "$out/winevents.json" -Hours 24; $files += "$out/winevents.json" } catch { Write-Output "windows events: $($_.Exception.Message)" }
           ./scripts/Invoke-LowImpactValidation.ps1 -PlanId 'ci-low-impact' -OutputPath "$out/validation.json" -ExecutedBy 'github-actions'; $files += "$out/validation.json"
           node scripts/ci-collector-check.js @files
+      - name: Emulate password guessing in the disposable runner and measure detection (CG-027)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $out = Join-Path $env:RUNNER_TEMP 'cg-detection'; New-Item -ItemType Directory -Force $out | Out-Null
+          $start = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
+          # Six failed network logons for an account that does not exist, each with a fresh random password.
+          1..6 | ForEach-Object { $bad = [guid]::NewGuid().ToString(); cmd /c "net use \\127.0.0.1\IPC`$ /user:cg-lab-nouser $bad >nul 2>&1"; cmd /c "net use \\127.0.0.1\IPC`$ /delete >nul 2>&1" }
+          Start-Sleep -Seconds 5
+          $end = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
+          ./scripts/Export-WindowsEvents.ps1 -OutputPath "$out/winevents.json" -Hours 1
+          node scripts/ci-detection-exercise.js --computer ([System.Net.Dns]::GetHostName()) --start $start --end $end --events "$out/winevents.json"
       - name: Run the Linux agent for real and ingest its output
         if: runner.os == 'Linux'
         run: |

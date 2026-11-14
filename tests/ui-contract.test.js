@@ -292,6 +292,11 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('vulnerabilities view measures detection during tests and lists detection gaps',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/detection-coverage/);
+  for(const marker of ['Detection measurement and gaps','Detection rate','Rule gap','Visibility gap','Settling','CG-027']) assert.ok(app.includes(marker),marker);
+});
+
 test('vulnerabilities view shows the three validation tiers, their enforced rules and out-of-plan runs',()=>{
   const app=read('app.js');assert.match(app,/\/api\/validation-program/);
   for(const marker of ['Validation tiers','Passive','Low-impact authorized validation','Adversary emulation (lab only)','Out of plan','Within plan','CG-026']) assert.ok(app.includes(marker),marker);
