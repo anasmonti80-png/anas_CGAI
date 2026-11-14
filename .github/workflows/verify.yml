@@ -59,6 +59,7 @@ jobs:
           ./scripts/Watch-SensitiveChanges.ps1 -StatePath "$out/state.json" -OutputPath "$out/changes.json" -WatchPath $watched
           $files = @("$out/agent.json", "$out/software.json", "$out/identity.json", "$out/posture.json", "$out/connections.json", "$out/firewall.json", "$out/hostcfg.json", "$out/changes.json")
           try { ./scripts/Export-LocalDiscovery.ps1 -OutputPath "$out/discovery.json" -AuthorizationRef 'github-actions-runner-self'; $files += "$out/discovery.json" } catch { Write-Output "discovery skipped: $($_.Exception.Message)" }
+          try { ./scripts/Export-WindowsEvents.ps1 -OutputPath "$out/winevents.json" -Hours 24; $files += "$out/winevents.json" } catch { Write-Output "windows events: $($_.Exception.Message)" }
           node scripts/ci-collector-check.js @files
       - name: Run the Linux agent for real and ingest its output
         if: runner.os == 'Linux'

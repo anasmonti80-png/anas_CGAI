@@ -294,7 +294,7 @@ test('data sources view shows security control integrations for DNS security, WA
 
 test('vulnerabilities view shows authorized assessment scopes, feed freshness, KEV/EPSS/CVSS enrichment and exposure evidence',()=>{
   const app=read('app.js');assert.match(app,/\/api\/vulnerability-assessments/);
-  for(const marker of ['Authorized vulnerability assessment','Intelligence feeds','CISA KEV','EPSS','Attack vector','Exposure','Outside authorized scope','Not assessed in window','CG-024']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['Authorized vulnerability assessment','Intelligence feeds','CISA KEV','EPSS','Attack vector','Exposure','Outside authorized scope','Not assessed in window','needs user interaction','remotely reachable without interaction','CG-024']) assert.ok(app.includes(marker),marker);
 });
 
 test('network map view renders a bounded visibility-gap registry without guessed topology',()=>{
@@ -312,4 +312,13 @@ test('asset detail renders lifecycle versions, support dates, extended support a
   const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8');
   for(const marker of ['Product / version','OS lifecycle version','Vendor support status','Standard support end','Security updates end','Extended support','Upgrade / replacement plan','Lifecycle evidence']) assert.ok(app.includes(marker),marker);
   for(const marker of ['asset.lifecycle','extended_support_enrollment_requires_availability','lifecycle_plan_action']) assert.ok(domain.includes(marker),marker);
+});
+
+test('browser markup respects the style-src CSP and uses pattern attributes that compile under the v flag',()=>{
+  // An inline style="" attribute is blocked by the page CSP (style-src 'self'); the evidence-readiness bar never filled because of one.
+  for(const name of ['app.js','dashboard.js','index.html']) assert.doesNotMatch(read(name),/\sstyle="/,`${name} must not use inline style attributes`);
+  // Browsers compile pattern="" with the v flag, where a bare "-" inside a class is invalid and the check is silently dropped.
+  const app=read('app.js'),patterns=[...app.matchAll(/pattern="([^"]*)"/g)].map(m=>m[1].replaceAll(String.fromCharCode(92,92),String.fromCharCode(92)));
+  assert.ok(patterns.length>=2);
+  for(const p of patterns){const re=new RegExp(`^(?:${p})$`,'v');assert.equal(re.test('qa-admin'),true,p);assert.equal(re.test('bad name'),false,p);}
 });

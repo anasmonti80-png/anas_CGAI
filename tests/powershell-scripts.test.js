@@ -18,5 +18,6 @@ test('PowerShell scripts parse the same on Windows PowerShell 5.1 and PowerShell
       assert.doesNotMatch(text, new RegExp(`\\{\\s*${word}\\s+[$('"\\w]`, 'i'), `${file} starts a script block with ${word}`);
     }
     assert.doesNotMatch(text, /[^\x00-\x7f]/, `${file} must stay ASCII so both PowerShell versions read it the same`);
+    for (const call of text.match(/ConvertTo-Json[^)\r\n]*/g) || []) assert.match(call, /-Compress/, `${file}: ${call} must use -Compress (indented JSON is about 5x larger; a real 807-rule firewall export exceeded the 2 MiB ingest limit)`);
   }
 });

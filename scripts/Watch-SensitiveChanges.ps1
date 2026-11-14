@@ -86,5 +86,5 @@ $events = @($changes | Select-Object -First 250 | ForEach-Object {
 })
 [System.IO.File]::WriteAllText($state, ($current | ConvertTo-Json -Depth 6 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 if ($events.Count -eq 0) { Write-Output ('No sensitive changes since {0}. Snapshot updated. No upload performed.' -f $previous.taken_at); return }
-[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ('{0} sensitive changes written ({1} shown at most 250 per file). No upload performed.' -f $changes.Count, $events.Count)

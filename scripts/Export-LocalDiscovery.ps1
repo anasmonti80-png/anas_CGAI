@@ -106,6 +106,6 @@ $export = [ordered]@{
         details = [ordered]@{ run_id = 'local-' + (Get-Date).ToUniversalTime().ToString('yyyyMMddTHHmmssZ'); authorization_ref = $AuthorizationRef; collector_ref = 'Export-LocalDiscovery.ps1@' + $hostName; scope = $scopeText; stages = $stages }
     })
 }
-[System.IO.File]::WriteAllText($destination, ($export | ConvertTo-Json -Depth 10), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ($export | ConvertTo-Json -Depth 10 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 $count = ($stages | ForEach-Object { $_.findings.Count } | Measure-Object -Sum).Sum
 Write-Output ('Exported one discovery run with {0} findings to the requested private file. No upload performed.' -f $count)

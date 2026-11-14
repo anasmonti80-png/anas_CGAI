@@ -18,7 +18,16 @@ $operatingSystem = Get-CimInstance -ClassName Win32_OperatingSystem
 $bootTime = $operatingSystem.LastBootUpTime.ToUniversalTime()
 $startTime = (Get-Date).ToUniversalTime().AddHours(-$Hours)
 if ($startTime -lt $bootTime) { $startTime = $bootTime }
-$records = @(Get-WinEvent -FilterHashtable @{ LogName = 'Security'; Id = @(4624, 4625, 4634); StartTime = $startTime } -MaxEvents $MaxEvents -ErrorAction Stop)
+# Without access, Windows answers a filtered Security query with "no events found", which would read as
+# "no logons happened". Check access first so the two cases are never confused.
+try { $null = Get-WinEvent -ListLog 'Security' -ErrorAction Stop } catch {
+    throw 'The Security log is not readable by this account (run as administrator or add the account to Event Log Readers). No telemetry file was created; this is not evidence that no logons occurred.'
+}
+try {
+    $records = @(Get-WinEvent -FilterHashtable @{ LogName = 'Security'; Id = @(4624, 4625, 4634); StartTime = $startTime } -MaxEvents $MaxEvents -ErrorAction Stop)
+} catch {
+    if ($_.FullyQualifiedErrorId -like 'NoMatchingEventsFound*') { $records = @() } else { throw }
+}
 $allowedFields = @('LogonType', 'TargetLogonId', 'TargetUserName', 'TargetDomainName', 'IpAddress', 'WorkstationName')
 $events = @($records | Sort-Object TimeCreated | ForEach-Object {
     $record = $_
@@ -36,13 +45,13 @@ $events = @($records | Sort-Object TimeCreated | ForEach-Object {
         data = $fields
     }
 })
-if ($events.Count -eq 0) { throw 'No matching events. No telemetry file was created.' }
+if ($events.Count -eq 0) { throw ('The Security log is readable but has no logon events (4624, 4625, 4634) since {0} UTC. No telemetry file was created.' -f $startTime.ToString('yyyy-MM-dd HH:mm')) }
 $export = [ordered]@{
     schema_version = 'cg.windows-export/1'
     computer = [System.Net.Dns]::GetHostName()
     boot_time = $bootTime.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
     events = $events
 }
-$serialized = $export | ConvertTo-Json -Depth 8
+$serialized = $export | ConvertTo-Json -Depth 8 -Compress
 [System.IO.File]::WriteAllText($destination, $serialized, (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ('Exported {0} records to the requested private file. No upload performed.' -f $events.Count)

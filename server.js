@@ -7,7 +7,7 @@ import { Auth } from './lib/auth.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
-import { AppError, fail, equal, object, page, token } from './lib/common.js';
+import { AppError, fail, equal, object, page, token, MAX_INGEST_BYTES } from './lib/common.js';
 
 const ROOT=fileURLToPath(new URL('./',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
@@ -20,7 +20,7 @@ const trace=()=>fs.readFileSync(path.join(ROOT,'docs/engineering/TRACEABILITY.js
 async function body(req) {
   fail(String(req.headers['content-type']||'').split(';')[0].trim()==='application/json',415,'json_content_type_required');
   const chunks=[]; let size=0;
-  for await (const chunk of req) { size+=chunk.length; fail(size<=2*1024*1024,413,'request_too_large'); chunks.push(chunk); }
+  for await (const chunk of req) { size+=chunk.length; fail(size<=MAX_INGEST_BYTES,413,'request_too_large'); chunks.push(chunk); }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new AppError(400,'invalid_json'); }
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }

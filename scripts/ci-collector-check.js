@@ -1,10 +1,13 @@
-// CI check: ingest real collector output files into a disposable store and fail if any is rejected.
+// CI check: ingest real collector output files into a disposable store and fail if any is rejected
+// or larger than the HTTP ingest limit (the API would answer 413 for it).
 // Usage: node scripts/ci-collector-check.js <file.json> [more.json ...]
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
+import { MAX_INGEST_BYTES } from '../lib/common.js';
+import { normalizeWindowsExport } from '../lib/windows-events.js';
 
 const files = process.argv.slice(2);
 if (!files.length) throw new Error('No collector output files given.');
@@ -16,9 +19,12 @@ const source = domain.createSource('ci-admin', { name: 'CI REAL COLLECTOR RUN', 
 let failed = 0;
 for (const file of files) {
   try {
+    const bytes = fs.statSync(file).size;
+    if (bytes > MAX_INGEST_BYTES) throw new Error(`file is ${bytes} bytes; the ingest API accepts at most ${MAX_INGEST_BYTES}`);
     const batch = JSON.parse(fs.readFileSync(file, 'utf8').replace(/^﻿/, ''));
-    const result = domain.ingest('ci-admin', source.id, batch);
-    const kinds = [...new Set(batch.events.map(e => e.kind))].join(', ');
+    // cg.windows-export/1 files go through the same normalizer the HTTP endpoint uses.
+    const result = batch.schema_version === 'cg.windows-export/1' ? domain.ingest('ci-admin', source.id, normalizeWindowsExport(batch).batch) : domain.ingest('ci-admin', source.id, batch);
+    const kinds = batch.schema_version === 'cg.windows-export/1' ? 'windows security events' : [...new Set(batch.events.map(e => e.kind))].join(', ');
     console.log(`ACCEPTED ${path.basename(file)}: ${batch.events.length} event(s) [${kinds}]`, JSON.stringify(result).slice(0, 200));
   } catch (error) {
     failed++;

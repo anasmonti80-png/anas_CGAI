@@ -47,5 +47,5 @@ $export = [ordered]@{
         }
     })
 }
-[System.IO.File]::WriteAllText($destination, ($export | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ($export | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ('Inventory written: {0} programs, {1} updates. No upload performed.' -f $software.Count, $updates.Count)

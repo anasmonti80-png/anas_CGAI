@@ -61,5 +61,5 @@ if ($IncludeActiveDirectory) {
         details = [ordered]@{ snapshot_id = 'ad-' + $system.Domain + '-' + $now.ToUniversalTime().ToString('yyyyMMddHHmmss'); directory = [ordered]@{ type = 'active-directory'; ref = 'ad:' + $system.Domain }; connector = [ordered]@{ method = 'ldap'; read_only = $true; credential_ref = 'machine-context:' + $system.Domain }; principals = @($adPrincipals | Select-Object -First 5000); memberships = @($adMemberships | Select-Object -First 20000); privileges = @() }
     }
 }
-[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ('Identity snapshot written: {0} directory snapshot(s), {1} local principals, {2} local memberships. No upload performed.' -f $events.Count, $principals.Count, $memberships.Count)

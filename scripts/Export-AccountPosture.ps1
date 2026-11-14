@@ -33,5 +33,5 @@ try {
     } | Where-Object { $_.principal_ref -and $_.principal_ref -ne 'user:-' })
     if ($signins.Count -gt 0) { $events += [ordered]@{ event_id = 'signin-' + [guid]::NewGuid().ToString(); kind = 'identity.signin_activity'; observed_at = (Get-Iso $now); asset = $asset; details = [ordered]@{ batch_id = 'local-' + $hostKey + '-' + $now.ToUniversalTime().ToString('yyyyMMddHHmmss'); directory_ref = $directory; window = [ordered]@{ starts_at = (Get-Iso $now.AddHours(-$Hours)); ends_at = (Get-Iso $now) }; signins = $signins } }; $signinNote = "$($signins.Count) sign-in events exported." }
 } catch { }
-[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ("Account posture written for {0} accounts. {1} No upload performed." -f $accounts.Count, $signinNote)

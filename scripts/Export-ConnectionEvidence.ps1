@@ -24,5 +24,5 @@ $asset = [ordered]@{ external_id = 'log-collector-' + $hostName.ToLower(); hostn
 $events = @()
 if ($flowLines.Count) { $events += [ordered]@{ event_id = 'conn-' + [guid]::NewGuid(); kind = 'log.batch'; observed_at = $iso; asset = $asset; details = [ordered]@{ batch_id = 'connections-' + [guid]::NewGuid(); source_name = "$hostName TCP connections"; format = 'goflow-json'; lines = $flowLines } } }
 if ($dnsLines.Count) { $events += [ordered]@{ event_id = 'dns-' + [guid]::NewGuid(); kind = 'log.batch'; observed_at = $iso; asset = $asset; details = [ordered]@{ batch_id = 'dnscache-' + [guid]::NewGuid(); source_name = "$hostName DNS client cache"; format = 'suricata-eve'; lines = $dnsLines } } }
-[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ([ordered]@{ schema_version = 'cg.telemetry/1'; events = $events } | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ('Wrote {0} connection lines and {1} DNS lines. No upload performed.' -f $flowLines.Count, $dnsLines.Count)

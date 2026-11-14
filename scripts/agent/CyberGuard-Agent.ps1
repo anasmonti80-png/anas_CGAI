@@ -89,5 +89,5 @@ $export = [ordered]@{
         }
     })
 }
-[System.IO.File]::WriteAllText($destination, ($export | ConvertTo-Json -Depth 8), (New-Object System.Text.UTF8Encoding($false)))
+[System.IO.File]::WriteAllText($destination, ($export | ConvertTo-Json -Depth 8 -Compress), (New-Object System.Text.UTF8Encoding($false)))
 Write-Output ('Agent report written: {0} services, {1} processes, {2} protection products. No upload performed.' -f $services.Count, $processes.Count, $products.Count)
