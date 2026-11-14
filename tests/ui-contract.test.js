@@ -292,6 +292,11 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('vulnerabilities view ranks risk with visible factors, evidence and the CVSS-only rank for comparison',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/vulnerability-risk/);
+  for(const marker of ['Vulnerability risk ranking','CVSS-only rank','Why','Missing inputs','How the score is built','CG-025']) assert.ok(app.includes(marker),marker);
+});
+
 test('vulnerabilities view shows authorized assessment scopes, feed freshness, KEV/EPSS/CVSS enrichment and exposure evidence',()=>{
   const app=read('app.js');assert.match(app,/\/api\/vulnerability-assessments/);
   for(const marker of ['Authorized vulnerability assessment','Intelligence feeds','CISA KEV','EPSS','Attack vector','Exposure','Outside authorized scope','Not assessed in window','needs user interaction','remotely reachable without interaction','CG-024']) assert.ok(app.includes(marker),marker);

@@ -149,6 +149,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/agents'&&method==='GET') return send(res,200,domain.agentInventory(page(url.searchParams)));
       if(p==='/api/sensitive-changes'&&method==='GET') return send(res,200,domain.sensitiveChanges(page(url.searchParams)));
       if(p==='/api/detection-rules'&&method==='GET') return send(res,200,domain.detectionRulesStatus());
+      if(p==='/api/vulnerability-risk'&&method==='GET') return send(res,200,domain.vulnerabilityRisk({...page(url.searchParams),band:['critical','high','medium','low'].includes(url.searchParams.get('band'))?url.searchParams.get('band'):''}));
       if(p==='/api/vulnerability-assessments'&&method==='GET') return send(res,200,domain.vulnerabilityAssessments(page(url.searchParams)));
       if(p==='/api/software-vulnerabilities'&&method==='GET') return send(res,200,domain.softwareVulnerabilities(page(url.searchParams)));
       if(p==='/api/identity-directories'&&method==='GET') return send(res,200,domain.identityDirectories(page(url.searchParams)));
