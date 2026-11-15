@@ -7,16 +7,16 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** CG-033 management-channel preservation and protected-infrastructure disruption guards (Codex implementation and acceptance verification).
-- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-033, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
-- **Validation:** Unit Tested — `node scripts/verify.js` passes 165/165 on Windows x64, Node 24.21.0, SQLite 3.53.4. Traceability reports 1,440 tracked, 59 accepted, source integrity passing and CG-034 as the first unaccepted ID. Current disruptive actions require target-bound management preflight evidence; unknown impact, an unprotected management cut and device-level disruption of a core switch, domain controller or the security platform are blocked. Isolated Chromium QA displayed the CG-033 catalog marker and safety requirement on all 12 disruptive actions. No production device or network action is Production Validated.
+- **Latest verified implementation checkpoint:** CG-034 recent MFA, two-person control, bounded break-glass and append-only evidence (Codex implementation and acceptance verification).
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-034, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — `node scripts/verify.js` passes 167/167 on Windows x64, Node 24.21.0, SQLite 3.53.4. Traceability reports 1,440 tracked, 60 accepted, source integrity passing and CG-035 as the first unaccepted ID. CG-034 adds encrypted local TOTP, a five-minute recent-MFA gate for sensitive operations, existing two-person action approval, and 5–60 minute/1–5 action break-glass approved by another standing administrator. Isolated Chromium shows login MFA, enrollment/status and controlled emergency-access panels. No enterprise IdP, hardware authenticator or externally anchored WORM audit is Production Validated.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, a central asset record with evidence-linked governance context, an evidence-readiness score, a Discover view for authorized observations, and a Settings view that states actual PC/collector/lab visibility boundaries. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
 - **Published state:** `codex/cg001-600` is published on `origin` and is the shared Codex/Claude handoff branch. `HANDOFF.md` is the single canonical coordination notebook.
 
 ## Safe next work
 
-1. Publish the verified CG-033 checkpoint, then continue CG-034, the lowest unaccepted requirement; do not skip it for a higher CG number.
+1. Publish the verified CG-034 checkpoint, then continue CG-035, the lowest unaccepted requirement; do not skip it for a higher CG number.
 2. Promote only requirements whose complete acceptance boundary has current code, test and platform evidence.
 3. Keep the Achievements ledger and Claude handoff current after every implementation phase.
 

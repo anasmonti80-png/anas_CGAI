@@ -7,6 +7,7 @@ import http from 'node:http';
 import { randomBytes } from 'node:crypto';
 import { createApp } from '../server.js';
 import { digest } from '../lib/common.js';
+import { totpCode } from '../lib/auth.js';
 
 async function fixture(t,options={}) {
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-http-test-'));
@@ -19,8 +20,10 @@ async function fixture(t,options={}) {
     const result=await response.json();return {status:response.status,data:result,headers:response.headers};
   }
   async function setup(){return req('/api/auth/setup',{method:'POST',data:{setup_token:setupToken,username:'admin',password}});}
-  async function login(username='admin',pass=password){const r=await req('/api/auth/login',{method:'POST',data:{username,password:pass}});assert.equal(r.status,200);return {cookie:r.headers.get('set-cookie').split(';')[0],csrf:r.data.csrf,...r.data.user};}
-  return {app,dir,req,setup,login,password,base,advance:ms=>{now+=ms;}};
+  const mfaSeeds=new Map();
+  async function login(username='admin',pass=password){let r=await req('/api/auth/login',{method:'POST',data:{username,password:pass,...(mfaSeeds.has(username)?{mfa_code:totpCode(mfaSeeds.get(username),now)}:{})}});assert.equal(r.status,200);const user={cookie:r.headers.get('set-cookie').split(';')[0],csrf:r.data.csrf,...r.data.user};if(!mfaSeeds.has(username)){const enrollment=await req('/api/auth/mfa/enroll',{method:'POST',user,data:{}});assert.equal(enrollment.status,201);mfaSeeds.set(username,enrollment.data.seed);const confirmed=await req('/api/auth/mfa/confirm',{method:'POST',user,data:{code:totpCode(enrollment.data.seed,now)}});assert.equal(confirmed.status,200);}return user;}
+  async function refreshMfa(user,username='admin'){const result=await req('/api/auth/mfa/verify',{method:'POST',user,data:{code:totpCode(mfaSeeds.get(username),now)}});assert.equal(result.status,200);return result;}
+  return {app,dir,req,setup,login,refreshMfa,password,base,advance:ms=>{now+=ms;}};
 }
 test('first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes',async t=>{
   const f=await fixture(t);
@@ -94,6 +97,14 @@ test('temporary permit API requires exact scope and independent approval then pr
   assert.equal((await f.req('/api/temporary-permits',{method:'POST',user:requester,data:{...input,source_ref:'*'}})).status,400);const requested=await f.req('/api/temporary-permits',{method:'POST',user:requester,data:input});assert.equal(requested.status,201);assert.equal((await f.req(`/api/temporary-permits/${requested.data.id}/approve`,{method:'POST',user:requester,data:{}})).status,403);assert.equal((await f.req(`/api/temporary-permits/${requested.data.id}/approve`,{method:'POST',user:approver,data:{}})).data.status,'active');
   let permits=await f.req('/api/temporary-permits',{user:requester});assert.equal(permits.data.active,1);assert.equal(permits.data.items[0].approved_by_name,'permit-approver');f.advance(5*60000);permits=await f.req('/api/temporary-permits',{user:requester});assert.equal(permits.data.active,0);assert.equal(permits.data.items[0].status,'expired');assert.match(permits.data.items[0].revocation_evidence_ref,/^audit:[a-f0-9]{64}$/);assert.equal((await f.req('/api/audit/verify',{user:requester})).data.valid,true);
 });
+test('recent TOTP, two-person control and bounded break-glass protect sensitive operations with append-only evidence',async t=>{
+  const f=await fixture(t);await f.setup();let admin=await f.login();assert.equal((await f.req('/api/auth/login',{method:'POST',data:{username:'admin',password:f.password}})).status,401,'password alone no longer logs in after enrollment');const mfa=await f.req('/api/auth/mfa',{user:admin});assert.deepEqual({enabled:mfa.data.enabled,recent:mfa.data.recent},{enabled:true,recent:true});
+  f.advance(6*60000);assert.equal((await f.req('/api/sources',{method:'POST',user:admin,data:{name:'MFA stale source'}})).status,403);await f.refreshMfa(admin);
+  const secondPassword='Synthetic-Second-Admin-034',analystPassword='Synthetic-Emergency-Analyst-034';for(const [username,password,role] of [['admin034',secondPassword,'admin'],['analyst034',analystPassword,'analyst']])assert.equal((await f.req('/api/users',{method:'POST',user:admin,data:{username,password,role}})).status,201);
+  const second=await f.login('admin034',secondPassword),analyst=await f.login('analyst034',analystPassword),request=await f.req('/api/break-glass',{method:'POST',user:analyst,data:{scope:'Create one emergency local viewer account',reason:'Synthetic incident has no available standing operator',duration_minutes:5,max_actions:1}});assert.equal(request.status,201);assert.equal(request.data.state,'pending');assert.equal((await f.req(`/api/break-glass/${request.data.id}/approve`,{method:'POST',user:analyst,data:{}})).status,403);
+  const approved=await f.req(`/api/break-glass/${request.data.id}/approve`,{method:'POST',user:second,data:{}});assert.equal(approved.status,200);assert.equal(approved.data.state,'active');const emergency=await f.req('/api/auth/me',{user:analyst});assert.equal(emergency.data.user.role,'admin');assert.equal(emergency.data.user.break_glass.actions_left,1);
+  assert.equal((await f.req('/api/users',{method:'POST',user:analyst,data:{username:'emergencyviewer',password:'Synthetic-Emergency-Viewer-034',role:'viewer'}})).status,201);assert.equal((await f.req('/api/users',{user:analyst})).status,403,'the one-action emergency envelope is exhausted');const grants=await f.req('/api/break-glass',{user:second});assert.equal(grants.data.items.find(item=>item.id===request.data.id).state,'exhausted');assert.equal((await f.req('/api/audit/verify',{user:second})).data.valid,true);
+});
 
 test('unsupported HTTP methods cannot mutate routes that accept both reads and writes',async t=>{
   const f=await fixture(t);await f.setup();const admin=await f.login();
@@ -151,7 +162,7 @@ test('Windows export HTTP import records parser provenance, reports skipped reco
   assert.equal((await f.req('/api/events',{user:admin})).data.total,1);
 });
 test('real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads',async t=>{
-  const f=await fixture(t);await f.setup();const admin=await f.login();
+  const f=await fixture(t);await f.setup();let admin=await f.login();
   const source=await f.req('/api/sources',{method:'POST',user:admin,data:{name:'API fixture',source_type:'managed-agent'}});assert.equal(source.status,201);assert.equal(source.data.source_type,'managed-agent');
   const batch={schema_version:'cg.telemetry/1',events:[{event_id:'e1',kind:'asset.observed',observed_at:new Date().toISOString(),asset:{external_id:'test-1',hostname:'LAB-API',addresses:['192.0.2.1']},details:{}}]};
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${source.data.token}`}})).status,200);
@@ -222,7 +233,7 @@ test('real HTTP ingestion persists evidence, exposes actual metrics and keeps co
   assert.equal((await f.req('/api/audit',{user:analyst})).status,403);const request=await f.req('/api/jit',{method:'POST',data:{role:'admin',scope:'Audit review',reason:'Need to read the audit log for incident review',duration_minutes:10,max_actions:3},user:analyst});assert.equal(request.status,201);
   assert.equal((await f.req(`/api/jit/${request.data.id}/approve`,{method:'POST',data:{},user:analyst})).status,403);assert.equal((await f.req(`/api/jit/${request.data.id}/approve`,{method:'POST',data:{note:'ok'},user:admin})).status,200);
   assert.equal((await f.req('/api/audit',{user:analyst})).status,200);const me=await f.req('/api/auth/me',{user:analyst});assert.equal(me.data.user.role,'admin');assert.equal(me.data.user.base_role,'analyst');
-  f.advance(11*60*1000);const refreshed=await f.login('analyst17',analystPassword);assert.equal((await f.req('/api/audit',{user:refreshed})).status,403);assert.equal((await f.req('/api/jit',{user:admin})).data.items.find(g=>g.id===request.data.id).state,'expired');}
+  f.advance(11*60*1000);const refreshed=await f.login('analyst17',analystPassword);admin=await f.login();assert.equal((await f.req('/api/audit',{user:refreshed})).status,403);assert.equal((await f.req('/api/jit',{user:admin})).data.items.find(g=>g.id===request.data.id).state,'expired');}
   const logs={schema_version:'cg.telemetry/1',events:[{...batch.events[0],event_id:'logs-api-1',kind:'log.batch',details:{batch_id:'API-LOGS-018',source_name:'api syslog',format:'syslog',lines:['<38>Nov 11 09:00:00 api01 sshd[1]: Accepted publickey for ops from 10.0.0.9 port 2222']}}]};
   assert.equal((await f.req(`/api/sources/${source.data.id}/events`,{method:'POST',data:logs,headers:{Authorization:`Bearer ${source.data.token}`}})).status,200);const logRows=await f.req('/api/normalized-logs?q=api01',{user:admin});assert.equal(logRows.status,200);assert.equal(logRows.data.total,1);assert.equal(logRows.data.items[0].category,'syslog');assert.ok(!JSON.stringify(logRows.data).includes(source.data.token));
   const netRows=await f.req('/api/network-analysis',{user:admin});assert.equal(netRows.status,200);assert.ok(netRows.data.records_analysed>=1);assert.ok(Array.isArray(netRows.data.lateral_movement));

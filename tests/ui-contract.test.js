@@ -84,6 +84,14 @@ test('response safety contract enforces CG-033 management-channel and protected-
   for(const marker of ['management preflight','core switch','domain controller','security platform'])assert.ok(app.includes(marker)||domain.includes(marker),marker);
 });
 
+test('settings exposes CG-034 recent MFA two-person control bounded break-glass and append-only evidence',()=>{
+  const app=read('app.js'),auth=fs.readFileSync(new URL('../lib/auth.js',import.meta.url),'utf8'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),store=fs.readFileSync(new URL('../lib/store.js',import.meta.url),'utf8'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');
+  for(const marker of ['Recent multi-factor authentication','Controlled break-glass','capped at 60 minutes and 5 actions','second approval','mfa-enroll','break-glass-request'])assert.ok(app.includes(marker),marker);
+  for(const marker of ['totpCode','requireRecentMfa','requestBreakGlass','decideBreakGlass','break-glass.used'])assert.ok(auth.includes(marker),marker);
+  for(const marker of ['CREATE TABLE user_mfa','CREATE TABLE mfa_assertions','CREATE TABLE break_glass_grants','audit_no_update','audit_no_delete'])assert.ok(store.includes(marker),marker);
+  assert.ok(domain.includes('recent_mfa_required'));assert.match(server,/\/api\/auth\/mfa/);assert.match(server,/\/api\/break-glass/);
+});
+
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);
@@ -376,5 +384,5 @@ test('browser markup respects the style-src CSP and uses pattern attributes that
   // Browsers compile pattern="" with the v flag, where a bare "-" inside a class is invalid and the check is silently dropped.
   const app=read('app.js'),patterns=[...app.matchAll(/pattern="([^"]*)"/g)].map(m=>m[1].replaceAll(String.fromCharCode(92,92),String.fromCharCode(92)));
   assert.ok(patterns.length>=2);
-  for(const p of patterns){const re=new RegExp(`^(?:${p})$`,'v');assert.equal(re.test('qa-admin'),true,p);assert.equal(re.test('bad name'),false,p);}
+  for(const p of patterns){const re=new RegExp(`^(?:${p})$`,'v');if(p.includes('{6}')){assert.equal(re.test('123456'),true,p);assert.equal(re.test('qa-admin'),false,p);}else{assert.equal(re.test('qa-admin'),true,p);assert.equal(re.test('bad name'),false,p);}}
 });

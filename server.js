@@ -93,7 +93,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         return send(res,201,{user});
       }
       if(p==='/api/auth/login'&&method==='POST') {
-        const input=object(await body(req),['username','password'],'login');
+        const input=object(await body(req),['username','password','mfa_code'],'login');
         const session=await auth.login(input,req.socket.remoteAddress||'unknown');
         res.setHeader('Set-Cookie',`cg_session=${session.token}; ${COOKIE}; Max-Age=28800`);
         return send(res,200,{user:session.user,csrf:session.csrf});
@@ -114,12 +114,20 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       authenticatedActor=user.id;
       if(mutation) fail(equal(req.headers['x-csrf-token']||'',user.csrf),403,'csrf_required');
       const roles=(allowed)=>auth.require(user,allowed);
-      if(mutation&&user.jit&&!p.startsWith('/api/jit')&&p!=='/api/auth/logout') auth.recordJitUse(user,p);
+      if(mutation&&(user.jit||user.break_glass)&&!p.startsWith('/api/jit')&&!p.startsWith('/api/break-glass')&&!p.startsWith('/api/auth/mfa')&&p!=='/api/auth/logout') auth.recordPrivilegedUse(user,p);
+      if(p==='/api/auth/mfa'&&method==='GET') return send(res,200,auth.mfaStatus(user));
+      if(p==='/api/auth/mfa/enroll'&&method==='POST') return send(res,201,auth.enrollMfa(user));
+      if(p==='/api/auth/mfa/confirm'&&method==='POST'){const input=object(await body(req),['code'],'mfa_confirmation');return send(res,200,auth.confirmMfa(user,input.code));}
+      if(p==='/api/auth/mfa/verify'&&method==='POST'){const input=object(await body(req),['code'],'mfa_verification');return send(res,200,auth.verifyMfa(user,input.code));}
+      if(p==='/api/break-glass'&&method==='GET') return send(res,200,auth.listBreakGlass(user));
+      if(p==='/api/break-glass'&&method==='POST') return send(res,201,auth.requestBreakGlass(user,await body(req)));
+      const breakGlassAction=p.match(/^\/api\/break-glass\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
+      if(breakGlassAction&&method==='POST'){if(breakGlassAction[2]==='revoke')return send(res,200,auth.revokeBreakGlass(user,breakGlassAction[1]));return send(res,200,auth.decideBreakGlass(user,breakGlassAction[1],breakGlassAction[2]));}
       if(p==='/api/jit'&&method==='GET') return send(res,200,auth.listJit(user));
       if(p==='/api/jit'&&method==='POST') return send(res,201,auth.requestJit(user,await body(req)));
       const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
       if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
-      if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit},csrf:user.csrf});
+      if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit,break_glass:user.break_glass,mfa:user.mfa},csrf:user.csrf});
       if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${COOKIE}; Max-Age=0`);return send(res,200,{logged_out:true});}
       if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
         {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
@@ -129,6 +137,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/users') {
         roles(['admin']);
         if(method==='GET') return send(res,200,{items:store.all('SELECT id,username,role,created_at FROM users ORDER BY username')});
+        auth.requireRecentMfa(user);
         const input=object(await body(req),['username','password','role'],'user');
         fail(store.get('SELECT COUNT(*) n FROM users').n<100,409,'user_limit');
         return send(res,201,{user:await auth.createUser(user.id,input)});
@@ -181,7 +190,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/discovery'&&method==='GET') return send(res,200,domain.discovery(page(url.searchParams)));
       if(p==='/api/sources') {
         if(method==='GET') return send(res,200,{items:domain.sources()});
-        roles(['admin']); return send(res,201,domain.createSource(user.id,await body(req)));
+        roles(['admin']);auth.requireRecentMfa(user);return send(res,201,domain.createSource(user.id,await body(req)));
       }
       if(p==='/api/collectors/local'&&method==='POST') {
         roles(['admin']);
@@ -193,7 +202,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         return send(res,200,domain.ingest(user.id,source.id,localObservation()));
       }
       const sourceAction=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/(rotate|revoke)$/);
-      if(sourceAction&&method==='POST') { roles(['admin']); return send(res,200,sourceAction[2]==='rotate'?domain.rotateSource(user.id,sourceAction[1]):domain.revokeSource(user.id,sourceAction[1])); }
+      if(sourceAction&&method==='POST') { roles(['admin']);auth.requireRecentMfa(user);return send(res,200,sourceAction[2]==='rotate'?domain.rotateSource(user.id,sourceAction[1]):domain.revokeSource(user.id,sourceAction[1])); }
       if(ingest&&method==='POST') {roles(['admin','analyst']);return send(res,200,ingestInput(user.id,ingest[1],await body(req)));}
       const tables={'/api/assets':'assets','/api/events':'events','/api/alerts':'alerts','/api/remote-sessions':'remote_sessions','/api/cases':'cases','/api/actions':'actions','/api/audit':'audit'};
       if(tables[p]&&method==='GET') {if(p==='/api/audit') roles(['admin']);return send(res,200,domain.list(tables[p],page(url.searchParams)));}

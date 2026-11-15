@@ -12,11 +12,11 @@ function fixture(t) {
   const s=new Store(':memory:'); t.after(()=>s.close());
   let now=Date.parse('2026-11-11T10:00:00.000Z');
   const d=new Domain(s,{clock:()=>now});
-  for(const id of ['admin-a','admin-b','admin-c','analyst']) s.run('INSERT INTO users VALUES (?,?,?,?,?)',id,id,'fixture-not-a-password-hash',id==='analyst'?'analyst':'admin',new Date(now).toISOString());
+  for(const id of ['admin-a','admin-b','admin-c','analyst']) {s.run('INSERT INTO users VALUES (?,?,?,?,?)',id,id,'fixture-not-a-password-hash',id==='analyst'?'analyst':'admin',new Date(now).toISOString());s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)',`${id}-mfa`,id,`fixture-session-${id}`,'totp',new Date(now).toISOString(),new Date(now+5*60000).toISOString(),digest({id,now}));}
   const source=d.createSource('admin-a',{name:'Synthetic lab',stale_seconds:60});
   const event=(id,kind='asset.observed',details={},asset={})=>({event_id:id,kind,observed_at:new Date(now).toISOString(),asset:{external_id:'synthetic-01',hostname:'LAB-01',os_family:'windows',device_type:'workstation',addresses:['192.0.2.10'],...asset},details});
   const ingest=events=>d.ingest('admin-a',source.id,{schema_version:'cg.telemetry/1',events});
-  return {s,d,source,event,ingest,advance:ms=>{now+=ms;}};
+  return {s,d,source,event,ingest,advance:ms=>{now+=ms;const verified=new Date(now).toISOString(),expires=new Date(now+5*60000).toISOString();s.run('UPDATE mfa_assertions SET verified_at=?,expires_at=?',verified,expires);}};
 }
 
 test('SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security',t=>{

@@ -2,11 +2,12 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { Store } from '../lib/store.js';
 import { Auth } from '../lib/auth.js';
+import { digest } from '../lib/common.js';
 
 function fixture(t){const s=new Store(':memory:');t.after(()=>s.close());let now=Date.parse('2026-11-11T10:00:00.000Z');const auth=new Auth(s,{clock:()=>now});
-  for(const [id,role] of [['admin-a','admin'],['admin-b','admin'],['analyst-1','analyst'],['viewer-1','viewer']])s.run('INSERT INTO users VALUES (?,?,?,?,?)',id,id,'fixture-not-a-password-hash',role,new Date(now).toISOString());
-  const user=id=>{const row=s.get('SELECT id,role FROM users WHERE id=?',id);const jit=auth.activeJit(id,now);return {id,role:jit?jit.requested_role:row.role,base_role:row.role,jit:jit?{id:jit.id}:null};};
-  return {s,auth,user,advance:ms=>{now+=ms;}};}
+  for(const [id,role] of [['admin-a','admin'],['admin-b','admin'],['analyst-1','analyst'],['viewer-1','viewer']]){s.run('INSERT INTO users VALUES (?,?,?,?,?)',id,id,'fixture-not-a-password-hash',role,new Date(now).toISOString());s.run('INSERT INTO sessions(token_hash,user_id,csrf,created_at,last_seen,expires_at,mfa_at) VALUES (?,?,?,?,?,?,?)',`session-${id}`,id,`csrf-${id}`,now,now,now+8*60*60*1000,now);s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)',`mfa-${id}`,id,`session-${id}`,'totp',new Date(now).toISOString(),new Date(now+5*60000).toISOString(),digest({id,now}));}
+  const user=id=>{const row=s.get('SELECT id,role FROM users WHERE id=?',id);const emergency=auth.activeBreakGlass(id,now),jit=emergency?null:auth.activeJit(id,now);return {id,role:emergency?'admin':jit?jit.requested_role:row.role,base_role:row.role,jit:jit?{id:jit.id}:null,break_glass:emergency?{id:emergency.id}:null,session_hash:`session-${id}`};};
+  return {s,auth,user,advance:ms=>{now+=ms;s.run('UPDATE sessions SET mfa_at=?',now);s.run('UPDATE mfa_assertions SET verified_at=?,expires_at=?',new Date(now).toISOString(),new Date(now+5*60000).toISOString());}};}
 
 test('just-in-time elevation needs a reason, a higher role, a different standing admin, and ends at expiry or the action cap with audit',t=>{
   const {s,auth,user,advance}=fixture(t);

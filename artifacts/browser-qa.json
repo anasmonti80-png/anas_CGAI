@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-15T19:20:00.000Z",
+  "at": "2026-11-15T21:28:00.000Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -67,7 +67,8 @@
     "permanent_service_safety": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-030", "catalog_actions_after_extension": 17, "connector_ready_actions": 17, "actions": ["endpoint.remove-service", "endpoint.change-service-permanent"], "service_preflight_visible": true, "recovery_method_visible": true, "recovery_artifact_visible": true, "recovery_owner_visible": true, "ordered_recovery_steps_visible": true, "recovery_verification_visible": true, "blind_removal_allowed": false, "separate_safety_approval_required": true},
     "temporary_permits": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-031", "active_and_revoked_records_visible": true, "scope_fields_visible": ["device", "user", "source", "destination", "protocol", "port", "duration", "reason", "owner", "approver"], "wildcards_allowed": false, "independent_approval_required": true, "automatic_expiry_unit_tested": true, "revocation_audit_receipt_visible": true, "request_form_complete": true},
     "management_channel_safety": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-033", "catalog_heading_visible": true, "disruptive_actions_marked": 12, "current_target_bound_preflight_required": true, "unknown_impact_allowed": false, "management_cut_without_alternate_allowed": false, "protected_device_disruption_allowed": false, "protected_roles": ["core-switch", "domain-controller", "security-platform"], "edge_port_with_unaffected_management_allowed": true, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 59, "next": "CG-034"}
+    "sensitive_action_governance": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-034", "login_mfa_field_visible": true, "mfa_status_panel_visible": true, "totp_enrollment_form_visible": true, "recent_window_minutes": 5, "break_glass_panel_visible": true, "break_glass_duration_minutes": {"min": 5, "max": 60}, "break_glass_action_cap": {"min": 1, "max": 5}, "different_standing_admin_required": true, "action_safety_bypass_allowed": false, "append_only_audit_unit_tested": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 60, "next": "CG-035"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
