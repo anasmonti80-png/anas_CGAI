@@ -70,6 +70,13 @@ test('response view marks permanent service work as CG-030 high risk with prefli
   assert.match(server,/safety-approve/);
 });
 
+test('response view exposes CG-031 exact temporary permits, independent approval and expiration evidence',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),store=fs.readFileSync(new URL('../lib/store.js',import.meta.url),'utf8'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');
+  for(const marker of ['Scoped temporary permits','Request temporary permit','Device / user','Source → destination','Duration / owner','Status / revocation proof','Submit for approval','approve-temporary-permit','revoke-temporary-permit','CG-031'])assert.ok(app.includes(marker),marker);
+  for(const marker of ['temporaryPermits','requestTemporaryPermit','approveTemporaryPermit','revokeTemporaryPermit','expireTemporaryPermits','temporary-permit.expired','independent_permit_approver_required','temporary_permit_${name}_must_be_explicit'])assert.ok(domain.includes(marker),marker);
+  assert.ok(store.includes('CREATE TABLE temporary_permits'));assert.match(server,/\/api\/temporary-permits/);
+});
+
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);

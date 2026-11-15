@@ -162,6 +162,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/detection-coverage'&&method==='GET') return send(res,200,domain.detectionCoverage(page(url.searchParams)));
       if(p==='/api/critical-production-protection'&&method==='GET') return send(res,200,domain.criticalProductionProtection());
       if(p==='/api/response-actions'&&method==='GET') return send(res,200,domain.responseActions());
+      if(p==='/api/temporary-permits'&&method==='GET') return send(res,200,domain.temporaryPermits());
+      if(p==='/api/temporary-permits'&&method==='POST'){roles(['admin','analyst']);return send(res,201,domain.requestTemporaryPermit(user.id,await body(req)));}
+      const permitAction=p.match(/^\/api\/temporary-permits\/([a-f0-9-]{36})\/(approve|revoke)$/);
+      if(permitAction&&method==='POST'){roles(['admin']);return send(res,200,permitAction[2]==='approve'?domain.approveTemporaryPermit(user.id,permitAction[1]):domain.revokeTemporaryPermit(user.id,permitAction[1]));}
       if(p==='/api/validation-program'&&method==='GET') return send(res,200,domain.validationProgram(page(url.searchParams)));
       if(p==='/api/vulnerability-risk'&&method==='GET') return send(res,200,domain.vulnerabilityRisk({...page(url.searchParams),band:['critical','high','medium','low'].includes(url.searchParams.get('band'))?url.searchParams.get('band'):''}));
       if(p==='/api/vulnerability-assessments'&&method==='GET') return send(res,200,domain.vulnerabilityAssessments(page(url.searchParams)));
@@ -242,11 +246,12 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   });
   server.requestTimeout=15000; server.headersTimeout=10000; server.keepAliveTimeout=5000; server.maxHeadersCount=50;
   const monitor=setInterval(()=>{try{domain.checkHealth();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
+  const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
   return {server,store,auth,domain,setupFile,operatingMode:mode,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>{server.removeListener('error',reject);resolve(server.address());});});
-  },async close(){clearInterval(monitor);if(server.listening){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}store.close();}};
+  },async close(){clearInterval(monitor);clearInterval(permitExpiryMonitor);if(server.listening){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}store.close();}};
 }
 if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {
   const app=createApp();
