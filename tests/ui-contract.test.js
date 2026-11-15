@@ -62,6 +62,14 @@ test('response view exposes every typed CG-029 action and authenticated connecto
   assert.match(server,/\/api\/response-actions/);assert.match(server,/response-jobs/);
 });
 
+test('response view marks permanent service work as CG-030 high risk with preflight, recovery and separate safety approval',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),catalog=fs.readFileSync(new URL('../lib/response-actions.js',import.meta.url),'utf8'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');
+  for(const marker of ['High-risk service removal','Permanent service change','Recovery method','Recovery artifact ref','Recovery steps — one per line','Recovery verification — one per line','Independently approve recovery plan','Separate safety approval','CG-030'])assert.ok(app.includes(marker),marker);
+  for(const marker of ['endpoint.remove-service','endpoint.change-service-permanent','requires_service_preflight:true','requires_safety_approval:true','permanent-service-removal','permanent-service-change'])assert.ok(catalog.includes(marker),marker);
+  for(const marker of ['response.service_preflight','servicePreflights','current_recoverable_service_preflight_required','service_preflight_stale','safetyApproveAction','action.safety-approved','separate_safety_approval_required'])assert.ok(domain.includes(marker),marker);
+  assert.match(server,/safety-approve/);
+});
+
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);
