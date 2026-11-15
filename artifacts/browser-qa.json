@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-15T17:56:00.000Z",
+  "at": "2026-11-15T19:20:00.000Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -66,7 +66,8 @@
     "governed_response_actions": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-029", "catalog_actions": 15, "connector_ready_actions": 15, "raw_commands_allowed": false, "endpoint_connector": "QA-EDR-029", "ncc_connector": "QA-NCC-029", "switch_port_owner": "ncc-scoped-api", "central_asset_request_form_visible": true, "authorization_reference_required": true, "independent_approval_visible": true, "evidence_visible": true},
     "permanent_service_safety": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-030", "catalog_actions_after_extension": 17, "connector_ready_actions": 17, "actions": ["endpoint.remove-service", "endpoint.change-service-permanent"], "service_preflight_visible": true, "recovery_method_visible": true, "recovery_artifact_visible": true, "recovery_owner_visible": true, "ordered_recovery_steps_visible": true, "recovery_verification_visible": true, "blind_removal_allowed": false, "separate_safety_approval_required": true},
     "temporary_permits": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-031", "active_and_revoked_records_visible": true, "scope_fields_visible": ["device", "user", "source", "destination", "protocol", "port", "duration", "reason", "owner", "approver"], "wildcards_allowed": false, "independent_approval_required": true, "automatic_expiry_unit_tested": true, "revocation_audit_receipt_visible": true, "request_form_complete": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 58, "next": "CG-033"}
+    "management_channel_safety": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-033", "catalog_heading_visible": true, "disruptive_actions_marked": 12, "current_target_bound_preflight_required": true, "unknown_impact_allowed": false, "management_cut_without_alternate_allowed": false, "protected_device_disruption_allowed": false, "protected_roles": ["core-switch", "domain-controller", "security-platform"], "edge_port_with_unaffected_management_allowed": true, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 59, "next": "CG-034"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

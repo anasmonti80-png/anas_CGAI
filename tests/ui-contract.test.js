@@ -77,6 +77,13 @@ test('response view exposes CG-031 exact temporary permits, independent approval
   assert.ok(store.includes('CREATE TABLE temporary_permits'));assert.match(server,/\/api\/temporary-permits/);
 });
 
+test('response safety contract enforces CG-033 management-channel and protected-infrastructure guards',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),catalog=fs.readFileSync(new URL('../lib/response-actions.js',import.meta.url),'utf8');
+  for(const marker of ['requires_management_preflight:true','endpoint.isolate-device','endpoint.shutdown-host','network.switch-port-admin-down'])assert.ok(catalog.includes(marker),marker);
+  for(const marker of ['response.management_preflight','managementPreflights','requireManagementPreflight','management_channel_impact_unknown','management_channel_would_be_cut','protected_infrastructure_disruption_prohibited','management_preflight_event_id'])assert.ok(domain.includes(marker),marker);
+  for(const marker of ['management preflight','core switch','domain controller','security platform'])assert.ok(app.includes(marker)||domain.includes(marker),marker);
+});
+
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);
