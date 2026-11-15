@@ -7,16 +7,16 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** CG-028 critical-production validation protection (Codex implementation and acceptance verification).
-- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-028, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
-- **Validation:** Unit Tested — `node scripts/verify.js` passes 154/154 on Windows x64, Node 24.21.0, SQLite 3.53.4. The required verify → requirements → verify sequence passed; traceability reports 1,440 tracked, 55 accepted, source integrity passing and CG-029 as the first unaccepted ID. Isolated Chromium QA displayed the critical production asset, its approved low-impact plan, blocked administrator bypass, the 6/minute ceiling and the broad-network prohibition. No Production Validated claim.
+- **Latest verified implementation checkpoint:** CG-029 governed typed response actions (Codex implementation and acceptance verification).
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-029, CG-032, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — `node scripts/verify.js` passes 157/157 on Windows x64, Node 24.21.0, SQLite 3.53.4. Traceability reports 1,440 tracked, 56 accepted, source integrity passing and CG-030 as the first unaccepted ID. Isolated Chromium QA displayed all 15 connector-ready response actions, the NCC-scoped switch-port action and the typed request form. Synthetic authenticated connectors exercised isolate → approve → dispatch → evidence → verified → rollback → reconnect. No external vendor or NCC side effect is Production Validated.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, a central asset record with evidence-linked governance context, an evidence-readiness score, a Discover view for authorized observations, and a Settings view that states actual PC/collector/lab visibility boundaries. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
 - **Published state:** `codex/cg001-600` is published on `origin` and is the shared Codex/Claude handoff branch. `HANDOFF.md` is the single canonical coordination notebook.
 
 ## Safe next work
 
-1. Continue CG-029, the lowest unaccepted requirement; do not skip it for a higher CG number.
+1. Publish the verified CG-029 checkpoint, then continue CG-030, the lowest unaccepted requirement; do not skip it for a higher CG number.
 2. Promote only requirements whose complete acceptance boundary has current code, test and platform evidence.
 3. Keep the Achievements ledger and Claude handoff current after every implementation phase.
 

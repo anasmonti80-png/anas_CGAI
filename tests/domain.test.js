@@ -6,6 +6,7 @@ import path from 'node:path';
 import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { redact } from '../lib/common.js';
+import { responseActionTypes, validateResponseTarget } from '../lib/response-actions.js';
 
 function fixture(t) {
   const s=new Store(':memory:'); t.after(()=>s.close());
@@ -657,6 +658,23 @@ test('critical production assets enforce a non-bypassable validation safety floo
   assert.throws(()=>ingest([plan('CRIT-EMU',{tier:'adversary-emulation',techniques:[{id:'T1110.001',name:'Password guessing'}],second_approver:'soc-lead',safeguards:{rate_limit_per_minute:null,stop_conditions:['isolation lost'],rollback:'restore',isolation_evidence_ref:'LAB-ISO'}})]),/adversary_emulation_not_allowed_in_production/);
   ingest([plan('CRIT-LAB',{tier:'adversary-emulation',environment:'lab',techniques:[{id:'T1110.001',name:'Password guessing'}],second_approver:'soc-lead',safeguards:{rate_limit_per_minute:null,stop_conditions:['isolation lost'],rollback:'destroy lab',isolation_evidence_ref:'LAB-ISO'}})]);
   assert.equal(d.validationProgram().items.some(item=>item.plan_id==='CRIT-LAB'),true,'the production floor does not falsely block an authorized isolated lab');
+});
+test('typed response actions cover the CG-029 catalog and require approval, scoped connector execution evidence and verified rollback',t=>{
+  const {d,event,ingest,source}=fixture(t),types=responseActionTypes(),cyber=types.filter(item=>item.owner==='cyberguard-connector').map(item=>item.id);
+  assert.equal(types.length,15);assert.equal(new Set(types.map(item=>item.id)).size,15);assert.ok(types.every(item=>item.typed_only&&!item.raw_command_allowed));
+  const examples={ip:{ip:'198.51.100.25'},'network-port':{protocol:'tcp',port:443,direction:'both'},application:{application_ref:'synthetic-app'},domain:{domain:'blocked.example'},service:{service_ref:'SyntheticService'},file:{file_ref:'synthetic-file',sha256:'a'.repeat(64)},device:{device_ref:'synthetic-01'},'physical-switch-port':{device_ref:'switch-01',interface_ref:'GigabitEthernet1/0/10',port_role:'edge',provenance_ref:'SYNTHETIC-PORT-PROVENANCE'}};
+  for(const spec of types)assert.doesNotThrow(()=>validateResponseTarget(spec.id,examples[spec.target]),spec.id);
+  ingest([event('response-capability-cyber','response.capability',{connector_id:'SYNTHETIC-EDR-029',owner_system:'cyberguard-connector',capabilities:cyber,target_asset_refs:['synthetic-01'],tested_at:'2026-11-11T09:00:00.000Z',evidence_ref:'SYNTHETIC-CONNECTOR-TEST-029',status:'active'})]);
+  const asset=d.list('assets').items.find(item=>item.external_id==='synthetic-01'),action=d.previewAction('admin-a',{type:'endpoint.isolate-device',asset_id:asset.id,target:{device_ref:'synthetic-01'},connector_id:'SYNTHETIC-EDR-029',authorization_ref:'IR-029',reason:'Contain synthetic lab endpoint',ttl_seconds:600});
+  assert.equal(action.status,'pending-approval');assert.throws(()=>d.approveAction('admin-a',action.id),/independent_approver_required/);d.approveAction('admin-b',action.id);d.executeAction('admin-a',action.id);
+  let jobs=d.responseJobs(source.id);assert.equal(jobs.items.length,1);assert.equal(jobs.items[0].request.action_type,'endpoint.isolate-device');assert.equal(jobs.items[0].request.raw_command,undefined);
+  const verified=d.completeResponseJob(source.id,action.id,{phase:'execute',outcome:'succeeded',observed_state:'Connector confirms network containment',evidence_ref:'SYNTHETIC-ISOLATED-029',rollback_supported:true});assert.equal(verified.status,'verified');assert.equal(verified.response_job.completion.evidence_ref,'SYNTHETIC-ISOLATED-029');
+  d.rollbackAction('admin-b',action.id);jobs=d.responseJobs(source.id);assert.equal(jobs.items[0].phase,'rollback');assert.equal(jobs.items[0].request.action_type,'endpoint.reconnect-device');
+  const rolled=d.completeResponseJob(source.id,action.id,{phase:'rollback',outcome:'succeeded',observed_state:'Connector confirms endpoint reconnected',evidence_ref:'SYNTHETIC-RECONNECTED-029',rollback_supported:true});assert.equal(rolled.status,'rolled-back');assert.equal(rolled.audit_chain.valid,true);
+  assert.throws(()=>d.previewAction('admin-a',{type:'endpoint.isolate-device',asset_id:asset.id,target:{device_ref:'synthetic-01',raw_command:'shutdown /s'},connector_id:'SYNTHETIC-EDR-029',authorization_ref:'IR-029',reason:'Reject raw commands'}),/unknown_response_target_field/);
+  ingest([event('response-capability-ncc','response.capability',{connector_id:'SYNTHETIC-NCC-029',owner_system:'ncc-scoped-api',capabilities:['network.switch-port-admin-down'],target_asset_refs:['switch-01'],tested_at:'2026-11-11T09:00:00.000Z',evidence_ref:'SYNTHETIC-NCC-TEST-029',status:'active'},{external_id:'switch-01',hostname:'LAB-SW-01',os_family:'network',device_type:'switch',addresses:['192.0.2.29']})]);
+  const sw=d.list('assets').items.find(item=>item.external_id==='switch-01');assert.throws(()=>d.previewAction('admin-a',{type:'network.switch-port-admin-down',asset_id:sw.id,target:{device_ref:'switch-01',interface_ref:'GigabitEthernet1/0/10',port_role:'edge',provenance_ref:null},connector_id:'SYNTHETIC-NCC-029',authorization_ref:'NET-029',reason:'Synthetic port containment'}),/invalid_switch_port_provenance_ref/);
+  const port=d.previewAction('admin-a',{type:'network.switch-port-admin-down',asset_id:sw.id,target:examples['physical-switch-port'],connector_id:'SYNTHETIC-NCC-029',authorization_ref:'NET-029',reason:'Synthetic port containment'});assert.equal(port.action_spec.owner,'ncc-scoped-api');assert.equal(port.action_spec.raw_command_allowed,false);
 });
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');

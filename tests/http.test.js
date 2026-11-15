@@ -55,6 +55,23 @@ test('unauthenticated, cross-origin, forged host, CSRF and viewer mutations are 
   assert.equal((await f.req('/api/assets?offset=-1',{user:admin})).status,400);
 });
 
+test('authenticated response connector receives only approved typed jobs and returns execution and rollback evidence',async t=>{
+  const f=await fixture(t);await f.setup();const requester=await f.login();
+  assert.equal((await f.req('/api/users',{method:'POST',user:requester,data:{username:'approver',password:f.password,role:'admin'}})).status,201);const approver=await f.login('approver');
+  const created=await f.req('/api/sources',{method:'POST',user:requester,data:{name:'Synthetic response connector',source_type:'managed-agent',stale_seconds:300}});assert.equal(created.status,201);
+  const now='2026-11-11T10:00:00.000Z',asset={external_id:'response-http-029',hostname:'HTTP-029',os_family:'windows',device_type:'workstation',addresses:['192.0.2.29']},batch={schema_version:'cg.telemetry/1',events:[{event_id:'response-http-asset-029',kind:'asset.observed',observed_at:now,asset,details:{}},{event_id:'response-http-capability-029',kind:'response.capability',observed_at:now,asset,details:{connector_id:'HTTP-EDR-029',owner_system:'cyberguard-connector',capabilities:['endpoint.isolate-device','endpoint.reconnect-device'],target_asset_refs:['response-http-029'],tested_at:'2026-11-11T09:00:00.000Z',evidence_ref:'HTTP-CONNECTOR-TEST-029',status:'active'}}]};
+  assert.equal((await f.req(`/api/sources/${created.data.id}/events`,{method:'POST',data:batch,headers:{Authorization:`Bearer ${created.data.token}`}})).status,403);
+  assert.equal((await f.req(`/api/sources/${created.data.id}/events`,{method:'POST',data:batch,user:requester})).status,200);
+  const catalog=await f.req('/api/response-actions',{user:requester});assert.equal(catalog.status,200);assert.equal(catalog.data.total,15);assert.equal(catalog.data.ready,2);assert.ok(!JSON.stringify(catalog.data).includes(created.data.token));
+  const assets=await f.req('/api/assets?limit=25',{user:requester}),assetId=assets.data.items.find(item=>item.external_id==='response-http-029').id;
+  const preview=await f.req('/api/actions/preview',{method:'POST',user:requester,data:{type:'endpoint.isolate-device',asset_id:assetId,target:{device_ref:'response-http-029'},connector_id:'HTTP-EDR-029',authorization_ref:'HTTP-IR-029',reason:'Synthetic HTTP response lifecycle',ttl_seconds:600}});assert.equal(preview.status,201);assert.equal(preview.data.status,'pending-approval');
+  assert.equal((await f.req(`/api/actions/${preview.data.id}/approve`,{method:'POST',user:approver,data:{}})).data.status,'approved');assert.equal((await f.req(`/api/actions/${preview.data.id}/execute`,{method:'POST',user:requester,data:{}})).data.status,'dispatched');
+  let jobs=await f.req(`/api/sources/${created.data.id}/response-jobs`,{headers:{Authorization:`Bearer ${created.data.token}`}});assert.equal(jobs.status,200);assert.equal(jobs.data.items.length,1);assert.equal(jobs.data.items[0].request.action_type,'endpoint.isolate-device');assert.equal(jobs.data.items[0].request.raw_command,undefined);
+  const executeResult={phase:'execute',outcome:'succeeded',observed_state:'HTTP connector reports isolated',evidence_ref:'HTTP-ISOLATED-029',rollback_supported:true};assert.equal((await f.req(`/api/sources/${created.data.id}/response-jobs/${preview.data.id}/result`,{method:'POST',data:executeResult,headers:{Authorization:`Bearer ${created.data.token}`}})).data.status,'verified');
+  assert.equal((await f.req(`/api/actions/${preview.data.id}/rollback`,{method:'POST',user:approver,data:{}})).data.status,'rollback-pending');jobs=await f.req(`/api/sources/${created.data.id}/response-jobs`,{headers:{Authorization:`Bearer ${created.data.token}`}});assert.equal(jobs.data.items[0].request.action_type,'endpoint.reconnect-device');
+  const rollbackResult={phase:'rollback',outcome:'succeeded',observed_state:'HTTP connector reports reconnected',evidence_ref:'HTTP-RECONNECTED-029',rollback_supported:true};const rolled=await f.req(`/api/sources/${created.data.id}/response-jobs/${preview.data.id}/result`,{method:'POST',data:rollbackResult,headers:{Authorization:`Bearer ${created.data.token}`}});assert.equal(rolled.data.status,'rolled-back');assert.ok(!JSON.stringify(rolled.data).includes(created.data.token));
+});
+
 test('unsupported HTTP methods cannot mutate routes that accept both reads and writes',async t=>{
   const f=await fixture(t);await f.setup();const admin=await f.login();
   assert.throws(()=>f.app.listen(0,'0.0.0.0'),/loopback_only/);

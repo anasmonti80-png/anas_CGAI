@@ -53,6 +53,15 @@ test('action review exposes dry run, impact, approval lifecycle, verification, a
   for(const stage of ['action.previewed','action.approved','action.executed','action.verified','action.rollback.executed','action.rollback.verified']) assert.ok(domain.includes(stage),stage);
 });
 
+test('response view exposes every typed CG-029 action and authenticated connector evidence without raw commands',()=>{
+  const app=read('app.js'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),catalog=fs.readFileSync(new URL('../lib/response-actions.js',import.meta.url),'utf8'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');
+  for(const marker of ['Governed response action catalog','Block IP','Allow IP','Block TCP/UDP port','Allow TCP/UDP port','Block application','Allow application','Block domain','Allow domain','Stop service','Disable service','Quarantine file','Isolate device','Reconnect device','Shutdown managed host','Switch port admin-down','CG-029']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['network.block-ip','network.allow-ip','network.block-port','network.allow-port','endpoint.block-app','endpoint.allow-app','dns.block-domain','dns.allow-domain','endpoint.stop-service','endpoint.disable-service','endpoint.quarantine-file','endpoint.isolate-device','endpoint.reconnect-device','endpoint.shutdown-host','network.switch-port-admin-down']) assert.ok(catalog.includes(marker),marker);
+  for(const marker of ['raw_command_allowed:false','typed_only:true','ncc-scoped-api','physical-switch-port','provenance_ref']) assert.ok(catalog.includes(marker),marker);
+  for(const marker of ['response.capability','responseJobs','completeResponseJob','action.dispatched','action.rollback.requested']) assert.ok(domain.includes(marker),marker);
+  assert.match(server,/\/api\/response-actions/);assert.match(server,/response-jobs/);
+});
+
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);

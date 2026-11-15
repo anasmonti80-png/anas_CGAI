@@ -67,9 +67,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const mutation=!['GET','HEAD'].includes(method);
       const bearer=String(req.headers.authorization||'').startsWith('Bearer ')?String(req.headers.authorization).slice(7):null;
       const ingest=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/events$/);
+      const responseJobs=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs$/);
+      const responseResult=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs\/([a-f0-9-]{36})\/result$/);
       if(mutation) {
         fail(method==='POST',405,'method_not_allowed');
-        if (!(bearer&&ingest)) fail(req.headers.origin===`http://${req.headers.host}`,403,'origin_not_allowed');
+        if (!(bearer&&(ingest||responseResult))) fail(req.headers.origin===`http://${req.headers.host}`,403,'origin_not_allowed');
       }
       if(method==='GET' && STATIC.has(p)) {
         const file=path.join(ROOT,'public',p==='/'?'index.html':p.slice(1));
@@ -99,6 +101,14 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(bearer && ingest && method==='POST') {
         const source=domain.sourceToken(bearer,ingest[1]);
         return send(res,200,ingestInput(`source:${source.id}`,source.id,await body(req)));
+      }
+      if(bearer && responseJobs && method==='GET') {
+        const source=domain.sourceToken(bearer,responseJobs[1]);
+        return send(res,200,domain.responseJobs(source.id));
+      }
+      if(bearer && responseResult && method==='POST') {
+        const source=domain.sourceToken(bearer,responseResult[1]);
+        return send(res,200,domain.completeResponseJob(source.id,responseResult[2],await body(req)));
       }
       const user=auth.session(req.headers.cookie);
       authenticatedActor=user.id;
@@ -151,6 +161,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/detection-rules'&&method==='GET') return send(res,200,domain.detectionRulesStatus());
       if(p==='/api/detection-coverage'&&method==='GET') return send(res,200,domain.detectionCoverage(page(url.searchParams)));
       if(p==='/api/critical-production-protection'&&method==='GET') return send(res,200,domain.criticalProductionProtection());
+      if(p==='/api/response-actions'&&method==='GET') return send(res,200,domain.responseActions());
       if(p==='/api/validation-program'&&method==='GET') return send(res,200,domain.validationProgram(page(url.searchParams)));
       if(p==='/api/vulnerability-risk'&&method==='GET') return send(res,200,domain.vulnerabilityRisk({...page(url.searchParams),band:['critical','high','medium','low'].includes(url.searchParams.get('band'))?url.searchParams.get('band'):''}));
       if(p==='/api/vulnerability-assessments'&&method==='GET') return send(res,200,domain.vulnerabilityAssessments(page(url.searchParams)));
