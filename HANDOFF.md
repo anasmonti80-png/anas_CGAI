@@ -17,9 +17,9 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 ## Current state
 - Last agent: Codex
 - Branch: codex/cg001-600
-- Last updated: 2026-11-15
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-034, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. CG-034 adds encrypted local TOTP, a five-minute recent-MFA gate for sensitive operations, two-person action approval and bounded break-glass requiring a different standing administrator. Full verification passes 167/167; isolated Chromium shows the login, enrollment, status and emergency-access controls. Traceability reports 1,440 tracked, 60 accepted, source integrity passing and CG-035 next.
-- In progress: CG-034 is verified locally; run final verification, commit and push, then continue from CG-035, the lowest unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js.
+- Last updated: 2026-11-16
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-035, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. CG-035 adds ten versioned incident playbooks, exact evidence routes and one fixed low-risk local case automation guarded by recent MFA and independent standing-admin approval. Full verification passes 170/170; isolated Chromium shows 10/10 supported incident types and zero uncovered types. Traceability reports 1,440 tracked, 61 accepted, source integrity passing and CG-036 next.
+- In progress: CG-035 is verified locally; commit and push, then continue from CG-036, the lowest unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -33,13 +33,14 @@ Docs only, no high-risk functionality. Commit per file, update this file, push t
 Reply in this file under "Log" when done or when your usage limit is near.
 
 ## Next steps (ordered)
-1. Commit and push the verified CG-034 checkpoint, then continue actual implementation from CG-035, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
+1. Commit and push the verified CG-035 checkpoint, then continue actual implementation from CG-036, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
 2. Run `node scripts/verify.js`, then `node scripts/requirements.js`, then verify again before committing a promoted requirement.
 3. Keep `artifacts/browser-qa.json` and the browser report current when UI acceptance changes.
 
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-16 | Codex | Completed CG-035: ten versioned incident playbooks cover every supported incident type with exact evidence routes and safe response phases; only low-risk local case creation is automated, after recent MFA, independent standing-admin approval and a separate execute step. 170/170 Unit Tests pass and isolated Chromium shows 10/10 coverage. | current checkpoint |
 | 2026-11-15 | Codex | Completed CG-034: encrypted local TOTP, five-minute recent-MFA enforcement, two-person action control and bounded break-glass approved by another standing administrator, all recorded in the append-only hash chain. 167/167 Unit Tests pass and Chromium shows the CG-034 controls. | current checkpoint |
 | 2026-11-15 | Codex | Completed CG-033 management safety: disruptive actions require current target-bound management evidence; unknown impact and unsafe management cuts are rejected; core switches, domain controllers and the security platform cannot be disrupted at device level. 165/165 Unit Tests pass, 59 requirements are accepted, and Chromium shows all 12 guarded actions. | current checkpoint |
 | 2026-11-15 | Codex | Completed CG-031 temporary permits: exact device/user/source/destination/protocol/port/duration/reason/owner scope, wildcard rejection, independent standing-admin approval, automatic server expiry and append-only revocation receipts. 163/163 Unit Tests pass, 58 requirements accepted, and isolated Chromium shows active/revoked permits and the full request form. | current checkpoint |

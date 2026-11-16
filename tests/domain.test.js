@@ -33,6 +33,17 @@ test('SOC dashboard uses actual counts and exposes a bounded evidence-readiness 
   const older=d.dashboard();assert.equal(older.mean_acknowledge_minutes,.5);assert.equal(older.mean_detection_minutes,null);assert.ok(older.security_score<dash.security_score);assert.equal(older.security_score_components.freshness,50);
   assert.throws(()=>d.dashboard('invalid'),/invalid_severity/);
 });
+
+test('incident playbooks cover every supported incident type and automate only approved low-risk local case creation',t=>{
+  const {s,d,event,ingest}=fixture(t);ingest([event('playbook-finding','security.finding',{title:'Synthetic malware finding',severity:'high',description:'Synthetic evidence only'})]);
+  const alert=s.get("SELECT * FROM alerts WHERE rule_id='CG-REPORTED-FINDING'"),catalog=d.incidentPlaybooks();
+  assert.equal(catalog.coverage.playbooks,catalog.coverage.supported_incident_types);assert.deepEqual(catalog.coverage.uncovered_supported_types,[]);assert.equal(catalog.items.length,10);
+  for(const item of catalog.items){assert.ok(item.evidence_paths.includes('/api/events/{evidence_id}'));assert.equal(item.automation.risk,'low');assert.equal(item.automation.external_change,false);assert.equal(item.automation.requires_independent_approval,true);}
+  assert.throws(()=>d.requestPlaybookRun('analyst',{playbook_id:'pb-unknown',alert_id:alert.id,reason:'Synthetic review request'}),/unknown_incident_playbook/);
+  const run=d.requestPlaybookRun('analyst',{playbook_id:'pb-malware',alert_id:alert.id,reason:'Investigate the synthetic malware evidence',ttl_seconds:900});assert.equal(run.status,'pending');
+  assert.throws(()=>d.decidePlaybookRun('analyst',run.id,'approve'),/playbook_approver_must_be_standing_admin/);assert.throws(()=>d.executePlaybookRun('admin-a',run.id),/playbook_run_not_approved/);
+  const approved=d.decidePlaybookRun('admin-b',run.id,'approve');assert.equal(approved.status,'approved');const executed=d.executePlaybookRun('admin-a',run.id);assert.equal(executed.status,'executed');assert.ok(executed.case_id);assert.equal(s.get('SELECT COUNT(*) n FROM cases WHERE id=?',executed.case_id).n,1);assert.equal(s.get('SELECT COUNT(*) n FROM response_jobs').n,0);assert.equal(s.verifyAudit().valid,true);
+});
 test('NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance',t=>{
   const {d,event,ingest}=fixture(t);
   ingest([event('asset'),event('protection','protection.observed',{engine:'Synthetic',installed:true,running:true,collecting:true,mode:'active'}),event('finding','security.finding',{title:'Synthetic finding',severity:'high',description:'Synthetic evidence'})]);

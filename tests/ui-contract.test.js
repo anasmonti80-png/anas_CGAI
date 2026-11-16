@@ -92,6 +92,14 @@ test('settings exposes CG-034 recent MFA two-person control bounded break-glass 
   assert.ok(domain.includes('recent_mfa_required'));assert.match(server,/\/api\/auth\/mfa/);assert.match(server,/\/api\/break-glass/);
 });
 
+test('CG-035 incident playbooks cover supported incident types and gate low-risk automation behind approval',()=>{
+  const app=read('app.js'),playbooks=fs.readFileSync(new URL('../lib/incident-playbooks.js',import.meta.url),'utf8'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');
+  for(const marker of ['malware','ransomware','identity-compromise','remote-access','network-intrusion','data-exposure','vulnerability-exploitation','defense-tamper','service-disruption','cloud-saas-compromise','open-investigation-case','requires_independent_approval','external_change:false'])assert.ok(playbooks.includes(marker),marker);
+  for(const marker of ['requestPlaybookRun','decidePlaybookRun','executePlaybookRun','playbook_automation_not_low_risk','independent_playbook_approver_required'])assert.ok(domain.includes(marker),marker);
+  for(const marker of ['Incident playbooks and evidence paths','Low-risk automation requests','Local case creation only after MFA and independent approval','playbook-request','playbook-execute'])assert.ok(app.includes(marker),marker);
+  assert.match(server,/\/api\/incident-playbooks/);assert.match(server,/\/api\/playbook-runs/);
+});
+
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
   for(const marker of ['Managed Agent','Log Forwarder','source_type','monitor_state']) assert.ok(app.includes(marker),marker);

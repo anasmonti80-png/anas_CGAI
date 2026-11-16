@@ -171,10 +171,14 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/detection-coverage'&&method==='GET') return send(res,200,domain.detectionCoverage(page(url.searchParams)));
       if(p==='/api/critical-production-protection'&&method==='GET') return send(res,200,domain.criticalProductionProtection());
       if(p==='/api/response-actions'&&method==='GET') return send(res,200,domain.responseActions());
+      if(p==='/api/incident-playbooks'&&method==='GET') return send(res,200,domain.incidentPlaybooks());
+      if(p==='/api/playbook-runs'&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);return send(res,201,domain.requestPlaybookRun(user.id,await body(req)));}
+      const playbookRun=p.match(/^\/api\/playbook-runs\/([a-f0-9-]{36})\/(approve|deny|execute)$/);
+      if(playbookRun&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,playbookRun[2]==='execute'?domain.executePlaybookRun(user.id,playbookRun[1]):domain.decidePlaybookRun(user.id,playbookRun[1],playbookRun[2]));}
       if(p==='/api/temporary-permits'&&method==='GET') return send(res,200,domain.temporaryPermits());
-      if(p==='/api/temporary-permits'&&method==='POST'){roles(['admin','analyst']);return send(res,201,domain.requestTemporaryPermit(user.id,await body(req)));}
+      if(p==='/api/temporary-permits'&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);return send(res,201,domain.requestTemporaryPermit(user.id,await body(req)));}
       const permitAction=p.match(/^\/api\/temporary-permits\/([a-f0-9-]{36})\/(approve|revoke)$/);
-      if(permitAction&&method==='POST'){roles(['admin']);return send(res,200,permitAction[2]==='approve'?domain.approveTemporaryPermit(user.id,permitAction[1]):domain.revokeTemporaryPermit(user.id,permitAction[1]));}
+      if(permitAction&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,permitAction[2]==='approve'?domain.approveTemporaryPermit(user.id,permitAction[1]):domain.revokeTemporaryPermit(user.id,permitAction[1]));}
       if(p==='/api/validation-program'&&method==='GET') return send(res,200,domain.validationProgram(page(url.searchParams)));
       if(p==='/api/vulnerability-risk'&&method==='GET') return send(res,200,domain.vulnerabilityRisk({...page(url.searchParams),band:['critical','high','medium','low'].includes(url.searchParams.get('band'))?url.searchParams.get('band'):''}));
       if(p==='/api/vulnerability-assessments'&&method==='GET') return send(res,200,domain.vulnerabilityAssessments(page(url.searchParams)));
@@ -221,11 +225,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         fail(!caseRoute[2],405,'method_not_allowed');
         roles(['admin','analyst']); return send(res,200,domain.updateCase(user.id,caseRoute[1],await body(req)));
       }
-      if(p==='/api/actions/preview'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.previewAction(user.id,await body(req)));}
+      if(p==='/api/actions/preview'&&method==='POST') {roles(['admin','analyst']);auth.requireRecentMfa(user);return send(res,201,domain.previewAction(user.id,await body(req)));}
       const action=p.match(/^\/api\/actions\/([a-f0-9-]{36})\/(approve|safety-approve|execute|rollback)$/);
       const actionDetail=p.match(/^\/api\/actions\/([a-f0-9-]{36})$/);
       if(actionDetail&&method==='GET') return send(res,200,domain.action(actionDetail[1]));
-      if(action&&method==='POST') {roles(['admin']);const fn={approve:'approveAction','safety-approve':'safetyApproveAction',execute:'executeAction',rollback:'rollbackAction'}[action[2]];return send(res,200,domain[fn](user.id,action[1]));}
+      if(action&&method==='POST') {roles(['admin']);auth.requireRecentMfa(user);const fn={approve:'approveAction','safety-approve':'safetyApproveAction',execute:'executeAction',rollback:'rollbackAction'}[action[2]];return send(res,200,domain[fn](user.id,action[1]));}
       if(p==='/api/audit/verify'&&method==='GET') {roles(['admin']);return send(res,200,store.verifyAudit());}
       if(p==='/api/coverage'&&method==='GET') return send(res,200,{...coverage,support:readJson('docs/engineering/SUPPORT_MATRIX.json'),capabilities:readJson('docs/engineering/CAPABILITIES.json')});
       if(p==='/api/accomplishments'&&method==='GET') {
