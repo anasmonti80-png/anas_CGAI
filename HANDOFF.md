@@ -18,8 +18,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-16
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-036, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. CG-036 adds a bilingual local evidence analyst that answers what happened, why suspicious, evidence, confidence and solution from stored alert/event/asset records, without an external model or unsupported attack claim. Full verification passes 172/172; isolated Chromium shows all five sections in Arabic and English. Traceability reports 1,440 tracked, 62 accepted, source integrity passing and CG-037 next.
-- In progress: CG-036 is verified locally; regenerate requirements evidence, run final verification, commit and push, then continue from CG-037, the lowest unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-037, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 are acceptance-verified. CG-037 grounds every analyst claim in a resolvable stored log, rule, advisory, record or documented-playbook reference and fails closed on unresolved sources. Full verification passes 174/174; isolated Chromium shows source IDs, hashes and both anti-hallucination controls in Arabic and English. Traceability reports 1,440 tracked, 63 accepted, source integrity passing and CG-038 next.
+- In progress: CG-037 is verified locally; regenerate requirements evidence, run final verification, commit and push, then continue from CG-038, the lowest unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -33,13 +33,14 @@ Docs only, no high-risk functionality. Commit per file, update this file, push t
 Reply in this file under "Log" when done or when your usage limit is near.
 
 ## Next steps (ordered)
-1. Commit and push the verified CG-036 checkpoint, then continue actual implementation from CG-037, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
+1. Commit and push the verified CG-037 checkpoint, then continue actual implementation from CG-038, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
 2. Run `node scripts/verify.js`, then `node scripts/requirements.js`, then verify again before committing a promoted requirement.
 3. Keep `artifacts/browser-qa.json` and the browser report current when UI acceptance changes.
 
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-16 | Codex | Completed CG-037: every analyst claim resolves to stored log, rule, advisory, record or documented-playbook sources; unresolved sources fail closed and unsupported IP/CVE/command facts are withheld. 174/174 Unit Tests pass and isolated Chromium shows Arabic/English source registries and both grounding controls. | current checkpoint |
 | 2026-11-16 | Codex | Completed CG-036: bilingual local evidence analysis answers what happened, why suspicious, evidence, confidence and solution from stored records, with exact routes/fingerprints, explicit uncertainty and no external model. 172/172 Unit Tests pass and isolated Chromium shows Arabic and English output. | current checkpoint |
 | 2026-11-16 | Codex | Completed CG-035: ten versioned incident playbooks cover every supported incident type with exact evidence routes and safe response phases; only low-risk local case creation is automated, after recent MFA, independent standing-admin approval and a separate execute step. 170/170 Unit Tests pass and isolated Chromium shows 10/10 coverage. | current checkpoint |
 | 2026-11-15 | Codex | Completed CG-034: encrypted local TOTP, five-minute recent-MFA enforcement, two-person action control and bounded break-glass approved by another standing administrator, all recorded in the append-only hash chain. 167/167 Unit Tests pass and Chromium shows the CG-034 controls. | current checkpoint |

@@ -7,16 +7,16 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** CG-036 bilingual local evidence analyst with exact evidence references, confidence basis and governed solution steps (Codex implementation and acceptance verification).
-- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-036, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
-- **Validation:** Unit Tested — `node scripts/verify.js` passes 172/172 on Windows x64, Node 24.21.0, SQLite 3.53.4. CG-036 explains stored alerts in Arabic and English using linked event and asset evidence, shows exact routes and sanitized fingerprints, labels confidence as evidence completeness rather than attack probability, and recommends only the existing governed playbook path. Isolated Chromium shows all five answer sections in both languages. No language model, cloud AI service or external response side effect is connected or claimed as Lab Tested or Production Validated.
+- **Latest verified implementation checkpoint:** CG-037 fail-closed claim grounding from stored logs, rules, advisories and documented references (Codex implementation and acceptance verification).
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-037, CG-054, CG-056, CG-057, CG-061, CG-068..CG-071, CG-073 and CG-075..CG-091 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — `node scripts/verify.js` passes 174/174 on Windows x64, Node 24.21.0, SQLite 3.53.4. CG-037 makes every analyst statement a typed claim with resolvable source IDs and exposes the log, rule, advisory, record and documented-playbook source registry with exact routes and fingerprints. An unresolved source fails closed; unsupported IP, CVE, command and operational facts are withheld. Isolated Chromium shows the source IDs and both grounding controls in Arabic and English. No external retrieval, language model or cloud AI service is connected or claimed as Lab Tested or Production Validated.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, a central asset record with evidence-linked governance context, an evidence-readiness score, a Discover view for authorized observations, and a Settings view that states actual PC/collector/lab visibility boundaries. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
 - **Published state:** `codex/cg001-600` is published on `origin` and is the shared Codex/Claude handoff branch. `HANDOFF.md` is the single canonical coordination notebook.
 
 ## Safe next work
 
-1. Publish the verified CG-036 checkpoint, then continue CG-037, the lowest unaccepted requirement; do not skip it for a higher CG number.
+1. Publish the verified CG-037 checkpoint, then continue CG-038, the lowest unaccepted requirement; do not skip it for a higher CG number.
 2. Promote only requirements whose complete acceptance boundary has current code, test and platform evidence.
 3. Keep the Achievements ledger and Claude handoff current after every implementation phase.
 
