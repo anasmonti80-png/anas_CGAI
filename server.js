@@ -8,6 +8,7 @@ import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
 import { AppError, fail, equal, object, page, token, MAX_INGEST_BYTES } from './lib/common.js';
+import { validateCloudResult } from './lib/ai-model-policy.js';
 
 const ROOT=fileURLToPath(new URL('./',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
@@ -25,7 +26,7 @@ async function body(req) {
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
-export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null}={}) {
+export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null}={}) {
   fail(OPERATING_MODES.includes(mode),400,'invalid_operating_mode');
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
@@ -145,6 +146,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/overview'&&method==='GET') return send(res,200,domain.summary());
       const aiAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})$/);
       if(aiAnalysis&&method==='GET') return send(res,200,domain.aiAnalysis(aiAnalysis[1]));
+      if(p==='/api/ai-model-policy'&&method==='GET') return send(res,200,domain.aiModelPolicy(typeof cloudAiInvoke==='function'));
+      if(p==='/api/ai-cloud-consents'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,domain.createAiCloudConsent(user.id,await body(req)));}
+      const cloudAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/cloud$/);
+      if(cloudAnalysis&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);fail(typeof cloudAiInvoke==='function',503,'cloud_ai_connector_unavailable');const prepared=domain.prepareAiCloudAnalysis(user.id,cloudAnalysis[1],await body(req)),raw=await cloudAiInvoke({provider:prepared.consent.provider,payload:prepared.payload}),result=validateCloudResult(raw);return send(res,200,domain.recordAiCloudAnalysis(user.id,prepared,result));}
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));
       if(p==='/api/security-outcomes'&&method==='GET') return send(res,200,domain.securityOutcomes());
       if(p==='/api/threat-models'&&method==='GET') return send(res,200,domain.threatModels(page(url.searchParams)));
