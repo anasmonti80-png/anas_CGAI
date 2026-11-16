@@ -143,6 +143,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         return send(res,201,{user:await auth.createUser(user.id,input)});
       }
       if(p==='/api/overview'&&method==='GET') return send(res,200,domain.summary());
+      const aiAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})$/);
+      if(aiAnalysis&&method==='GET') return send(res,200,domain.aiAnalysis(aiAnalysis[1]));
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));
       if(p==='/api/security-outcomes'&&method==='GET') return send(res,200,domain.securityOutcomes());
       if(p==='/api/threat-models'&&method==='GET') return send(res,200,domain.threatModels(page(url.searchParams)));

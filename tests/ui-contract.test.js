@@ -99,6 +99,9 @@ test('CG-035 incident playbooks cover supported incident types and gate low-risk
   for(const marker of ['Incident playbooks and evidence paths','Low-risk automation requests','Local case creation only after MFA and independent approval','playbook-request','playbook-execute'])assert.ok(app.includes(marker),marker);
   assert.match(server,/\/api\/incident-playbooks/);assert.match(server,/\/api\/playbook-runs/);
 });
+test('CG-036 local analyst exposes bilingual what why evidence confidence and solution without an external model',()=>{
+  const app=read('app.js'),analyst=fs.readFileSync(new URL('../lib/ai-analyst.js',import.meta.url),'utf8'),domain=fs.readFileSync(new URL('../lib/domain.js',import.meta.url),'utf8'),server=fs.readFileSync(new URL('../server.js',import.meta.url),'utf8');for(const marker of ['What happened?','Why suspicious?','Evidence','Confidence','Solution','External AI used','ai-explain'])assert.ok(app.includes(marker),marker);for(const marker of ['what_happened','why_suspicious','evidence','confidence','solution','external_ai_used:false','ليس إثباتًا مستقلًا'])assert.ok(analyst.includes(marker),marker);assert.ok(domain.includes('aiAnalysis'));assert.ok(server.includes('ai-analysis'));
+});
 
 test('source health UI distinguishes managed agents, log forwarders and delivery failures',()=>{
   const app=read('app.js');
