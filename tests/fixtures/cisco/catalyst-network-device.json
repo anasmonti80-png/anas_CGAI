@@ -1,0 +1,60 @@
+{
+ "response": [
+  {
+   "id": "a1b2c3d4-0001-4000-8000-000000000001",
+   "hostname": "cat9k-core-01.example.invalid",
+   "managementIpAddress": "192.0.2.11",
+   "platformId": "C9500-24Y4C",
+   "softwareType": "IOS-XE",
+   "softwareVersion": "17.9.4a",
+   "family": "Switches and Hubs",
+   "role": "CORE",
+   "serialNumber": "FXS0000SYN1",
+   "macAddress": "00:00:5e:00:53:01",
+   "reachabilityStatus": "Reachable",
+   "upTime": "120 days",
+   "lastUpdated": "2026-11-17 08:00:00",
+   "type": "Cisco Catalyst 9500 Switch"
+  },
+  {
+   "id": "a1b2c3d4-0002-4000-8000-000000000002",
+   "hostname": "cat9k-access-01.example.invalid",
+   "managementIpAddress": "192.0.2.21",
+   "platformId": "C9300-48P",
+   "softwareType": "IOS-XE",
+   "softwareVersion": "17.6.1",
+   "family": "Switches and Hubs",
+   "role": "ACCESS",
+   "serialNumber": "FOC0000SYN2",
+   "reachabilityStatus": "Reachable",
+   "lastUpdated": "2026-11-17 08:00:00"
+  },
+  {
+   "id": "a1b2c3d4-0003-4000-8000-000000000003",
+   "hostname": "isr-edge-01.example.invalid",
+   "managementIpAddress": "192.0.2.1",
+   "platformId": "ISR4451-X/K9",
+   "softwareType": "IOS-XE",
+   "softwareVersion": "17.3.8",
+   "family": "Routers",
+   "role": "BORDER ROUTER",
+   "serialNumber": "FDO0000SYN3",
+   "reachabilityStatus": "Unreachable",
+   "lastUpdated": "2026-11-17 07:10:00"
+  },
+  {
+   "id": "a1b2c3d4-0004-4000-8000-000000000004",
+   "hostname": "wlc-01.example.invalid",
+   "managementIpAddress": "192.0.2.31",
+   "platformId": "C9800-40-K9",
+   "softwareType": "IOS-XE",
+   "softwareVersion": "17.9.4",
+   "family": "Wireless Controller",
+   "role": "ACCESS",
+   "serialNumber": "TTM0000SYN4",
+   "reachabilityStatus": "Reachable",
+   "lastUpdated": "2026-11-17 08:00:00"
+  }
+ ],
+ "version": "1.0"
+}

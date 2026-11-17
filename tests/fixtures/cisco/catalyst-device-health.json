@@ -1,0 +1,44 @@
+{
+ "version": "1.0",
+ "totalCount": 4,
+ "response": [
+  {
+   "name": "cat9k-core-01",
+   "uuid": "a1b2c3d4-0001-4000-8000-000000000001",
+   "ipAddress": "192.0.2.11",
+   "overallHealth": 10,
+   "reachabilityHealth": "REACHABLE",
+   "cpuUlitilization": 12,
+   "memoryUtilization": 41,
+   "issueCount": 0
+  },
+  {
+   "name": "cat9k-access-01",
+   "uuid": "a1b2c3d4-0002-4000-8000-000000000002",
+   "ipAddress": "192.0.2.21",
+   "overallHealth": 3,
+   "reachabilityHealth": "REACHABLE",
+   "cpuUlitilization": 96,
+   "memoryUtilization": 88,
+   "issueCount": 4
+  },
+  {
+   "name": "isr-edge-01",
+   "uuid": "a1b2c3d4-0003-4000-8000-000000000003",
+   "ipAddress": "192.0.2.1",
+   "overallHealth": 0,
+   "reachabilityHealth": "UNREACHABLE",
+   "issueCount": 1
+  },
+  {
+   "name": "wlc-01",
+   "uuid": "a1b2c3d4-0004-4000-8000-000000000004",
+   "ipAddress": "192.0.2.31",
+   "overallHealth": 9,
+   "reachabilityHealth": "REACHABLE",
+   "cpuUlitilization": 20,
+   "memoryUtilization": 50,
+   "issueCount": 0
+  }
+ ]
+}

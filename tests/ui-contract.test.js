@@ -344,6 +344,11 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('network map shows controller topology with device health and no guessed links',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/network-topology/);
+  for(const marker of ['Controller topology and device health','topology-map','links down','scripts/cisco-connector.js catalyst-topology','CG-041']) assert.ok(app.includes(marker),marker);
+});
+
 test('case view reconstructs the incident with proven timeline and graph separate from the attack-path hypothesis',()=>{
   const app=read('app.js');assert.match(app,/\/reconstruction/);
   assert.doesNotMatch(app,/join\('، '\)/,'list separators must follow the interface language: join(tr(\'، \',\', \'))');

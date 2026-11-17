@@ -1,0 +1,69 @@
+{
+ "Cisco-IOS-XE-native:native": {
+  "version": "17.3",
+  "hostname": "isr-edge-01",
+  "ip": {
+   "name-server": {
+    "no-vrf": [
+     "192.0.2.53",
+     "198.51.100.53"
+    ]
+   },
+   "http": {
+    "server": true,
+    "secure-server": true
+   }
+  },
+  "ntp": {
+   "Cisco-IOS-XE-ntp:server": {
+    "server-list": [
+     {
+      "ip-address": "192.0.2.123"
+     }
+    ]
+   }
+  },
+  "line": {
+   "vty": [
+    {
+     "first": 0,
+     "last": 4,
+     "transport": {
+      "input": {
+       "input": [
+        "telnet",
+        "ssh"
+       ]
+      }
+     }
+    },
+    {
+     "first": 5,
+     "last": 15,
+     "access-class": {
+      "acccess-list": [
+       {
+        "direction": "in",
+        "access-list": "MGMT"
+       }
+      ]
+     },
+     "transport": {
+      "input": {
+       "input": [
+        "ssh"
+       ]
+      }
+     }
+    }
+   ]
+  },
+  "snmp-server": {
+   "Cisco-IOS-XE-snmp:community": [
+    {
+     "name": "synthetic-ro"
+    }
+   ]
+  }
+ }
+}

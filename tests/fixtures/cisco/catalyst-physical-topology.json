@@ -1,0 +1,70 @@
+{
+ "response": {
+  "nodes": [
+   {
+    "id": "a1b2c3d4-0001-4000-8000-000000000001",
+    "label": "cat9k-core-01",
+    "ip": "192.0.2.11",
+    "deviceType": "Cisco Catalyst 9500 Switch",
+    "family": "Switches and Hubs",
+    "role": "CORE",
+    "platformId": "C9500-24Y4C"
+   },
+   {
+    "id": "a1b2c3d4-0002-4000-8000-000000000002",
+    "label": "cat9k-access-01",
+    "ip": "192.0.2.21",
+    "family": "Switches and Hubs",
+    "role": "ACCESS",
+    "platformId": "C9300-48P"
+   },
+   {
+    "id": "a1b2c3d4-0003-4000-8000-000000000003",
+    "label": "isr-edge-01",
+    "ip": "192.0.2.1",
+    "family": "Routers",
+    "role": "BORDER ROUTER",
+    "platformId": "ISR4451-X/K9"
+   },
+   {
+    "id": "a1b2c3d4-0004-4000-8000-000000000004",
+    "label": "wlc-01",
+    "ip": "192.0.2.31",
+    "family": "Wireless Controller",
+    "role": "ACCESS",
+    "platformId": "C9800-40-K9"
+   }
+  ],
+  "links": [
+   {
+    "source": "a1b2c3d4-0001-4000-8000-000000000001",
+    "target": "a1b2c3d4-0002-4000-8000-000000000002",
+    "startPortName": "TenGigabitEthernet1/0/1",
+    "endPortName": "TenGigabitEthernet1/1/1",
+    "linkStatus": "up"
+   },
+   {
+    "source": "a1b2c3d4-0001-4000-8000-000000000001",
+    "target": "a1b2c3d4-0003-4000-8000-000000000003",
+    "startPortName": "TenGigabitEthernet1/0/24",
+    "endPortName": "GigabitEthernet0/0/0",
+    "linkStatus": "down"
+   },
+   {
+    "source": "a1b2c3d4-0001-4000-8000-000000000001",
+    "target": "a1b2c3d4-0004-4000-8000-000000000004",
+    "startPortName": "TenGigabitEthernet1/0/2",
+    "endPortName": "TenGigabitEthernet0/0/0",
+    "linkStatus": "up"
+   },
+   {
+    "source": "a1b2c3d4-0002-4000-8000-000000000002",
+    "target": "unknown-node",
+    "startPortName": "Gi1/0/48",
+    "endPortName": "eth0",
+    "linkStatus": "up"
+   }
+  ]
+ },
+ "version": "1.0"
+}

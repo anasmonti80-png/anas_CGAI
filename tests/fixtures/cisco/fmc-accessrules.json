@@ -1,0 +1,117 @@
+{
+ "links": {
+  "self": "https://fmc.example.invalid/api/fmc_config/v1/domain/x/policy/accesspolicies/y/accessrules?expanded=true"
+ },
+ "items": [
+  {
+   "id": "005056B1-0001",
+   "name": "Allow-Web-DMZ",
+   "action": "ALLOW",
+   "enabled": true,
+   "type": "AccessRule",
+   "sourceNetworks": {
+    "literals": [
+     {
+      "type": "Network",
+      "value": "0.0.0.0/0"
+     }
+    ]
+   },
+   "destinationNetworks": {
+    "literals": [
+     {
+      "type": "Host",
+      "value": "198.51.100.80"
+     }
+    ]
+   },
+   "destinationPorts": {
+    "literals": [
+     {
+      "type": "PortLiteral",
+      "protocol": "6",
+      "port": "443"
+     }
+    ]
+   },
+   "sourceZones": {
+    "objects": [
+     {
+      "name": "OUTSIDE",
+      "type": "SecurityZone"
+     }
+    ]
+   }
+  },
+  {
+   "id": "005056B1-0002",
+   "name": "Allow-RDP-Any",
+   "action": "ALLOW",
+   "enabled": true,
+   "type": "AccessRule",
+   "destinationNetworks": {
+    "literals": [
+     {
+      "type": "Network",
+      "value": "10.10.0.0/16"
+     }
+    ]
+   },
+   "destinationPorts": {
+    "literals": [
+     {
+      "type": "PortLiteral",
+      "protocol": "6",
+      "port": "3389"
+     }
+    ]
+   }
+  },
+  {
+   "id": "005056B1-0003",
+   "name": "Allow-Named-Objects",
+   "action": "ALLOW",
+   "enabled": true,
+   "type": "AccessRule",
+   "sourceNetworks": {
+    "objects": [
+     {
+      "name": "PARTNER-NETS",
+      "type": "NetworkGroup",
+      "id": "g1"
+     }
+    ]
+   },
+   "destinationPorts": {
+    "objects": [
+     {
+      "name": "HTTPS",
+      "type": "ProtocolPortObject",
+      "protocol": "TCP",
+      "port": "443"
+     }
+    ]
+   }
+  },
+  {
+   "id": "005056B1-0004",
+   "name": "Monitor-All",
+   "action": "MONITOR",
+   "enabled": true,
+   "type": "AccessRule"
+  },
+  {
+   "id": "005056B1-0005",
+   "name": "Block-Rest",
+   "action": "BLOCK",
+   "enabled": true,
+   "type": "AccessRule"
+  }
+ ],
+ "paging": {
+  "offset": 0,
+  "limit": 25,
+  "count": 5,
+  "pages": 1
+ }
+}

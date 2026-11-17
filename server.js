@@ -180,6 +180,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/agents'&&method==='GET') return send(res,200,domain.agentInventory(page(url.searchParams)));
       if(p==='/api/sensitive-changes'&&method==='GET') return send(res,200,domain.sensitiveChanges(page(url.searchParams)));
       if(p==='/api/detection-rules'&&method==='GET') return send(res,200,domain.detectionRulesStatus());
+      if(p==='/api/network-topology'&&method==='GET') return send(res,200,domain.networkTopology());
       if(p==='/api/detection-coverage'&&method==='GET') return send(res,200,domain.detectionCoverage(page(url.searchParams)));
       if(p==='/api/critical-production-protection'&&method==='GET') return send(res,200,domain.criticalProductionProtection());
       if(p==='/api/response-actions'&&method==='GET') return send(res,200,domain.responseActions());
