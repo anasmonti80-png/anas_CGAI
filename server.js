@@ -148,6 +148,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(aiAnalysis&&method==='GET') return send(res,200,domain.aiAnalysis(aiAnalysis[1]));
       if(p==='/api/ai-model-policy'&&method==='GET') return send(res,200,domain.aiModelPolicy(typeof cloudAiInvoke==='function'));
       if(p==='/api/ai-cloud-consents'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,domain.createAiCloudConsent(user.id,await body(req)));}
+      const aiPropose=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/proposals$/);
+      if(aiPropose&&method==='POST'){roles(['admin','analyst']);return send(res,201,domain.aiProposeAction(user.id,aiPropose[1],await body(req)));}
+      if(p==='/api/ai-action-proposals'&&method==='GET') return send(res,200,domain.aiActionProposals({alert_id:url.searchParams.get('alert_id')||null}));
+      const aiDecision=p.match(/^\/api\/ai-action-proposals\/([a-f0-9-]{36})\/(promote|dismiss)$/);
+      if(aiDecision&&method==='POST'){roles(['admin','analyst']);if(aiDecision[2]==='promote'){auth.requireRecentMfa(user);return send(res,201,domain.promoteAiProposal(user.id,aiDecision[1],await body(req)));}return send(res,200,domain.dismissAiProposal(user.id,aiDecision[1]));}
       const cloudAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/cloud$/);
       if(cloudAnalysis&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);fail(typeof cloudAiInvoke==='function',503,'cloud_ai_connector_unavailable');const prepared=domain.prepareAiCloudAnalysis(user.id,cloudAnalysis[1],await body(req)),raw=await cloudAiInvoke({provider:prepared.consent.provider,payload:prepared.payload}),result=validateCloudResult(raw);return send(res,200,domain.recordAiCloudAnalysis(user.id,prepared,result));}
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));

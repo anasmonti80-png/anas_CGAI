@@ -344,6 +344,11 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('AI analyst shows typed catalog proposals, their human decision state and rejected raw-command attempts',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/ai-action-proposals/);
+  for(const marker of ['AI action proposals','Propose to a human','Rejected AI attempts','Promote to request','CG-039']) assert.ok(app.includes(marker),marker);
+});
+
 test('vulnerabilities view measures detection during tests and lists detection gaps',()=>{
   const app=read('app.js');assert.match(app,/\/api\/detection-coverage/);
   for(const marker of ['Detection measurement and gaps','Detection rate','Rule gap','Visibility gap','Settling','CG-027']) assert.ok(app.includes(marker),marker);

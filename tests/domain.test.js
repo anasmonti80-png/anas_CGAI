@@ -734,6 +734,38 @@ test('management safety preflight preserves channels and prohibits disruption of
   preflight('management-security-platform-033',{protected_role:'security-platform'});assert.throws(()=>d.approveAction('admin-b',action.id),/protected_infrastructure_disruption_prohibited/);
   const dcAsset={external_id:'dc-033',hostname:'DC-033',os_family:'windows',device_type:'domain-controller',addresses:['192.0.2.33']};preflight('management-domain-controller-wrong-target-033',{protected_role:'domain-controller'},dcAsset);const dc=d.list('assets').items.find(item=>item.external_id==='dc-033'),dcTarget={device_ref:'dc-033'};assert.throws(()=>d.previewAction('admin-a',{...request,asset_id:dc.id,target:dcTarget}),/current_management_preflight_required/,'target hash prevents reusing safety evidence for another device');advance(1);ingest([event('management-domain-controller-033','response.management_preflight',{connector_id:'SYNTHETIC-MGMT-033',action_type:'endpoint.isolate-device',target_hash:digest(dcTarget),protected_role:'domain-controller',management_channel_impact:'none',alternate_management:{status:'not-applicable',evidence_ref:null},captured_at:'2026-11-11T10:00:00.000Z',evidence_ref:'DOMAIN-CONTROLLER-SAFETY-033'},dcAsset)]);assert.throws(()=>d.previewAction('admin-a',{...request,asset_id:dc.id,target:dcTarget}),/protected_infrastructure_disruption_prohibited/);
 });
+test('AI may only propose bounded catalog actions as typed targets; raw commands and policy violations are rejected and audited; humans promote and approve',t=>{
+  const {d,s,event,ingest}=fixture(t);
+  ingest(Array.from({length:5},(_,i)=>event(`ai-fail-${i}`,'auth.failed',{account:'LAB\\\\admin',source_ip:'198.51.100.23',protocol:'rdp'})));
+  const alert=s.get("SELECT id FROM alerts WHERE rule_id='CG-AUTH-FAILURES-5-IN-5M'");assert.ok(alert);
+  const analysis=d.aiAnalysis(alert.id);assert.deepEqual(analysis.proposed_actions.map(x=>[x.action_type,x.target]),[['network.block-ip',{ip:'198.51.100.23'}]]);assert.ok(analysis.proposed_actions[0].rationale_ar);
+  const p1=d.aiProposeAction('analyst',alert.id,{suggestion_id:'s1'});assert.equal(p1.status,'proposed');assert.equal(p1.origin,'local-analyst');assert.match(p1.rationale_ar,/[؀-ۿ]/);assert.deepEqual(p1.target,{ip:'198.51.100.23'});
+  const reject=(proposal,code)=>assert.throws(()=>d.aiProposeAction('analyst',alert.id,{proposal}),new RegExp(code));
+  reject({action_type:'network.block-ip',target:{ip:'198.51.100.24'},rationale:'x',command:'netsh advfirewall firewall add rule'},'ai_raw_command_rejected');
+  reject({action_type:'endpoint.stop-service',target:{service_ref:'Spooler && del C:\\\\x'},rationale:'x'},'ai_raw_command_rejected');
+  reject({action_type:'endpoint.block-app',target:{application_ref:'powershell -enc AAAA'},rationale:'x'},'ai_raw_command_rejected');
+  reject({action_type:'shell.run',target:{},rationale:'x'},'ai_action_not_in_catalog');
+  reject({action_type:'endpoint.shutdown-host',target:{device_ref:'synthetic-01'},rationale:'x'},'ai_action_not_proposable');
+  reject({action_type:'endpoint.remove-service',target:{service_ref:'x'},rationale:'x'},'ai_action_not_proposable');
+  reject({action_type:'endpoint.isolate-device',target:{device_ref:'other-host'},rationale:'x'},'ai_target_outside_alert_asset');
+  assert.throws(()=>d.aiProposeAction('analyst',alert.id,{suggestion_id:'s9'}),/ai_suggestion_not_found/);
+  d.aiProposeAction('analyst',alert.id,{proposal:{action_type:'dns.block-domain',target:{domain:'evil.example'},rationale:'model connector proposal'}});
+  d.aiProposeAction('analyst',alert.id,{proposal:{action_type:'network.block-port',target:{protocol:'tcp',port:3389,direction:'inbound'},rationale:'limit RDP exposure'}});
+  reject({action_type:'network.block-ip',target:{ip:'198.51.100.30'},rationale:'fourth'},'ai_proposal_limit_reached');
+  ingest([event('ctx-039','asset.context',{owner:{owner_id:'ops',display_name:'Ops',contact:null},business_service:'Payroll',service_name:null,site:'HQ',data_sensitivity:'restricted',maintenance_windows:[],service_criticality:'critical'})]);
+  d.dismissAiProposal('analyst',d.aiActionProposals({alert_id:alert.id}).items.find(x=>x.action_type==='dns.block-domain').id);
+  reject({action_type:'endpoint.isolate-device',target:{device_ref:'synthetic-01'},rationale:'contain'},'ai_disruptive_action_blocked_on_critical_asset');
+  const rejected=s.all("SELECT details FROM audit WHERE action='ai.proposal.rejected'").map(r=>JSON.parse(r.details).reason);
+  assert.equal(rejected.length,10);assert.equal(rejected.filter(x=>x==='ai_raw_command_rejected').length,3);
+  // Promotion goes through the normal CG-029 gate: no connector means no request, and the proposal stays open.
+  assert.throws(()=>d.promoteAiProposal('admin-a',p1.id,{connector_id:'NONE',authorization_ref:'IR-039'}),/response_connector_capability_unavailable/);assert.equal(d.aiActionProposals({alert_id:alert.id}).items.find(x=>x.id===p1.id).status,'proposed');
+  ingest([event('cap-039','response.capability',{connector_id:'SYNTHETIC-FW-039',owner_system:'cyberguard-connector',capabilities:['network.block-ip'],target_asset_refs:['synthetic-01'],tested_at:'2026-11-11T09:00:00.000Z',evidence_ref:'SYNTHETIC-CONNECTOR-039',status:'active'}),event('mgmt-039','response.management_preflight',{connector_id:'SYNTHETIC-FW-039',action_type:'network.block-ip',target_hash:digest({ip:'198.51.100.23'}),protected_role:'none',management_channel_impact:'none',alternate_management:{status:'not-applicable',evidence_ref:null},captured_at:'2026-11-11T10:00:00.000Z',evidence_ref:'SYNTHETIC-MGMT-039'})]);
+  const promoted=d.promoteAiProposal('admin-a',p1.id,{connector_id:'SYNTHETIC-FW-039',authorization_ref:'IR-039'});
+  assert.equal(promoted.proposal.status,'promoted');assert.equal(promoted.action.status,'pending-approval');assert.equal(promoted.action.requested_by,'admin-a');assert.match(promoted.action.reason,/^AI proposal /);
+  assert.throws(()=>d.approveAction('admin-a',promoted.action.id),/independent_approver_required/);
+  assert.equal(d.approveAction('admin-b',promoted.action.id).status,'approved');
+  assert.throws(()=>d.promoteAiProposal('admin-a',p1.id,{connector_id:'SYNTHETIC-FW-039',authorization_ref:'IR-039'}),/ai_proposal_not_open/);
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;
