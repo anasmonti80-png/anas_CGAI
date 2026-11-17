@@ -344,6 +344,12 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('case view reconstructs the incident with proven timeline and graph separate from the attack-path hypothesis',()=>{
+  const app=read('app.js');assert.match(app,/\/reconstruction/);
+  assert.doesNotMatch(app,/join\('، '\)/,'list separators must follow the interface language: join(tr(\'، \',\', \'))');
+  for(const marker of ['Incident reconstruction','Proven by evidence','Evidence graph','Analytic hypothesis','Competing hypothesis','not proof','CG-040']) assert.ok(app.includes(marker),marker);
+});
+
 test('AI analyst shows typed catalog proposals, their human decision state and rejected raw-command attempts',()=>{
   const app=read('app.js');assert.match(app,/\/api\/ai-action-proposals/);
   for(const marker of ['AI action proposals','Propose to a human','Rejected AI attempts','Promote to request','CG-039']) assert.ok(app.includes(marker),marker);

@@ -24,7 +24,7 @@ export function renderDashboard(d,{tr,h,icon,button,pill,date,lang,siren}) {
     {key:'soar',name:'SOAR',ar:'بوابة الموافقات',en:'Approval gateway',ic:'actions',tone:'pink',view:'response',status:tr('إجراء محلي فقط','Local action only'),ready:true}
   ];
   const toolCards=tools.map(t=>`<button class="tool-card" data-action="${t.view?'nav':'capability'}" data-id="${t.view||t.key}"><span class="tool-icon ${t.tone}">${icon(t.ic)}</span><strong>${h(t.name)}</strong><span>${h(tr(t.ar,t.en))}</span><small class="tool-state ${t.ready?'available':'pending'}">${h(t.status||tr('يحتاج تكاملًا','Needs integration'))}</small></button>`).join('');
-  const alerts=d.recent_alerts.map(a=>`<button class="incident-row" data-action="alert" data-id="${h(a.id)}"><span class="incident-symbol">${icon(a.severity==='critical'?'alerts':'shield')}</span><span class="incident-text"><strong>${h(a.title)}</strong><small>${h(date(a.last_seen))}</small></span>${pill(a.severity)}</button>`).join('');
+  const alerts=d.recent_alerts.map(a=>`<button class="incident-row" data-action="alert" data-id="${h(a.id)}"><span class="incident-symbol">${icon(a.severity==='critical'?'alerts':'shield')}</span><span class="incident-text"><strong>${h((parts=>parts.length===2?tr(parts[1],parts[0]):a.title)(String(a.title||'').split(' / ')))}</strong><small>${h(date(a.last_seen))}</small></span>${pill(a.severity)}</button>`).join('');
   const score=d.security_score;
   const scoreComponents=d.security_score_components;
   const scoreLabel=score===null?tr('غير مُقيّم','Not assessed'):tr('جاهزية أدلة النطاق المهيأ','Configured-scope evidence readiness');

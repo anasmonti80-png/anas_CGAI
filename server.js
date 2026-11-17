@@ -231,6 +231,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(alertRoute&&method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM alerts WHERE id=?',[alertRoute[1]])));
       if(ack&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.acknowledge(user.id,ack[1]));}
       if(p==='/api/cases'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.createCase(user.id,await body(req)));}
+      const reconstruction=p.match(/^\/api\/cases\/([a-f0-9-]{36})\/reconstruction$/);
+      if(reconstruction&&method==='GET') return send(res,200,domain.incidentReconstruction(reconstruction[1]));
       const caseRoute=p.match(/^\/api\/cases\/([a-f0-9-]{36})(\/report)?$/);
       if(caseRoute) {
         if(method==='GET') return send(res,200,caseRoute[2]?domain.caseReport(caseRoute[1]):domain.decode(store.require('SELECT * FROM cases WHERE id=?',[caseRoute[1]])));

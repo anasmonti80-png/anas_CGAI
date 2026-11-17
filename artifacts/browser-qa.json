@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-17T16:32:46.758Z",
+  "at": "2026-11-17T16:44:42.998Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -73,7 +73,8 @@
     "claim_grounding": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-037", "languages_checked": ["ar", "en"], "claim_sections_with_source_ids": ["what happened", "why suspicious", "confidence", "solution"], "source_types_visible": ["record", "rule", "log", "documented-reference"], "event_sha256_visible": true, "all_claims_grounded": true, "unsupported_claims_rejected": true, "withheld_fact_classes_visible": ["IP addresses", "CVEs", "commands", "operational facts"], "external_ai_used": false},
     "local_first_optional_cloud_policy": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-038", "languages_checked": ["ar", "en"], "primary_route": "local-deterministic-evidence-analyst", "primary_route_status": "Unit Tested", "local_data_leaves_host": false, "cloud_optional": true, "cloud_default_state": "unavailable", "connector_required": true, "current_customer_consent_required": true, "recent_mfa_required": true, "fixed_redacted_schema_visible": true, "allowed_outbound_fields_visible": 11, "prohibited_classes_visible": 11},
     "ai_action_gateway": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-039", "suggestion": "network.block-ip 198.51.100.23 from 5 failed RDP logons", "proposed_to_human": true, "rejected_over_http": {"command_field": 400, "chained_command_in_target": 400, "shutdown_not_proposable": 403}, "promotion_without_recent_mfa": "refused", "proposal_state_after_refusal": "proposed", "defects_fixed": ["English rationale in the Arabic view", "raw origin label", "duplicated status label"], "english_view_clean": true, "mobile_overflow": false, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 65, "next": "CG-040"}
+    "incident_reconstruction": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-040", "case_alerts": 3, "graph": {"nodes": 20, "edges": 36}, "attack_path_probability": 0.108, "competing_hypothesis": 0.892, "linked_steps": "ip, host and account shared by steps 1-2", "caveats_shown": 2, "defects_fixed": ["raw asset identifiers in shared entities and relations", "bilingual alert titles shown whole on five pages", "Arabic comma in English lists (11 places)"], "english_view_clean": true, "arabic_view_clean": true, "console_errors": 0, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 66, "next": "CG-041"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

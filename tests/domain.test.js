@@ -766,6 +766,29 @@ test('AI may only propose bounded catalog actions as typed targets; raw commands
   assert.equal(d.approveAction('admin-b',promoted.action.id).status,'approved');
   assert.throws(()=>d.promoteAiProposal('admin-a',p1.id,{connector_id:'SYNTHETIC-FW-039',authorization_ref:'IR-039'}),/ai_proposal_not_open/);
 });
+test('incident reconstruction separates a proven timeline and evidence graph from a scored attack-path hypothesis',t=>{
+  const {d,s,event,ingest,advance}=fixture(t),other={external_id:'synthetic-02',hostname:'LAB-02',addresses:['10.9.9.9']};
+  ingest(Array.from({length:5},(_,i)=>event(`rec-fail-${i}`,'auth.failed',{account:'LAB\\\\admin',source_ip:'198.51.100.23',protocol:'rdp'})));
+  advance(10*60000);
+  ingest([event('rec-remote','remote.authenticated',{session_id:'S-040',protocol:'rdp',source_a:{hostname:null,ip:'198.51.100.23',account:null},target_b:{hostname:'LAB-01',account:'LAB\\\\admin'},relay:false,evidence_type:'authentication_log',assessment:'suspicious',assessment_basis:'analyst-reviewed',authorization_ref:null,rationale:'Logon from the address that failed five times'})]);
+  advance(10*60000);
+  ingest(Array.from({length:5},(_,i)=>event(`rec-other-${i}`,'auth.failed',{account:'LAB\\\\svc',source_ip:'203.0.113.77',protocol:'unknown'},other)));
+  const alerts=s.all("SELECT id,rule_id FROM alerts WHERE rule_id IN ('CG-AUTH-FAILURES-5-IN-5M','CG-REMOTE-SUSPICIOUS') ORDER BY first_seen");assert.equal(alerts.length,3);
+  const c=d.createCase('analyst',{title:'Synthetic RDP intrusion',alert_ids:alerts.map(a=>a.id)});
+  const r=d.incidentReconstruction(c.id),proven=r.proven,hyp=r.hypothesis;
+  assert.ok(proven.timeline.length>=13);assert.ok(proven.timeline.every(x=>['proven','analyst-statement'].includes(x.basis)));
+  assert.ok(proven.timeline.filter(x=>x.type==='alert-evidence').every(x=>x.reference&&/^[a-f0-9]{64}$/.test(x.sha256)));
+  const ipEdge=proven.graph.edges.find(e=>e.from==='ip:198.51.100.23'&&e.relation==='failed-logon-to');assert.ok(ipEdge.evidence_event_id);assert.equal(ipEdge.basis,'proven');
+  assert.ok(proven.graph.edges.some(e=>e.from==='ip:198.51.100.23'&&e.relation==='remote-authenticated'));
+  assert.ok(proven.graph.edges.every(e=>e.basis==='proven'&&e.evidence_event_id));
+  assert.equal(hyp.basis,'hypothesis');assert.ok(hyp.steps.every(x=>x.basis==='hypothesis'));
+  assert.deepEqual(hyp.steps.map(x=>x.tactic.id),['TA0006','TA0008','TA0006']);
+  assert.equal(hyp.steps[0].link_to_next.linked,true);assert.ok(hyp.steps[0].link_to_next.shared_entities.includes('ip:198.51.100.23'));
+  assert.equal(hyp.steps[1].link_to_next.linked,false);assert.equal(hyp.steps[1].link_to_next.out_of_order,true);
+  assert.equal(hyp.probability,0.108,'0.7^3 x 0.9 (linked) x 0.5 (timing only) x 0.7 (backwards)');assert.equal(hyp.competing_hypothesis.probability,0.892);
+  assert.ok(hyp.notes.some(n=>/timing only/.test(n.en))&&hyp.notes.every(n=>/[\u0600-\u06FF]/.test(n.ar)));
+  assert.ok(r.separation.en.includes('never presented as proof'));
+});
 test('database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering',()=>{
   const dir=fs.mkdtempSync(path.join(os.tmpdir(),'cg-store-test-')),file=path.join(dir,'test.sqlite');
   let s;
