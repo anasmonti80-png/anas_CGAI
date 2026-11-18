@@ -1,0 +1,10 @@
+{
+  "SummaryMap": {
+    "AccountMFAEnabled": 1,
+    "AccountAccessKeysPresent": 1,
+    "Users": 12,
+    "Roles": 30,
+    "Policies": 8,
+    "MFADevices": 10
+  }
+}

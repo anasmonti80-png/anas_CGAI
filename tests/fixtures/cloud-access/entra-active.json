@@ -1,0 +1,36 @@
+{
+  "value": [
+    {
+      "id": "ga-permanent",
+      "principalId": "p1",
+      "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10",
+      "directoryScopeId": "/",
+      "assignmentType": "Assigned",
+      "memberType": "Direct",
+      "startDateTime": "2023-01-01T00:00:00Z",
+      "endDateTime": null,
+      "roleDefinition": {
+        "displayName": "Global Administrator"
+      },
+      "principal": {
+        "userPrincipalName": "breakglass-old@contoso.example"
+      }
+    },
+    {
+      "id": "gr-permanent",
+      "principalId": "p2",
+      "roleDefinitionId": "f2ef992c-3afb-46b9-b7cf-a126ee74c451",
+      "directoryScopeId": "/",
+      "assignmentType": "Assigned",
+      "memberType": "Direct",
+      "startDateTime": "2026-11-01T00:00:00Z",
+      "endDateTime": null,
+      "roleDefinition": {
+        "displayName": "Global Reader"
+      },
+      "principal": {
+        "userPrincipalName": "cyberguard-reader@contoso.example"
+      }
+    }
+  ]
+}

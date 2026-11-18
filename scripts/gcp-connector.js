@@ -13,13 +13,15 @@
 //   armor-policy    --input <gcloud compute security-policies describe NAME> --device-ref gcp:<project>:<policy> --output out.json
 //   audit-logs | vpc-flow | firewall-logs | armor-logs  --input <gcloud logging read --format=json, an export, or JSON lines> --output out.json
 // Live mode (owner's own gcloud session; read calls only):
-//   live --projects <id1,id2> [--organization-id <number>] --output out.json
+//   live --projects <id1,id2> [--organization-id <number>] [--impersonate-service-account <sa-email>] --output out.json
+//   With --impersonate-service-account every call uses a short-lived token of that read-only service account (CG-049).
 //   Grant roles/viewer, roles/iam.securityReviewer, roles/securitycenter.findingsViewer and roles/logging.viewer (see
 //   deploy/gcp/cyberguard-viewer-roles.json); no owner, editor or organisation admin role is needed.
 import fs from 'node:fs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
+import { gcpMemberGrants } from '../lib/cloud-access.js';
 import { projects, gcpServiceStatus, sccFindings, iamSnapshot, publicBindingFindings, vpcFirewallRules, cloudArmorRules, logEntryLines } from '../lib/connectors/gcp.js';
 
 const run = promisify(execFile);
@@ -41,9 +43,11 @@ const inventoryEvent = (accounts, services, org, by) => event('cloud.account_inv
 const events = [];
 
 if (mode === 'live') {
-  const gcloud = async cli => { const { stdout } = await run(process.platform === 'win32' ? 'gcloud.cmd' : 'gcloud', [...cli, '--format=json', '--quiet'], { maxBuffer: 128 * 1024 * 1024, shell: process.platform === 'win32' }); return JSON.parse(stdout || 'null'); };
+  const impersonate = args['impersonate-service-account'] || null;
+  const gcloud = async cli => { const { stdout } = await run(process.platform === 'win32' ? 'gcloud.cmd' : 'gcloud', [...cli, '--format=json', '--quiet', ...(impersonate ? [`--impersonate-service-account=${impersonate}`] : [])], { maxBuffer: 128 * 1024 * 1024, shell: process.platform === 'win32' }); return JSON.parse(stdout || 'null'); };
   let all; try { all = projects(await gcloud(['projects', 'list'])); } catch (e) { console.error(e.code === 'ENOENT' ? 'Google Cloud CLI is not installed or not on PATH.' : `The gcloud session could not be used (run "gcloud auth login" first): ${String(e.stderr || e.message).trim().slice(0, 300)}`); process.exit(1); }
   const keep = args.projects ? new Set(String(args.projects).split(',')) : null, accounts = keep ? all.filter(p => keep.has(p.account_id)) : all, org = args['organization-id'] || null;
+  const me = impersonate ? `serviceAccount:${impersonate}` : await gcloud(['config', 'get-value', 'account']).then(v => (String(v).includes('gserviceaccount.com') ? `serviceAccount:${v}` : `user:${v}`)).catch(() => null), grants = [];
   const apis = {}, subnets = {}, firewalls = {}, armor = {}, iam = {}, denied = e => (/PERMISSION_DENIED|403|does not have/i.test(String(e.stderr || '')) ? 'access-denied' : undefined);
   for (const a of accounts.filter(x => x.status === 'active')) {
     const P = ['--project', a.account_id];
@@ -52,12 +56,14 @@ if (mode === 'live') {
     try { subnets[a.account_id] = await gcloud(['compute', 'networks', 'subnets', 'list', ...P]); } catch (e) { subnets[a.account_id] = denied(e); }
     try { firewalls[a.account_id] = await gcloud(['compute', 'firewall-rules', 'list', ...P]); events.push(ruleset(vpcFirewallRules(firewalls[a.account_id]), `gcp:${a.account_id}:all-networks`)); } catch (e) { firewalls[a.account_id] = denied(e); }
     try { armor[a.account_id] = await gcloud(['compute', 'security-policies', 'list', ...P]); for (const pol of armor[a.account_id] || []) events.push(ruleset(cloudArmorRules(pol), `gcp:${a.account_id}:${pol.name}`)); } catch (e) { armor[a.account_id] = denied(e); }
+    if (me && iam[a.account_id] && iam[a.account_id] !== 'access-denied') grants.push(...gcpMemberGrants(iam[a.account_id], me, `projects/${a.account_id}`, { impersonated: Boolean(impersonate) }));
     if (iam[a.account_id] && iam[a.account_id] !== 'access-denied') { const r = iamSnapshot(iam[a.account_id], a.account_id, { method: 'cloud-api', credentialRef: 'gcloud-session:owner' }); events.push(event('identity.directory_snapshot', collector(a.account_id), r.details), ...findingEvents(publicBindingFindings(r.publicBindings, a.account_id, iam[a.account_id].etag))); }
   }
   let scc, findings = [];
   if (org) { try { findings = sccFindings(await gcloud(['scc', 'findings', 'list', `organizations/${org}`, '--filter=state="ACTIVE"', '--page-size=1000', '--limit=5000'])); scc = 'enabled'; } catch (e) { scc = denied(e) || (/not enabled|has not been activated|FAILED_PRECONDITION/i.test(String(e.stderr || '')) ? 'disabled' : undefined); } }
   events.unshift(inventoryEvent(accounts, gcpServiceStatus({ accounts, enabledApis: apis, subnets, firewalls, armor, iam, scc }), org, org ? 'organizations' : 'single-account'));
   events.push(...findingEvents(findings));
+  if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `gcp-live-${randomUUID()}`, grants }));
   console.log(`Google Cloud live read: ${accounts.length} project(s), ${findings.length} active SCC finding(s), SCC ${scc || 'not checked (give --organization-id)'}.`);
 } else {
   if (!args.input) { console.error('Missing --input <saved gcloud output>'); process.exit(2); }

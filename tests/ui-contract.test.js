@@ -433,3 +433,8 @@ test('cloud view shows AWS coverage per account and service with every gap and a
   for(const marker of ['Google Cloud','scripts/gcp-connector.js','Viewer role lacks the permission','CG-048','provider=gcp','Azure','scripts/azure-connector.js','Reader role lacks the permission','CG-047','provider=azure','Coverage per account and service','Visibility gaps','Active findings','Role refused','Read-only role lacks the permission','Security Hub CSPM','VPC Flow Logs','scripts/aws-connector.js','CG-046',"'cloud-audit'"]) assert.ok(app.includes(marker),marker);
   assert.doesNotMatch(app,/cloud:\{status:'not-configured'/);
 });
+
+test('cloud view reviews temporary least-privilege access with the reason for every violation (CG-049)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/cloud-access/);
+  for(const marker of ['Temporary least-privilege cloud access','root access keys exist','standing administrator','write across a whole organisation','session longer than one hour','PIM eligible (not active)','Short-lived impersonation','scripts/cloud-access-review.js','CG-049']) assert.ok(app.includes(marker),marker);
+});

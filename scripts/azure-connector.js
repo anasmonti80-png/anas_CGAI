@@ -24,6 +24,7 @@ import fs from 'node:fs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
+import { azureRoleGrants } from '../lib/cloud-access.js';
 import { subscriptions, azureServiceStatus, defenderAlerts, defenderAssessments, sentinelIncidents, entraSignins, entraDirectoryAudits, nsgRules, azureFirewallPolicyRules, vnetFlowLines } from '../lib/connectors/azure.js';
 
 const run = promisify(execFile);
@@ -51,11 +52,12 @@ if (mode === 'live') {
   if (args.subscriptions) { const keep = new Set(String(args.subscriptions).toLowerCase().split(',')); accounts = accounts.filter(a => keep.has(a.account_id)); }
   const tenant = args['tenant-id'] || (await az(['account', 'show']).catch(() => null))?.tenantId || null, ids = accounts.map(a => a.account_id);
   let graph = null; try { graph = []; let skip = null; do { const r = await az(['graph', 'query', '-q', "resources | where type in~ ('microsoft.network/virtualnetworks','microsoft.network/networkwatchers','microsoft.network/networkwatchers/flowlogs','microsoft.network/azurefirewalls','microsoft.network/networksecuritygroups','microsoft.network/applicationsecuritygroups','microsoft.operationsmanagement/solutions') | project id,name,type,location,subscriptionId,properties", '--first', '1000', '--subscriptions', ...ids, ...(skip ? ['--skip-token', skip] : [])]); graph.push(...(r.data || [])); skip = r.skip_token || null; } while (skip && graph.length < 20000); } catch { graph = null; }
-  const pricings = {}, diagnostics = {}, sentinel = {}, findings = [];
+  const pricings = {}, diagnostics = {}, sentinel = {}, findings = [], grants = [];
   for (const a of accounts.filter(x => x.status === 'active')) {
     try { pricings[a.account_id] = await az(['security', 'pricing', 'list', '--subscription', a.account_id]); a.access = 'assumed'; } catch (e) { pricings[a.account_id] = 'access-denied'; }
     try { diagnostics[a.account_id] = await az(['monitor', 'diagnostic-settings', 'subscription', 'list', '--subscription', a.account_id]); a.access = 'assumed'; } catch { diagnostics[a.account_id] = 'access-denied'; }
     if (pricings[a.account_id] === 'access-denied' && diagnostics[a.account_id] === 'access-denied') a.access = 'denied';
+    try { const base = `https://management.azure.com/subscriptions/${a.account_id}/providers/Microsoft.Authorization`; grants.push(...azureRoleGrants(await az(['rest', '--method', 'get', '--url', `${base}/roleAssignmentScheduleInstances?api-version=2020-10-01&$filter=asTarget()`]), await az(['rest', '--method', 'get', '--url', `${base}/roleEligibilityScheduleInstances?api-version=2020-10-01&$filter=asTarget()`]).catch(() => null))); } catch { /* PIM read not permitted */ }
     try { findings.push(...defenderAlerts(await az(['security', 'alert', 'list', '--subscription', a.account_id]))); } catch { /* recorded as a Defender gap */ }
     if (graph) { const ws = graph.filter(r => r.subscriptionId === a.account_id && String(r.type).toLowerCase() === 'microsoft.operationsmanagement/solutions' && /^SecurityInsights/i.test(r.name)).map(r => r.properties?.workspaceResourceId).filter(Boolean); sentinel[a.account_id] = ws;
       for (const w of ws) try { findings.push(...sentinelIncidents(await az(['rest', '--method', 'get', '--url', `https://management.azure.com${w}/providers/Microsoft.SecurityInsights/incidents?api-version=2024-03-01&$filter=properties/status ne 'Closed'&$top=200`]))); } catch { /* Sentinel Reader missing: shown as no incidents read */ } }
@@ -65,6 +67,7 @@ if (mode === 'live') {
     const audits = entraDirectoryAudits(await az(['rest', '--method', 'get', '--url', 'https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?$top=500']), directoryRef); for (const c of audits.changes) events.push(event('identity.idp_change', collector(directoryRef), c)); } catch { entra = entra || 'access-denied'; }
   events.unshift(inventoryEvent(accounts, azureServiceStatus({ accounts, graph, pricings, diagnostics, sentinel, entra }), tenant, 'tenant'));
   events.push(...findingEvents(findings));
+  if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `azure-live-${randomUUID()}`, grants }));
   console.log(`Azure live read: ${accounts.length} subscription(s), Resource Graph ${graph ? graph.length + ' row(s)' : 'not readable'}, ${findings.length} finding(s), Entra logs ${entra}.`);
 } else {
   if (!args.input) { console.error('Missing --input <saved Azure output>'); process.exit(2); }

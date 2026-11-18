@@ -1,0 +1,38 @@
+{
+  "version": 3,
+  "etag": "BwYexample=",
+  "bindings": [
+    {
+      "role": "roles/viewer",
+      "members": [
+        "serviceAccount:cyberguard-reader@example-prod-1234.iam.gserviceaccount.com"
+      ]
+    },
+    {
+      "role": "roles/iam.securityReviewer",
+      "members": [
+        "serviceAccount:cyberguard-reader@example-prod-1234.iam.gserviceaccount.com"
+      ],
+      "condition": {
+        "title": "review window",
+        "expression": "request.time < timestamp(\"2099-01-01T00:00:00Z\")"
+      }
+    },
+    {
+      "role": "roles/owner",
+      "members": [
+        "serviceAccount:cyberguard-reader@example-prod-1234.iam.gserviceaccount.com"
+      ]
+    },
+    {
+      "role": "roles/securitycenter.findingsViewer",
+      "members": [
+        "serviceAccount:cyberguard-reader@example-prod-1234.iam.gserviceaccount.com"
+      ],
+      "condition": {
+        "title": "old pilot",
+        "expression": "request.time < timestamp(\"2025-01-01T00:00:00Z\")"
+      }
+    }
+  ]
+}

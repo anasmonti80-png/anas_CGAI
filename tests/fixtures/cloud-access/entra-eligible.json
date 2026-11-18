@@ -1,0 +1,19 @@
+{
+  "value": [
+    {
+      "id": "ga-eligible",
+      "principalId": "p3",
+      "roleDefinitionId": "62e90394-69f5-4237-9190-012177145e10",
+      "directoryScopeId": "/",
+      "memberType": "Direct",
+      "startDateTime": "2026-11-01T00:00:00Z",
+      "endDateTime": "2027-11-01T00:00:00Z",
+      "roleDefinition": {
+        "displayName": "Global Administrator"
+      },
+      "principal": {
+        "userPrincipalName": "admin@contoso.example"
+      }
+    }
+  ]
+}

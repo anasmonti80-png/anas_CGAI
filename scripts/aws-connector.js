@@ -13,12 +13,13 @@
 // Live mode (owner runs it with their own AWS CLI profile; read-only calls only):
 //   live --profile <name> --regions us-east-1,eu-west-1 [--role-name CyberGuardReadOnly] [--external-id-env CG_AWS_EXTERNAL_ID] --output out.json
 //   Uses organizations list-accounts (falls back to the calling account), sts assume-role into each member account with the
-//   template in deploy/aws/cyberguard-readonly-role.yaml (SecurityAudit, 1 hour session), then one read call per service
+//   template in deploy/aws/cyberguard-readonly-role.yaml (SecurityAudit; sessions of --session-seconds, default 900, at most 3600), then one read call per service
 //   and region and securityhub get-findings for active findings. Temporary credentials live only in the child process env.
 import fs from 'node:fs';
 import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
+import { awsRoleGrant, awsRootGrant } from '../lib/cloud-access.js';
 import { organizationsAccounts, asffFindings, guarddutyFindings, securityGroupRules, cloudtrailLines, networkFirewallLines, eventBridgeEnvelopes, serviceProbes, probeError, awsServices } from '../lib/connectors/aws.js';
 
 const run = promisify(execFile);
@@ -45,13 +46,14 @@ if (mode === 'live') {
   let accounts, organizationId = null, collectedBy = 'organizations';
   try { accounts = organizationsAccounts(await aws(['organizations', 'list-accounts'], base)); organizationId = (await aws(['organizations', 'describe-organization'], base))?.Organization?.Id || null; }
   catch { accounts = [{ account_id: me.Account, name: null, status: 'active', access: 'management' }]; collectedBy = 'single-account'; }
-  const services = [], findings = [], roleName = args['role-name'] || 'CyberGuardReadOnly', externalId = args['external-id-env'] ? process.env[args['external-id-env']] : null;
+  const grants = [], services = [], findings = [], roleName = args['role-name'] || 'CyberGuardReadOnly', externalId = args['external-id-env'] ? process.env[args['external-id-env']] : null;
   for (const a of accounts.filter(x => x.status === 'active')) {
     let env = base;
-    if (a.account_id === me.Account) a.access = 'management';
+    if (a.account_id === me.Account) { a.access = 'management'; try { const g = awsRootGrant(await aws(['iam', 'get-account-summary'], base), a.account_id); if (g) grants.push(g); } catch { /* summary not readable */ } }
     else {
-      try { const c = (await aws(['sts', 'assume-role', '--role-arn', `arn:aws:iam::${a.account_id}:role/${roleName}`, '--role-session-name', 'cyberguard-readonly', '--duration-seconds', '3600', ...(externalId ? ['--external-id', externalId] : [])], base)).Credentials;
-        env = { AWS_PROFILE: '', AWS_ACCESS_KEY_ID: c.AccessKeyId, AWS_SECRET_ACCESS_KEY: c.SecretAccessKey, AWS_SESSION_TOKEN: c.SessionToken }; a.access = 'assumed'; }
+      try { const c = (await aws(['sts', 'assume-role', '--role-arn', `arn:aws:iam::${a.account_id}:role/${roleName}`, '--role-session-name', 'cyberguard-readonly', '--duration-seconds', String(Math.min(Number(args['session-seconds']) || 900, 3600)), ...(externalId ? ['--external-id', externalId] : [])], base)).Credentials;
+        env = { AWS_PROFILE: '', AWS_ACCESS_KEY_ID: c.AccessKeyId, AWS_SECRET_ACCESS_KEY: c.SecretAccessKey, AWS_SESSION_TOKEN: c.SessionToken }; a.access = 'assumed';
+        try { grants.push(awsRoleGrant(await aws(['iam', 'get-role', '--role-name', roleName], env), await aws(['iam', 'list-attached-role-policies', '--role-name', roleName], env), a.account_id)); } catch { /* role metadata not readable with SecurityAudit */ } }
       catch { a.access = 'denied'; continue; }
     }
     for (const region of regions) for (const service of awsServices) {
@@ -61,6 +63,7 @@ if (mode === 'live') {
     for (const region of regions) try { findings.push(...asffFindings(await aws(['securityhub', 'get-findings', '--filters', '{"RecordState":[{"Value":"ACTIVE","Comparison":"EQUALS"}]}', '--max-items', '1000'], env, region))); } catch { /* Security Hub disabled or denied: already recorded as a service gap */ }
   }
   events.push(event('cloud.account_inventory', collector(organizationId || me.Account), { inventory_id: `aws:${organizationId || me.Account}`, provider: 'aws', organization_id: organizationId, collected_by: collectedBy, accounts, services }), ...findingEvents(findings));
+  if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `aws-live-${randomUUID()}`, grants }));
   console.log(`AWS live read: ${accounts.length} account(s), ${services.length} service check(s), ${findings.length} active finding(s).`);
 } else {
   if (!args.input) { console.error('Missing --input <saved AWS output>'); process.exit(2); }

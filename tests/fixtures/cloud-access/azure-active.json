@@ -1,0 +1,82 @@
+{
+  "value": [
+    {
+      "id": "/providers/Microsoft.Authorization/roleAssignmentScheduleInstances/reader-prod",
+      "name": "reader-prod",
+      "type": "Microsoft.Authorization/roleAssignmentScheduleInstances",
+      "properties": {
+        "scope": "/subscriptions/11111111-1111-4111-8111-111111111111",
+        "roleDefinitionId": "/subscriptions/11111111-1111-4111-8111-111111111111/providers/Microsoft.Authorization/roleDefinitions/00000000-role-reader-prod",
+        "principalId": "99999999-9999-4999-8999-999999999999",
+        "principalType": "ServicePrincipal",
+        "assignmentType": "Assigned",
+        "memberType": "Direct",
+        "startDateTime": "2026-11-18T06:00:00Z",
+        "endDateTime": null,
+        "expandedProperties": {
+          "principal": {
+            "displayName": "cyberguard-collector"
+          },
+          "roleDefinition": {
+            "displayName": "Reader"
+          },
+          "scope": {
+            "id": "/subscriptions/11111111-1111-4111-8111-111111111111"
+          }
+        }
+      }
+    },
+    {
+      "id": "/providers/Microsoft.Authorization/roleAssignmentScheduleInstances/owner-activated",
+      "name": "owner-activated",
+      "type": "Microsoft.Authorization/roleAssignmentScheduleInstances",
+      "properties": {
+        "scope": "/subscriptions/11111111-1111-4111-8111-111111111111",
+        "roleDefinitionId": "/subscriptions/11111111-1111-4111-8111-111111111111/providers/Microsoft.Authorization/roleDefinitions/00000000-role-owner-activated",
+        "principalId": "99999999-9999-4999-8999-999999999999",
+        "principalType": "ServicePrincipal",
+        "assignmentType": "Activated",
+        "memberType": "Direct",
+        "startDateTime": "2026-11-18T06:00:00Z",
+        "endDateTime": "2099-01-01T00:00:00Z",
+        "expandedProperties": {
+          "principal": {
+            "displayName": "oncall-admin"
+          },
+          "roleDefinition": {
+            "displayName": "Owner"
+          },
+          "scope": {
+            "id": "/subscriptions/11111111-1111-4111-8111-111111111111"
+          }
+        }
+      }
+    },
+    {
+      "id": "/providers/Microsoft.Authorization/roleAssignmentScheduleInstances/contrib-mg",
+      "name": "contrib-mg",
+      "type": "Microsoft.Authorization/roleAssignmentScheduleInstances",
+      "properties": {
+        "scope": "/providers/Microsoft.Management/managementGroups/root-mg",
+        "roleDefinitionId": "/providers/Microsoft.Management/managementGroups/root-mg/providers/Microsoft.Authorization/roleDefinitions/00000000-role-contrib-mg",
+        "principalId": "99999999-9999-4999-8999-999999999999",
+        "principalType": "ServicePrincipal",
+        "assignmentType": "Assigned",
+        "memberType": "Direct",
+        "startDateTime": "2026-11-18T06:00:00Z",
+        "endDateTime": null,
+        "expandedProperties": {
+          "principal": {
+            "displayName": "legacy-deploy"
+          },
+          "roleDefinition": {
+            "displayName": "Contributor"
+          },
+          "scope": {
+            "id": "/providers/Microsoft.Management/managementGroups/root-mg"
+          }
+        }
+      }
+    }
+  ]
+}

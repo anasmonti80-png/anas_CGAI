@@ -1,7 +1,7 @@
 {
   "Name": "CyberGuard Read Only",
   "IsCustom": true,
-  "Description": "CG-047 read-only access for the CyberGuard Azure connector: resource inventory, network security configuration, flow log settings, Defender for Cloud, Azure Monitor diagnostic settings and Microsoft Sentinel incidents. No write, delete or data-plane action. Assign at the management group or subscription scope; Entra sign-in and audit logs additionally need the Microsoft Graph permission AuditLog.Read.All (read only).",
+  "Description": "CG-047 read-only access for the CyberGuard Azure connector: resource inventory, network security configuration, flow log settings, Defender for Cloud, Azure Monitor diagnostic settings and Microsoft Sentinel incidents. No write, delete or data-plane action. Assign per subscription (CG-049: one subscription per assignment, preferably as a PIM-eligible assignment activated for the collection window); Entra sign-in and audit logs additionally need the Microsoft Graph permission AuditLog.Read.All (read only).",
   "Actions": [
     "Microsoft.Resources/subscriptions/read",
     "Microsoft.Resources/subscriptions/resourceGroups/read",
@@ -28,6 +28,6 @@
   "DataActions": [],
   "NotDataActions": [],
   "AssignableScopes": [
-    "/providers/Microsoft.Management/managementGroups/REPLACE-WITH-MANAGEMENT-GROUP-ID"
+    "/subscriptions/REPLACE-WITH-SUBSCRIPTION-ID"
   ]
 }

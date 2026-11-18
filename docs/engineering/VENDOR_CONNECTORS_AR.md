@@ -89,3 +89,11 @@
 - مصادر القراءة الموثقة: سجل تدقيق خادم Kubernetes API (`audit.k8s.io/v1` Event) عبر CloudWatch Logs لـEKS، وفئة `kube-audit` في إعدادات التشخيص لـAKS، وCloud Audit Logs لـGKE؛ وقائمة العناقيد عبر `eks list-clusters` و`az aks list` و`gcloud container clusters list`؛ وسياسات الشبكة `networking.k8s.io/v1 NetworkPolicy` وأدوار RBAC (`ClusterRoleBinding`) بالقراءة عبر `kubectl get -o json`.
 - كشف الحماية المدارة: GuardDuty EKS Protection، وDefender for Containers، وGKE Security Posture/SCC، وتُستورد نتائجها بالموصلات الحالية لأنها تصل عبر Security Hub وDefender for Cloud وSCC.
 - ما يلزم قبل التنفيذ: نوع حدث لسجل تدقيق Kubernetes، ومحلل لـ`NetworkPolicy` (غيابها يعني السماح الكامل داخل مساحة الأسماء)، وربط ClusterRoleBinding بلقطة الهوية؛ ودور قراءة فقط بـ`get/list/watch` دون `secrets`.
+
+## صلاحيات سحابية مؤقتة ومحدودة (CG-049)
+
+- كل وصول إلى حساب أو اشتراك أو مشروع يُسجَّل كـ`cloud.access_grant`: الأدوار ومستوى الصلاحية (قراءة، كتابة، مسؤول) والآلية ومدة الجلسة ووقت الانتهاء والشروط.
+- المصادر: AWS `iam get-role` و`iam list-attached-role-policies` و`iam get-account-summary` (مفاتيح root)؛ Azure `roleAssignmentScheduleInstances` و`roleEligibilityScheduleInstances` (PIM)؛ Entra `roleManagement/directory/roleAssignmentScheduleInstances` والأهلية؛ Google Cloud `getIamPolicy` مع شروط `request.time < timestamp(...)`.
+- مخالفة: مفاتيح root، أو صلاحية مسؤول دائمة (مثل Global Administrator أو Owner أو roles/owner دون PIM)، أو صلاحية مسؤول بلا وقت انتهاء، أو كتابة دائمة، أو كتابة على مؤسسة أو مجموعة إدارة أو مجلد كامل. تحذير: جلسة أطول من ساعة، أو قراءة دائمة غير مؤقتة، أو قراءة على مستوى المؤسسة. أهلية PIM غير المفعلة والتفعيل المحدد بوقت وانتحال الهوية القصير والشرط الزمني تُعد وصولًا مؤقتًا.
+- الموصلات: جلسة AWS افتراضيًا 15 دقيقة وحدّها ساعة (`--session-seconds`)، ودور Azure يُسند لكل اشتراك على حدة ويفضّل كإسناد مؤهل في PIM، وموصل Google Cloud يقبل `--impersonate-service-account` لرموز قصيرة العمر لحساب خدمة قراءة فقط. الوضع live لكل موصل يضيف مراجعة الصلاحيات للهوية التي يعمل بها.
+- التنبيه `CG-CLOUD-ACCESS-049`: حرج لمفاتيح root والمسؤول الدائم، وعالٍ لبقية المخالفات.
