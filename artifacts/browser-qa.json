@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T20:11:11.868Z",
+  "at": "2026-11-18T20:21:17.193Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -91,7 +91,8 @@
     "quality_metrics": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-058", "threats_panel": "Detection and response quality", "before_triage": "precision and MTTR shown as not measured", "after_true_positive": "precision 100%, MTTR measured with 1 sample", "disposition_buttons": ["True positive", "Benign true positive", "False positive"], "english_view_clean": true, "mobile_overflow": false, "console_errors": 0},
     "tenant_policy": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-059", "settings_panel": "Tenant isolation, limits and retention", "usage_rows": ["Events today", "Sources", "Assets", "Storage (MB)"], "retention_kinds_listed": true, "policy_form_requires_recent_mfa": true, "mobile_overflow": false, "console_errors": 0},
     "reconciliation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-060", "response_panel": "Outage operation and change reconciliation", "summary_cards": 6, "empty_states_explained": true, "mobile_overflow": false, "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 83, "next": "CG-062"}
+    "rollout": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-062", "settings_panel": "Rollout stages: lab, pilot, expansion", "undeclared_state_visible": true, "gate_checks_localized": true, "arabic_view_clean": true, "mobile_overflow": false, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 84, "next": "CG-064"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

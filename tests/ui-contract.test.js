@@ -477,3 +477,7 @@ test('response shows outage reconciliation: waiting jobs, expired jobs, verified
   const app=read('app.js');assert.match(app,/\/api\/reconciliation/);
   for(const marker of ['Outage operation and change reconciliation','Awaiting connector','Expired before execution','Rollbacks verified','Sources with backlog','New request and approval against current state','CG-060']) assert.ok(app.includes(marker),marker);
 });
+test('settings show rollout stages with measured gates and second-administrator approval (CG-062)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/rollout/);
+  for(const marker of ['Rollout stages: lab, pilot, expansion','Isolated lab with test data','Limited authorized pilot','Expansion on measured results','Gate for the next stage','Approve (another administrator)','CG-062']) assert.ok(app.includes(marker),marker);
+});

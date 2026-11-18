@@ -11,6 +11,7 @@ import { scopeFor, pathDomain, siteScopedPath, scopeDomains } from './lib/access
 import { remoteAccessConfig, RemoteAccessGate } from './lib/remote-access.js';
 import { SecretStore } from './lib/secret-store.js';
 import { TenantPolicy } from './lib/tenancy.js';
+import { Rollout } from './lib/rollout.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
@@ -47,7 +48,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout;
   const setupFile=path.join(dataDir,'setup-token');
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -173,6 +174,9 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/secrets'&&method==='GET'){auth.require(user,['admin']);return send(res,200,{items:secrets.list(),claim:'Connector secrets are encrypted with a per-secret data key wrapped by a store key that never leaves the data directory. Values are write-only: users see metadata only, and a value is released only to a delegated connector source, for a stated purpose, with an audit record. Each secret has a rotation period; overdue secrets raise CG-SECRET-ROTATION-055.',claim_ar:'أسرار الموصلات مشفرة بمفتاح بيانات لكل سر، ومفتاح البيانات مغلف بمفتاح مخزن لا يغادر مجلد البيانات. القيم للكتابة فقط: يرى المستخدمون البيانات الوصفية فقط، ولا تُسلَّم القيمة إلا لمصدر موصل مفوض، لغرض مذكور، مع سجل تدقيق. لكل سر مدة تدوير، والأسرار المتأخرة ترفع CG-SECRET-ROTATION-055.'});}
       if(p==='/api/secrets'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'secret_admin_requires_full_scope');return send(res,201,secrets.put(user,object(await body(req),['ref','kind','value','purpose','rotation_days','delegated_sources'],'secret')));}
       const secretRevoke=p.match(/^\/api\/secrets\/([a-z0-9._-]{3,100})\/revoke$/);if(secretRevoke&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,secrets.revoke(user,secretRevoke[1]));}
+      if(p==='/api/rollout'&&method==='GET'){auth.require(user,['admin','analyst']);return send(res,200,rollout.status());}
+      if(p==='/api/rollout'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'rollout_requires_full_scope');return send(res,201,rollout.request(user.id,await body(req)));}
+      const rolloutDecision=p.match(/^\/api\/rollout\/(\d{1,9})\/(approve|reject)$/);if(rolloutDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'rollout_requires_full_scope');return send(res,200,rollout.decide(user.id,Number(rolloutDecision[1]),rolloutDecision[2]));}
       if(p==='/api/tenant-policy'&&method==='GET'){auth.require(user,['admin']);return send(res,200,tenancy.status());}
       if(p==='/api/tenant-policy'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'tenant_policy_requires_full_scope');return send(res,200,tenancy.set(user.id,await body(req)));}
       if(p==='/api/tenant-policy/retention'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,tenancy.applyRetention(user.id));}
@@ -340,7 +344,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   const checkSecretRotation=()=>{for(const x of secrets.list().filter(x=>x.status==='rotation-overdue'))domain.alert({key:`CG-SECRET-ROTATION-055:${x.ref}:v${x.version}`,rule:'CG-SECRET-ROTATION-055',severity:'medium',title:`Secret rotation overdue / سر متأخر عن التدوير: ${x.ref} (due ${x.rotation_due_at.slice(0,10)})`});};
   const monitor=setInterval(()=>{try{domain.checkHealth();checkSecretRotation();tenancy.maybeRetention();domain.expireStaleResponseJobs();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
-  return {server,store,auth,domain,secrets,tenancy,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
+  return {server,store,auth,domain,secrets,tenancy,rollout,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host)||(accessConfig.mode==='vpn'&&host===accessConfig.vpn.listen_host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     // A random port (0) never lands on a port that browsers and fetch refuse by specification (Windows may hand out ports from 1024).
