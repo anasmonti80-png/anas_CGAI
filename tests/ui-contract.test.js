@@ -481,3 +481,6 @@ test('settings show rollout stages with measured gates and second-administrator 
   const app=read('app.js');assert.match(app,/\/api\/rollout/);
   for(const marker of ['Rollout stages: lab, pilot, expansion','Isolated lab with test data','Limited authorized pilot','Expansion on measured results','Gate for the next stage','Approve (another administrator)','CG-062']) assert.ok(app.includes(marker),marker);
 });
+test('achievements state whether the final development prompt may be generated and what blocks it (CG-063)',()=>{
+  const app=read('app.js');for(const marker of ['data-development-prompt','The final development prompt is not written yet','node scripts/development-prompt.js --write','CG-063']) assert.ok(app.includes(marker),marker);
+});

@@ -12,6 +12,7 @@ import { remoteAccessConfig, RemoteAccessGate } from './lib/remote-access.js';
 import { SecretStore } from './lib/secret-store.js';
 import { TenantPolicy } from './lib/tenancy.js';
 import { Rollout } from './lib/rollout.js';
+import { readiness as developmentPromptReadiness } from './scripts/development-prompt.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
@@ -323,7 +324,9 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         const count=status=>scoped.filter(r=>r.status===status).length;
         const completed=count('acceptance-verified'),partial=count('partially-implemented')+count('implemented-unverified');
         const next=scoped.find(r=>r.status!=='acceptance-verified')||null;
-        return send(res,200,{scope:{from,to,total:scoped.length},summary:{completed,partial,pending:scoped.length-completed-partial,validation_level:'Unit Tested',production_validated:false},next_requirement:next?.id||null,items:matching.slice(offset,offset+limit),total:matching.length,limit,offset});
+        // CG-063 the final development prompt is generated only when every requirement is reviewed and accepted.
+        const dp=developmentPromptReadiness(ROOT);
+        return send(res,200,{scope:{from,to,total:scoped.length},summary:{completed,partial,pending:scoped.length-completed-partial,validation_level:'Unit Tested',production_validated:false},development_prompt:{ready:dp.ready,accepted:dp.accepted,in_scope:dp.in_scope,blockers:dp.blockers,command:'node scripts/development-prompt.js --write'},next_requirement:next?.id||null,items:matching.slice(offset,offset+limit),total:matching.length,limit,offset});
       }
       if(p==='/api/requirements'&&method==='GET') {
         const {limit,offset,q}=page(url.searchParams), query=q.toLowerCase();

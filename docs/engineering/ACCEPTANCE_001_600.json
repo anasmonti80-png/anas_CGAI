@@ -592,6 +592,13 @@
       "tests": ["tests/rollout.test.js: rollout moves from isolated lab to authorized pilot to expansion only on measured gates with a second administrator (CG-062)", "tests/ui-contract.test.js: settings show rollout stages with measured gates and second-administrator approval (CG-062)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["An installation that never declares a stage keeps working unrestricted and shows that no stage is declared; the gate thresholds are fixed defaults, not per-organisation settings."]
+    },
+    "CG-063": {
+      "reason": "The final comprehensive development prompt is written only after the study is finished and the requirements are approved, and this order is enforced rather than remembered. scripts/development-prompt.js reads the traceability of all 1440 requirements and refuses (exit code 3, no file written) while any requirement still needs semantic review or any in-scope CyberGuard requirement other than CG-063 itself is not acceptance-verified, listing the blocking counts and first IDs. When ready it writes docs/engineering/DEVELOPMENT_PROMPT.md only from approved requirements: verbatim requirement text, source line and SHA-256, accepted behaviour, code, tests and restrictions; out-of-scope and unapproved items are excluded. The achievements page shows whether the prompt may be generated and what blocks it. Today it is correctly refused and no prompt exists in the repository.",
+      "code": ["scripts/development-prompt.js", "server.js", "public/app.js"],
+      "tests": ["tests/development-prompt.test.js: the final development prompt is refused until every requirement is reviewed and accepted, then built only from approved text (CG-063)", "tests/ui-contract.test.js: achievements state whether the final development prompt may be generated and what blocks it (CG-063)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The source marks CG-063 as deferred; what is accepted is the enforced gate and generator, while the prompt itself is produced only when the gate opens. Engineering continues in requirement order under the owner instruction."]
     }
   }
 }
