@@ -65,3 +65,27 @@
 - قواعد NSG تشمل القواعد الافتراضية بترتيب الأولوية؛ وما يشير إلى ASG أو وسوم خدمة مثل VirtualNetwork وAzureLoadBalancer أو IP Groups يُعلَّم غير مقروء ولا يُحلَّل. سياسة Azure Firewall تُحلَّل دون قيد نطاق لأنها تمر عليها كل الحركة الموجهة إليها، لذلك «أي إلى أي» فيها حرجة.
 - التنبيهات: `CG-CLOUD-FINDING-046` للنتائج النشطة العالية والحرجة، و`CG-CLOUD-GAP-046` لتعطيل Defender for Cloud أو عدم تصدير سجل النشاط أو تعذر قراءة سجلات Entra أو غياب دور القراءة، و`CG-CLOUD-ACTIVITY-047` للعمليات الحساسة الناجحة في سجل النشاط (حذف إعدادات التشخيص أو سجلات التدفق، كتابة قواعد NSG أو سياسة الجدار، إسناد الأدوار)، وتعيد تنبيهات IDPS استخدام `CG-LOG-IDS-014`.
 - لم يُجرَ تشغيل حي ضد مستأجر Azure لأن الوكلاء لا يُدخلون بيانات دخول. المدخلات بصيغ Microsoft الموثقة بمعرّفات بديلة، والتشغيل الحي يتم بجلسة `az login` الخاصة بالمالك: `node scripts/azure-connector.js live --output <file>`.
+
+## Google Cloud للقراءة فقط (CG-048)
+
+| المصدر | واجهة القراءة الموثقة | ما يصل إلى CyberGuard |
+|---|---|---|
+| المشاريع | `gcloud projects list` | `cloud.account_inventory` بالمزود `gcp` والمشاريع وحالتها |
+| Security Command Center | `gcloud scc findings list organizations/<id>` (ListFindingsResult) | `cloud.finding` بالمنتج `scc` مع الفئة والخطورة والامتثال وحالة الكتم |
+| IAM | `gcloud projects get-iam-policy` | `identity.directory_snapshot` من نوع `gcp-iam` بالأدوار المميزة والشروط، ونتيجة مشتقة لكل ربط علني (`allUsers`/`allAuthenticatedUsers`) |
+| Cloud Audit Logs | `gcloud logging read` لسجلات `cloudaudit.googleapis.com` | `log.batch` بصيغة `gcp-audit-json`، وحالة سجلات Data Access من `auditConfigs` |
+| VPC Flow Logs | `logConfig.enable` لكل شبكة فرعية، وسجلات `vpc_flows` | حالة كل إقليم، و`log.batch` بصيغة `gcp-vpc-flow-json` |
+| قواعد جدار VPC وتسجيلها | `gcloud compute firewall-rules list` وسجلات `firewall` | `firewall.ruleset` بالمورّد `gcp-vpc-firewall`، و`log.batch` بصيغة `gcp-firewall-json` |
+| Cloud Armor | `gcloud compute security-policies describe` وسجلات موازن التحميل | `firewall.ruleset` بالمورّد `gcp-cloud-armor`، و`log.batch` بصيغة `gcp-armor-json` (فئة WAF) |
+
+- الأدوار في `deploy/gcp/cyberguard-viewer-roles.json` أدوار عرض ومراجعة فقط (`roles/viewer` و`roles/iam.securityReviewer` و`roles/securitycenter.findingsViewer` و`roles/logging.viewer` و`roles/cloudasset.viewer`)، ولا يُطلب Owner أو Editor أو Organization Admin.
+- ترتيب قواعد جدار VPC: الأولوية الأدنى رقمًا أولًا، والرفض قبل السماح عند تساوي الأولوية، ثم القاعدتان الضمنيتان (رفض الوارد وسماح الصادر). القاعدة التي تستهدف وسومًا أو حسابات خدمة مقيدة النطاق، والمصدر بالوسوم أو حسابات الخدمة لا يُحلَّل. قاعدة سماح كاملة من `0.0.0.0/0` بلا هدف تشمل كل الأجهزة في الشبكة فتُعد «أي إلى أي».
+- قواعد Cloud Armor مقيدة بالخدمة الخلفية التي تحميها السياسة، والقاعدة في وضع المعاينة تُعلَّم غير مطبقة، وقواعد التعبيرات (مثل `evaluatePreconfiguredExpr`) لا تُقيّم.
+- التنبيهات: `CG-CLOUD-FINDING-046` للنتائج النشطة العالية والحرجة (ومنها الربط العلني)، و`CG-CLOUD-GAP-046` لتعطيل SCC أو تعذر قراءة IAM أو غياب دور العرض، و`CG-CLOUD-AUDIT-048` لاستدعاءات ناجحة تحذف أو تعدّل مصارف السجلات أو تغيّر IAM أو تنشئ مفاتيح حسابات خدمة أو تعدّل قواعد الجدار وسياسات Cloud Armor، وتعيد حظرات Cloud Armor استخدام `CG-WAF-025`.
+- لم يُجرَ تشغيل حي ضد مؤسسة Google Cloud لأن الوكلاء لا يُدخلون بيانات دخول. المدخلات بصيغ Google الموثقة بمعرّفات أمثلة، والتشغيل الحي يتم بجلسة `gcloud auth login` الخاصة بالمالك: `node scripts/gcp-connector.js live --projects <ids> --organization-id <id> --output <file>`.
+
+### بحث لاحق: Kubernetes (EKS وAKS وGKE)
+
+- مصادر القراءة الموثقة: سجل تدقيق خادم Kubernetes API (`audit.k8s.io/v1` Event) عبر CloudWatch Logs لـEKS، وفئة `kube-audit` في إعدادات التشخيص لـAKS، وCloud Audit Logs لـGKE؛ وقائمة العناقيد عبر `eks list-clusters` و`az aks list` و`gcloud container clusters list`؛ وسياسات الشبكة `networking.k8s.io/v1 NetworkPolicy` وأدوار RBAC (`ClusterRoleBinding`) بالقراءة عبر `kubectl get -o json`.
+- كشف الحماية المدارة: GuardDuty EKS Protection، وDefender for Containers، وGKE Security Posture/SCC، وتُستورد نتائجها بالموصلات الحالية لأنها تصل عبر Security Hub وDefender for Cloud وSCC.
+- ما يلزم قبل التنفيذ: نوع حدث لسجل تدقيق Kubernetes، ومحلل لـ`NetworkPolicy` (غيابها يعني السماح الكامل داخل مساحة الأسماء)، وربط ClusterRoleBinding بلقطة الهوية؛ ودور قراءة فقط بـ`get/list/watch` دون `secrets`.

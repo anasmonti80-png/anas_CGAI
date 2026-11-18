@@ -1,0 +1,46 @@
+{
+  "example-prod-1234": [
+    {
+      "config": {
+        "name": "compute.googleapis.com",
+        "title": "compute.googleapis.com"
+      },
+      "name": "projects/111111111111/services/compute.googleapis.com",
+      "state": "ENABLED"
+    },
+    {
+      "config": {
+        "name": "cloudasset.googleapis.com",
+        "title": "cloudasset.googleapis.com"
+      },
+      "name": "projects/111111111111/services/cloudasset.googleapis.com",
+      "state": "ENABLED"
+    },
+    {
+      "config": {
+        "name": "logging.googleapis.com",
+        "title": "logging.googleapis.com"
+      },
+      "name": "projects/111111111111/services/logging.googleapis.com",
+      "state": "ENABLED"
+    }
+  ],
+  "example-dev-5678": [
+    {
+      "config": {
+        "name": "compute.googleapis.com",
+        "title": "compute.googleapis.com"
+      },
+      "name": "projects/111111111111/services/compute.googleapis.com",
+      "state": "ENABLED"
+    },
+    {
+      "config": {
+        "name": "logging.googleapis.com",
+        "title": "logging.googleapis.com"
+      },
+      "name": "projects/111111111111/services/logging.googleapis.com",
+      "state": "ENABLED"
+    }
+  ]
+}

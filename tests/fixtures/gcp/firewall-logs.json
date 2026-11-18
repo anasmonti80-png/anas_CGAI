@@ -1,0 +1,32 @@
+[
+  {
+    "insertId": "fw1",
+    "jsonPayload": {
+      "connection": {
+        "src_ip": "203.0.113.9",
+        "src_port": 40000,
+        "dest_ip": "10.10.0.5",
+        "dest_port": 22,
+        "protocol": 6
+      },
+      "disposition": "ALLOWED",
+      "rule_details": {
+        "reference": "network:default/firewall:default-allow-ssh",
+        "priority": 65534,
+        "action": "ALLOW",
+        "direction": "INGRESS"
+      },
+      "instance": {
+        "project_id": "example-prod-1234",
+        "vm_name": "web-1"
+      }
+    },
+    "resource": {
+      "type": "gce_subnetwork",
+      "labels": {
+        "project_id": "example-prod-1234"
+      }
+    },
+    "timestamp": "2026-11-17T08:11:00.000Z"
+  }
+]

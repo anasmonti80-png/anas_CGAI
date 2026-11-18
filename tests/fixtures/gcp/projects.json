@@ -1,0 +1,46 @@
+[
+  {
+    "createTime": "2024-01-10T09:00:00.000Z",
+    "lifecycleState": "ACTIVE",
+    "name": "Production",
+    "parent": {
+      "id": "123456789012",
+      "type": "organization"
+    },
+    "projectId": "example-prod-1234",
+    "projectNumber": "111111111111"
+  },
+  {
+    "createTime": "2024-02-10T09:00:00.000Z",
+    "lifecycleState": "ACTIVE",
+    "name": "Development",
+    "parent": {
+      "id": "123456789012",
+      "type": "organization"
+    },
+    "projectId": "example-dev-5678",
+    "projectNumber": "222222222222"
+  },
+  {
+    "createTime": "2024-03-10T09:00:00.000Z",
+    "lifecycleState": "ACTIVE",
+    "name": "Finance",
+    "parent": {
+      "id": "123456789012",
+      "type": "organization"
+    },
+    "projectId": "example-finance-9012",
+    "projectNumber": "333333333333"
+  },
+  {
+    "createTime": "2023-03-10T09:00:00.000Z",
+    "lifecycleState": "DELETE_REQUESTED",
+    "name": "Old lab",
+    "parent": {
+      "id": "123456789012",
+      "type": "organization"
+    },
+    "projectId": "example-oldlab-3456",
+    "projectNumber": "444444444444"
+  }
+]

@@ -89,3 +89,10 @@
 - صيغ `log.batch` الجديدة: `azure-activity-json` (فئة `cloud-audit`) و`azure-vnet-flow-json` (تدفق) و`azure-firewall-json` (جدار ناري/IDS).
 - المورّدان الجديدان في `firewall.ruleset`: `azure-nsg` و`azure-firewall`.
 - التحويل: `node scripts/azure-connector.js <inventory|defender-alerts|defender-assessments|sentinel-incidents|entra-signins|entra-audits|nsg|firewall-policy|activity|vnet-flow|firewall-logs|live> ...`.
+
+## السحابة: Google Cloud (CG-048)
+
+- `cloud.account_inventory` و`cloud.finding` يقبلان `provider: "gcp"`؛ و`account_id` هو معرّف المشروع (6-30 حرفًا صغيرًا وأرقامًا وشرطات)، و`organization_id` رقم المؤسسة. خدمات Google Cloud: `asset-inventory` و`scc` و`cloud-audit-logs` و`vpc-flow-logs` و`firewall-rules-logging` و`vpc-firewall` و`cloud-armor` و`iam`. منتج النتائج: `scc`.
+- صيغ `log.batch` الجديدة: `gcp-audit-json` (فئة `cloud-audit`) و`gcp-vpc-flow-json` (تدفق) و`gcp-firewall-json` (جدار ناري) و`gcp-armor-json` (WAF).
+- المورّدان الجديدان في `firewall.ruleset`: `gcp-vpc-firewall` و`gcp-cloud-armor`. وسياسة IAM تصل كلقطة `identity.directory_snapshot` من نوع `gcp-iam`.
+- التحويل: `node scripts/gcp-connector.js <inventory|scc-findings|iam|firewall-rules|armor-policy|audit-logs|vpc-flow|firewall-logs|armor-logs|live> ...`.

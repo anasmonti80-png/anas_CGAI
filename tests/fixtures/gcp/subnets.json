@@ -1,0 +1,50 @@
+{
+  "example-prod-1234": [
+    {
+      "name": "web-eu",
+      "region": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/regions/europe-west1",
+      "ipCidrRange": "10.10.0.0/24",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "logConfig": {
+        "enable": true,
+        "aggregationInterval": "INTERVAL_5_SEC",
+        "flowSampling": 0.5,
+        "metadata": "INCLUDE_ALL_METADATA"
+      },
+      "enableFlowLogs": true
+    },
+    {
+      "name": "app-me",
+      "region": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/regions/me-central1",
+      "ipCidrRange": "10.10.0.0/24",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "logConfig": {
+        "enable": true,
+        "aggregationInterval": "INTERVAL_5_SEC",
+        "flowSampling": 0.5,
+        "metadata": "INCLUDE_ALL_METADATA"
+      },
+      "enableFlowLogs": true
+    },
+    {
+      "name": "db-me",
+      "region": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/regions/me-central1",
+      "ipCidrRange": "10.10.0.0/24",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "logConfig": {
+        "enable": false
+      }
+    }
+  ],
+  "example-dev-5678": [
+    {
+      "name": "dev",
+      "region": "https://www.googleapis.com/compute/v1/projects/example-dev-5678/regions/europe-west1",
+      "ipCidrRange": "10.10.0.0/24",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-dev-5678/global/networks/default",
+      "logConfig": {
+        "enable": false
+      }
+    }
+  ]
+}

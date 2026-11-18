@@ -1,0 +1,33 @@
+[
+  {
+    "insertId": "flow1",
+    "jsonPayload": {
+      "connection": {
+        "src_ip": "10.10.0.5",
+        "src_port": 51234,
+        "dest_ip": "198.51.100.20",
+        "dest_port": 443,
+        "protocol": 6
+      },
+      "bytes_sent": "5400",
+      "packets_sent": "12",
+      "start_time": "2026-11-17T08:10:00.000Z",
+      "end_time": "2026-11-17T08:10:05.000Z",
+      "reporter": "SRC",
+      "src_instance": {
+        "project_id": "example-prod-1234",
+        "vm_name": "web-1",
+        "zone": "europe-west1-b"
+      }
+    },
+    "resource": {
+      "type": "gce_subnetwork",
+      "labels": {
+        "project_id": "example-prod-1234",
+        "subnetwork_name": "web-eu"
+      }
+    },
+    "timestamp": "2026-11-17T08:10:06.000Z",
+    "logName": "projects/example-prod-1234/logs/compute.googleapis.com%2Fvpc_flows"
+  }
+]

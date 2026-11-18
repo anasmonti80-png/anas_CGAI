@@ -1,0 +1,13 @@
+{
+  "requirement": "CG-048",
+  "purpose": "Read-only Google Cloud access for the CyberGuard connector. Grant these predefined roles to the collector principal at the organization or folder scope. Every role below is a viewer or reviewer role; none can change resources, IAM policies, logs or findings.",
+  "roles": [
+    { "role": "roles/viewer", "why": "projects, enabled services, subnetworks (flow log state), firewall rules and Cloud Armor security policies" },
+    { "role": "roles/iam.securityReviewer", "why": "get-iam-policy on projects, folders and the organization" },
+    { "role": "roles/securitycenter.findingsViewer", "why": "Security Command Center findings at the organization level" },
+    { "role": "roles/logging.viewer", "why": "Cloud Audit Logs (Admin Activity), VPC Flow Logs, Firewall Rules Logging and load balancer logs with Cloud Armor; Data Access logs additionally need roles/logging.privateLogViewer" },
+    { "role": "roles/cloudasset.viewer", "why": "Cloud Asset Inventory searches across projects" }
+  ],
+  "never_required": ["roles/owner", "roles/editor", "roles/resourcemanager.organizationAdmin", "roles/iam.securityAdmin", "roles/securitycenter.admin"],
+  "gcloud_example": "gcloud organizations add-iam-policy-binding ORGANIZATION_ID --member=group:cyberguard-readers@example.com --role=roles/iam.securityReviewer"
+}

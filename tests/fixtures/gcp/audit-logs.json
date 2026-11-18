@@ -1,0 +1,106 @@
+[
+  {
+    "insertId": "audit00",
+    "logName": "projects/example-prod-1234/logs/cloudaudit.googleapis.com%2Factivity",
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "authenticationInfo": {
+        "principalEmail": "ops@example.com"
+      },
+      "requestMetadata": {
+        "callerIp": "198.51.100.10",
+        "callerSuppliedUserAgent": "google-cloud-sdk"
+      },
+      "serviceName": "compute.googleapis.com",
+      "methodName": "v1.compute.firewalls.insert",
+      "resourceName": "projects/example-prod-1234/global/firewalls/allow-all-legacy"
+    },
+    "resource": {
+      "type": "gce_firewall_rule",
+      "labels": {
+        "project_id": "example-prod-1234"
+      }
+    },
+    "severity": "NOTICE",
+    "timestamp": "2026-11-17T08:00:00.000000Z"
+  },
+  {
+    "insertId": "audit01",
+    "logName": "projects/example-prod-1234/logs/cloudaudit.googleapis.com%2Factivity",
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "authenticationInfo": {
+        "principalEmail": "ops@example.com"
+      },
+      "requestMetadata": {
+        "callerIp": "198.51.100.10",
+        "callerSuppliedUserAgent": "google-cloud-sdk"
+      },
+      "serviceName": "logging.googleapis.com",
+      "methodName": "google.logging.v2.ConfigServiceV2.DeleteSink",
+      "resourceName": "projects/example-prod-1234/global/firewalls/allow-all-legacy"
+    },
+    "resource": {
+      "type": "gce_firewall_rule",
+      "labels": {
+        "project_id": "example-prod-1234"
+      }
+    },
+    "severity": "NOTICE",
+    "timestamp": "2026-11-17T08:01:00.000000Z"
+  },
+  {
+    "insertId": "audit02",
+    "logName": "projects/example-prod-1234/logs/cloudaudit.googleapis.com%2Factivity",
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "authenticationInfo": {
+        "principalEmail": "contractor@example.net"
+      },
+      "requestMetadata": {
+        "callerIp": "198.51.100.10",
+        "callerSuppliedUserAgent": "google-cloud-sdk"
+      },
+      "serviceName": "cloudresourcemanager.googleapis.com",
+      "methodName": "SetIamPolicy",
+      "resourceName": "projects/example-prod-1234/global/firewalls/allow-all-legacy",
+      "status": {
+        "code": 7,
+        "message": "PERMISSION_DENIED"
+      }
+    },
+    "resource": {
+      "type": "gce_firewall_rule",
+      "labels": {
+        "project_id": "example-prod-1234"
+      }
+    },
+    "severity": "ERROR",
+    "timestamp": "2026-11-17T08:02:00.000000Z"
+  },
+  {
+    "insertId": "audit03",
+    "logName": "projects/example-prod-1234/logs/cloudaudit.googleapis.com%2Factivity",
+    "protoPayload": {
+      "@type": "type.googleapis.com/google.cloud.audit.AuditLog",
+      "authenticationInfo": {
+        "principalEmail": "ops@example.com"
+      },
+      "requestMetadata": {
+        "callerIp": "198.51.100.10",
+        "callerSuppliedUserAgent": "google-cloud-sdk"
+      },
+      "serviceName": "compute.googleapis.com",
+      "methodName": "v1.compute.instances.start",
+      "resourceName": "projects/example-prod-1234/global/firewalls/allow-all-legacy"
+    },
+    "resource": {
+      "type": "gce_firewall_rule",
+      "labels": {
+        "project_id": "example-prod-1234"
+      }
+    },
+    "severity": "NOTICE",
+    "timestamp": "2026-11-17T08:03:00.000000Z"
+  }
+]

@@ -1,0 +1,5 @@
+{
+  "example-prod-1234": "assumed",
+  "example-dev-5678": "assumed",
+  "example-finance-9012": "denied"
+}

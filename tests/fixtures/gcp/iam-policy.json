@@ -1,0 +1,54 @@
+{
+  "version": 1,
+  "etag": "BwXhqDk4mYc=",
+  "bindings": [
+    {
+      "role": "roles/owner",
+      "members": [
+        "user:owner@example.com"
+      ]
+    },
+    {
+      "role": "roles/editor",
+      "members": [
+        "serviceAccount:111111111111-compute@developer.gserviceaccount.com",
+        "group:platform@example.com"
+      ]
+    },
+    {
+      "role": "roles/iam.serviceAccountTokenCreator",
+      "members": [
+        "user:contractor@example.net"
+      ],
+      "condition": {
+        "title": "expires 2026-12-31",
+        "expression": "request.time < timestamp(\"2026-12-31T00:00:00Z\")"
+      }
+    },
+    {
+      "role": "roles/storage.objectViewer",
+      "members": [
+        "allUsers"
+      ]
+    },
+    {
+      "role": "roles/viewer",
+      "members": [
+        "group:cyberguard-readers@example.com"
+      ]
+    }
+  ],
+  "auditConfigs": [
+    {
+      "service": "allServices",
+      "auditLogConfigs": [
+        {
+          "logType": "ADMIN_READ"
+        },
+        {
+          "logType": "DATA_WRITE"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,116 @@
+[
+  {
+    "finding": {
+      "name": "organizations/123456789012/sources/1234567890/findings/f1publicbucket",
+      "parent": "organizations/123456789012/sources/1234567890",
+      "resourceName": "//storage.googleapis.com/example-prod-1234-public-assets",
+      "state": "ACTIVE",
+      "category": "PUBLIC_BUCKET_ACL",
+      "severity": "HIGH",
+      "findingClass": "MISCONFIGURATION",
+      "mute": "UNMUTED",
+      "eventTime": "2026-11-17T07:00:00Z",
+      "createTime": "2026-11-16T07:00:00Z",
+      "compliances": [
+        {
+          "standard": "cis",
+          "version": "2.0",
+          "ids": [
+            "5.1"
+          ]
+        }
+      ]
+    },
+    "resource": {
+      "name": "//storage.googleapis.com/example-prod-1234-public-assets",
+      "projectDisplayName": "example-prod-1234",
+      "type": "google.cloud.storage.Bucket",
+      "displayName": "example-prod-1234-public-assets",
+      "location": "global"
+    }
+  },
+  {
+    "finding": {
+      "name": "organizations/123456789012/sources/1234567890/findings/f2openssh",
+      "parent": "organizations/123456789012/sources/1234567890",
+      "resourceName": "//compute.googleapis.com/projects/example-prod-1234/global/firewalls/default-allow-ssh",
+      "state": "ACTIVE",
+      "category": "OPEN_SSH_PORT",
+      "severity": "HIGH",
+      "findingClass": "MISCONFIGURATION",
+      "mute": "UNMUTED",
+      "eventTime": "2026-11-17T07:00:00Z",
+      "createTime": "2026-11-16T07:00:00Z"
+    },
+    "resource": {
+      "name": "//compute.googleapis.com/projects/example-prod-1234/global/firewalls/default-allow-ssh",
+      "projectDisplayName": "example-prod-1234",
+      "type": "google.compute.Firewall",
+      "displayName": "default-allow-ssh",
+      "location": "global"
+    }
+  },
+  {
+    "finding": {
+      "name": "organizations/123456789012/sources/1234567890/findings/f3malware",
+      "parent": "organizations/123456789012/sources/1234567890",
+      "resourceName": "//compute.googleapis.com/projects/example-prod-1234/zones/europe-west1-b/instances/web-1",
+      "state": "ACTIVE",
+      "category": "Malware: Bad Domain",
+      "severity": "CRITICAL",
+      "findingClass": "THREAT",
+      "mute": "UNMUTED",
+      "eventTime": "2026-11-17T07:00:00Z",
+      "createTime": "2026-11-16T07:00:00Z"
+    },
+    "resource": {
+      "name": "//compute.googleapis.com/projects/example-prod-1234/zones/europe-west1-b/instances/web-1",
+      "projectDisplayName": "example-prod-1234",
+      "type": "google.compute.Instance",
+      "displayName": "web-1",
+      "location": "europe-west1"
+    }
+  },
+  {
+    "finding": {
+      "name": "organizations/123456789012/sources/1234567890/findings/f4fixed",
+      "parent": "organizations/123456789012/sources/1234567890",
+      "resourceName": "//compute.googleapis.com/projects/example-dev-5678/global/firewalls/dev-rdp",
+      "state": "INACTIVE",
+      "category": "OPEN_RDP_PORT",
+      "severity": "HIGH",
+      "findingClass": "MISCONFIGURATION",
+      "mute": "UNMUTED",
+      "eventTime": "2026-11-17T07:00:00Z",
+      "createTime": "2026-11-16T07:00:00Z"
+    },
+    "resource": {
+      "name": "//compute.googleapis.com/projects/example-dev-5678/global/firewalls/dev-rdp",
+      "projectDisplayName": "example-dev-5678",
+      "type": "google.compute.Firewall",
+      "displayName": "dev-rdp",
+      "location": "global"
+    }
+  },
+  {
+    "finding": {
+      "name": "organizations/123456789012/sources/1234567890/findings/f5muted",
+      "parent": "organizations/123456789012/sources/1234567890",
+      "resourceName": "//compute.googleapis.com/projects/example-dev-5678/zones/europe-west1-b/instances/dev-1",
+      "state": "ACTIVE",
+      "category": "PUBLIC_IP_ADDRESS",
+      "severity": "MEDIUM",
+      "findingClass": "MISCONFIGURATION",
+      "mute": "MUTED",
+      "eventTime": "2026-11-17T07:00:00Z",
+      "createTime": "2026-11-16T07:00:00Z"
+    },
+    "resource": {
+      "name": "//compute.googleapis.com/projects/example-dev-5678/zones/europe-west1-b/instances/dev-1",
+      "projectDisplayName": "example-dev-5678",
+      "type": "google.compute.Instance",
+      "displayName": "dev-1",
+      "location": "global"
+    }
+  }
+]

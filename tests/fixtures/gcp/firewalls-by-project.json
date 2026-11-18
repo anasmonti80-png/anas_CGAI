@@ -1,0 +1,167 @@
+{
+  "example-prod-1234": [
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "direction": "INGRESS",
+      "priority": 65534,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": true
+      },
+      "name": "default-allow-ssh",
+      "sourceRanges": [
+        "0.0.0.0/0"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "22"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "direction": "INGRESS",
+      "priority": 900,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": false
+      },
+      "name": "allow-all-legacy",
+      "sourceRanges": [
+        "0.0.0.0/0"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "all"
+        }
+      ]
+    },
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "direction": "INGRESS",
+      "priority": 1000,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": true
+      },
+      "name": "web-https",
+      "sourceRanges": [
+        "0.0.0.0/0"
+      ],
+      "targetTags": [
+        "web"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "443"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "direction": "INGRESS",
+      "priority": 900,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": false
+      },
+      "name": "deny-rdp",
+      "sourceRanges": [
+        "0.0.0.0/0"
+      ],
+      "denied": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "3389"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "direction": "INGRESS",
+      "priority": 1000,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": false
+      },
+      "name": "app-from-web",
+      "sourceTags": [
+        "web"
+      ],
+      "targetTags": [
+        "app"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "8080"
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-prod-1234/global/networks/default",
+      "direction": "EGRESS",
+      "priority": 1000,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": false
+      },
+      "name": "egress-block-smtp",
+      "destinationRanges": [
+        "0.0.0.0/0"
+      ],
+      "denied": [
+        {
+          "IPProtocol": "tcp",
+          "ports": [
+            "25"
+          ]
+        }
+      ]
+    }
+  ],
+  "example-dev-5678": [
+    {
+      "kind": "compute#firewall",
+      "network": "https://www.googleapis.com/compute/v1/projects/example-dev-5678/global/networks/default",
+      "direction": "INGRESS",
+      "priority": 1000,
+      "creationTimestamp": "2025-06-01T10:00:00.000-07:00",
+      "disabled": false,
+      "logConfig": {
+        "enable": false
+      },
+      "name": "dev-internal",
+      "sourceRanges": [
+        "10.0.0.0/8"
+      ],
+      "allowed": [
+        {
+          "IPProtocol": "tcp"
+        }
+      ]
+    }
+  ]
+}

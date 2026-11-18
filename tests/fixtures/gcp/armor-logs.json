@@ -1,0 +1,31 @@
+[
+  {
+    "insertId": "lb1",
+    "jsonPayload": {
+      "@type": "type.googleapis.com/google.cloud.loadbalancing.type.LoadBalancerLogEntry",
+      "enforcedSecurityPolicy": {
+        "name": "web-edge-policy",
+        "priority": 2000,
+        "configuredAction": "DENY",
+        "outcome": "DENY",
+        "preconfiguredExprIds": [
+          "owasp-crs-v030301-id942100-sqli"
+        ]
+      },
+      "statusDetails": "denied_by_security_policy"
+    },
+    "httpRequest": {
+      "requestMethod": "GET",
+      "requestUrl": "https://shop.example.com/item?id=1'%20OR%201=1",
+      "remoteIp": "203.0.113.66",
+      "status": 403
+    },
+    "resource": {
+      "type": "http_load_balancer",
+      "labels": {
+        "project_id": "example-prod-1234"
+      }
+    },
+    "timestamp": "2026-11-17T08:12:00.000Z"
+  }
+]
