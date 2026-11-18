@@ -1,0 +1,54 @@
+{
+  "Findings": [
+    {
+      "AccountId": "444455556666",
+      "Arn": "arn:aws:guardduty:eu-west-1:444455556666:detector/example/finding/gd-example-1",
+      "CreatedAt": "2026-11-16T10:00:00.000Z",
+      "Description": "API GeneratedFindingAPIName was invoked from a known malicious IP address.",
+      "Id": "gd-example-1",
+      "Partition": "aws",
+      "Region": "eu-west-1",
+      "Resource": {
+        "AccessKeyDetails": {
+          "AccessKeyId": "GeneratedFindingAccessKeyId",
+          "PrincipalId": "GeneratedFindingPrincipalId",
+          "UserName": "GeneratedFindingUserName",
+          "UserType": "IAMUser"
+        },
+        "ResourceType": "AccessKey"
+      },
+      "SchemaVersion": "2.0",
+      "Service": {
+        "Archived": false,
+        "Count": 3,
+        "EventFirstSeen": "2026-11-16T09:58:00.000Z",
+        "EventLastSeen": "2026-11-16T10:00:00.000Z",
+        "ServiceName": "guardduty"
+      },
+      "Severity": 8,
+      "Title": "API GeneratedFindingAPIName was invoked from a known malicious IP address.",
+      "Type": "UnauthorizedAccess:IAMUser/MaliciousIPCaller",
+      "UpdatedAt": "2026-11-16T10:05:00.000Z"
+    },
+    {
+      "AccountId": "444455556666",
+      "Arn": "x",
+      "CreatedAt": "2026-11-10T10:00:00.000Z",
+      "Id": "gd-example-2",
+      "Region": "us-east-1",
+      "Resource": {
+        "InstanceDetails": {
+          "InstanceId": "i-0123456789abcdef0"
+        },
+        "ResourceType": "Instance"
+      },
+      "Service": {
+        "Archived": true
+      },
+      "Severity": 2,
+      "Title": "Unusual port probe",
+      "Type": "Recon:EC2/PortProbeUnprotectedPort",
+      "UpdatedAt": "2026-11-11T10:00:00.000Z"
+    }
+  ]
+}

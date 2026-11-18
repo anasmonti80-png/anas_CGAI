@@ -1,0 +1,44 @@
+{
+  "Accounts": [
+    {
+      "Id": "111122223333",
+      "Arn": "arn:aws:organizations::111122223333:account/o-exampleorgid/111122223333",
+      "Email": "mgmt@example.com",
+      "Name": "Management",
+      "Status": "ACTIVE",
+      "State": "ACTIVE",
+      "JoinedMethod": "CREATED",
+      "JoinedTimestamp": "2024-01-10T09:00:00.000Z"
+    },
+    {
+      "Id": "444455556666",
+      "Arn": "arn:aws:organizations::111122223333:account/o-exampleorgid/444455556666",
+      "Email": "prod@example.com",
+      "Name": "Production",
+      "Status": "ACTIVE",
+      "State": "ACTIVE",
+      "JoinedMethod": "INVITED",
+      "JoinedTimestamp": "2024-02-01T09:00:00.000Z"
+    },
+    {
+      "Id": "777788889999",
+      "Arn": "arn:aws:organizations::111122223333:account/o-exampleorgid/777788889999",
+      "Email": "dev@example.com",
+      "Name": "Development",
+      "Status": "ACTIVE",
+      "State": "ACTIVE",
+      "JoinedMethod": "CREATED",
+      "JoinedTimestamp": "2024-03-01T09:00:00.000Z"
+    },
+    {
+      "Id": "123456789012",
+      "Arn": "arn:aws:organizations::111122223333:account/o-exampleorgid/123456789012",
+      "Email": "old@example.com",
+      "Name": "Retired sandbox",
+      "Status": "SUSPENDED",
+      "State": "SUSPENDED",
+      "JoinedMethod": "CREATED",
+      "JoinedTimestamp": "2023-05-01T09:00:00.000Z"
+    }
+  ]
+}

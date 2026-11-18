@@ -20,7 +20,7 @@ export function renderDashboard(d,{tr,h,icon,button,pill,date,lang,siren}) {
     {key:'ids',name:'IDS / IPS',ar:'رصد التسلل',en:'Intrusion prevention',ic:'sources',tone:'purple'},
     {key:'email',name:tr('أمن البريد','Email Security'),ar:'مكافحة التصيد',en:'Anti-phishing',ic:'events',tone:'green'},
     {key:'iam',name:'IAM',ar:'حسابات محلية',en:'Local identity',ic:'lock',tone:'yellow',view:'identity',status:tr('دخول محلي فقط','Local access only'),ready:true},
-    {key:'casb',name:'CASB',ar:'أمن السحابة',en:'Cloud security',ic:'lock',tone:'indigo'},
+    {key:'cloud',name:'CSPM',ar:'أمن السحابة',en:'Cloud security',ic:'lock',tone:'indigo',view:'cloud',status:tr('AWS للقراءة فقط','AWS read-only'),ready:true},
     {key:'soar',name:'SOAR',ar:'بوابة الموافقات',en:'Approval gateway',ic:'actions',tone:'pink',view:'response',status:tr('إجراء محلي فقط','Local action only'),ready:true}
   ];
   const toolCards=tools.map(t=>`<button class="tool-card" data-action="${t.view?'nav':'capability'}" data-id="${t.view||t.key}"><span class="tool-icon ${t.tone}">${icon(t.ic)}</span><strong>${h(t.name)}</strong><span>${h(tr(t.ar,t.en))}</span><small class="tool-state ${t.ready?'available':'pending'}">${h(t.status||tr('يحتاج تكاملًا','Needs integration'))}</small></button>`).join('');

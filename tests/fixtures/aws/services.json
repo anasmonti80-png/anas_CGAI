@@ -1,0 +1,142 @@
+[
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "cloudtrail",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "guardduty",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "security-hub",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "inspector",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "config",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "vpc-flow-logs",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "network-firewall",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "security-groups",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "111122223333",
+    "region": "us-east-1",
+    "service": "eventbridge",
+    "status": "enabled",
+    "detail": "read-only check"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "cloudtrail",
+    "status": "enabled",
+    "detail": "1 trail(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "eu-west-1",
+    "service": "cloudtrail",
+    "status": "enabled",
+    "detail": "1 trail(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "guardduty",
+    "status": "enabled",
+    "detail": "1 detector(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "eu-west-1",
+    "service": "guardduty",
+    "status": "disabled",
+    "detail": "0 detector(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "security-hub",
+    "status": "enabled",
+    "detail": "since 2024-02-02"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "inspector",
+    "status": "access-denied",
+    "detail": null
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "config",
+    "status": "enabled",
+    "detail": "1 recorder(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "vpc-flow-logs",
+    "status": "enabled",
+    "detail": "2 active flow log(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "network-firewall",
+    "status": "enabled",
+    "detail": "1 firewall(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "security-groups",
+    "status": "enabled",
+    "detail": "14 group(s)"
+  },
+  {
+    "account_id": "444455556666",
+    "region": "us-east-1",
+    "service": "eventbridge",
+    "status": "disabled",
+    "detail": "0 CyberGuard rule(s)"
+  }
+]

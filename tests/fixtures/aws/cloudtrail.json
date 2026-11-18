@@ -1,0 +1,215 @@
+{
+  "Records": [
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE",
+        "arn": "arn:aws:iam::444455556666:user/ops-alice",
+        "accountId": "444455556666",
+        "userName": "ops-alice"
+      },
+      "eventTime": "2026-11-17T09:00:00Z",
+      "eventSource": "ec2.amazonaws.com",
+      "eventName": "DescribeInstances",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.24",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": null,
+      "eventID": "e1",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE",
+        "arn": "arn:aws:iam::444455556666:user/ops-alice",
+        "accountId": "444455556666",
+        "userName": "ops-alice"
+      },
+      "eventTime": "2026-11-17T09:01:00Z",
+      "eventSource": "cloudtrail.amazonaws.com",
+      "eventName": "StopLogging",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.24",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": {
+        "name": "org-trail"
+      },
+      "responseElements": null,
+      "eventID": "e2",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE",
+        "arn": "arn:aws:iam::444455556666:user/ops-alice",
+        "accountId": "444455556666",
+        "userName": "ops-alice"
+      },
+      "eventTime": "2026-11-17T09:02:00Z",
+      "eventSource": "guardduty.amazonaws.com",
+      "eventName": "DeleteDetector",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.24",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": null,
+      "errorCode": "AccessDenied",
+      "errorMessage": "denied",
+      "eventID": "e3",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "Root",
+        "principalId": "444455556666",
+        "arn": "arn:aws:iam::444455556666:root",
+        "accountId": "444455556666"
+      },
+      "eventTime": "2026-11-17T09:03:00Z",
+      "eventSource": "s3.amazonaws.com",
+      "eventName": "ListBuckets",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "198.51.100.24",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": null,
+      "eventID": "e4",
+      "readOnly": false,
+      "eventType": "AwsApiCall",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE2",
+        "arn": "arn:aws:iam::444455556666:user/svc-report",
+        "accountId": "444455556666",
+        "userName": "svc-report"
+      },
+      "eventTime": "2026-11-17T09:11:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "eventID": "l1",
+      "readOnly": false,
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE2",
+        "arn": "arn:aws:iam::444455556666:user/svc-report",
+        "accountId": "444455556666",
+        "userName": "svc-report"
+      },
+      "eventTime": "2026-11-17T09:12:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "eventID": "l2",
+      "readOnly": false,
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE2",
+        "arn": "arn:aws:iam::444455556666:user/svc-report",
+        "accountId": "444455556666",
+        "userName": "svc-report"
+      },
+      "eventTime": "2026-11-17T09:13:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "eventID": "l3",
+      "readOnly": false,
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE2",
+        "arn": "arn:aws:iam::444455556666:user/svc-report",
+        "accountId": "444455556666",
+        "userName": "svc-report"
+      },
+      "eventTime": "2026-11-17T09:14:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "eventID": "l4",
+      "readOnly": false,
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "444455556666"
+    },
+    {
+      "eventVersion": "1.08",
+      "userIdentity": {
+        "type": "IAMUser",
+        "principalId": "AIDAEXAMPLE2",
+        "arn": "arn:aws:iam::444455556666:user/svc-report",
+        "accountId": "444455556666",
+        "userName": "svc-report"
+      },
+      "eventTime": "2026-11-17T09:15:00Z",
+      "eventSource": "signin.amazonaws.com",
+      "eventName": "ConsoleLogin",
+      "awsRegion": "us-east-1",
+      "sourceIPAddress": "203.0.113.50",
+      "userAgent": "aws-cli/2.15.0",
+      "requestParameters": null,
+      "responseElements": {
+        "ConsoleLogin": "Failure"
+      },
+      "eventID": "l5",
+      "readOnly": false,
+      "eventType": "AwsConsoleSignIn",
+      "recipientAccountId": "444455556666"
+    }
+  ]
+}

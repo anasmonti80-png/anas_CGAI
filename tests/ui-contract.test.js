@@ -427,3 +427,9 @@ test('every server description has an Arabic version and the interface shows it 
     for(const m of src.matchAll(/claim:'((?:[^'\\]|\\.)*)'(,claim_ar:'((?:[^'\\]|\\.)*)')?/g)){if(m[1]==='not-independently-verified')continue;assert.ok(m[3]&&/[؀-ۿ]/.test(m[3]),`missing Arabic for claim: ${m[1].slice(0,60)}`);}}
   for(const name of ['app.js','dashboard.js'])assert.doesNotMatch(read(name),/\$\{h\([a-zA-Z]+\.claim\)\}/,`${name} shows a server claim without the Arabic version`);
 });
+
+test('cloud view shows AWS coverage per account and service with every gap and active finding',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/cloud-posture/);assert.ok(app.includes("state.view==='cloud'?await cloudView()"));
+  for(const marker of ['AWS read-only posture','Coverage per account and service','Visibility gaps','Active findings','Role refused','Read-only role lacks the permission','Security Hub CSPM','VPC Flow Logs','scripts/aws-connector.js','CG-046',"'cloud-audit'"]) assert.ok(app.includes(marker),marker);
+  assert.doesNotMatch(app,/cloud:\{status:'not-configured'/);
+});

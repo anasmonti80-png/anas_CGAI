@@ -2,7 +2,7 @@
 // Usage: node scripts/logs-to-telemetry.js <format> <input.log> <output.json> [source-name]
 // Formats: syslog, journal, nfdump-csv, goflow-json, suricata-eve, bind-query, isc-dhcpd, openvpn,
 //          iptables, windows-firewall, pfsense-filterlog, modsecurity-json, aws-waf-json, dnsmasq,
-//          zeek-conn, freeradius, cloudflare-access-json
+//          zeek-conn, freeradius, cloudflare-access-json, aws-cloudtrail-json, aws-vpc-flow, aws-network-firewall-json
 import fs from 'node:fs';
 import os from 'node:os';
 import { randomUUID } from 'node:crypto';

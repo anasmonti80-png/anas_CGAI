@@ -1,0 +1,115 @@
+{
+  "SecurityGroups": [
+    {
+      "GroupId": "sg-0a1b2c3d4e5f60001",
+      "GroupName": "bastion",
+      "OwnerId": "444455556666",
+      "VpcId": "vpc-0abc1230001",
+      "Description": "bastion",
+      "IpPermissions": [
+        {
+          "IpProtocol": "tcp",
+          "FromPort": 22,
+          "ToPort": 22,
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0",
+              "Description": "ssh from anywhere"
+            }
+          ],
+          "Ipv6Ranges": [],
+          "PrefixListIds": [],
+          "UserIdGroupPairs": []
+        },
+        {
+          "IpProtocol": "tcp",
+          "FromPort": 3389,
+          "ToPort": 3389,
+          "IpRanges": [
+            {
+              "CidrIp": "203.0.113.0/24"
+            }
+          ],
+          "Ipv6Ranges": [],
+          "PrefixListIds": [],
+          "UserIdGroupPairs": []
+        }
+      ],
+      "IpPermissionsEgress": [
+        {
+          "IpProtocol": "-1",
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0"
+            }
+          ],
+          "Ipv6Ranges": [],
+          "PrefixListIds": [],
+          "UserIdGroupPairs": []
+        }
+      ]
+    },
+    {
+      "GroupId": "sg-0a1b2c3d4e5f60002",
+      "GroupName": "legacy-open",
+      "OwnerId": "444455556666",
+      "VpcId": "vpc-0abc1230001",
+      "Description": "temporary",
+      "IpPermissions": [
+        {
+          "IpProtocol": "-1",
+          "IpRanges": [
+            {
+              "CidrIp": "0.0.0.0/0"
+            }
+          ],
+          "Ipv6Ranges": [
+            {
+              "CidrIpv6": "::/0"
+            }
+          ],
+          "PrefixListIds": [],
+          "UserIdGroupPairs": []
+        }
+      ],
+      "IpPermissionsEgress": []
+    },
+    {
+      "GroupId": "sg-0a1b2c3d4e5f60003",
+      "GroupName": "app",
+      "OwnerId": "444455556666",
+      "VpcId": "vpc-0abc1230001",
+      "Description": "app tier",
+      "IpPermissions": [
+        {
+          "IpProtocol": "tcp",
+          "FromPort": 8443,
+          "ToPort": 8443,
+          "IpRanges": [],
+          "Ipv6Ranges": [],
+          "PrefixListIds": [],
+          "UserIdGroupPairs": [
+            {
+              "GroupId": "sg-0a1b2c3d4e5f60001",
+              "UserId": "444455556666"
+            }
+          ]
+        },
+        {
+          "IpProtocol": "udp",
+          "FromPort": 1024,
+          "ToPort": 2048,
+          "IpRanges": [
+            {
+              "CidrIp": "10.0.0.0/16"
+            }
+          ],
+          "Ipv6Ranges": [],
+          "PrefixListIds": [],
+          "UserIdGroupPairs": []
+        }
+      ],
+      "IpPermissionsEgress": []
+    }
+  ]
+}

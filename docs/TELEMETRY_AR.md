@@ -75,3 +75,10 @@
 ```powershell
 .\scripts\Export-LocalDiscovery.ps1 -OutputPath 'C:\PrivateTelemetry\discovery.json' -AuthorizationRef 'APPROVED-SCOPE-REF'
 ```
+
+## السحابة: AWS (CG-046)
+
+- `cloud.account_inventory`: `inventory_id` و`provider` (`aws`) و`organization_id` و`collected_by` (`organizations` أو `single-account` أو `manual-import`) و`accounts[]` (`account_id` من 12 رقمًا، `name`، `status`، `access`: `management|assumed|denied|not-attempted`) و`services[]` (`account_id`، `region`، `service`، `status`: `enabled|disabled|access-denied|not-available|not-checked`، `detail`).
+- `cloud.finding`: `finding_id` و`provider` و`account_id` و`region` و`product` (`guardduty|security-hub|inspector|config|macie|access-analyzer|other`) و`title` و`severity` و`resource_type` و`resource_id` و`status` (`active|resolved|suppressed`) و`compliance` و`types` و`first_seen` و`updated_at`.
+- صيغ `log.batch` الجديدة: `aws-cloudtrail-json` (فئة `cloud-audit`) و`aws-vpc-flow` (تدفق) و`aws-network-firewall-json` (IDS/تدفق).
+- التحويل: `node scripts/aws-connector.js <inventory|findings-asff|findings-guardduty|security-groups|cloudtrail|vpc-flow|network-firewall|eventbridge|live> ...`.

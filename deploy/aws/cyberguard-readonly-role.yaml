@@ -1,0 +1,96 @@
+# CG-046 read-only cross-account role for the CyberGuard AWS connector.
+# Deploy to every member account (for example with a service-managed CloudFormation StackSet from the Organizations
+# management or delegated administrator account). The role grants only the AWS managed SecurityAudit policy (read-only
+# metadata and security configuration) plus read access to Security Hub, GuardDuty and Inspector findings, denies
+# every write to the services CyberGuard reads, and limits each session to one hour. It never needs root.
+AWSTemplateFormatVersion: '2010-09-09'
+Description: CyberGuard AI read-only cross-account access (CG-046)
+Parameters:
+  CollectorAccountId:
+    Type: String
+    AllowedPattern: '^\d{12}$'
+    Description: AWS account ID that runs the CyberGuard connector and is allowed to assume this role
+  ExternalId:
+    Type: String
+    MinLength: 16
+    NoEcho: true
+    Description: Shared external ID held by the owner (pass it to the connector through an environment variable)
+Resources:
+  CyberGuardReadOnly:
+    Type: AWS::IAM::Role
+    Properties:
+      RoleName: CyberGuardReadOnly
+      MaxSessionDuration: 3600
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal: { AWS: !Sub 'arn:aws:iam::${CollectorAccountId}:root' }
+            Action: sts:AssumeRole
+            Condition:
+              StringEquals: { 'sts:ExternalId': !Ref ExternalId }
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/SecurityAudit
+      Policies:
+        - PolicyName: CyberGuardFindingsRead
+          PolicyDocument:
+            Version: '2012-10-17'
+            Statement:
+              - Effect: Allow
+                Action:
+                  - securityhub:GetFindings
+                  - securityhub:DescribeHub
+                  - guardduty:GetFindings
+                  - guardduty:ListFindings
+                  - guardduty:ListDetectors
+                  - inspector2:BatchGetAccountStatus
+                  - inspector2:ListFindings
+                  - network-firewall:ListFirewalls
+                  - network-firewall:DescribeFirewall
+                  - events:ListRules
+                Resource: '*'
+              - Effect: Deny
+                Action:
+                  - cloudtrail:Stop*
+                  - cloudtrail:Delete*
+                  - cloudtrail:Update*
+                  - cloudtrail:Put*
+                  - guardduty:Delete*
+                  - guardduty:Update*
+                  - guardduty:Disassociate*
+                  - securityhub:Disable*
+                  - securityhub:BatchUpdate*
+                  - config:Stop*
+                  - config:Delete*
+                  - config:Put*
+                  - ec2:Authorize*
+                  - ec2:Revoke*
+                  - ec2:Delete*
+                  - ec2:Create*
+                  - network-firewall:Update*
+                  - network-firewall:Delete*
+                  - events:Put*
+                  - events:Delete*
+                  - events:Disable*
+                  - iam:Create*
+                  - iam:Delete*
+                  - iam:Put*
+                  - iam:Attach*
+                  - iam:Update*
+                  - iam:Add*
+                  - iam:PassRole
+                  - organizations:Create*
+                  - organizations:Delete*
+                  - organizations:Leave*
+                  - organizations:Move*
+                  - organizations:Remove*
+                  - organizations:Update*
+                  - organizations:Invite*
+                  - organizations:Attach*
+                  - organizations:Detach*
+                  - organizations:Enable*
+                  - organizations:Disable*
+                Resource: '*'
+Outputs:
+  RoleArn:
+    Value: !GetAtt CyberGuardReadOnly.Arn

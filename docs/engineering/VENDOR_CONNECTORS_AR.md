@@ -24,3 +24,23 @@
 - أي كائن مسمّى (مجموعة عناوين، alias، address-list، خدمة مخصصة) لا تُعرف قيمته من المدخل تُعلَّم قاعدته `filters_readable=false` ولا تُحلَّل، بدل التخمين.
 - كلمات المرور المشفرة والمفاتيح ومجتمعات SNMP لا تُنسخ من أي تهيئة.
 - لم يُجرَ تشغيل حي ضد أجهزة حقيقية لهذه المورّدين لعدم توفرها، ولأن الوكلاء لا يُدخلون بيانات دخول. صيغ المدخلات مطابقة لوثائق المورّدين، والتشغيل الحي يتطلب بيانات دخول المالك.
+
+## AWS للقراءة فقط (CG-046)
+
+| المصدر | واجهة القراءة الموثقة | ما يصل إلى CyberGuard |
+|---|---|---|
+| Organizations | `organizations list-accounts` | `cloud.account_inventory` بالحسابات وحالتها |
+| أدوار عبر الحسابات | `sts assume-role` لدور `CyberGuardReadOnly` (قالب `deploy/aws/cyberguard-readonly-role.yaml`) | نتيجة التولي لكل حساب: إدارة، مُتولّى، مرفوض |
+| CloudTrail وGuardDuty وSecurity Hub CSPM وInspector وConfig وVPC Flow Logs وNetwork Firewall ومجموعات الأمان وEventBridge | استدعاء قراءة واحد لكل خدمة وإقليم (`describe-trails`، `list-detectors`، `describe-hub`، `batch-get-account-status`، `describe-configuration-recorder-status`، `describe-flow-logs`، `list-firewalls`، `describe-security-groups`، `list-rules`) | حالة كل خدمة: مفعلة، غير مفعلة، مرفوض الوصول، غير متاحة، لم تُفحص |
+| النتائج | `securityhub get-findings` (ASFF) و`guardduty get-findings` وأحداث EventBridge | `cloud.finding` بآخر حالة لكل نتيجة |
+| CloudTrail | ملفات السجل `{"Records":[...]}` أو EventBridge | `log.batch` بصيغة `aws-cloudtrail-json` |
+| VPC Flow Logs | الصيغة الافتراضية v2 أو ترويسة الحقول في S3 | `log.batch` بصيغة `aws-vpc-flow` |
+| Network Firewall | سجلات alert وflow (EVE) | `log.batch` بصيغة `aws-network-firewall-json` |
+| مجموعات الأمان | `ec2 describe-security-groups` | `firewall.ruleset` بالمورّد `aws-security-group` ويحللها CG-020 |
+
+- الدور يمنح SecurityAudit وقراءة النتائج فقط، ويمنع صراحة أي كتابة على الخدمات المقروءة، ويتطلب ExternalId، ومدة الجلسة ساعة واحدة. لا يُطلب Root.
+- الاعتمادات المؤقتة تبقى في بيئة العملية الفرعية فقط ولا تُكتب في أي ملف.
+- مجموعة الأمان تصل فقط إلى واجهات أعضائها، لذلك لا تُعد قاعدة "أي إلى أي"؛ ويُعلَّم الكشف الواسع للمنافذ الإدارية. القواعد التي تشير إلى مجموعة أخرى أو prefix list تُعلَّم غير مقروءة ولا تُحلَّل.
+- الحساب المعلق فجوة واحدة، والدور المرفوض فجوة تشمل كل الخدمات، ولا تُعرض خدمة لم تُفحص على أنها مغطاة.
+- التنبيهات: `CG-CLOUD-FINDING-046` للنتائج النشطة العالية والحرجة، و`CG-CLOUD-GAP-046` لتعطيل CloudTrail أو GuardDuty أو رفض الدور، و`CG-CLOUD-TRAIL-046` لاستدعاءات تعطيل الرؤية أو توسيع الوصول الناجحة واستخدام root وتكرار فشل دخول الكونسول، وتعيد سجلات Network Firewall استخدام `CG-LOG-IDS-014`.
+- لم يُجرَ تشغيل حي ضد حساب AWS لأن الوكلاء لا يُدخلون بيانات دخول. المدخلات بصيغ AWS الموثقة بأرقام حسابات التوثيق، والتشغيل الحي يتم بملف تعريف AWS CLI الخاص بالمالك: `node scripts/aws-connector.js live --profile <name> --regions us-east-1,eu-west-1 --output <file>`.
