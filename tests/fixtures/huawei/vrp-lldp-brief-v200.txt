@@ -1,0 +1,3 @@
+Local Intf       Neighbor Dev             Neighbor Intf             Exptime(s)
+GE0/0/1          AR651-Branch-01          GE0/0/2                   105
+GE0/0/24         AirEngine-AP-01          GE0/0/0                   98

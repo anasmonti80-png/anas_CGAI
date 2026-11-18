@@ -1,0 +1,55 @@
+{
+ "errcode": "0",
+ "errmsg": "",
+ "pageIndex": 1,
+ "pageSize": 20,
+ "totalRecords": 4,
+ "data": [
+  {
+   "id": "5e1c0001-syn",
+   "name": "AR651-Branch-01",
+   "esn": "2102SYN00001",
+   "mac": "00:00:5E:00:53:11",
+   "ip": "192.0.2.41",
+   "deviceModel": "AR651",
+   "deviceType": "AR",
+   "status": "0",
+   "version": "V300R019C13SPC100",
+   "siteId": "site-syn"
+  },
+  {
+   "id": "5e1c0002-syn",
+   "name": "S5735-Access-01",
+   "esn": "2102SYN00002",
+   "mac": "00:00:5E:00:53:12",
+   "ip": "192.0.2.42",
+   "deviceModel": "S5735-L24P4S-A",
+   "deviceType": "LSW",
+   "status": "1",
+   "version": "V200R021C00SPC100",
+   "siteId": "site-syn"
+  },
+  {
+   "id": "5e1c0003-syn",
+   "name": "AirEngine-AP-01",
+   "esn": "2102SYN00003",
+   "ip": "192.0.2.43",
+   "deviceModel": "AirEngine5760-10",
+   "deviceType": "AP",
+   "status": "3",
+   "version": "V200R021C10SPC300",
+   "siteId": "site-syn"
+  },
+  {
+   "id": "5e1c0004-syn",
+   "name": "USG6525E-01",
+   "esn": "2102SYN00004",
+   "ip": "192.0.2.44",
+   "deviceModel": "USG6525E",
+   "deviceType": "FW",
+   "status": "4",
+   "version": "V600R007C20",
+   "siteId": "site-syn"
+  }
+ ]
+}

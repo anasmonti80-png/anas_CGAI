@@ -346,7 +346,7 @@ test('data sources view shows security control integrations for DNS security, WA
 
 test('network map shows controller topology with device health and no guessed links',()=>{
   const app=read('app.js');assert.match(app,/\/api\/network-topology/);
-  for(const marker of ['Controller topology and device health','topology-map','links down','scripts/cisco-connector.js catalyst-topology','CG-041']) assert.ok(app.includes(marker),marker);
+  for(const marker of ['Controller topology and device health','topology-map','links down','scripts/cisco-connector.js catalyst-topology','scripts/huawei-connector.js vrp-lldp','Huawei iMaster NCE-Campus','CG-041','CG-042']) assert.ok(app.includes(marker),marker);
 });
 
 test('case view reconstructs the incident with proven timeline and graph separate from the attack-path hypothesis',()=>{

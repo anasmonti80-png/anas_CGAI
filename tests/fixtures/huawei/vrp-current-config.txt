@@ -1,0 +1,33 @@
+#
+sysname S5735-Access-01
+#
+dns resolve
+dns server 192.0.2.53
+dns server 198.51.100.53
+#
+telnet server enable
+stelnet server enable
+http secure-server enable
+#
+ntp-service unicast-server 192.0.2.123
+#
+snmp-agent
+snmp-agent sys-info version v2c v3
+snmp-agent community read cipher %^%#SYNTHETIC-CIPHER-NOT-A-SECRET%^%#
+#
+ike peer HQ
+ pre-shared-key cipher %^%#SYNTHETIC%^%#
+ remote-address 203.0.113.9
+#
+aaa
+ local-user admin password irreversible-cipher $1c$SYNTHETIC$
+#
+user-interface vty 0 4
+ authentication-mode aaa
+ protocol inbound all
+user-interface vty 16 20
+ authentication-mode aaa
+ protocol inbound ssh
+ acl 2000 inbound
+#
+return

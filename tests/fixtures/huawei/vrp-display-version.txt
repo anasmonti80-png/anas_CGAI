@@ -1,0 +1,4 @@
+Huawei Versatile Routing Platform Software
+VRP (R) software, Version 5.170 (S5735 V200R021C00SPC100)
+Copyright (C) 2000-2021 HUAWEI TECH Co., Ltd.
+HUAWEI S5735-L24P4S-A Routing Switch uptime is 120 days, 3 hours, 12 minutes
