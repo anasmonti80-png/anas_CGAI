@@ -43,7 +43,7 @@ test('CloudTrail, VPC Flow Logs and Network Firewall logs normalise into the com
   const ct = normalizeLogLines('aws-cloudtrail-json', cloudtrailLines(fx('cloudtrail.json'))).records;
   assert.equal(ct.length, 9); assert.equal(ct[1].signature, 'cloudtrail:StopLogging'); assert.equal(ct[2].outcome, 'failure'); assert.equal(ct[3].user, 'root');
   assert.equal(ct.filter(r => r.action === 'ConsoleLogin' && r.outcome === 'failure').length, 5);
-  const flow = normalizeLogLines('aws-vpc-flow', fx('vpc-flow.log').split('\n'));
+  const flow = normalizeLogLines('aws-vpc-flow', fx('vpc-flow.txt').split('\n'));
   assert.equal(flow.records.length, 3); assert.equal(flow.rejected.length, 1, 'NODATA lines are rejected, not invented');
   assert.deepEqual([flow.records[0].dst_port, flow.records[0].protocol, flow.records[0].action], [22, 'tcp', 'allowed']); assert.equal(flow.records[1].action, 'blocked'); assert.equal(flow.records[0].time, '2026-11-17T08:00:00.000Z');
   const nfw = normalizeLogLines('aws-network-firewall-json', fx('network-firewall.jsonl').split('\n')).records;
@@ -60,7 +60,7 @@ test('AWS inventory, findings and logs raise cloud alerts and show coverage gaps
   const src = d.createSource('admin-a', { name: 'AWS read-only connector', stale_seconds: 86400, source_type: 'generic' });
   const ingest = file => d.ingest('admin-a', src.id, file);
   ingest(conv('inventory', 'list-accounts.json', ['--services', f('services.json'), '--access', f('access.json')]));
-  for (const [mode, input] of [['findings-asff', 'securityhub-findings.json'], ['findings-guardduty', 'guardduty-findings.json'], ['cloudtrail', 'cloudtrail.json'], ['vpc-flow', 'vpc-flow.log'], ['network-firewall', 'network-firewall.jsonl'], ['eventbridge', 'eventbridge.jsonl']]) ingest(conv(mode, input));
+  for (const [mode, input] of [['findings-asff', 'securityhub-findings.json'], ['findings-guardduty', 'guardduty-findings.json'], ['cloudtrail', 'cloudtrail.json'], ['vpc-flow', 'vpc-flow.txt'], ['network-firewall', 'network-firewall.jsonl'], ['eventbridge', 'eventbridge.jsonl']]) ingest(conv(mode, input));
   ingest(conv('security-groups', 'security-groups.json', ['--device-ref', `aws:${PROD}:vpc-0abc1230001`]));
   const p = d.cloudPosture();
   assert.equal(p.counts.accounts, 4); assert.equal(p.counts.active_findings, 5); assert.equal(p.counts.critical, 2);
