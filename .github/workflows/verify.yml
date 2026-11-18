@@ -74,6 +74,16 @@ jobs:
           $end = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
           ./scripts/Export-WindowsEvents.ps1 -OutputPath "$out/winevents.json" -Hours 1
           node scripts/ci-detection-exercise.js --computer ([System.Net.Dns]::GetHostName()) --start $start --end $end --events "$out/winevents.json"
+      - name: Convert the runner's real iptables ruleset (CG-043)
+        if: runner.os == 'Linux'
+        run: |
+          sudo iptables-save > "$RUNNER_TEMP/iptables-save.txt"
+          if grep -q '^*filter' "$RUNNER_TEMP/iptables-save.txt"; then
+            node scripts/firewall-policy-to-telemetry.js iptables "$RUNNER_TEMP/iptables-save.txt" "$RUNNER_TEMP/iptables.json" github-runner
+            node scripts/ci-collector-check.js "$RUNNER_TEMP/iptables.json"
+          else
+            echo "iptables-save has no filter table on this runner"
+          fi
       - name: Run the Linux agent for real and ingest its output
         if: runner.os == 'Linux'
         run: |

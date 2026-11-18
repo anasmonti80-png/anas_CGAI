@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T04:45:27.576Z",
+  "at": "2026-11-18T04:50:49.144Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -76,7 +76,8 @@
     "incident_reconstruction": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-040", "case_alerts": 3, "graph": {"nodes": 20, "edges": 36}, "attack_path_probability": 0.108, "competing_hypothesis": 0.892, "linked_steps": "ip, host and account shared by steps 1-2", "caveats_shown": 2, "defects_fixed": ["raw asset identifiers in shared entities and relations", "bilingual alert titles shown whole on five pages", "Arabic comma in English lists (11 places)"], "english_view_clean": true, "arabic_view_clean": true, "console_errors": 0, "evidence_visible": true},
     "cisco_connectors": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-041", "topology": {"devices": 4, "links": 3, "down": 1}, "health_states": ["healthy", "degraded", "unreachable", "healthy"], "alerts": "CG-NET-HEALTH-041 high and medium", "fmc_rules": 5, "fmc_unreadable_not_evaluated": 1, "iosxe_insecure_management_flagged": true, "ise_job_over_http": "approved job fetched, wrong token exits 401", "defects_fixed": ["ISE operation derived from phase instead of action type", "empty queue shown for a refused token", "unrelated status label in the health badge", "percent sign on missing values"], "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
     "huawei_connectors": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-042", "nce_devices": 4, "offline_alert": "AirEngine-AP-01", "vrp_management_enabled": ["telnet", "ssh", "https", "snmpv2c", "snmpv3"], "secrets_copied": 0, "lldp_formats": 2, "topology": {"devices": 3, "links": 2}, "defects_fixed": ["LLDP topology labelled as controller data", "LLDP neighbours did not show controller health"], "english_view_clean": true, "console_errors": 0, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 68, "next": "CG-043"}
+    "multi_vendor_firewalls": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-020", "vendors_converted": ["palo-alto", "fortigate", "mikrotik", "opnsense", "juniper-srx", "iptables"], "vendors_in_ui": 4, "admin_port_open_flagged": "iptables SSH from any", "unresolved_objects_marked_unreadable": true, "research_doc": "docs/engineering/VENDOR_CONNECTORS_AR.md", "console_errors": 0, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 69, "next": "CG-044"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
