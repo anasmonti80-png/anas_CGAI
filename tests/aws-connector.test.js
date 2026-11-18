@@ -45,7 +45,7 @@ test('CloudTrail, VPC Flow Logs and Network Firewall logs normalise into the com
   assert.equal(ct.filter(r => r.action === 'ConsoleLogin' && r.outcome === 'failure').length, 5);
   const flow = normalizeLogLines('aws-vpc-flow', fx('vpc-flow.log').split('\n'));
   assert.equal(flow.records.length, 3); assert.equal(flow.rejected.length, 1, 'NODATA lines are rejected, not invented');
-  assert.deepEqual([flow.records[0].dst_port, flow.records[0].protocol, flow.records[0].action], [22, 'tcp', 'allowed']); assert.equal(flow.records[1].action, 'blocked');
+  assert.deepEqual([flow.records[0].dst_port, flow.records[0].protocol, flow.records[0].action], [22, 'tcp', 'allowed']); assert.equal(flow.records[1].action, 'blocked'); assert.equal(flow.records[0].time, '2026-11-17T08:00:00.000Z');
   const nfw = normalizeLogLines('aws-network-firewall-json', fx('network-firewall.jsonl').split('\n')).records;
   assert.deepEqual(nfw.map(r => r.category), ['ids', 'flow']); assert.equal(nfw[0].severity, 1); assert.equal(nfw[0].time, '2026-11-17T09:05:00.711Z');
 });

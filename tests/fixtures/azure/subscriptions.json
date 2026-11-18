@@ -1,0 +1,50 @@
+[
+  {
+    "cloudName": "AzureCloud",
+    "id": "11111111-1111-4111-8111-111111111111",
+    "isDefault": true,
+    "name": "Production",
+    "state": "Enabled",
+    "tenantId": "72f988bf-0000-4000-8000-00000000c0de",
+    "user": {
+      "name": "reader@example.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "22222222-2222-4222-8222-222222222222",
+    "isDefault": false,
+    "name": "Development",
+    "state": "Enabled",
+    "tenantId": "72f988bf-0000-4000-8000-00000000c0de",
+    "user": {
+      "name": "reader@example.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "44444444-4444-4444-8444-444444444444",
+    "isDefault": false,
+    "name": "Finance (no role)",
+    "state": "Enabled",
+    "tenantId": "72f988bf-0000-4000-8000-00000000c0de",
+    "user": {
+      "name": "reader@example.com",
+      "type": "user"
+    }
+  },
+  {
+    "cloudName": "AzureCloud",
+    "id": "33333333-3333-4333-8333-333333333333",
+    "isDefault": false,
+    "name": "Old lab",
+    "state": "Disabled",
+    "tenantId": "72f988bf-0000-4000-8000-00000000c0de",
+    "user": {
+      "name": "reader@example.com",
+      "type": "user"
+    }
+  }
+]

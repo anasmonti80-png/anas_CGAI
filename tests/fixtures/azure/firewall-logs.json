@@ -1,0 +1,52 @@
+{
+  "records": [
+    {
+      "time": "2026-11-17T08:20:00.000Z",
+      "resourceId": "/SUBSCRIPTIONS/11111111-1111-4111-8111-111111111111/RESOURCEGROUPS/NET-RG/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/HUB-FW",
+      "category": "AZFWNetworkRule",
+      "properties": {
+        "Protocol": "TCP",
+        "SourceIp": "10.1.0.4",
+        "SourcePort": 50123,
+        "DestinationIp": "198.51.100.53",
+        "DestinationPort": 53,
+        "Action": "Allow",
+        "Policy": "hub-policy",
+        "RuleCollectionGroup": "DefaultNetworkRuleCollectionGroup",
+        "RuleCollection": "allow-dns",
+        "Rule": "dns-out"
+      }
+    },
+    {
+      "time": "2026-11-17T08:21:00.000Z",
+      "resourceId": "/SUBSCRIPTIONS/11111111-1111-4111-8111-111111111111/RESOURCEGROUPS/NET-RG/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/HUB-FW",
+      "category": "AZFWIdpsSignature",
+      "properties": {
+        "Protocol": "TCP",
+        "SourceIp": "10.1.0.9",
+        "SourcePort": 49152,
+        "DestinationIp": "203.0.113.200",
+        "DestinationPort": 4444,
+        "Action": "Deny",
+        "SignatureId": "2024217",
+        "Category": "A Network Trojan was detected",
+        "Description": "ET MALWARE Possible Metasploit Payload Common Construct Bind_API (from server)",
+        "Severity": 1
+      }
+    },
+    {
+      "time": "2026-11-17T08:22:00.000Z",
+      "resourceId": "/SUBSCRIPTIONS/11111111-1111-4111-8111-111111111111/RESOURCEGROUPS/NET-RG/PROVIDERS/MICROSOFT.NETWORK/AZUREFIREWALLS/HUB-FW",
+      "category": "AZFWApplicationRule",
+      "properties": {
+        "Protocol": "HTTPS",
+        "SourceIp": "10.1.0.4",
+        "SourcePort": 50200,
+        "DestinationPort": 443,
+        "Fqdn": "example.org",
+        "Action": "Deny",
+        "Policy": "hub-policy"
+      }
+    }
+  ]
+}

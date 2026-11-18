@@ -1,0 +1,92 @@
+{
+  "totalRecords": 9,
+  "count": 9,
+  "data": [
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/virtualNetworks/hub-vnet",
+      "name": "hub-vnet",
+      "type": "microsoft.network/virtualnetworks",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/virtualNetworks/spoke-vnet",
+      "name": "spoke-vnet",
+      "type": "microsoft.network/virtualnetworks",
+      "location": "uaenorth",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope",
+      "name": "NetworkWatcher_westeurope",
+      "type": "microsoft.network/networkwatchers",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope/flowLogs/hub-vnet-flowlog",
+      "name": "NetworkWatcher_westeurope/flowLogs/hub-vnet-flowlog",
+      "type": "microsoft.network/networkwatchers/flowlogs",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {
+        "targetResourceId": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/virtualNetworks/hub-vnet",
+        "enabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/azureFirewalls/hub-fw",
+      "name": "hub-fw",
+      "type": "microsoft.network/azurefirewalls",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/networkSecurityGroups/web-nsg",
+      "name": "web-nsg",
+      "type": "microsoft.network/networksecuritygroups",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/applicationSecurityGroups/web-asg",
+      "name": "web-asg",
+      "type": "microsoft.network/applicationsecuritygroups",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/22222222-2222-4222-8222-222222222222/resourceGroups/dev-rg/providers/Microsoft.Network/virtualNetworks/dev-vnet",
+      "name": "dev-vnet",
+      "type": "microsoft.network/virtualnetworks",
+      "location": "westeurope",
+      "subscriptionId": "22222222-2222-4222-8222-222222222222",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/22222222-2222-4222-8222-222222222222/resourceGroups/dev-rg/providers/Microsoft.Network/networkSecurityGroups/dev-nsg",
+      "name": "dev-nsg",
+      "type": "microsoft.network/networksecuritygroups",
+      "location": "westeurope",
+      "subscriptionId": "22222222-2222-4222-8222-222222222222",
+      "properties": {}
+    },
+    {
+      "id": "/subscriptions/22222222-2222-4222-8222-222222222222/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope/flowLogs/dev-nsg-flowlog",
+      "name": "NetworkWatcher_westeurope/flowLogs/dev-nsg-flowlog",
+      "type": "microsoft.network/networkwatchers/flowlogs",
+      "location": "westeurope",
+      "subscriptionId": "22222222-2222-4222-8222-222222222222",
+      "properties": {
+        "targetResourceId": "/subscriptions/22222222-2222-4222-8222-222222222222/resourceGroups/dev-rg/providers/Microsoft.Network/networkSecurityGroups/dev-nsg",
+        "enabled": true
+      }
+    }
+  ]
+}

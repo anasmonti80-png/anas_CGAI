@@ -1,0 +1,95 @@
+[
+  {
+    "name": "web-nsg",
+    "location": "westeurope",
+    "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/networkSecurityGroups/web-nsg",
+    "securityRules": [
+      {
+        "name": "allow-rdp-internet",
+        "priority": 100,
+        "direction": "Inbound",
+        "access": "Allow",
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "Internet",
+        "sourcePortRange": "*",
+        "destinationAddressPrefix": "*",
+        "destinationPortRange": "3389"
+      },
+      {
+        "name": "allow-https-asg",
+        "priority": 110,
+        "direction": "Inbound",
+        "access": "Allow",
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "*",
+        "sourcePortRange": "*",
+        "destinationApplicationSecurityGroups": [
+          {
+            "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/applicationSecurityGroups/web-asg"
+          }
+        ],
+        "destinationPortRanges": [
+          "443",
+          "8443"
+        ]
+      },
+      {
+        "name": "deny-smb",
+        "priority": 120,
+        "direction": "Inbound",
+        "access": "Deny",
+        "protocol": "Tcp",
+        "sourceAddressPrefix": "*",
+        "sourcePortRange": "*",
+        "destinationAddressPrefix": "10.1.0.0/24",
+        "destinationPortRange": "445"
+      }
+    ],
+    "defaultSecurityRules": [
+      {
+        "name": "AllowVnetInBound",
+        "priority": 65000,
+        "direction": "Inbound",
+        "access": "Allow",
+        "protocol": "*",
+        "sourceAddressPrefix": "VirtualNetwork",
+        "sourcePortRange": "*",
+        "destinationAddressPrefix": "VirtualNetwork",
+        "destinationPortRange": "*"
+      },
+      {
+        "name": "AllowAzureLoadBalancerInBound",
+        "priority": 65001,
+        "direction": "Inbound",
+        "access": "Allow",
+        "protocol": "*",
+        "sourceAddressPrefix": "AzureLoadBalancer",
+        "sourcePortRange": "*",
+        "destinationAddressPrefix": "*",
+        "destinationPortRange": "*"
+      },
+      {
+        "name": "DenyAllInBound",
+        "priority": 65500,
+        "direction": "Inbound",
+        "access": "Deny",
+        "protocol": "*",
+        "sourceAddressPrefix": "*",
+        "sourcePortRange": "*",
+        "destinationAddressPrefix": "*",
+        "destinationPortRange": "*"
+      },
+      {
+        "name": "AllowInternetOutBound",
+        "priority": 65001,
+        "direction": "Outbound",
+        "access": "Allow",
+        "protocol": "*",
+        "sourceAddressPrefix": "*",
+        "sourcePortRange": "*",
+        "destinationAddressPrefix": "Internet",
+        "destinationPortRange": "*"
+      }
+    ]
+  }
+]

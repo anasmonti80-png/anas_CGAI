@@ -1,0 +1,251 @@
+{
+  "value": [
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1000",
+      "createdDateTime": "2026-11-17T07:10:00Z",
+      "userDisplayName": "a.user",
+      "userPrincipalName": "a.user@contoso.example",
+      "userId": "uid-0",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1001",
+      "createdDateTime": "2026-11-17T07:11:00Z",
+      "userDisplayName": "b.user",
+      "userPrincipalName": "b.user@contoso.example",
+      "userId": "uid-1",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1002",
+      "createdDateTime": "2026-11-17T07:12:00Z",
+      "userDisplayName": "c.user",
+      "userPrincipalName": "c.user@contoso.example",
+      "userId": "uid-2",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1003",
+      "createdDateTime": "2026-11-17T07:13:00Z",
+      "userDisplayName": "d.user",
+      "userPrincipalName": "d.user@contoso.example",
+      "userId": "uid-3",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1004",
+      "createdDateTime": "2026-11-17T07:14:00Z",
+      "userDisplayName": "e.user",
+      "userPrincipalName": "e.user@contoso.example",
+      "userId": "uid-4",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1005",
+      "createdDateTime": "2026-11-17T07:15:00Z",
+      "userDisplayName": "f.user",
+      "userPrincipalName": "f.user@contoso.example",
+      "userId": "uid-5",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1006",
+      "createdDateTime": "2026-11-17T07:16:00Z",
+      "userDisplayName": "g.user",
+      "userPrincipalName": "g.user@contoso.example",
+      "userId": "uid-6",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1007",
+      "createdDateTime": "2026-11-17T07:17:00Z",
+      "userDisplayName": "h.user",
+      "userPrincipalName": "h.user@contoso.example",
+      "userId": "uid-7",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1008",
+      "createdDateTime": "2026-11-17T07:18:00Z",
+      "userDisplayName": "i.user",
+      "userPrincipalName": "i.user@contoso.example",
+      "userId": "uid-8",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1009",
+      "createdDateTime": "2026-11-17T07:19:00Z",
+      "userDisplayName": "j.user",
+      "userPrincipalName": "j.user@contoso.example",
+      "userId": "uid-9",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1010",
+      "createdDateTime": "2026-11-17T07:20:00Z",
+      "userDisplayName": "k.user",
+      "userPrincipalName": "k.user@contoso.example",
+      "userId": "uid-10",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1011",
+      "createdDateTime": "2026-11-17T07:21:00Z",
+      "userDisplayName": "l.user",
+      "userPrincipalName": "l.user@contoso.example",
+      "userId": "uid-11",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "203.0.113.77",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "singleFactorAuthentication",
+      "status": {
+        "errorCode": 50126,
+        "failureReason": "Error validating credentials due to invalid username or password."
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "NL"
+      }
+    },
+    {
+      "id": "66ea54eb-6301-4ee5-be62-ff5a759b1020",
+      "createdDateTime": "2026-11-17T07:30:00Z",
+      "userDisplayName": "admin",
+      "userPrincipalName": "admin@contoso.example",
+      "userId": "uid-20",
+      "appDisplayName": "Azure Portal",
+      "ipAddress": "198.51.100.10",
+      "clientAppUsed": "Browser",
+      "authenticationRequirement": "multiFactorAuthentication",
+      "status": {
+        "errorCode": 0,
+        "failureReason": null
+      },
+      "location": {
+        "city": "Example",
+        "countryOrRegion": "AE"
+      }
+    }
+  ]
+}

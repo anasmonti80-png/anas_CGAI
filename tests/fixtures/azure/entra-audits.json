@@ -1,0 +1,73 @@
+{
+  "value": [
+    {
+      "id": "Directory_2b5a1f9e-example-ca",
+      "category": "Policy",
+      "activityDateTime": "2026-11-17T06:00:00Z",
+      "activityDisplayName": "Update conditional access policy",
+      "result": "success",
+      "initiatedBy": {
+        "user": {
+          "userPrincipalName": "admin@contoso.example"
+        }
+      },
+      "targetResources": [
+        {
+          "displayName": "Require MFA for admins",
+          "type": "Policy",
+          "modifiedProperties": [
+            {
+              "displayName": "ConditionalAccessPolicy",
+              "oldValue": "{\"state\":\"enabled\"}",
+              "newValue": "{\"state\":\"disabled\"}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Directory_3c6b2f0e-example-fed",
+      "category": "DirectoryManagement",
+      "activityDateTime": "2026-11-17T06:05:00Z",
+      "activityDisplayName": "Set domain authentication",
+      "result": "success",
+      "initiatedBy": {
+        "user": {
+          "userPrincipalName": "admin@contoso.example"
+        }
+      },
+      "targetResources": [
+        {
+          "displayName": "contoso.example federation",
+          "type": "Other",
+          "modifiedProperties": [
+            {
+              "displayName": "LiveType",
+              "oldValue": "Managed",
+              "newValue": "Federated"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "Directory_4d7c3a1f-example-user",
+      "category": "UserManagement",
+      "activityDateTime": "2026-11-17T06:10:00Z",
+      "activityDisplayName": "Update user",
+      "result": "success",
+      "initiatedBy": {
+        "user": {
+          "userPrincipalName": "admin@contoso.example"
+        }
+      },
+      "targetResources": [
+        {
+          "displayName": "a.user",
+          "type": "User",
+          "modifiedProperties": []
+        }
+      ]
+    }
+  ]
+}

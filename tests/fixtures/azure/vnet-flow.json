@@ -1,0 +1,36 @@
+{
+  "records": [
+    {
+      "time": "2026-11-17T08:10:00.000Z",
+      "flowLogVersion": 4,
+      "flowLogGUID": "66aa66aa-6666-4666-8666-66aa66aa66aa",
+      "macAddress": "112233445566",
+      "category": "FlowLogFlowEvent",
+      "flowLogResourceID": "/SUBSCRIPTIONS/11111111-1111-4111-8111-111111111111/RESOURCEGROUPS/NETWORKWATCHERRG/PROVIDERS/MICROSOFT.NETWORK/NETWORKWATCHERS/NETWORKWATCHER_WESTEUROPE/FLOWLOGS/HUB-VNET-FLOWLOG",
+      "targetResourceID": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/virtualNetworks/hub-vnet",
+      "operationName": "FlowLogFlowEvent",
+      "flowRecords": {
+        "flows": [
+          {
+            "aclID": "9a5ca4b1-example",
+            "flowGroups": [
+              {
+                "rule": "DefaultRule_AllowInternetOutBound",
+                "flowTuples": [
+                  "1794903000000,10.1.0.4,198.51.100.180,23956,443,6,O,B,NX,0,0,0,0",
+                  "1794903060000,10.1.0.4,198.51.100.180,23956,443,6,O,E,NX,3,767,2,1580"
+                ]
+              },
+              {
+                "rule": "UserRule_deny-smb",
+                "flowTuples": [
+                  "1794903100000,203.0.113.77,10.1.0.5,51000,445,6,I,D,NX,0,0,0,0"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

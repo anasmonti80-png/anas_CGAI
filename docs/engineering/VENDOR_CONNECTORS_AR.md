@@ -44,3 +44,24 @@
 - الحساب المعلق فجوة واحدة، والدور المرفوض فجوة تشمل كل الخدمات، ولا تُعرض خدمة لم تُفحص على أنها مغطاة.
 - التنبيهات: `CG-CLOUD-FINDING-046` للنتائج النشطة العالية والحرجة، و`CG-CLOUD-GAP-046` لتعطيل CloudTrail أو GuardDuty أو رفض الدور، و`CG-CLOUD-TRAIL-046` لاستدعاءات تعطيل الرؤية أو توسيع الوصول الناجحة واستخدام root وتكرار فشل دخول الكونسول، وتعيد سجلات Network Firewall استخدام `CG-LOG-IDS-014`.
 - لم يُجرَ تشغيل حي ضد حساب AWS لأن الوكلاء لا يُدخلون بيانات دخول. المدخلات بصيغ AWS الموثقة بأرقام حسابات التوثيق، والتشغيل الحي يتم بملف تعريف AWS CLI الخاص بالمالك: `node scripts/aws-connector.js live --profile <name> --regions us-east-1,eu-west-1 --output <file>`.
+
+## Azure وMicrosoft Entra للقراءة فقط (CG-047)
+
+| المصدر | واجهة القراءة الموثقة | ما يصل إلى CyberGuard |
+|---|---|---|
+| الاشتراكات | `az account list` (ARM `/subscriptions`) | `cloud.account_inventory` بالمزود `azure` والاشتراكات وحالتها |
+| Azure Resource Graph | `az graph query` على VNet وNetwork Watcher وflowLogs وAzure Firewall وNSG وASG وحلول Sentinel | حالة Network Watcher لكل إقليم فيه VNet، وسجلات تدفق VNet، وAzure Firewall، وNSG/ASG |
+| Defender for Cloud | `az security pricing list` والتنبيهات (`Microsoft.Security/alerts`) والتوصيات (`assessments`) | حالة الخطط و`cloud.finding` بالمنتج `defender-for-cloud` |
+| Microsoft Sentinel | `Microsoft.SecurityInsights/incidents` لكل مساحة مفعّل فيها Sentinel | `cloud.finding` بالمنتج `sentinel` |
+| Azure Monitor | `az monitor diagnostic-settings subscription list` وسجل النشاط | حالة تصدير سجل النشاط، و`log.batch` بصيغة `azure-activity-json` |
+| Microsoft Entra | Graph `auditLogs/signIns` و`auditLogs/directoryAudits` | `identity.signin_activity` و`identity.idp_change` (الوصول المشروط، الاتحاد، سياسة MFA، ...) فتعمل قواعد تهديدات الهوية CG-015 |
+| VNet flow logs | ملف التدفق الإصدار 4 `{"records":[...]}` | `log.batch` بصيغة `azure-vnet-flow-json` |
+| Azure Firewall | السجلات المنظمة AZFWNetworkRule وAZFWApplicationRule وAZFWIdpsSignature وAZFWThreatIntel | `log.batch` بصيغة `azure-firewall-json` |
+| NSG وسياسة Azure Firewall | `az network nsg list` و`az network firewall policy rule-collection-group list` | `firewall.ruleset` بالمورّدين `azure-nsg` و`azure-firewall` ويحللها CG-020 |
+
+- الدور المخصص `deploy/azure/cyberguard-reader-role.json` يحتوي عمليات `/read` فقط ولا DataActions؛ ويكفي بديلًا عنه Reader وSecurity Reader وMicrosoft Sentinel Reader، مع صلاحية Graph `AuditLog.Read.All` لسجلات Entra. لا يُطلب Global Admin أو Owner.
+- الاشتراك الذي لا يوجد عليه دور قراءة فجوة تشمل كل الخدمات، والاشتراك المعطل فجوة واحدة، ولا تُكتب له صفوف خدمات حتى لا يبدو مغطى.
+- الاشتراك الذي فيه سجلات تدفق NSG فقط يظهر بفجوة «تتقاعد في 2027-09-30؛ يلزم تفعيل سجلات تدفق VNet» (تمهيدًا لـCG-051).
+- قواعد NSG تشمل القواعد الافتراضية بترتيب الأولوية؛ وما يشير إلى ASG أو وسوم خدمة مثل VirtualNetwork وAzureLoadBalancer أو IP Groups يُعلَّم غير مقروء ولا يُحلَّل. سياسة Azure Firewall تُحلَّل دون قيد نطاق لأنها تمر عليها كل الحركة الموجهة إليها، لذلك «أي إلى أي» فيها حرجة.
+- التنبيهات: `CG-CLOUD-FINDING-046` للنتائج النشطة العالية والحرجة، و`CG-CLOUD-GAP-046` لتعطيل Defender for Cloud أو عدم تصدير سجل النشاط أو تعذر قراءة سجلات Entra أو غياب دور القراءة، و`CG-CLOUD-ACTIVITY-047` للعمليات الحساسة الناجحة في سجل النشاط (حذف إعدادات التشخيص أو سجلات التدفق، كتابة قواعد NSG أو سياسة الجدار، إسناد الأدوار)، وتعيد تنبيهات IDPS استخدام `CG-LOG-IDS-014`.
+- لم يُجرَ تشغيل حي ضد مستأجر Azure لأن الوكلاء لا يُدخلون بيانات دخول. المدخلات بصيغ Microsoft الموثقة بمعرّفات بديلة، والتشغيل الحي يتم بجلسة `az login` الخاصة بالمالك: `node scripts/azure-connector.js live --output <file>`.

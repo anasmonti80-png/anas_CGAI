@@ -1,0 +1,37 @@
+{
+  "value": [
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/web-rg/providers/Microsoft.Security/locations/westeurope/alerts/2517538088322968242_d2a1b3c4-example",
+      "name": "2517538088322968242_d2a1b3c4-example",
+      "type": "Microsoft.Security/Locations/alerts",
+      "properties": {
+        "alertType": "VM_SuspiciousCommandLineExecution",
+        "alertDisplayName": "Suspicious command line execution detected",
+        "severity": "High",
+        "status": "Active",
+        "compromisedEntity": "web-vm-01",
+        "timeGeneratedUtc": "2026-11-17T08:12:00.000Z",
+        "startTimeUtc": "2026-11-17T08:05:00.000Z",
+        "resourceIdentifiers": [
+          {
+            "type": "AzureResource",
+            "azureResourceId": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/web-rg/providers/Microsoft.Compute/virtualMachines/web-vm-01"
+          }
+        ]
+      }
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/web-rg/providers/Microsoft.Security/locations/westeurope/alerts/2517538088322968243_example",
+      "name": "x",
+      "properties": {
+        "alertType": "Storage.Blob_AnonymousAccessAnomaly",
+        "alertDisplayName": "Unusual unauthenticated access to a storage container",
+        "severity": "Medium",
+        "status": "Dismissed",
+        "compromisedEntity": "stweb01",
+        "timeGeneratedUtc": "2026-11-10T08:12:00.000Z",
+        "resourceIdentifiers": []
+      }
+    }
+  ]
+}

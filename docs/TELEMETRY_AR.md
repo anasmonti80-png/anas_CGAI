@@ -82,3 +82,10 @@
 - `cloud.finding`: `finding_id` و`provider` و`account_id` و`region` و`product` (`guardduty|security-hub|inspector|config|macie|access-analyzer|other`) و`title` و`severity` و`resource_type` و`resource_id` و`status` (`active|resolved|suppressed`) و`compliance` و`types` و`first_seen` و`updated_at`.
 - صيغ `log.batch` الجديدة: `aws-cloudtrail-json` (فئة `cloud-audit`) و`aws-vpc-flow` (تدفق) و`aws-network-firewall-json` (IDS/تدفق).
 - التحويل: `node scripts/aws-connector.js <inventory|findings-asff|findings-guardduty|security-groups|cloudtrail|vpc-flow|network-firewall|eventbridge|live> ...`.
+
+## السحابة: Azure وEntra (CG-047)
+
+- `cloud.account_inventory` و`cloud.finding` يقبلان `provider: "azure"`؛ و`account_id` هو معرّف الاشتراك (GUID)، و`organization_id` معرّف المستأجر، و`collected_by` قد تكون `tenant`. خدمات Azure: `resource-graph` و`entra-logs` و`defender-for-cloud` و`sentinel` و`azure-monitor` و`vnet-flow-logs` و`azure-firewall` و`nsg` و`network-watcher`. منتجات النتائج: `defender-for-cloud` و`sentinel`.
+- صيغ `log.batch` الجديدة: `azure-activity-json` (فئة `cloud-audit`) و`azure-vnet-flow-json` (تدفق) و`azure-firewall-json` (جدار ناري/IDS).
+- المورّدان الجديدان في `firewall.ruleset`: `azure-nsg` و`azure-firewall`.
+- التحويل: `node scripts/azure-connector.js <inventory|defender-alerts|defender-assessments|sentinel-incidents|entra-signins|entra-audits|nsg|firewall-policy|activity|vnet-flow|firewall-logs|live> ...`.

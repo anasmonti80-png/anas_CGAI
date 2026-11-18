@@ -1,0 +1,122 @@
+[
+  {
+    "name": "DefaultNetworkRuleCollectionGroup",
+    "properties": {
+      "priority": 200,
+      "ruleCollections": [
+        {
+          "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+          "name": "allow-dns",
+          "priority": 100,
+          "action": {
+            "type": "Allow"
+          },
+          "rules": [
+            {
+              "ruleType": "NetworkRule",
+              "name": "dns-out",
+              "ipProtocols": [
+                "UDP"
+              ],
+              "sourceAddresses": [
+                "10.1.0.0/16"
+              ],
+              "destinationAddresses": [
+                "198.51.100.53"
+              ],
+              "destinationPorts": [
+                "53"
+              ]
+            }
+          ]
+        },
+        {
+          "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+          "name": "temp-any",
+          "priority": 300,
+          "action": {
+            "type": "Allow"
+          },
+          "rules": [
+            {
+              "ruleType": "NetworkRule",
+              "name": "any-any",
+              "ipProtocols": [
+                "Any"
+              ],
+              "sourceAddresses": [
+                "*"
+              ],
+              "destinationAddresses": [
+                "*"
+              ],
+              "destinationPorts": [
+                "*"
+              ]
+            }
+          ]
+        },
+        {
+          "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+          "name": "ipgroup",
+          "priority": 400,
+          "action": {
+            "type": "Deny"
+          },
+          "rules": [
+            {
+              "ruleType": "NetworkRule",
+              "name": "block-partners",
+              "ipProtocols": [
+                "TCP"
+              ],
+              "sourceIpGroups": [
+                "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/ipGroups/partners"
+              ],
+              "destinationAddresses": [
+                "*"
+              ],
+              "destinationPorts": [
+                "22"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  },
+  {
+    "name": "DefaultApplicationRuleCollectionGroup",
+    "properties": {
+      "priority": 300,
+      "ruleCollections": [
+        {
+          "ruleCollectionType": "FirewallPolicyFilterRuleCollection",
+          "name": "web",
+          "priority": 100,
+          "action": {
+            "type": "Allow"
+          },
+          "rules": [
+            {
+              "ruleType": "ApplicationRule",
+              "name": "windows-update",
+              "protocols": [
+                {
+                  "protocolType": "Https",
+                  "port": 443
+                }
+              ],
+              "sourceAddresses": [
+                "10.1.0.0/16"
+              ],
+              "fqdnTags": [
+                "WindowsUpdate"
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  }
+]
