@@ -465,3 +465,7 @@ test('settings manage connector secrets as write-only metadata with rotation sta
   for(const marker of ['Connector secret store and separation of duties','Value (never shown after saving)','Rotation overdue','Delegate to source','approval by an independent administrator','CG-055']) assert.ok(app.includes(marker),marker);
   assert.ok(app.includes('type="password" required autocomplete="new-password"'),'the value field is a password input');
 });
+test('threats show measured detection and response quality and alerts take an analyst disposition (CG-058)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/quality-metrics/);assert.match(app,/\/disposition`/);
+  for(const marker of ['Detection and response quality','False positive','Benign true positive','Rule coverage','Device coverage','Response action failures','not measured','CG-058']) assert.ok(app.includes(marker),marker);
+});

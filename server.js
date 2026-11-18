@@ -202,6 +202,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(aiDecision&&method==='POST'){roles(['admin','analyst']);if(aiDecision[2]==='promote'){auth.requireRecentMfa(user);return send(res,201,domain.promoteAiProposal(user.id,aiDecision[1],await body(req)));}return send(res,200,domain.dismissAiProposal(user.id,aiDecision[1]));}
       const cloudAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/cloud$/);
       if(cloudAnalysis&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);fail(typeof cloudAiInvoke==='function',503,'cloud_ai_connector_unavailable');const prepared=domain.prepareAiCloudAnalysis(user.id,cloudAnalysis[1],await body(req)),raw=await cloudAiInvoke({provider:prepared.consent.provider,payload:prepared.payload}),result=validateCloudResult(raw);return send(res,200,domain.recordAiCloudAnalysis(user.id,prepared,result));}
+      if(p==='/api/quality-metrics'&&method==='GET') return send(res,200,domain.qualityMetrics({days:url.searchParams.get('days')||30}));
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));
       if(p==='/api/security-outcomes'&&method==='GET') return send(res,200,domain.securityOutcomes());
       if(p==='/api/threat-models'&&method==='GET') return send(res,200,domain.threatModels(page(url.searchParams)));
@@ -283,6 +284,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const alertRoute=p.match(/^\/api\/alerts\/([a-f0-9-]{36})$/);
       if(alertRoute&&method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM alerts WHERE id=?',[alertRoute[1]])));
       if(ack&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.acknowledge(user.id,ack[1]));}
+      const disposition=p.match(/^\/api\/alerts\/([a-f0-9-]{36})\/disposition$/);
+      if(disposition&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.dispositionAlert(user.id,disposition[1],await body(req)));}
       if(p==='/api/cases'&&method==='POST') {roles(['admin','analyst']);return send(res,201,domain.createCase(user.id,await body(req)));}
       const reconstruction=p.match(/^\/api\/cases\/([a-f0-9-]{36})\/reconstruction$/);
       if(reconstruction&&method==='GET') return send(res,200,domain.incidentReconstruction(reconstruction[1]));

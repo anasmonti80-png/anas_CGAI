@@ -38,6 +38,7 @@ try {
   for (const p of [...new Set([...routes, '/api/assets', '/api/events', '/api/alerts', '/api/remote-sessions', '/api/cases', '/api/actions', '/api/audit', '/api/sso/status', '/api/cloud-posture?provider=azure', '/api/cloud-posture?provider=gcp'])]) { const r = await req(p); check(`GET ${p}`, r.status === 200 && r.json !== null, r.status === 200 ? 'not JSON' : `${r.status} ${r.text.slice(0, 120)}`); }
   const alerts = (await req('/api/alerts?limit=100')).json; check('alerts raised from connector data', alerts.total >= 10, alerts.total);
   const first = alerts.items[0]; check('alert detail', (await req(`/api/alerts/${first.id}`)).status === 200); check('AI analysis of an alert', (await req(`/api/ai-analysis/${first.id}`)).status === 200);
+  check('analyst disposition of an alert', (await req(`/api/alerts/${first.id}/disposition`, { method: 'POST', data: { disposition: 'true-positive' } })).status === 200); check('quality metrics measured after triage', (await req('/api/quality-metrics')).json?.detection_quality?.precision === 1);
   check('audit chain intact', (await req('/api/audit/verify')).json?.valid === true);
   report.counts = { alerts: alerts.total, assets: (await req('/api/assets')).json.total, events: (await req('/api/events')).json.total };
 } catch (e) { check('smoke run', false, e.stack?.slice(0, 500)); }
