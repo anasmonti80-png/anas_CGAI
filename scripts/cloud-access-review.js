@@ -23,7 +23,7 @@ if (mode === 'azure-rbac') grants = azureRoleGrants(read(args.active), read(args
 if (mode === 'entra-roles') grants = entraDirectoryRoleGrants(read(args.active), read(args.eligible), args.tenant || 'tenant');
 if (mode === 'gcp-bindings') grants = gcpMemberGrants(read(args.policy), args.member, args.scope, { impersonated: args.impersonated === true });
 if (!grants.length) { console.log('No grants to review (for aws-root: no root access keys exist).'); process.exit(0); }
-const asset = { external_id: `cloud-access:${mode}`, hostname: 'Cloud access review', os_family: 'unknown', device_type: 'unknown', addresses: [] };
+const provider = mode.startsWith('aws') ? 'aws' : mode.startsWith('gcp') ? 'gcp' : 'azure', asset = { external_id: `${provider}:access-review`, hostname: `${{ aws: 'AWS', azure: 'Azure', gcp: 'Google Cloud' }[provider]} access review`, os_family: 'unknown', device_type: 'unknown', addresses: [] };
 fs.writeFileSync(args.output, JSON.stringify({ schema_version: 'cg.telemetry/1', events: [{ event_id: `access-${randomUUID()}`, kind: 'cloud.access_grant', observed_at: new Date().toISOString(), asset, details: { review_id: `${mode}-${randomUUID()}`, grants } }] }));
 for (const g of grants) { const r = reviewGrant(g); console.log(`${r.status.padEnd(9)} ${g.roles.join(',')} -> ${g.principal_ref} on ${g.scope_ref} [${g.mechanism}]${r.reasons.length ? ' ' + r.reasons.join(', ') : ''}`); }
 console.log('Wrote the requested private file. No upload performed.');

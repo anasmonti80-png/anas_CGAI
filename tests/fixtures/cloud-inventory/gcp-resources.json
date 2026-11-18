@@ -1,0 +1,68 @@
+[
+  {
+    "name": "//compute.googleapis.com/projects/example-prod-1234/zones/europe-west1-b/instances/web-1",
+    "assetType": "compute.googleapis.com/Instance",
+    "project": "projects/111111111111",
+    "location": "europe-west1-b",
+    "displayName": "web-1",
+    "labels": {
+      "env": "prod"
+    },
+    "state": "RUNNING"
+  },
+  {
+    "name": "//storage.googleapis.com/example-prod-1234-public-assets",
+    "assetType": "storage.googleapis.com/Bucket",
+    "project": "projects/111111111111",
+    "location": "europe-west1",
+    "displayName": "example-prod-1234-public-assets",
+    "labels": {
+      "env": "prod"
+    },
+    "state": "RUNNING"
+  },
+  {
+    "name": "//compute.googleapis.com/projects/example-prod-1234/regions/me-central1/subnetworks/db-me",
+    "assetType": "compute.googleapis.com/Subnetwork",
+    "project": "projects/111111111111",
+    "location": "me-central1",
+    "displayName": "db-me",
+    "labels": {
+      "env": "prod"
+    },
+    "state": "RUNNING"
+  },
+  {
+    "name": "//sqladmin.googleapis.com/projects/example-prod-1234/instances/orders",
+    "assetType": "sqladmin.googleapis.com/Instance",
+    "project": "projects/111111111111",
+    "location": "me-central1",
+    "displayName": "orders",
+    "labels": {
+      "env": "prod"
+    },
+    "state": "RUNNING"
+  },
+  {
+    "name": "//container.googleapis.com/projects/example-prod-1234/locations/us-central1/clusters/gke-1",
+    "assetType": "container.googleapis.com/Cluster",
+    "project": "projects/111111111111",
+    "location": "us-central1",
+    "displayName": "gke-1",
+    "labels": {
+      "env": "prod"
+    },
+    "state": "RUNNING"
+  },
+  {
+    "name": "//iam.googleapis.com/projects/example-prod-1234/serviceAccounts/cyberguard-reader@example-prod-1234.iam.gserviceaccount.com",
+    "assetType": "iam.googleapis.com/ServiceAccount",
+    "project": "projects/111111111111",
+    "location": "global",
+    "displayName": "cyberguard-reader@example-prod-1234.iam.gserviceaccount.com",
+    "labels": {
+      "env": "prod"
+    },
+    "state": "RUNNING"
+  }
+]

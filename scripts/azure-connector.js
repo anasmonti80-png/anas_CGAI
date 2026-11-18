@@ -6,6 +6,7 @@
 //   inventory            --input subscriptions.json [--graph resource-graph.json] [--pricings {"<sub>":<az security pricing list>}.json]
 //                        [--diagnostics {"<sub>":<az monitor diagnostic-settings subscription list>}.json] [--sentinel {"<sub>":[workspace ids]}.json]
 //                        [--access {"<sub>":"assumed|denied"}.json] [--entra enabled|access-denied] [--tenant-id <guid>] --output out.json
+//   resources            --input <az graph query -q "resources | project id,name,type,location,subscriptionId,tags,properties"> --output out.json   (CG-050)
 //   defender-alerts      --input <Microsoft.Security/alerts list> --output out.json
 //   defender-assessments --input <assessments list or Resource Graph securityresources rows> --output out.json
 //   sentinel-incidents   --input <Microsoft.SecurityInsights/incidents list> --output out.json
@@ -25,12 +26,13 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
 import { azureRoleGrants } from '../lib/cloud-access.js';
+import { azureResources } from '../lib/cloud-inventory.js';
 import { subscriptions, azureServiceStatus, defenderAlerts, defenderAssessments, sentinelIncidents, entraSignins, entraDirectoryAudits, nsgRules, azureFirewallPolicyRules, vnetFlowLines } from '../lib/connectors/azure.js';
 
 const run = promisify(execFile);
 const [mode, ...rest] = process.argv.slice(2);
 const args = Object.fromEntries(rest.reduce((pairs, v, i, all) => (v.startsWith('--') ? [...pairs, [v.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : true]] : pairs), []));
-const modes = ['inventory', 'defender-alerts', 'defender-assessments', 'sentinel-incidents', 'entra-signins', 'entra-audits', 'nsg', 'firewall-policy', 'activity', 'vnet-flow', 'firewall-logs', 'live'];
+const modes = ['inventory', 'resources', 'defender-alerts', 'defender-assessments', 'sentinel-incidents', 'entra-signins', 'entra-audits', 'nsg', 'firewall-policy', 'activity', 'vnet-flow', 'firewall-logs', 'live'];
 if (!modes.includes(mode)) { console.error(`Usage: node scripts/azure-connector.js <${modes.join('|')}> ... (see the header of this file)`); process.exit(2); }
 if (!args.output) { console.error('Missing --output'); process.exit(2); }
 if (fs.existsSync(args.output)) { console.error('Output already exists. Choose a new private file path.'); process.exit(1); }
@@ -67,6 +69,7 @@ if (mode === 'live') {
     const audits = entraDirectoryAudits(await az(['rest', '--method', 'get', '--url', 'https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?$top=500']), directoryRef); for (const c of audits.changes) events.push(event('identity.idp_change', collector(directoryRef), c)); } catch { entra = entra || 'access-denied'; }
   events.unshift(inventoryEvent(accounts, azureServiceStatus({ accounts, graph, pricings, diagnostics, sentinel, entra }), tenant, 'tenant'));
   events.push(...findingEvents(findings));
+  try { const all = []; let skip = null; do { const r = await az(['graph', 'query', '-q', 'resources | project id,name,type,location,subscriptionId,tags,properties', '--first', '1000', '--subscriptions', ...ids, ...(skip ? ['--skip-token', skip] : [])]); all.push(...(r.data || [])); skip = r.skip_token || null; } while (skip && all.length < 20000); const r = azureResources(all); if (r.length) events.push(event('cloud.resource_inventory', collector('resource-graph'), { inventory_id: `azure-resources-${randomUUID()}`, provider: 'azure', source: 'azure-resource-graph', resources: r })); } catch { /* Resource Graph not readable */ }
   if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `azure-live-${randomUUID()}`, grants }));
   console.log(`Azure live read: ${accounts.length} subscription(s), Resource Graph ${graph ? graph.length + ' row(s)' : 'not readable'}, ${findings.length} finding(s), Entra logs ${entra}.`);
 } else {
@@ -78,6 +81,7 @@ if (mode === 'live') {
     events.push(inventoryEvent(accounts, services, args['tenant-id'], 'manual-import'));
     console.log(`Azure subscriptions: ${accounts.length}, ${services.length} service status row(s).`);
   }
+  if (mode === 'resources') { const r = azureResources(raw); events.push(event('cloud.resource_inventory', collector('resource-graph'), { inventory_id: `azure-resources-${randomUUID()}`, provider: 'azure', source: 'azure-resource-graph', resources: r })); console.log(`Resource Graph: ${r.length} resource(s) in ${new Set(r.map(x => x.account_id)).size} subscription(s) and ${new Set(r.map(x => x.region)).size} region(s).`); }
   if (mode === 'defender-alerts') { const f = defenderAlerts(raw); events.push(...findingEvents(f)); console.log(`Defender for Cloud alerts: ${f.length}.`); }
   if (mode === 'defender-assessments') { const f = defenderAssessments(raw); events.push(...findingEvents(f)); console.log(`Defender for Cloud recommendations: ${f.length}, ${f.filter(x => x.status === 'active').length} unhealthy.`); }
   if (mode === 'sentinel-incidents') { const f = sentinelIncidents(raw); events.push(...findingEvents(f)); console.log(`Sentinel incidents: ${f.length}, ${f.filter(x => x.status === 'active').length} open.`); }

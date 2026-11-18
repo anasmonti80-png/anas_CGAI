@@ -7,6 +7,7 @@
 //                   [--firewalls {"<project>":<firewall-rules list>}.json] [--armor {"<project>":<security-policies list>}.json]
 //                   [--iam {"<project>":<get-iam-policy>|"access-denied"}.json] [--access {"<project>":"assumed|denied"}.json]
 //                   [--scc enabled|disabled|access-denied] [--organization-id <number>] --output out.json
+//   resources       --input <gcloud asset search-all-resources --scope=organizations/ORG> [--projects <gcloud projects list>] --output out.json   (CG-050)
 //   scc-findings    --input <gcloud scc findings list ORG> --output out.json
 //   iam             --input <gcloud projects get-iam-policy P> --project <id> --output out.json
 //   firewall-rules  --input <gcloud compute firewall-rules list> --device-ref gcp:<project>:<network> [--network <name>] --output out.json
@@ -22,12 +23,13 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
 import { gcpMemberGrants } from '../lib/cloud-access.js';
+import { gcpResources } from '../lib/cloud-inventory.js';
 import { projects, gcpServiceStatus, sccFindings, iamSnapshot, publicBindingFindings, vpcFirewallRules, cloudArmorRules, logEntryLines } from '../lib/connectors/gcp.js';
 
 const run = promisify(execFile);
 const [mode, ...rest] = process.argv.slice(2);
 const args = Object.fromEntries(rest.reduce((pairs, v, i, all) => (v.startsWith('--') ? [...pairs, [v.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : true]] : pairs), []));
-const modes = ['inventory', 'scc-findings', 'iam', 'firewall-rules', 'armor-policy', 'audit-logs', 'vpc-flow', 'firewall-logs', 'armor-logs', 'live'];
+const modes = ['inventory', 'resources', 'scc-findings', 'iam', 'firewall-rules', 'armor-policy', 'audit-logs', 'vpc-flow', 'firewall-logs', 'armor-logs', 'live'];
 if (!modes.includes(mode)) { console.error(`Usage: node scripts/gcp-connector.js <${modes.join('|')}> ... (see the header of this file)`); process.exit(2); }
 if (!args.output) { console.error('Missing --output'); process.exit(2); }
 if (fs.existsSync(args.output)) { console.error('Output already exists. Choose a new private file path.'); process.exit(1); }
@@ -63,6 +65,7 @@ if (mode === 'live') {
   if (org) { try { findings = sccFindings(await gcloud(['scc', 'findings', 'list', `organizations/${org}`, '--filter=state="ACTIVE"', '--page-size=1000', '--limit=5000'])); scc = 'enabled'; } catch (e) { scc = denied(e) || (/not enabled|has not been activated|FAILED_PRECONDITION/i.test(String(e.stderr || '')) ? 'disabled' : undefined); } }
   events.unshift(inventoryEvent(accounts, gcpServiceStatus({ accounts, enabledApis: apis, subnets, firewalls, armor, iam, scc }), org, org ? 'organizations' : 'single-account'));
   events.push(...findingEvents(findings));
+  if (org) try { const nums = Object.fromEntries((await gcloud(['projects', 'list'])).map(p => [String(p.projectNumber), p.projectId])), r = gcpResources(await gcloud(['asset', 'search-all-resources', `--scope=organizations/${org}`, '--page-size=500']), nums); if (r.length) events.push(event('cloud.resource_inventory', collector('cloud-asset-inventory'), { inventory_id: `gcp-resources-${randomUUID()}`, provider: 'gcp', source: 'gcp-cloud-asset-inventory', resources: r })); } catch { /* Cloud Asset API not enabled or not permitted */ }
   if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `gcp-live-${randomUUID()}`, grants }));
   console.log(`Google Cloud live read: ${accounts.length} project(s), ${findings.length} active SCC finding(s), SCC ${scc || 'not checked (give --organization-id)'}.`);
 } else {
@@ -74,6 +77,7 @@ if (mode === 'live') {
     events.push(inventoryEvent(accounts, services, args['organization-id'], 'manual-import'));
     console.log(`Google Cloud projects: ${accounts.length}, ${services.length} service status row(s).`);
   }
+  if (mode === 'resources') { const nums = Object.fromEntries((json(args.projects) || []).map(p => [String(p.projectNumber), p.projectId])), r = gcpResources(raw, nums); events.push(event('cloud.resource_inventory', collector('cloud-asset-inventory'), { inventory_id: `gcp-resources-${randomUUID()}`, provider: 'gcp', source: 'gcp-cloud-asset-inventory', resources: r })); console.log(`Cloud Asset Inventory: ${r.length} resource(s) in ${new Set(r.map(x => x.account_id)).size} project(s) and ${new Set(r.map(x => x.region)).size} location(s).`); }
   if (mode === 'scc-findings') { const f = sccFindings(raw); events.push(...findingEvents(f)); console.log(`Security Command Center: ${f.length} finding(s), ${f.filter(x => x.status === 'active').length} active.`); }
   if (mode === 'iam') { if (!args.project) { console.error('Missing --project <id>'); process.exit(2); } const r = iamSnapshot(raw, args.project); events.push(event('identity.directory_snapshot', collector(args.project), r.details), ...findingEvents(publicBindingFindings(r.publicBindings, args.project, JSON.parse(raw).etag))); console.log(`IAM policy: ${r.details.principals.length} principal(s), ${r.details.privileges.length} role binding(s), ${r.publicBindings.length} public binding(s)${r.publicBindings.length ? ': ' + r.publicBindings.map(b => `${b.member} ${b.role}`).join(', ') : ''}.`); }
   if (mode === 'firewall-rules') { const r = vpcFirewallRules(raw, args.network || null); events.push(ruleset(r, args['device-ref'] || 'gcp-vpc-firewall')); console.log(`VPC firewall: ${r.rules.length} rule(s) including the two implied rules, ${r.unreadable} matching source tags or service accounts (not evaluated).`); }

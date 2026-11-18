@@ -3,6 +3,7 @@
 //
 // Offline modes (--input is a saved AWS CLI/API output):
 //   inventory          --input list-accounts.json [--services service-status.json] [--access {"<account>":"management|assumed|denied"}.json] --output out.json
+//   resources          --input <resource-explorer-2 search --view-arn <aggregator view> --query-string "*"> --output out.json   (CG-050)
 //   findings-asff      --input securityhub-get-findings.json --output out.json
 //   findings-guardduty --input guardduty-get-findings.json --output out.json
 //   security-groups    --input describe-security-groups.json --output out.json [--device-ref aws:<account>:<vpc>]
@@ -20,12 +21,13 @@ import { execFile } from 'node:child_process';
 import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
 import { awsRoleGrant, awsRootGrant } from '../lib/cloud-access.js';
+import { awsResources } from '../lib/cloud-inventory.js';
 import { organizationsAccounts, asffFindings, guarddutyFindings, securityGroupRules, cloudtrailLines, networkFirewallLines, eventBridgeEnvelopes, serviceProbes, probeError, awsServices } from '../lib/connectors/aws.js';
 
 const run = promisify(execFile);
 const [mode, ...rest] = process.argv.slice(2);
 const args = Object.fromEntries(rest.reduce((pairs, v, i, all) => (v.startsWith('--') ? [...pairs, [v.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : true]] : pairs), []));
-const modes = ['inventory', 'findings-asff', 'findings-guardduty', 'security-groups', 'cloudtrail', 'vpc-flow', 'network-firewall', 'eventbridge', 'live'];
+const modes = ['inventory', 'resources', 'findings-asff', 'findings-guardduty', 'security-groups', 'cloudtrail', 'vpc-flow', 'network-firewall', 'eventbridge', 'live'];
 if (!modes.includes(mode)) { console.error(`Usage: node scripts/aws-connector.js <${modes.join('|')}> ... (see the header of this file)`); process.exit(2); }
 if (!args.output) { console.error('Missing --output'); process.exit(2); }
 if (fs.existsSync(args.output)) { console.error('Output already exists. Choose a new private file path.'); process.exit(1); }
@@ -63,6 +65,7 @@ if (mode === 'live') {
     for (const region of regions) try { findings.push(...asffFindings(await aws(['securityhub', 'get-findings', '--filters', '{"RecordState":[{"Value":"ACTIVE","Comparison":"EQUALS"}]}', '--max-items', '1000'], env, region))); } catch { /* Security Hub disabled or denied: already recorded as a service gap */ }
   }
   events.push(event('cloud.account_inventory', collector(organizationId || me.Account), { inventory_id: `aws:${organizationId || me.Account}`, provider: 'aws', organization_id: organizationId, collected_by: collectedBy, accounts, services }), ...findingEvents(findings));
+  try { const r = awsResources(await aws(['resource-explorer-2', 'search', '--query-string', '*', '--max-results', '1000'], base)); if (r.length) events.push(event('cloud.resource_inventory', collector('resource-explorer'), { inventory_id: `aws-resources-${randomUUID()}`, provider: 'aws', source: 'aws-resource-explorer', resources: r })); } catch { /* Resource Explorer aggregator index not set up */ }
   if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `aws-live-${randomUUID()}`, grants }));
   console.log(`AWS live read: ${accounts.length} account(s), ${services.length} service check(s), ${findings.length} active finding(s).`);
 } else {
@@ -73,6 +76,7 @@ if (mode === 'live') {
     events.push(event('cloud.account_inventory', collector('organization'), { inventory_id: `aws:${args['inventory-id'] || 'organization'}`, provider: 'aws', organization_id: args['organization-id'] || null, collected_by: 'manual-import', accounts, services: status }));
     console.log(`AWS Organizations: ${accounts.length} account(s), ${status.length} service status row(s).`);
   }
+  if (mode === 'resources') { const r = awsResources(raw); events.push(event('cloud.resource_inventory', collector('resource-explorer'), { inventory_id: `aws-resources-${randomUUID()}`, provider: 'aws', source: 'aws-resource-explorer', resources: r })); console.log(`Resource Explorer: ${r.length} resource(s) in ${new Set(r.map(x => x.account_id)).size} account(s) and ${new Set(r.map(x => x.region)).size} region(s).`); }
   if (mode === 'findings-asff') { const f = asffFindings(raw); events.push(...findingEvents(f)); console.log(`Security Hub ASFF: ${f.length} finding(s), ${f.filter(x => x.status === 'active').length} active.`); }
   if (mode === 'findings-guardduty') { const f = guarddutyFindings(raw); events.push(...findingEvents(f)); console.log(`GuardDuty: ${f.length} finding(s).`); }
   if (mode === 'security-groups') {

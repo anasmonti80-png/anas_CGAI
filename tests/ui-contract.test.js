@@ -438,3 +438,8 @@ test('cloud view reviews temporary least-privilege access with the reason for ev
   const app=read('app.js');assert.match(app,/\/api\/cloud-access/);
   for(const marker of ['Temporary least-privilege cloud access','root access keys exist','standing administrator','write across a whole organisation','session longer than one hour','PIM eligible (not active)','Short-lived impersonation','scripts/cloud-access-review.js','CG-049']) assert.ok(app.includes(marker),marker);
 });
+
+test('cloud view unifies inventory, alerts, policies, access, regional gaps and charges across providers (CG-050)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/cloud-unified/);
+  for(const marker of ['Unified cloud inventory','Resources by category','Regions with resources but no log coverage','Charges of the services read','Partly charged','No resource inventory','CG-050']) assert.ok(app.includes(marker),marker);
+});

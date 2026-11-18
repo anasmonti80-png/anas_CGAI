@@ -96,3 +96,8 @@
 - صيغ `log.batch` الجديدة: `gcp-audit-json` (فئة `cloud-audit`) و`gcp-vpc-flow-json` (تدفق) و`gcp-firewall-json` (جدار ناري) و`gcp-armor-json` (WAF).
 - المورّدان الجديدان في `firewall.ruleset`: `gcp-vpc-firewall` و`gcp-cloud-armor`. وسياسة IAM تصل كلقطة `identity.directory_snapshot` من نوع `gcp-iam`.
 - التحويل: `node scripts/gcp-connector.js <inventory|scc-findings|iam|firewall-rules|armor-policy|audit-logs|vpc-flow|firewall-logs|armor-logs|live> ...`.
+
+## السحابة: الجرد الموحد (CG-050)
+
+- `cloud.resource_inventory`: `inventory_id` و`provider` و`source` (`aws-resource-explorer` أو `azure-resource-graph` أو `gcp-cloud-asset-inventory`) و`resources[]` (`resource_id`، `name`، `account_id`، `region`، `type`، `category`، `tags`، `public` حين يذكره المصدر فقط).
+- التحويل: الوضع `resources` في `scripts/aws-connector.js` و`scripts/azure-connector.js` و`scripts/gcp-connector.js`، ويُجمع تلقائيًا في الوضع live.
