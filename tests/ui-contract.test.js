@@ -488,3 +488,7 @@ test('incidents show the documented incident study library with stage visibility
   const app=read('app.js');assert.match(app,/\/api\/incident-studies/);
   for(const marker of ['Documented incident study library','Visible here','Blind here','Evidence and visibility','Prevention','rel="noopener noreferrer"','CG-064']) assert.ok(app.includes(marker),marker);
 });
+test('threats manage detection hypotheses from published evidence with manual testing and independent approval (CG-065)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/hypotheses/);
+  for(const marker of ['Detection hypotheses from published evidence','Manually tested','I reviewed the hypothesis and its results manually','Save as draft','Run test','CG-065']) assert.ok(app.includes(marker),marker);
+});

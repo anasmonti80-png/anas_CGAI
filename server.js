@@ -12,6 +12,8 @@ import { remoteAccessConfig, RemoteAccessGate } from './lib/remote-access.js';
 import { SecretStore } from './lib/secret-store.js';
 import { TenantPolicy } from './lib/tenancy.js';
 import { Rollout } from './lib/rollout.js';
+import { Hypotheses } from './lib/hypotheses.js';
+import { evidenceKinds } from './lib/domain.js';
 import { readiness as developmentPromptReadiness } from './scripts/development-prompt.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
@@ -49,7 +51,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds}); domain.hypothesisEngine=hypotheses;
   const setupFile=path.join(dataDir,'setup-token');
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -214,6 +216,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(aiDecision&&method==='POST'){roles(['admin','analyst']);if(aiDecision[2]==='promote'){auth.requireRecentMfa(user);return send(res,201,domain.promoteAiProposal(user.id,aiDecision[1],await body(req)));}return send(res,200,domain.dismissAiProposal(user.id,aiDecision[1]));}
       const cloudAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/cloud$/);
       if(cloudAnalysis&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);fail(typeof cloudAiInvoke==='function',503,'cloud_ai_connector_unavailable');const prepared=domain.prepareAiCloudAnalysis(user.id,cloudAnalysis[1],await body(req)),raw=await cloudAiInvoke({provider:prepared.consent.provider,payload:prepared.payload}),result=validateCloudResult(raw);return send(res,200,domain.recordAiCloudAnalysis(user.id,prepared,result));}
+      if(p==='/api/hypotheses'&&method==='GET'){roles(['admin','analyst']);return send(res,200,{items:hypotheses.list(),operators:['equals','not-equals','contains','starts-with','ends-with','in','gte','lte','exists'],claim:'Published evidence becomes a declarative detection hypothesis that cites its source; nothing from the source is executed. It is tested against labelled samples and replayed over 30 days of stored evidence, a person attests the manual review, and a different administrator with recent MFA approves it before it can raise alerts.',claim_ar:'تتحول الأدلة المنشورة إلى فرضية كشف وصفية تذكر مصدرها؛ ولا يُنفذ شيء من المصدر. تُختبر على عينات معلَّمة وتُعاد على أدلة 30 يومًا مخزنة، ويقر شخص بالمراجعة اليدوية، ويعتمدها مسؤول آخر بتحقق MFA حديث قبل أن ترفع أي تنبيه.'});}
+      if(p==='/api/hypotheses'&&method==='POST'){roles(['admin','analyst']);return send(res,201,hypotheses.create(user.id,await body(req)));}
+      const hypothesisTest=p.match(/^\/api\/hypotheses\/(\d{1,9})\/test$/);if(hypothesisTest&&method==='POST'){roles(['admin','analyst']);return send(res,200,hypotheses.test(user.id,Number(hypothesisTest[1]),await body(req)));}
+      const hypothesisDecision=p.match(/^\/api\/hypotheses\/(\d{1,9})\/(approve|reject|retire)$/);if(hypothesisDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);const input=object(await body(req),['note'],'hypothesis_decision');return send(res,200,hypotheses.decide(user.id,Number(hypothesisDecision[1]),hypothesisDecision[2],input.note));}
       if(p==='/api/incident-studies'&&method==='GET') return send(res,200,domain.incidentStudies({q:url.searchParams.get('q')||''}));
       if(p==='/api/reconciliation'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.reconciliation());}
       if(p==='/api/quality-metrics'&&method==='GET') return send(res,200,domain.qualityMetrics({days:url.searchParams.get('days')||30}));
@@ -348,7 +354,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   const checkSecretRotation=()=>{for(const x of secrets.list().filter(x=>x.status==='rotation-overdue'))domain.alert({key:`CG-SECRET-ROTATION-055:${x.ref}:v${x.version}`,rule:'CG-SECRET-ROTATION-055',severity:'medium',title:`Secret rotation overdue / سر متأخر عن التدوير: ${x.ref} (due ${x.rotation_due_at.slice(0,10)})`});};
   const monitor=setInterval(()=>{try{domain.checkHealth();checkSecretRotation();tenancy.maybeRetention();domain.expireStaleResponseJobs();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
-  return {server,store,auth,domain,secrets,tenancy,rollout,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
+  return {server,store,auth,domain,secrets,tenancy,rollout,hypotheses,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host)||(accessConfig.mode==='vpn'&&host===accessConfig.vpn.listen_host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     // A random port (0) never lands on a port that browsers and fetch refuse by specification (Windows may hand out ports from 1024).

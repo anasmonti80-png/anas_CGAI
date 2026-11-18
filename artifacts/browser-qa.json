@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T20:30:12.630Z",
+  "at": "2026-11-18T20:34:51.929Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -94,7 +94,8 @@
     "rollout": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-062", "settings_panel": "Rollout stages: lab, pilot, expansion", "undeclared_state_visible": true, "gate_checks_localized": true, "arabic_view_clean": true, "mobile_overflow": false, "console_errors": 0},
     "development_prompt": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-063", "achievements_hint": "not written yet with blocking counts", "prompt_file_absent": true, "console_errors": 0},
     "incident_studies": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-064", "incidents_panel": "Documented incident study library", "studies": 8, "stage_visibility_shown": true, "arabic_prevention": true, "mobile_overflow": false, "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 86, "next": "CG-065"}
+    "hypotheses": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-065", "created_from_form": "CG-HYP-0001 draft", "manual_test_from_form": "passed with 2 samples, replay shown", "approve_buttons_after_test": true, "mobile_overflow": false, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 87, "next": "CG-066"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
