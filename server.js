@@ -6,6 +6,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { Store } from './lib/store.js';
 import { Auth } from './lib/auth.js';
+import { Sso } from './lib/sso.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
@@ -39,7 +40,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock});
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock});
   const setupFile=path.join(dataDir,'setup-token');
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -120,6 +121,14 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         const source=domain.sourceToken(bearer,responseResult[1]);
         return send(res,200,domain.completeResponseJob(source.id,responseResult[2],await body(req)));
       }
+      // CG-052 SSO: the login start and the provider callback are reachable before a session exists.
+      if(p==='/api/sso/status'&&method==='GET') return send(res,200,sso.publicStatus());
+      if(p==='/api/sso/start'&&method==='GET') { const location=sso.start(`${tlsMaterial?'https':'http'}://${req.headers.host}/api/sso/callback`); res.writeHead(302,{Location:location}); res.end(); return; }
+      if(p==='/api/sso/callback'&&method==='GET') {
+        try { const session=await sso.callback({code:url.searchParams.get('code'),state:url.searchParams.get('state'),error:url.searchParams.get('error')}); res.writeHead(302,{Location:'/','Set-Cookie':`cg_session=${session.token}; ${cookieFlags}; Max-Age=28800`}); }
+        catch(e) { res.writeHead(302,{Location:`/#sso_error=${encodeURIComponent(e.code||'sso_failed')}`}); }
+        res.end(); return;
+      }
       const user=auth.session(req.headers.cookie);
       authenticatedActor=user.id;
       if(mutation) fail(equal(req.headers['x-csrf-token']||'',user.csrf),403,'csrf_required');
@@ -137,6 +146,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/jit'&&method==='POST') return send(res,201,auth.requestJit(user,await body(req)));
       const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
       if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
+      if(p==='/api/sso/config'&&method==='POST') return send(res,200,await sso.configure(user,object(await body(req),['issuer','client_id','client_secret_env','tenant','tenant_claim','groups_claim','role_map','mfa_amr','mfa_acr'],'sso_config')));
+      if(p==='/api/sso/config'&&method==='GET') { auth.require(user,['admin']); const c=sso.config(); return send(res,200,c?{issuer:c.issuer,client_id:c.client_id,client_secret_env:c.client_secret_env,tenant:c.tenant,tenant_claim:c.tenant_claim,groups_claim:c.groups_claim,role_map:c.role_map,mfa_amr:c.mfa_amr,mfa_acr:c.mfa_acr,updated_at:c.updated_at}:null); }
       if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit,break_glass:user.break_glass,mfa:user.mfa},csrf:user.csrf});
       if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${cookieFlags}; Max-Age=0`);return send(res,200,{logged_out:true});}
       if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
