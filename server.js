@@ -1,4 +1,6 @@
 import http from 'node:http';
+import https from 'node:https';
+import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,8 +29,13 @@ async function body(req) {
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
-export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null}={}) {
+export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null,tls=process.env.CG_TLS_CERT&&process.env.CG_TLS_KEY?{certFile:process.env.CG_TLS_CERT,keyFile:process.env.CG_TLS_KEY}:process.env.CG_TLS==='self-signed'?'self-signed':null}={}) {
   fail(OPERATING_MODES.includes(mode),400,'invalid_operating_mode');
+  // CG-052 HTTPS: an operator certificate (CG_TLS_CERT/CG_TLS_KEY) or a self-signed one kept in the data directory.
+  let tlsMaterial=null;
+  if(tls==='self-signed'){const dir=path.join(dataDir,'tls'),certFile=path.join(dir,'cert.pem'),keyFile=path.join(dir,'key.pem');fs.mkdirSync(dir,{recursive:true});if(!fs.existsSync(certFile)||!fs.existsSync(keyFile)){const c=selfSignedCertificate();fs.writeFileSync(keyFile,c.key,{mode:0o600});fs.writeFileSync(certFile,c.cert);}tlsMaterial={cert:fs.readFileSync(certFile,'utf8'),key:fs.readFileSync(keyFile,'utf8')};}
+  else if(tls&&typeof tls==='object')tlsMaterial=tls.cert&&tls.key?{cert:tls.cert,key:tls.key}:{cert:fs.readFileSync(tls.certFile,'utf8'),key:fs.readFileSync(tls.keyFile,'utf8')};
+  const cookieFlags=tlsMaterial?`${COOKIE}; Secure`:COOKIE;
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
@@ -52,9 +59,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
     const r=rates.get(key)||{n:0,until:now+60000}; r.n++; rates.set(key,r);
     fail(r.n<=600,429,'request_rate_limit');
   }
-  const server=http.createServer(async(req,res)=>{
+  const handler=async(req,res)=>{
     let authenticatedActor=null;
     res.setHeader('Cache-Control','no-store');
+    if(tlsMaterial)res.setHeader('Strict-Transport-Security','max-age=31536000');
     res.setHeader('X-Content-Type-Options','nosniff');
     res.setHeader('Referrer-Policy','no-referrer');
     res.setHeader('X-Frame-Options','DENY');
@@ -73,7 +81,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const responseResult=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs\/([a-f0-9-]{36})\/result$/);
       if(mutation) {
         fail(method==='POST',405,'method_not_allowed');
-        if (!(bearer&&(ingest||responseResult))) fail(req.headers.origin===`http://${req.headers.host}`,403,'origin_not_allowed');
+        if (!(bearer&&(ingest||responseResult))) fail(req.headers.origin===`${tlsMaterial?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
       }
       if(method==='GET' && STATIC.has(p)) {
         const file=path.join(ROOT,'public',p==='/'?'index.html':p.slice(1));
@@ -97,7 +105,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/auth/login'&&method==='POST') {
         const input=object(await body(req),['username','password','mfa_code'],'login');
         const session=await auth.login(input,req.socket.remoteAddress||'unknown');
-        res.setHeader('Set-Cookie',`cg_session=${session.token}; ${COOKIE}; Max-Age=28800`);
+        res.setHeader('Set-Cookie',`cg_session=${session.token}; ${cookieFlags}; Max-Age=28800`);
         return send(res,200,{user:session.user,csrf:session.csrf});
       }
       if(bearer && ingest && method==='POST') {
@@ -130,7 +138,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
       if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
       if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit,break_glass:user.break_glass,mfa:user.mfa},csrf:user.csrf});
-      if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${COOKIE}; Max-Age=0`);return send(res,200,{logged_out:true});}
+      if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${cookieFlags}; Max-Age=0`);return send(res,200,{logged_out:true});}
       if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
         {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
         {id:'enterprise-collectors',status:mode==='enterprise-collectors'?'active':'available',capabilities:['independently authenticated source identities','passive import','SPAN/TAP observations','flow logs','managed agents'],limitations:['Visibility is limited to configured and currently receiving sources.','Connector availability is reported independently.']},
@@ -277,11 +285,12 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(!res.headersSent) send(res,e instanceof AppError?e.status:500,{error:e instanceof AppError?e.code:'internal_error'});
       else res.end();
     }
-  });
+  };
+  const server=tlsMaterial?https.createServer({...tlsMaterial,minVersion:'TLSv1.2'},handler):http.createServer(handler);
   server.requestTimeout=15000; server.headersTimeout=10000; server.keepAliveTimeout=5000; server.maxHeadersCount=50;
   const monitor=setInterval(()=>{try{domain.checkHealth();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
-  return {server,store,auth,domain,setupFile,operatingMode:mode,listen(port=4310,host='127.0.0.1'){
+  return {server,store,auth,domain,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>{server.removeListener('error',reject);resolve(server.address());});});
@@ -291,7 +300,7 @@ if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.
   const app=createApp();
   const port=Number(process.env.CG_PORT||4310);
   await app.listen(port);
-  console.log(`CyberGuard AI engineering preview: http://127.0.0.1:${port}`);
+  console.log(`CyberGuard AI engineering preview: ${app.scheme}://${app.scheme==='https'?'localhost':'127.0.0.1'}:${port}`);
   if(!app.store.get('SELECT id FROM users LIMIT 1')) console.log(`First-run token is in ${app.setupFile}. Keep it private; the file is removed after setup.`);
   for(const signal of ['SIGINT','SIGTERM']) process.once(signal,()=>app.close().then(()=>process.exit(0)));
 }
