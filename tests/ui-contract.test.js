@@ -443,3 +443,8 @@ test('cloud view unifies inventory, alerts, policies, access, regional gaps and 
   const app=read('app.js');assert.match(app,/\/api\/cloud-unified/);
   for(const marker of ['Unified cloud inventory','Resources by category','Regions with resources but no log coverage','Charges of the services read','Partly charged','No resource inventory','CG-050']) assert.ok(app.includes(marker),marker);
 });
+
+test('cloud view plans the NSG to VNet flow log migration with days left and an action per NSG (CG-051)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/nsg-flow-migration/);
+  for(const marker of ['NSG to VNet flow log migration','Migrate: enable a VNet flow log','Covered: disable the NSG flow log to avoid paying twice','NIC-only: enable a VNet flow log on its network','days to','CG-051']) assert.ok(app.includes(marker),marker);
+});

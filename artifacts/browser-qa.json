@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T14:00:33.750Z",
+  "at": "2026-11-18T14:05:28.604Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -84,7 +84,8 @@
     "gcp_connectors": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-048", "projects": 4, "gaps": 9, "active_findings": {"total": 4, "critical": 1, "high": 3}, "public_iam_binding_finding": true, "alerts": ["CG-CLOUD-FINDING-046", "CG-CLOUD-AUDIT-048", "CG-FW-ANYANY-018", "CG-WAF-025"], "providers_on_cloud_page": ["AWS", "Azure", "Google Cloud"], "defects_fixed": ["overview cloud card text overflowed", "gap and findings tables said account for projects and subscriptions", "inactive state said account not active for every provider"], "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
     "cloud_temporary_access": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-049", "grants": 14, "violations": 5, "warnings": 3, "compliant": 5, "expired": 1, "violation_reasons_shown": ["root access keys exist", "administrator without an end time", "standing write access", "write across a whole organisation", "standing administrator"], "temporary_mechanisms_shown": ["PIM activation", "PIM eligible (not active)", "Temporary role session", "Time-bound binding"], "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
     "cloud_unified_inventory": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-050", "resources": {"aws": 7, "azure": 7, "gcp": 6}, "regional_gaps": 7, "charges_listed": 26, "defects_fixed": ["GCP zones counted as separate regions and produced false regional gaps", "security groups classified as other instead of network", "access review alerts not attributed to a provider", "firewall finding types redundant, stale, conflict, broad inbound and expiring exception shown in English in the Arabic view"], "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 76, "next": "CG-051"}
+    "nsg_flow_migration": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-051", "days_to_retirement_shown": 316, "nsg_flow_logs": 3, "actions": {"migrate": "dev-nsg (enable on dev-vnet)", "covered": "web-nsg (disable to avoid paying twice)", "nic_only": "app-nic-nsg"}, "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 77, "next": "CG-052"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

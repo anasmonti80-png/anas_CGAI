@@ -1,0 +1,39 @@
+{
+  "records": [
+    {
+      "time": "2026-11-17T08:30:00.0000000Z",
+      "systemId": "5f7c-example",
+      "macAddress": "000D3AF87856",
+      "category": "NetworkSecurityGroupFlowEvent",
+      "resourceId": "/SUBSCRIPTIONS/22222222-2222-4222-8222-222222222222/RESOURCEGROUPS/DEV-RG/PROVIDERS/MICROSOFT.NETWORK/NETWORKSECURITYGROUPS/DEV-NSG",
+      "operationName": "NetworkSecurityGroupFlowEvents",
+      "properties": {
+        "Version": 2,
+        "flows": [
+          {
+            "rule": "DefaultRule_DenyAllInBound",
+            "flows": [
+              {
+                "mac": "000D3AF87856",
+                "flowTuples": [
+                  "1794904200,203.0.113.77,10.2.0.4,51000,3389,T,I,D,B,,,,"
+                ]
+              }
+            ]
+          },
+          {
+            "rule": "UserRule_allow-https",
+            "flows": [
+              {
+                "mac": "000D3AF87856",
+                "flowTuples": [
+                  "1794904210,198.51.100.30,10.2.0.4,40000,443,T,I,A,E,6,820,5,4200"
+                ]
+              }
+            ]
+          }
+        ]
+      }
+    }
+  ]
+}

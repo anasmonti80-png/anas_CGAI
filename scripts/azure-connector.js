@@ -16,6 +16,8 @@
 //   firewall-policy      --input <az network firewall policy rule-collection-group list> --device-ref azure:<sub>:<policy> --output out.json
 //   activity             --input <activity log export {"records":[...]}, az monitor activity-log list, or JSON lines> --output out.json
 //   vnet-flow            --input <VNet flow log blob {"records":[...]}> --output out.json
+//   nsg-flow             --input <NSG flow log blob {"records":[...]}, version 1 or 2; retiring 2027-09-30> --output out.json   (CG-051)
+//   With --graph, inventory also writes the NSG-to-VNet flow log migration plan (CG-051).
 //   firewall-logs        --input <Azure Firewall structured logs {"records":[...]} or JSON lines> --output out.json
 // Live mode (owner's own "az login"; every call is a read):
 //   live [--subscriptions <id1,id2>] [--tenant-id <guid>] --output out.json
@@ -27,12 +29,12 @@ import { promisify } from 'node:util';
 import { randomUUID } from 'node:crypto';
 import { azureRoleGrants } from '../lib/cloud-access.js';
 import { azureResources } from '../lib/cloud-inventory.js';
-import { subscriptions, azureServiceStatus, defenderAlerts, defenderAssessments, sentinelIncidents, entraSignins, entraDirectoryAudits, nsgRules, azureFirewallPolicyRules, vnetFlowLines } from '../lib/connectors/azure.js';
+import { subscriptions, azureServiceStatus, defenderAlerts, defenderAssessments, sentinelIncidents, entraSignins, entraDirectoryAudits, nsgRules, azureFirewallPolicyRules, vnetFlowLines, nsgFlowLines, nsgFlowMigration } from '../lib/connectors/azure.js';
 
 const run = promisify(execFile);
 const [mode, ...rest] = process.argv.slice(2);
 const args = Object.fromEntries(rest.reduce((pairs, v, i, all) => (v.startsWith('--') ? [...pairs, [v.slice(2), all[i + 1] && !all[i + 1].startsWith('--') ? all[i + 1] : true]] : pairs), []));
-const modes = ['inventory', 'resources', 'defender-alerts', 'defender-assessments', 'sentinel-incidents', 'entra-signins', 'entra-audits', 'nsg', 'firewall-policy', 'activity', 'vnet-flow', 'firewall-logs', 'live'];
+const modes = ['inventory', 'resources', 'defender-alerts', 'defender-assessments', 'sentinel-incidents', 'entra-signins', 'entra-audits', 'nsg', 'firewall-policy', 'activity', 'vnet-flow', 'nsg-flow', 'firewall-logs', 'live'];
 if (!modes.includes(mode)) { console.error(`Usage: node scripts/azure-connector.js <${modes.join('|')}> ... (see the header of this file)`); process.exit(2); }
 if (!args.output) { console.error('Missing --output'); process.exit(2); }
 if (fs.existsSync(args.output)) { console.error('Output already exists. Choose a new private file path.'); process.exit(1); }
@@ -45,6 +47,7 @@ const logBatch = (format, lines, name) => event('log.batch', collector(name), { 
 const findingEvents = list => list.map(f => event('cloud.finding', collector(f.account_id), f));
 const records = raw => { const t = raw.trim(); if (t.startsWith('{')) { const v = JSON.parse(t); return (v.records || v.value || [v]).map(r => JSON.stringify(r)); } if (t.startsWith('[')) return JSON.parse(t).map(r => JSON.stringify(r)); return t.split(/\r?\n/).filter(Boolean); };
 const ruleset = (r, ref) => event('firewall.ruleset', { external_id: `firewall-${ref}`.slice(0, 200), hostname: ref, os_family: 'network', device_type: 'firewall', addresses: [] }, { ruleset_id: `${r.vendor}:${ref}`, device_ref: ref, vendor: r.vendor, evaluation: 'first-match', rules: r.rules });
+const migrationEvent = graph => { const items = nsgFlowMigration(graph).map(({ days_to_retirement, ...x }) => x); return items.length ? event('cloud.nsg_flow_migration', collector('nsg-flow-migration'), { plan_id: `nsg-flow-${randomUUID()}`, items }) : null; };
 const inventoryEvent = (accounts, services, tenant, by) => event('cloud.account_inventory', collector(tenant || 'tenant'), { inventory_id: `azure:${tenant || 'tenant'}`, provider: 'azure', organization_id: tenant || null, collected_by: by, accounts, services });
 const events = [];
 
@@ -68,6 +71,7 @@ if (mode === 'live') {
   try { const s = await az(['rest', '--method', 'get', '--url', 'https://graph.microsoft.com/v1.0/auditLogs/signIns?$top=500']); entra = 'enabled'; try { events.push(event('identity.signin_activity', collector(directoryRef), entraSignins(s, directoryRef))); } catch { /* no sign-ins in the window */ }
     const audits = entraDirectoryAudits(await az(['rest', '--method', 'get', '--url', 'https://graph.microsoft.com/v1.0/auditLogs/directoryAudits?$top=500']), directoryRef); for (const c of audits.changes) events.push(event('identity.idp_change', collector(directoryRef), c)); } catch { entra = entra || 'access-denied'; }
   events.unshift(inventoryEvent(accounts, azureServiceStatus({ accounts, graph, pricings, diagnostics, sentinel, entra }), tenant, 'tenant'));
+  if (graph) { const m = migrationEvent(graph); if (m) events.push(m); }
   events.push(...findingEvents(findings));
   try { const all = []; let skip = null; do { const r = await az(['graph', 'query', '-q', 'resources | project id,name,type,location,subscriptionId,tags,properties', '--first', '1000', '--subscriptions', ...ids, ...(skip ? ['--skip-token', skip] : [])]); all.push(...(r.data || [])); skip = r.skip_token || null; } while (skip && all.length < 20000); const r = azureResources(all); if (r.length) events.push(event('cloud.resource_inventory', collector('resource-graph'), { inventory_id: `azure-resources-${randomUUID()}`, provider: 'azure', source: 'azure-resource-graph', resources: r })); } catch { /* Resource Graph not readable */ }
   if (grants.length) events.push(event('cloud.access_grant', collector('access-review'), { review_id: `azure-live-${randomUUID()}`, grants }));
@@ -79,6 +83,7 @@ if (mode === 'live') {
     const access = json(args.access) || {}, accounts = subscriptions(raw).map(a => ({ ...a, access: access[a.account_id] || a.access })), graph = args.graph ? (j => j.data || j.value || j)(json(args.graph)) : null;
     const services = azureServiceStatus({ accounts, graph, pricings: json(args.pricings) || {}, diagnostics: json(args.diagnostics) || {}, sentinel: json(args.sentinel) || {}, entra: args.entra });
     events.push(inventoryEvent(accounts, services, args['tenant-id'], 'manual-import'));
+    if (graph) { const m = migrationEvent(graph); if (m) { events.push(m); console.log(`NSG flow logs: ${m.details.items.length}, ${m.details.items.filter(x => x.status === 'migrate').length} to migrate to VNet flow logs before 2027-09-30.`); } }
     console.log(`Azure subscriptions: ${accounts.length}, ${services.length} service status row(s).`);
   }
   if (mode === 'resources') { const r = azureResources(raw); events.push(event('cloud.resource_inventory', collector('resource-graph'), { inventory_id: `azure-resources-${randomUUID()}`, provider: 'azure', source: 'azure-resource-graph', resources: r })); console.log(`Resource Graph: ${r.length} resource(s) in ${new Set(r.map(x => x.account_id)).size} subscription(s) and ${new Set(r.map(x => x.region)).size} region(s).`); }
@@ -92,6 +97,7 @@ if (mode === 'live') {
   if (mode === 'firewall-policy') { const r = azureFirewallPolicyRules(raw); events.push(ruleset(r, args['device-ref'] || 'azure-firewall')); console.log(`Azure Firewall policy: ${r.rules.length} rule(s), ${r.unreadable} with IP groups or names (not evaluated).`); }
   if (mode === 'activity') { const l = records(raw); events.push(logBatch('azure-activity-json', l, 'azure-activity-log')); console.log(`Activity log: ${l.length} record(s).`); }
   if (mode === 'vnet-flow') { const l = vnetFlowLines(raw); events.push(logBatch('azure-vnet-flow-json', l, 'azure-vnet-flow-logs')); console.log(`VNet flow logs: ${l.length} flow tuple(s).`); }
+  if (mode === 'nsg-flow') { const l = nsgFlowLines(raw); events.push(logBatch('azure-nsg-flow-json', l, 'azure-nsg-flow-logs')); console.log(`NSG flow logs: ${l.length} flow tuple(s) (format retiring 2027-09-30).`); }
   if (mode === 'firewall-logs') { const l = records(raw); events.push(logBatch('azure-firewall-json', l, 'azure-firewall')); console.log(`Azure Firewall logs: ${l.length} record(s).`); }
 }
 if (!events.length) { console.error('Nothing to write.'); process.exit(1); }

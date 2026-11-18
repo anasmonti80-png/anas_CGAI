@@ -182,6 +182,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/sensitive-changes'&&method==='GET') return send(res,200,domain.sensitiveChanges(page(url.searchParams)));
       if(p==='/api/detection-rules'&&method==='GET') return send(res,200,domain.detectionRulesStatus());
       if(p==='/api/device-capabilities'&&method==='GET') return send(res,200,domain.deviceCapabilities());
+      if(p==='/api/nsg-flow-migration'&&method==='GET') return send(res,200,domain.nsgFlowMigration());
       if(p==='/api/cloud-unified'&&method==='GET') return send(res,200,domain.cloudUnified());
       if(p==='/api/cloud-access'&&method==='GET') return send(res,200,domain.cloudAccessReview());
       if(p==='/api/cloud-posture'&&method==='GET') return send(res,200,domain.cloudPosture(url.searchParams.get('provider')||'aws'));

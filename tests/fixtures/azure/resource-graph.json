@@ -51,7 +51,49 @@
       "type": "microsoft.network/networksecuritygroups",
       "location": "westeurope",
       "subscriptionId": "11111111-1111-4111-8111-111111111111",
-      "properties": {}
+      "properties": {
+        "subnets": [
+          {
+            "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/virtualNetworks/hub-vnet/subnets/web"
+          }
+        ]
+      }
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/app-rg/providers/Microsoft.Network/networkSecurityGroups/app-nic-nsg",
+      "name": "app-nic-nsg",
+      "type": "microsoft.network/networksecuritygroups",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {
+        "networkInterfaces": [
+          {
+            "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/app-rg/providers/Microsoft.Network/networkInterfaces/app-vm-nic"
+          }
+        ]
+      }
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope/flowLogs/web-nsg-flowlog",
+      "name": "NetworkWatcher_westeurope/flowLogs/web-nsg-flowlog",
+      "type": "microsoft.network/networkwatchers/flowlogs",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {
+        "targetResourceId": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/networkSecurityGroups/web-nsg",
+        "enabled": true
+      }
+    },
+    {
+      "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope/flowLogs/app-nic-nsg-flowlog",
+      "name": "NetworkWatcher_westeurope/flowLogs/app-nic-nsg-flowlog",
+      "type": "microsoft.network/networkwatchers/flowlogs",
+      "location": "westeurope",
+      "subscriptionId": "11111111-1111-4111-8111-111111111111",
+      "properties": {
+        "targetResourceId": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/app-rg/providers/Microsoft.Network/networkSecurityGroups/app-nic-nsg",
+        "enabled": true
+      }
     },
     {
       "id": "/subscriptions/11111111-1111-4111-8111-111111111111/resourceGroups/net-rg/providers/Microsoft.Network/applicationSecurityGroups/web-asg",
@@ -75,7 +117,13 @@
       "type": "microsoft.network/networksecuritygroups",
       "location": "westeurope",
       "subscriptionId": "22222222-2222-4222-8222-222222222222",
-      "properties": {}
+      "properties": {
+        "subnets": [
+          {
+            "id": "/subscriptions/22222222-2222-4222-8222-222222222222/resourceGroups/dev-rg/providers/Microsoft.Network/virtualNetworks/dev-vnet/subnets/default"
+          }
+        ]
+      }
     },
     {
       "id": "/subscriptions/22222222-2222-4222-8222-222222222222/resourceGroups/NetworkWatcherRG/providers/Microsoft.Network/networkWatchers/NetworkWatcher_westeurope/flowLogs/dev-nsg-flowlog",
