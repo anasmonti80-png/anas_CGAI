@@ -415,3 +415,9 @@ test('browser markup respects the style-src CSP and uses pattern attributes that
   assert.ok(patterns.length>=2);
   for(const p of patterns){const re=new RegExp(`^(?:${p})$`,'v');if(p.includes('{6}')){assert.equal(re.test('123456'),true,p);assert.equal(re.test('qa-admin'),false,p);}else{assert.equal(re.test('qa-admin'),true,p);assert.equal(re.test('bad name'),false,p);}}
 });
+
+test('every server description has an Arabic version and the interface shows it in the interface language',()=>{
+  for(const file of ['../lib/domain.js','../lib/auth.js']){const src=fs.readFileSync(new URL(file,import.meta.url),'utf8');
+    for(const m of src.matchAll(/claim:'((?:[^'\\]|\\.)*)'(,claim_ar:'((?:[^'\\]|\\.)*)')?/g)){if(m[1]==='not-independently-verified')continue;assert.ok(m[3]&&/[؀-ۿ]/.test(m[3]),`missing Arabic for claim: ${m[1].slice(0,60)}`);}}
+  for(const name of ['app.js','dashboard.js'])assert.doesNotMatch(read(name),/\$\{h\([a-zA-Z]+\.claim\)\}/,`${name} shows a server claim without the Arabic version`);
+});

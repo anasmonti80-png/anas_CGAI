@@ -7,6 +7,7 @@ import { Auth } from './lib/auth.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
+import { toAr } from './lib/i18n-ar.js';
 import { AppError, fail, equal, object, page, token, MAX_INGEST_BYTES } from './lib/common.js';
 import { validateCloudResult } from './lib/ai-model-policy.js';
 
@@ -134,7 +135,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
         {id:'enterprise-collectors',status:mode==='enterprise-collectors'?'active':'available',capabilities:['independently authenticated source identities','passive import','SPAN/TAP observations','flow logs','managed agents'],limitations:['Visibility is limited to configured and currently receiving sources.','Connector availability is reported independently.']},
         {id:'authorized-defense-validation-lab',status:mode==='authorized-defense-validation-lab'?'active':'requires-explicit-authorization',capabilities:['isolated synthetic validation data','responsive browser QA harness'],limitations:['Requires CG_BROWSER_QA and a non-secret authorization reference at process start.','Never represents production validation.']}
-      ]});
+      ].map(m=>({...m,capabilities_ar:m.capabilities.map(toAr),limitations_ar:m.limitations.map(toAr)}))});
       if(p==='/api/users') {
         roles(['admin']);
         if(method==='GET') return send(res,200,{items:store.all('SELECT id,username,role,created_at FROM users ORDER BY username')});
