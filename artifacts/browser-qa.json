@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T20:44:08.029Z",
+  "at": "2026-11-18T20:50:19.247Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -97,7 +97,8 @@
     "hypotheses": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-065", "created_from_form": "CG-HYP-0001 draft", "manual_test_from_form": "passed with 2 samples, replay shown", "approve_buttons_after_test": true, "mobile_overflow": false, "console_errors": 0},
     "rule_signing": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-066", "threats_panel": "Rule signing, versions and update packs", "own_key_fingerprint_visible": true, "export_link": "/api/rule-packs/export", "import_requires_mfa": true, "mobile_overflow": false, "console_errors": 0},
     "remediation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-067", "alert_modal_section": "Best way to fix", "recommended_marked": true, "unknowns_listed": true, "asset_type_localized": true, "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 89, "next": "CG-072"}
+    "attack_surface": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-072", "real_local_self_check": "scope 127.0.0.1/32 on the owner workstation: 445/smb, 3389/rdp, 5985/winrm open, 3 high or critical findings", "vulnerabilities_panel": "External attack surface of authorized assets", "mobile_overflow": false, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 90, "next": "CG-074"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

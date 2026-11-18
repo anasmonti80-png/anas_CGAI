@@ -499,3 +499,7 @@ test('threats show signed rule versions with rollback and signed update packs fr
 test('alert details show the best fix for the environment with non-applicable options, verification and uncertainty (CG-067)',()=>{
   const app=read('app.js');for(const marker of ['/remediation`','data-remediation','Best way to fix','Not applicable here','Verify the fix','Low confidence','CG-067']) assert.ok(app.includes(marker),marker);
 });
+test('vulnerabilities show the external attack surface of authorized assets with not-probed targets (CG-072)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/attack-surface/);
+  for(const marker of ['External attack surface of authorized assets','Not probed (outside authorization)','Ownership verified by DNS','node scripts/attack-surface.js scan','CG-072']) assert.ok(app.includes(marker),marker);
+});

@@ -227,6 +227,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/rule-packs/import'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,hypotheses.importPack(user.id,await body(req)));}
       const hypothesisTest=p.match(/^\/api\/hypotheses\/(\d{1,9})\/test$/);if(hypothesisTest&&method==='POST'){roles(['admin','analyst']);return send(res,200,hypotheses.test(user.id,Number(hypothesisTest[1]),await body(req)));}
       const hypothesisDecision=p.match(/^\/api\/hypotheses\/(\d{1,9})\/(approve|reject|retire)$/);if(hypothesisDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);const input=object(await body(req),['note'],'hypothesis_decision');return send(res,200,hypotheses.decide(user.id,Number(hypothesisDecision[1]),hypothesisDecision[2],input.note));}
+      if(p==='/api/attack-surface'&&method==='GET') return send(res,200,domain.attackSurface());
       if(p==='/api/incident-studies'&&method==='GET') return send(res,200,domain.incidentStudies({q:url.searchParams.get('q')||''}));
       if(p==='/api/reconciliation'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.reconciliation());}
       if(p==='/api/quality-metrics'&&method==='GET') return send(res,200,domain.qualityMetrics({days:url.searchParams.get('days')||30}));

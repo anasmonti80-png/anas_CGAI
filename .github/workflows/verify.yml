@@ -123,3 +123,13 @@ jobs:
           sudo test -f /var/lib/private/cyberguard-tenants/north-clinic/cyberguard.sqlite
           test "$(sudo cat /var/lib/private/cyberguard-tenants/acme-bank/setup-token)" != "$(sudo cat /var/lib/private/cyberguard-tenants/north-clinic/setup-token)"
           sudo systemd-analyze security cyberguard@acme-bank --no-pager | tail -1
+      - name: Check the authorized attack surface of this runner with Linux nmap (CG-072)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y -qq nmap >/dev/null
+          nmap --version | head -1
+          printf '{"authorization_ref":"CI-RUNNER-SELF-CHECK","owner":"GitHub Actions runner","window_end":"%s","networks":["127.0.0.1/32"],"ports":[22,4310,4411,4412],"rate_per_second":50}' "$(date -u -d '+1 hour' +%Y-%m-%dT%H:%M:%SZ)" > "$RUNNER_TEMP/scope.json"
+          node scripts/attack-surface.js scan --scope "$RUNNER_TEMP/scope.json" --output "$RUNNER_TEMP/easm-nmap.json" --nmap
+          node -e "const t=require(process.argv[1]);const s=t.events.flatMap(e=>e.details.services);console.log(JSON.stringify(s));if(!s.some(x=>x.port===4310&&x.via==='nmap'))process.exit(1);if(t.events[0].details.tool!=='nmap')process.exit(1)" "$RUNNER_TEMP/easm-nmap.json"
+          node scripts/attack-surface.js scan --scope "$RUNNER_TEMP/scope.json" --output "$RUNNER_TEMP/easm-tcp.json"
+          node -e "const t=require(process.argv[1]);if(!t.events.flatMap(e=>e.details.services).some(x=>x.port===4310&&x.via==='tcp-connect'))process.exit(1)" "$RUNNER_TEMP/easm-tcp.json"
