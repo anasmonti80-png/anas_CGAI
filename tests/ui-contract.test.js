@@ -454,3 +454,8 @@ test('login offers SSO with clear refusal reasons, settings manage SSO and per-u
   for(const marker of ['Sign in with SSO','The identity provider did not prove multi-factor authentication.','None of your groups is mapped to a CyberGuard role.','OIDC single sign-on and tenant/site scope','Tenant, site and area scope per user','Overview of your sites only.','This view aggregates every site; your access is limited to specific sites.','CG-052']) assert.ok(app.includes(marker),marker);
   assert.ok(app.includes("state.user.scope?.restricted"),'site-limited users get the scoped workspace');
 });
+
+test('settings explain how CyberGuard is reached remotely and whether devices must prove compliance (CG-053)',()=>{
+  const app=read('app.js'),html=read('index.html');assert.match(app,/\/api\/remote-access/);assert.match(html,/manifest\.webmanifest/);
+  for(const marker of ['Remote access and devices','Through a Zero Trust gateway','Over VPN with TLS','Device posture rule','Device certificates (mTLS)','Install app','CG-053']) assert.ok(app.includes(marker),marker);
+});

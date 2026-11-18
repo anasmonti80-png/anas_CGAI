@@ -8,6 +8,7 @@ import { Store } from './lib/store.js';
 import { Auth } from './lib/auth.js';
 import { Sso } from './lib/sso.js';
 import { scopeFor, pathDomain, siteScopedPath, scopeDomains } from './lib/access-scope.js';
+import { remoteAccessConfig, RemoteAccessGate } from './lib/remote-access.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
@@ -16,8 +17,8 @@ import { AppError, fail, equal, object, page, token, MAX_INGEST_BYTES } from './
 import { validateCloudResult } from './lib/ai-model-policy.js';
 
 const ROOT=fileURLToPath(new URL('./',import.meta.url));
-const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml'};
-const STATIC=new Set(['/','/app.js','/dashboard.js','/styles.css','/soc.css','/icon.svg']);
+const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webmanifest':'application/manifest+json; charset=utf-8'};
+const STATIC=new Set(['/','/app.js','/dashboard.js','/styles.css','/soc.css','/icon.svg','/manifest.webmanifest']);
 const COOKIE='Path=/; HttpOnly; SameSite=Strict';
 const OPERATING_MODES=['pc-local','enterprise-collectors','authorized-defense-validation-lab'];
 const readJson=p=>JSON.parse(fs.readFileSync(path.join(ROOT,p),'utf8'));
@@ -31,13 +32,15 @@ async function body(req) {
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
-export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null,tls=process.env.CG_TLS_CERT&&process.env.CG_TLS_KEY?{certFile:process.env.CG_TLS_CERT,keyFile:process.env.CG_TLS_KEY}:process.env.CG_TLS==='self-signed'?'self-signed':null,tenant=process.env.CG_TENANT||'default'}={}) {
+export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null,tls=process.env.CG_TLS_CERT&&process.env.CG_TLS_KEY?{certFile:process.env.CG_TLS_CERT,keyFile:process.env.CG_TLS_KEY}:process.env.CG_TLS==='self-signed'?'self-signed':null,tenant=process.env.CG_TENANT||'default',remoteAccess=process.env,clientCa=process.env.CG_TLS_CLIENT_CA?fs.readFileSync(process.env.CG_TLS_CLIENT_CA,'utf8'):null,jwksFetcher=null}={}) {
   fail(OPERATING_MODES.includes(mode),400,'invalid_operating_mode');
   // CG-052 HTTPS: an operator certificate (CG_TLS_CERT/CG_TLS_KEY) or a self-signed one kept in the data directory.
   let tlsMaterial=null;
   if(tls==='self-signed'){const dir=path.join(dataDir,'tls'),certFile=path.join(dir,'cert.pem'),keyFile=path.join(dir,'key.pem');fs.mkdirSync(dir,{recursive:true});if(!fs.existsSync(certFile)||!fs.existsSync(keyFile)){const c=selfSignedCertificate();fs.writeFileSync(keyFile,c.key,{mode:0o600});fs.writeFileSync(certFile,c.cert);}tlsMaterial={cert:fs.readFileSync(certFile,'utf8'),key:fs.readFileSync(keyFile,'utf8')};}
   else if(tls&&typeof tls==='object')tlsMaterial=tls.cert&&tls.key?{cert:tls.cert,key:tls.key}:{cert:fs.readFileSync(tls.certFile,'utf8'),key:fs.readFileSync(tls.keyFile,'utf8')};
-  const cookieFlags=tlsMaterial?`${COOKIE}; Secure`:COOKIE;
+  // CG-053 remote access: loopback, Zero Trust gateway or VPN (with optional device certificates).
+  const accessConfig=remoteAccessConfig(remoteAccess,{tls:Boolean(tlsMaterial),clientCa:Boolean(clientCa&&tlsMaterial)}),gate=new RemoteAccessGate(accessConfig,{fetchJwks:jwksFetcher});
+  const secureFor=req=>Boolean(tlsMaterial)||req.cgAccess?.via==='ztna',cookieFor=req=>secureFor(req)?`${COOKIE}; Secure`:COOKIE;
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
@@ -69,10 +72,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
     res.setHeader('Referrer-Policy','no-referrer');
     res.setHeader('X-Frame-Options','DENY');
     res.setHeader('Permissions-Policy','camera=(), microphone=(), geolocation=()');
-    res.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; form-action 'self'; frame-ancestors ${browserQa?"'self'":"'none'"}`);
+    res.setHeader('Content-Security-Policy',`default-src 'none'; script-src 'self'; style-src 'self'; img-src 'self'; connect-src 'self'; base-uri 'none'; manifest-src 'self'; form-action 'self'; frame-ancestors ${browserQa?"'self'":"'none'"}`);
     try {
       const port=server.address()?.port;
-      fail([`127.0.0.1:${port}`,`localhost:${port}`,`[::1]:${port}`].includes(req.headers.host),403,'host_not_allowed');
+      req.cgAccess=await gate.check(req,port);
       rate(req);
       const url=new URL(req.url,`http://${req.headers.host}`), p=url.pathname, method=req.method;
       fail(['GET','POST'].includes(method),405,'method_not_allowed');
@@ -83,7 +86,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const responseResult=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs\/([a-f0-9-]{36})\/result$/);
       if(mutation) {
         fail(method==='POST',405,'method_not_allowed');
-        if (!(bearer&&(ingest||responseResult))) fail(req.headers.origin===`${tlsMaterial?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
+        if (!(bearer&&(ingest||responseResult))) fail(req.headers.origin===`${secureFor(req)?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
       }
       if(method==='GET' && STATIC.has(p)) {
         const file=path.join(ROOT,'public',p==='/'?'index.html':p.slice(1));
@@ -107,7 +110,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/auth/login'&&method==='POST') {
         const input=object(await body(req),['username','password','mfa_code'],'login');
         const session=await auth.login(input,req.socket.remoteAddress||'unknown');
-        res.setHeader('Set-Cookie',`cg_session=${session.token}; ${cookieFlags}; Max-Age=28800`);
+        res.setHeader('Set-Cookie',`cg_session=${session.token}; ${cookieFor(req)}; Max-Age=28800`);store.audit(session.user.id,'access.path','session',{via:req.cgAccess.via,identity:req.cgAccess.identity,device:req.cgAccess.device});
         return send(res,200,{user:session.user,csrf:session.csrf});
       }
       if(bearer && ingest && method==='POST') {
@@ -124,9 +127,9 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       // CG-052 SSO: the login start and the provider callback are reachable before a session exists.
       if(p==='/api/sso/status'&&method==='GET') return send(res,200,sso.publicStatus());
-      if(p==='/api/sso/start'&&method==='GET') { const location=sso.start(`${tlsMaterial?'https':'http'}://${req.headers.host}/api/sso/callback`); res.writeHead(302,{Location:location}); res.end(); return; }
+      if(p==='/api/sso/start'&&method==='GET') { const location=sso.start(`${secureFor(req)?'https':'http'}://${req.headers.host}/api/sso/callback`); res.writeHead(302,{Location:location}); res.end(); return; }
       if(p==='/api/sso/callback'&&method==='GET') {
-        try { const session=await sso.callback({code:url.searchParams.get('code'),state:url.searchParams.get('state'),error:url.searchParams.get('error')}); res.writeHead(302,{Location:'/','Set-Cookie':`cg_session=${session.token}; ${cookieFlags}; Max-Age=28800`}); }
+        try { const session=await sso.callback({code:url.searchParams.get('code'),state:url.searchParams.get('state'),error:url.searchParams.get('error')}); res.writeHead(302,{Location:'/','Set-Cookie':`cg_session=${session.token}; ${cookieFor(req)}; Max-Age=28800`}); }
         catch(e) { res.writeHead(302,{Location:`/#sso_error=${encodeURIComponent(e.code||'sso_failed')}`}); }
         res.end(); return;
       }
@@ -158,13 +161,14 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/jit'&&method==='POST') return send(res,201,auth.requestJit(user,await body(req)));
       const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
       if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
+      if(p==='/api/remote-access'&&method==='GET') return send(res,200,{...gate.summary(),this_request:req.cgAccess,claim:'CyberGuard is reachable from this machine, through a Zero Trust gateway that signs every request with an access assertion (and, when required, a device posture claim), or over a VPN with TLS from the VPN address pools and, when a device CA is set, only from devices holding a certificate it issued. Direct exposure on other addresses is refused.',claim_ar:'يمكن الوصول إلى CyberGuard من هذا الجهاز، أو عبر بوابة Zero Trust توقّع كل طلب بتأكيد وصول (ومطالبة بحالة الجهاز عند اشتراطها)، أو عبر VPN مع TLS من نطاقات عناوين الـVPN، وعند ضبط جهة إصدار للأجهزة لا يُقبل إلا جهاز يحمل شهادة صادرة منها. ويُرفض التعريض المباشر على عناوين أخرى.'});
       if(p==='/api/scoped-overview'&&method==='GET') return send(res,200,domain.scopedOverview(allowedAssets||domain.list('assets',{limit:100000}).items.map(a=>a.id),scope.sites));
       if(p==='/api/user-scopes'&&method==='GET'){auth.require(user,['admin']);return send(res,200,{items:store.all('SELECT s.*,u.username FROM user_scopes s JOIN users u ON u.id=s.user_id ORDER BY u.username').map(r=>({...r,sites:JSON.parse(r.sites),domains:JSON.parse(r.domains)})),tenant,domains:scopeDomains});}
       if(p==='/api/user-scopes'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'scope_admin_requires_full_scope');const input=object(await body(req),['user_id','tenant','sites','domains'],'user_scope');const target=store.require('SELECT id FROM users WHERE id=?',[String(input.user_id)]);fail(target.id!==user.id,403,'cannot_change_own_scope');const list=(v,name,max,allowedValues)=>{fail(Array.isArray(v)&&v.length>=1&&v.length<=max&&v.every(x=>typeof x==='string'&&x.length>=1&&x.length<=200&&(!allowedValues||x==='*'||allowedValues.includes(x))),400,`invalid_${name}`);return [...new Set(v)];};const sites=list(input.sites,'scope_sites',100),domains=list(input.domains,'scope_domains',scopeDomains.length+1,scopeDomains),t=String(input.tenant||'');fail(/^[A-Za-z0-9_.-]{1,100}$/.test(t),400,'invalid_scope_tenant');const at=new Date().toISOString();store.transaction(()=>{store.run('INSERT INTO user_scopes VALUES (?,?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET tenant=excluded.tenant,sites=excluded.sites,domains=excluded.domains,source=excluded.source,updated_by=excluded.updated_by,updated_at=excluded.updated_at',target.id,t,JSON.stringify(sites),JSON.stringify(domains),'admin',user.id,at);store.audit(user.id,'user.scope.set',target.id,{tenant:t,sites,domains},at);});return send(res,200,{user_id:target.id,tenant:t,sites,domains});}
       if(p==='/api/sso/config'&&method==='POST') return send(res,200,await sso.configure(user,object(await body(req),['issuer','client_id','client_secret_env','tenant','tenant_claim','groups_claim','role_map','mfa_amr','mfa_acr'],'sso_config')));
       if(p==='/api/sso/config'&&method==='GET') { auth.require(user,['admin']); const c=sso.config(); return send(res,200,c?{issuer:c.issuer,client_id:c.client_id,client_secret_env:c.client_secret_env,tenant:c.tenant,tenant_claim:c.tenant_claim,groups_claim:c.groups_claim,role_map:c.role_map,mfa_amr:c.mfa_amr,mfa_acr:c.mfa_acr,updated_at:c.updated_at}:null); }
       if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{scope:user.scope,id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit,break_glass:user.break_glass,mfa:user.mfa},csrf:user.csrf});
-      if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${cookieFlags}; Max-Age=0`);return send(res,200,{logged_out:true});}
+      if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${cookieFor(req)}; Max-Age=0`);return send(res,200,{logged_out:true});}
       if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
         {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
         {id:'enterprise-collectors',status:mode==='enterprise-collectors'?'active':'available',capabilities:['independently authenticated source identities','passive import','SPAN/TAP observations','flow logs','managed agents'],limitations:['Visibility is limited to configured and currently receiving sources.','Connector availability is reported independently.']},
@@ -312,12 +316,12 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       else res.end();
     }
   };
-  const server=tlsMaterial?https.createServer({...tlsMaterial,minVersion:'TLSv1.2'},handler):http.createServer(handler);
+  const server=tlsMaterial?https.createServer({...tlsMaterial,minVersion:'TLSv1.2',...(accessConfig.device_certificates?{ca:clientCa,requestCert:true,rejectUnauthorized:true}:{})},handler):http.createServer(handler);
   server.requestTimeout=15000; server.headersTimeout=10000; server.keepAliveTimeout=5000; server.maxHeadersCount=50;
   const monitor=setInterval(()=>{try{domain.checkHealth();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
   return {server,store,auth,domain,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
-    fail(['127.0.0.1','::1'].includes(host),400,'loopback_only');
+    fail(['127.0.0.1','::1'].includes(host)||(accessConfig.mode==='vpn'&&host===accessConfig.vpn.listen_host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>{server.removeListener('error',reject);resolve(server.address());});});
   },async close(){clearInterval(monitor);clearInterval(permitExpiryMonitor);if(server.listening){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}store.close();}};
