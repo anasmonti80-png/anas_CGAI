@@ -344,6 +344,11 @@ test('data sources view shows security control integrations for DNS security, WA
   for(const marker of ['Security control integrations by environment','DNS security','Receiving, not declared','Not configured','Actually received','CG-023']) assert.ok(app.includes(marker),marker);
 });
 
+test('data sources view shows device capability negotiation with the reason for every unavailable capability',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/device-capabilities/);
+  for(const marker of ['Device capability negotiation','Port shutdown','licence expired','version too old','scripts/Probe-LocalCapabilities.ps1','CG-044']) assert.ok(app.includes(marker),marker);
+});
+
 test('network map shows controller topology with device health and no guessed links',()=>{
   const app=read('app.js');assert.match(app,/\/api\/network-topology/);
   for(const marker of ['Controller topology and device health','topology-map','links down','scripts/cisco-connector.js catalyst-topology','scripts/huawei-connector.js vrp-lldp','Huawei iMaster NCE-Campus','CG-041','CG-042']) assert.ok(app.includes(marker),marker);
