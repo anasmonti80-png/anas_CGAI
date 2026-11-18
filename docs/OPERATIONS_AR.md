@@ -53,3 +53,9 @@
 - Zero Trust: يبقى CyberGuard على 127.0.0.1 ويعمل موصل البوابة (مثل cloudflared أو موصل تطبيق ZTNA) على الجهاز نفسه. اضبط `CG_REMOTE_ACCESS=ztna` و`CG_PUBLIC_HOSTS=soc.example.com` و`CG_ZTNA_ISSUER` و`CG_ZTNA_AUDIENCE` و`CG_ZTNA_JWKS_URL` (HTTPS)، واسم ترويسة التأكيد في `CG_ZTNA_HEADER` (الافتراضي `cf-access-jwt-assertion` لـCloudflare Access). كل طلب للاسم العام يحتاج تأكيدًا موقّعًا صالحًا للجمهور وغير منتهٍ، ويُشترط امتثال الجهاز بـ`CG_ZTNA_DEVICE_CLAIM` و`CG_ZTNA_DEVICE_VALUE` (مثل `device_posture.compliant=true`).
 - VPN: `CG_REMOTE_ACCESS=vpn` مع TLS إلزامي و`CG_LISTEN_HOST` عنوان واجهة الـVPN الخاص (لا يُقبل عنوان عام) و`CG_VPN_CIDRS` نطاقات عملاء الـVPN. ومع `CG_TLS_CLIENT_CA` (شهادة جهة إصدار أجهزة المؤسسة) لا يتصل إلا جهاز يحمل شهادة صادرة منها (mTLS).
 - كل دخول يُسجل في التدقيق بطريقة الوصول والهوية لدى البوابة والجهاز. والواجهة قابلة للتثبيت كتطبيق على Windows والأجهزة اللوحية والهواتف (Web App Manifest).
+
+## التشغيل على لينكس (Debian/Ubuntu/Kali/RHEL)
+
+- المتطلب: Node.js 24. التثبيت: `sudo sh deploy/linux/install.sh` ينسخ النسخة إلى `/opt/cyberguard` وينشئ مستخدم نظام `cyberguard` ومجلد بيانات `/var/lib/cyberguard` بصلاحية المالك فقط، ويشغّل خدمة systemd مقيدة (`deploy/linux/cyberguard.service`: بلا صلاحيات إضافية، ونظام ملفات للقراءة فقط عدا مجلد البيانات، ومنع الأجهزة والوحدات). الإعدادات في `/etc/cyberguard/cyberguard.env`.
+- الاستماع على 127.0.0.1:4310 افتراضيًا، ويُتحقق في CI على Ubuntu حقيقي من تثبيت الخدمة وتشغيلها وعدم الاستماع خارج loopback.
+- الفحص التشغيلي الشامل: `node scripts/smoke.js` يشغّل النسخة في مجلد مؤقت ويحمّل بيانات كل الموصلات ويستدعي كل الصفحات وواجهات القراءة ويتحقق من سلسلة التدقيق؛ ويعمل في CI على Windows وUbuntu وmacOS.

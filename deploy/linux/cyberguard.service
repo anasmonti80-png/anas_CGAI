@@ -1,0 +1,36 @@
+# CyberGuard AI as a hardened systemd service (installed by deploy/linux/install.sh).
+[Unit]
+Description=CyberGuard AI security evidence control plane
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=cyberguard
+Group=cyberguard
+WorkingDirectory=/opt/cyberguard
+EnvironmentFile=-/etc/cyberguard/cyberguard.env
+Environment=CG_DATA_DIR=/var/lib/cyberguard
+ExecStart=/usr/bin/env node /opt/cyberguard/server.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/var/lib/cyberguard
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

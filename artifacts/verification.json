@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T18:06:19.363Z",
+  "at": "2026-11-18T18:09:42.562Z",
   "level": "Unit Tested",
   "environment": {
     "platform": "win32",
@@ -8,10 +8,10 @@
     "node": "v24.21.0",
     "sqlite": "3.53.4"
   },
-  "base_commit": "3b7f9754029af8bfd581c19b637797425af48f05",
+  "base_commit": "f2d34e25d9c6ccf6b1093c7c82083ba9285bb522",
   "source": {
-    "sha256": "9f34bcfd85d5c98720fbbfab261dd8b51abfad78b37d6d514aca55c21d18936e",
-    "files": 177,
+    "sha256": "f7df6387456a29c228d9366060e410a980aa0cde50a1bd9e9ce13b8a7abe2c1c",
+    "files": 178,
     "normalization": "UTF-8 text with LF"
   },
   "includes_uncommitted_work": true,

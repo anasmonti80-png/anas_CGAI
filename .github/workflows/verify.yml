@@ -21,6 +21,8 @@ jobs:
           node-version: '24.21.0'
       - run: node scripts/verify.js
       - run: node scripts/requirements.js
+      - name: Operational smoke check (every connector, page and API)
+        run: node scripts/smoke.js
       - name: Validate Windows exporter syntax
         if: runner.os == 'Windows'
         shell: pwsh
@@ -93,3 +95,16 @@ jobs:
           journalctl -n 500 -o short-iso --no-pager > "$RUNNER_TEMP/journal.log" || true
           node scripts/logs-to-telemetry.js journal "$RUNNER_TEMP/journal.log" "$RUNNER_TEMP/journal.json" github-runner-journal
           node scripts/ci-collector-check.js "$RUNNER_TEMP/agent.json" "$RUNNER_TEMP/journal.json"
+      - name: Install and run CyberGuard as a hardened systemd service on Linux
+        if: runner.os == 'Linux'
+        run: |
+          sh -n deploy/linux/install.sh
+          sudo sh deploy/linux/install.sh
+          for i in $(seq 1 30); do curl -fsS http://127.0.0.1:4310/api/health >/dev/null 2>&1 && break; sleep 1; done
+          systemctl is-active cyberguard
+          curl -fsS http://127.0.0.1:4310/api/health | grep -q '"status":"running"'
+          curl -fsS http://127.0.0.1:4310/api/setup/status | grep -q '"setup_required":true'
+          sudo test -f /var/lib/cyberguard/setup-token
+          test "$(sudo stat -c %U /var/lib/cyberguard)" = cyberguard
+          if curl -fsS --max-time 3 "http://$(hostname -I | awk '{print $1}'):4310/api/health"; then echo 'CyberGuard must not listen beyond loopback'; exit 1; fi
+          sudo systemd-analyze security cyberguard --no-pager | tail -1
