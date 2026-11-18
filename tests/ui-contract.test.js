@@ -469,3 +469,7 @@ test('threats show measured detection and response quality and alerts take an an
   const app=read('app.js');assert.match(app,/\/api\/quality-metrics/);assert.match(app,/\/disposition`/);
   for(const marker of ['Detection and response quality','False positive','Benign true positive','Rule coverage','Device coverage','Response action failures','not measured','CG-058']) assert.ok(app.includes(marker),marker);
 });
+test('settings show the tenant isolation model, resource usage against limits and retention (CG-059)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/tenant-policy/);
+  for(const marker of ['Tenant isolation, limits and retention','Daily event limit','Activity retention (days)','Storage limit (MB)','Apply retention now','CG-059']) assert.ok(app.includes(marker),marker);
+});

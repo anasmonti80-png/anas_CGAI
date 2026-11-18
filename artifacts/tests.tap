@@ -2,1443 +2,1461 @@ TAP version 13
 # Subtest: paths map to functional domains and only investigation paths are open to site-limited users (CG-052)
 ok 1 - paths map to functional domains and only investigation paths are open to site-limited users (CG-052)
   ---
-  duration_ms: 2.9454
+  duration_ms: 2.6869
   type: 'test'
   ...
 # Subtest: tenant, site and domain scope are enforced on every API call on top of roles (CG-052)
 ok 2 - tenant, site and domain scope are enforced on every API call on top of roles (CG-052)
   ---
-  duration_ms: 3124.365
+  duration_ms: 3165.0674
   type: 'test'
   ...
 # Subtest: AWS converters read Organizations, ASFF, GuardDuty, security groups and EventBridge without guessing (CG-046)
 ok 3 - AWS converters read Organizations, ASFF, GuardDuty, security groups and EventBridge without guessing (CG-046)
   ---
-  duration_ms: 14.9449
+  duration_ms: 18.0599
   type: 'test'
   ...
 # Subtest: CloudTrail, VPC Flow Logs and Network Firewall logs normalise into the common event model (CG-046)
 ok 4 - CloudTrail, VPC Flow Logs and Network Firewall logs normalise into the common event model (CG-046)
   ---
-  duration_ms: 12.5721
+  duration_ms: 6.0758
   type: 'test'
   ...
 # Subtest: AWS inventory, findings and logs raise cloud alerts and show coverage gaps per account and service (CG-046)
 ok 5 - AWS inventory, findings and logs raise cloud alerts and show coverage gaps per account and service (CG-046)
   ---
-  duration_ms: 1651.0422
+  duration_ms: 1626.1399
   type: 'test'
   ...
 # Subtest: the AWS read-only role template grants SecurityAudit only, denies writes and limits sessions to one hour (CG-046)
 ok 6 - the AWS read-only role template grants SecurityAudit only, denies writes and limits sessions to one hour (CG-046)
   ---
-  duration_ms: 1.3677
+  duration_ms: 0.996
   type: 'test'
   ...
 # Subtest: Azure converters read subscriptions, Resource Graph, Defender, Sentinel and Entra without guessing (CG-047)
 ok 7 - Azure converters read subscriptions, Resource Graph, Defender, Sentinel and Entra without guessing (CG-047)
   ---
-  duration_ms: 36.2673
+  duration_ms: 26.4695
   type: 'test'
   ...
 # Subtest: NSG and Azure Firewall policies feed the CG-020 analyzer with ASGs, service tags and IP groups left unevaluated (CG-047)
 ok 8 - NSG and Azure Firewall policies feed the CG-020 analyzer with ASGs, service tags and IP groups left unevaluated (CG-047)
   ---
-  duration_ms: 44.4618
+  duration_ms: 39.3125
   type: 'test'
   ...
 # Subtest: Activity log, VNet flow logs and Azure Firewall logs normalise into the common event model (CG-047)
 ok 9 - Activity log, VNet flow logs and Azure Firewall logs normalise into the common event model (CG-047)
   ---
-  duration_ms: 6.7848
+  duration_ms: 29.3345
   type: 'test'
   ...
 # Subtest: Azure inventory, findings, Entra and logs raise alerts and show coverage gaps per subscription and service (CG-047)
 ok 10 - Azure inventory, findings, Entra and logs raise alerts and show coverage gaps per subscription and service (CG-047)
   ---
-  duration_ms: 2640.3716
+  duration_ms: 2219.8143
   type: 'test'
   ...
 # Subtest: the Azure read-only role allows only read operations and no data actions (CG-047)
 ok 11 - the Azure read-only role allows only read operations and no data actions (CG-047)
   ---
-  duration_ms: 0.7054
+  duration_ms: 0.6874
   type: 'test'
   ...
 # Subtest: capability negotiation requires a confirming probe, the minimum version, a current licence feature and a fresh probe
 ok 12 - capability negotiation requires a confirming probe, the minimum version, a current licence feature and a fresh probe
   ---
-  duration_ms: 3.2407
+  duration_ms: 3.6302
   type: 'test'
   ...
 # Subtest: a response action is refused when the target probe shows the needed capability is unavailable
 ok 13 - a response action is refused when the target probe shows the needed capability is unavailable
   ---
-  duration_ms: 35.1884
+  duration_ms: 31.1655
   type: 'test'
   ...
 # Subtest: read collectors and response connectors are separate privilege classes with explicit asset authorization (CG-045)
 ok 14 - read collectors and response connectors are separate privilege classes with explicit asset authorization (CG-045)
   ---
-  duration_ms: 12.0319
+  duration_ms: 10.4867
   type: 'test'
   ...
 # Subtest: Cisco Catalyst Center inventory, physical topology and device health convert from the Intent API responses
 ok 15 - Cisco Catalyst Center inventory, physical topology and device health convert from the Intent API responses
   ---
-  duration_ms: 6.8797
+  duration_ms: 10.2436
   type: 'test'
   ...
 # Subtest: Secure Firewall FMC access rules and IOS XE RESTCONF configuration convert without guessing unresolved objects
 ok 16 - Secure Firewall FMC access rules and IOS XE RESTCONF configuration convert without guessing unresolved objects
   ---
-  duration_ms: 3.9585
+  duration_ms: 10.4137
   type: 'test'
   ...
 # Subtest: Cisco telemetry feeds topology, health alerts, the firewall analyzer and device configuration checks; ISE ANC isolation runs only as an approved governed job
 ok 17 - Cisco telemetry feeds topology, health alerts, the firewall analyzer and device configuration checks; ISE ANC isolation runs only as an approved governed job
   ---
-  duration_ms: 176.7513
+  duration_ms: 83.6512
   type: 'test'
   ...
 # Subtest: cloud access review flags root keys, standing administrators and standing or organisation-wide write access (CG-049)
 ok 18 - cloud access review flags root keys, standing administrators and standing or organisation-wide write access (CG-049)
   ---
-  duration_ms: 38.6946
+  duration_ms: 61.5432
   type: 'test'
   ...
 # Subtest: cloud access reviews raise alerts for violations and the API orders violations first (CG-049)
 ok 19 - cloud access reviews raise alerts for violations and the API orders violations first (CG-049)
   ---
-  duration_ms: 1165.839
+  duration_ms: 989.8037
   type: 'test'
   ...
 # Subtest: connector templates and live modes keep CyberGuard on temporary read-only access (CG-049)
 ok 20 - connector templates and live modes keep CyberGuard on temporary read-only access (CG-049)
   ---
-  duration_ms: 1.4481
+  duration_ms: 1.4831
   type: 'test'
   ...
 # Subtest: AWS Resource Explorer, Azure Resource Graph and Cloud Asset Inventory become one categorised inventory (CG-050)
 ok 21 - AWS Resource Explorer, Azure Resource Graph and Cloud Asset Inventory become one categorised inventory (CG-050)
   ---
-  duration_ms: 47.0515
+  duration_ms: 25.421
   type: 'test'
   ...
 # Subtest: the unified view joins inventory, alerts, policies, access and gaps across providers, accounts and regions (CG-050)
 ok 22 - the unified view joins inventory, alerts, policies, access and gaps across providers, accounts and regions (CG-050)
   ---
-  duration_ms: 2240.6466
+  duration_ms: 2046.1929
   type: 'test'
   ...
 # Subtest: the current distributable has no undeclared npm dependency or accidental publish path
 ok 23 - the current distributable has no undeclared npm dependency or accidental publish path
   ---
-  duration_ms: 4.5266
+  duration_ms: 6.8897
   type: 'test'
   ...
 # Subtest: Cisco IOS-XE show version and running-config parse into version, model, DNS, NTP, VPN peers and management flags without secrets
 ok 24 - Cisco IOS-XE show version and running-config parse into version, model, DNS, NTP, VPN peers and management flags without secrets
   ---
-  duration_ms: 6.9264
+  duration_ms: 6.5651
   type: 'test'
   ...
 # Subtest: device analysis flags insecure or exposed management, vulnerable firmware and DNS/VPN/management/firmware changes
 ok 25 - device analysis flags insecure or exposed management, vulnerable firmware and DNS/VPN/management/firmware changes
   ---
-  duration_ms: 1.457
+  duration_ms: 1.7501
   type: 'test'
   ...
 # Subtest: SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security
 ok 26 - SOC dashboard uses actual counts and exposes a bounded evidence-readiness score without claiming security
   ---
-  duration_ms: 66.4934
+  duration_ms: 63.1152
   type: 'test'
   ...
 # Subtest: incident playbooks cover every supported incident type and automate only approved low-risk local case creation
 ok 27 - incident playbooks cover every supported incident type and automate only approved low-risk local case creation
   ---
-  duration_ms: 20.9737
+  duration_ms: 11.9002
   type: 'test'
   ...
 # Subtest: local evidence analyst explains what why evidence confidence and solution in Arabic and English without claiming an attack
 ok 28 - local evidence analyst explains what why evidence confidence and solution in Arabic and English without claiming an attack
   ---
-  duration_ms: 15.6911
+  duration_ms: 15.9188
   type: 'test'
   ...
 # Subtest: AI grounding gives every claim recorded log rule advisory or documented references and rejects unsupported facts
 ok 29 - AI grounding gives every claim recorded log rule advisory or documented references and rejects unsupported facts
   ---
-  duration_ms: 13.6839
+  duration_ms: 15.2995
   type: 'test'
   ...
 # Subtest: local analysis stays primary and cloud preparation requires current customer consent with a fixed redacted schema
 ok 30 - local analysis stays primary and cloud preparation requires current customer consent with a fixed redacted schema
   ---
-  duration_ms: 10.8672
+  duration_ms: 8.5442
   type: 'test'
   ...
 # Subtest: NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance
 ok 31 - NIST CSF 2.0 outcome map exposes evidence and explicit gaps for all six functions without claiming compliance
   ---
-  duration_ms: 14.9896
+  duration_ms: 14.5966
   type: 'test'
   ...
 # Subtest: versioned threat model covers valuable assets, trust boundaries, attack scenarios and both impact classes per environment
 ok 32 - versioned threat model covers valuable assets, trust boundaries, attack scenarios and both impact classes per environment
   ---
-  duration_ms: 10.4068
+  duration_ms: 10.5879
   type: 'test'
   ...
 # Subtest: institutional risk register links coverage, resolved evidence, owner, remediation, exception and time-bounded acceptance
 ok 33 - institutional risk register links coverage, resolved evidence, owner, remediation, exception and time-bounded acceptance
   ---
-  duration_ms: 30.3458
+  duration_ms: 17.4613
   type: 'test'
   ...
 # Subtest: source credentials are hashed, scoped, rotatable and revocable
 ok 34 - source credentials are hashed, scoped, rotatable and revocable
   ---
-  duration_ms: 5.1241
+  duration_ms: 11.0302
   type: 'test'
   ...
 # Subtest: ingestion is durable, idempotent, atomic and rejects changed event identifiers
 ok 35 - ingestion is durable, idempotent, atomic and rejects changed event identifiers
   ---
-  duration_ms: 17.9386
+  duration_ms: 11.0448
   type: 'test'
   ...
 # Subtest: shared IP does not merge DHCP identities and older observations do not overwrite new identity
 ok 36 - shared IP does not merge DHCP identities and older observations do not overwrite new identity
   ---
-  duration_ms: 8.0271
+  duration_ms: 8.5638
   type: 'test'
   ...
 # Subtest: authorized passive discovery preserves topology evidence and reports additions, changes and outages
 ok 37 - authorized passive discovery preserves topology evidence and reports additions, changes and outages
   ---
-  duration_ms: 16.7003
+  duration_ms: 13.0813
   type: 'test'
   ...
 # Subtest: visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution
 ok 38 - visibility-gap registry records known systems, networks and accounts with reason, last sighting, recommendation and resolution
   ---
-  duration_ms: 29.7487
+  duration_ms: 29.5645
   type: 'test'
   ...
 # Subtest: network service ports never replace or merge with physical switch interfaces
 ok 39 - network service ports never replace or merge with physical switch interfaces
   ---
-  duration_ms: 12.6344
+  duration_ms: 18.4026
   type: 'test'
   ...
 # Subtest: visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently
 ok 40 - visibility evidence accepts SPAN/TAP, flow-log and managed-agent acquisition paths independently
   ---
-  duration_ms: 15.4604
+  duration_ms: 9.1233
   type: 'test'
   ...
 # Subtest: unsupported fields, secret-bearing text and future timestamps are handled safely
 ok 41 - unsupported fields, secret-bearing text and future timestamps are handled safely
   ---
-  duration_ms: 6.9216
+  duration_ms: 7.9445
   type: 'test'
   ...
 # Subtest: open port is exposure only; active sessions require session evidence and relay keeps A unknown
 ok 42 - open port is exposure only; active sessions require session evidence and relay keeps A unknown
   ---
-  duration_ms: 11.0552
+  duration_ms: 12.0528
   type: 'test'
   ...
 # Subtest: remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment
 ok 43 - remote access separates application presence from confirmed sessions and evidence-backed authorized or suspicious assessment
   ---
-  duration_ms: 9.2188
+  duration_ms: 14.238
   type: 'test'
   ...
 # Subtest: protection separates installed/running/collection from independently tested prevention
 ok 44 - protection separates installed/running/collection from independently tested prevention
   ---
-  duration_ms: 6.6195
+  duration_ms: 9.4236
   type: 'test'
   ...
 # Subtest: five failed authentications correlate by target account/source and alerts are deduplicated
 ok 45 - five failed authentications correlate by target account/source and alerts are deduplicated
   ---
-  duration_ms: 9.2268
+  duration_ms: 13.1089
   type: 'test'
   ...
 # Subtest: lost source visibility creates a distinct alert, not a healthy no-threat claim
 ok 46 - lost source visibility creates a distinct alert, not a healthy no-threat claim
   ---
-  duration_ms: 8.9103
+  duration_ms: 23.7576
   type: 'test'
   ...
 # Subtest: managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
 ok 47 - managed-agent loss and log-delivery failure have distinct health states, alerts and coverage statistics
   ---
-  duration_ms: 10.4035
+  duration_ms: 10.3968
   type: 'test'
   ...
 # Subtest: cases preserve notes, audit and evidence links; ACK is not incident closure
 ok 48 - cases preserve notes, audit and evidence links; ACK is not incident closure
   ---
-  duration_ms: 10.6715
+  duration_ms: 17.8497
   type: 'test'
   ...
 # Subtest: approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
 ok 49 - approval requires another administrator, binds state/TTL, verifies local changes and supports guarded rollback
   ---
-  duration_ms: 13.1272
+  duration_ms: 9.9299
   type: 'test'
   ...
 # Subtest: expired approvals and changed preflight state prevent execution
 ok 50 - expired approvals and changed preflight state prevent execution
   ---
-  duration_ms: 16.027
+  duration_ms: 7.8442
   type: 'test'
   ...
 # Subtest: 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
 ok 51 - 5,000 synthetic assets have bounded pages, escaped search, stable identities and no truncation
   ---
-  duration_ms: 678.9645
+  duration_ms: 630.2951
   type: 'test'
   ...
 # Subtest: asset context links the central device to owner, service, site, sensitivity, maintenance and service criticality evidence
 ok 52 - asset context links the central device to owner, service, site, sensitivity, maintenance and service criticality evidence
   ---
-  duration_ms: 26.5636
+  duration_ms: 9.9634
   type: 'test'
   ...
 # Subtest: asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan
 ok 53 - asset lifecycle records versions, vendor support, security-update end, extended support and an owned upgrade or replacement plan
   ---
-  duration_ms: 11.4503
+  duration_ms: 6.488
   type: 'test'
   ...
 # Subtest: legacy compatibility matrix keeps agent, read-only, isolation, tested capability, performance and licensing evidence explicit
 ok 54 - legacy compatibility matrix keeps agent, read-only, isolation, tested capability, performance and licensing evidence explicit
   ---
-  duration_ms: 10.7162
+  duration_ms: 6.1428
   type: 'test'
   ...
 # Subtest: legacy compensating controls require evidence for segmentation, jump host, internet restriction, MFA, backup and monitoring until migration
 ok 55 - legacy compensating controls require evidence for segmentation, jump host, internet restriction, MFA, backup and monitoring until migration
   ---
-  duration_ms: 8.4002
+  duration_ms: 8.6433
   type: 'test'
   ...
 # Subtest: backup security keeps multiple separated copies, platform immutability, change monitoring and permissions explicit
 ok 56 - backup security keeps multiple separated copies, platform immutability, change monitoring and permissions explicit
   ---
-  duration_ms: 27.6384
+  duration_ms: 10.3377
   type: 'test'
   ...
 # Subtest: restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent
 ok 57 - restore readiness keeps periodic tests, service RPO and RTO, integrity and backup presence independent
   ---
-  duration_ms: 10.2484
+  duration_ms: 18.1994
   type: 'test'
   ...
 # Subtest: incident recovery enforces containment, identity configuration and device recovery, threat clearance, then approved reconnection
 ok 58 - incident recovery enforces containment, identity configuration and device recovery, threat clearance, then approved reconnection
   ---
-  duration_ms: 9.4607
+  duration_ms: 8.82
   type: 'test'
   ...
 # Subtest: resilience controls require separated configuration backups, tested alternate paths, an exercised SOC outage playbook and active automatic fail-safe evidence
 ok 59 - resilience controls require separated configuration backups, tested alternate paths, an exercised SOC outage playbook and active automatic fail-safe evidence
   ---
-  duration_ms: 6.1191
+  duration_ms: 6.9263
   type: 'test'
   ...
 # Subtest: AD and Entra audit separates Tier 0, Domain Admin changes, service accounts, trusts and sign-in policy evidence without secrets
 ok 60 - AD and Entra audit separates Tier 0, Domain Admin changes, service accounts, trusts and sign-in policy evidence without secrets
   ---
-  duration_ms: 6.776
+  duration_ms: 13.8577
   type: 'test'
   ...
 # Subtest: Windows LAPS posture tracks per-device policy, rotation failures and secret-view audits without collecting passwords
 ok 61 - Windows LAPS posture tracks per-device policy, rotation failures and secret-view audits without collecting passwords
   ---
-  duration_ms: 12.2607
+  duration_ms: 12.2663
   type: 'test'
   ...
 # Subtest: AD CS and Kerberos posture keeps certificate services, issuance, delegation, NTLM and access-decided authentication changes explicit
 ok 62 - AD CS and Kerberos posture keeps certificate services, issuance, delegation, NTLM and access-decided authentication changes explicit
   ---
-  duration_ms: 7.3468
+  duration_ms: 12.1446
   type: 'test'
   ...
 # Subtest: privileged access requires bounded JIT or PIM, compliant dedicated PAW, controlled temporary session and independent authorization
 ok 63 - privileged access requires bounded JIT or PIM, compliant dedicated PAW, controlled temporary session and independent authorization
   ---
-  duration_ms: 10.2398
+  duration_ms: 9.1102
   type: 'test'
   ...
 # Subtest: SaaS OAuth and service identity inventory tracks owners, credential rotation, permissions and activities without credential values
 ok 64 - SaaS OAuth and service identity inventory tracks owners, credential rotation, permissions and activities without credential values
   ---
-  duration_ms: 8.2554
+  duration_ms: 9.5179
   type: 'test'
   ...
 # Subtest: identity attack correlation orders sign-in and identity changes before file resource and network movement without claiming an attack
 ok 65 - identity attack correlation orders sign-in and identity changes before file resource and network movement without claiming an attack
   ---
-  duration_ms: 9.6844
+  duration_ms: 38.4212
   type: 'test'
   ...
 # Subtest: help desk reset controls require requester verification, independent approval, audit and temporary-access follow-up without secret values
 ok 66 - help desk reset controls require requester verification, independent approval, audit and temporary-access follow-up without secret values
   ---
-  duration_ms: 16.4803
+  duration_ms: 12.7843
   type: 'test'
   ...
 # Subtest: process causality builds a parent-child tree with services tasks and connections, masks personal data and states confidence without a verdict
 ok 67 - process causality builds a parent-child tree with services tasks and connections, masks personal data and states confidence without a verdict
   ---
-  duration_ms: 19.284
+  duration_ms: 16.8256
   type: 'test'
   ...
 # Subtest: defense tamper detection separates authorized change, likely fault and suspected deliberate tampering without responding
 ok 68 - defense tamper detection separates authorized change, likely fault and suspected deliberate tampering without responding
   ---
-  duration_ms: 26.9112
+  duration_ms: 13.8442
   type: 'test'
   ...
 # Subtest: anti-ransomware posture flags file-activity indicators, platform limits, backup integrity and recovery-store gaps without a verdict
 ok 69 - anti-ransomware posture flags file-activity indicators, platform limits, backup integrity and recovery-store gaps without a verdict
   ---
-  duration_ms: 8.7186
+  duration_ms: 8.8109
   type: 'test'
   ...
 # Subtest: sequential discovery runs every method in order, merges devices across methods, keeps neighbour links and rejects out-of-scope or unordered evidence
 ok 70 - sequential discovery runs every method in order, merges devices across methods, keeps neighbour links and rejects out-of-scope or unordered evidence
   ---
-  duration_ms: 21.57
+  duration_ms: 17.0602
   type: 'test'
   ...
 # Subtest: distributed collector capacity plan checks the 20,000-device target, overload, uncovered sites, single points of failure and upstreams
 ok 71 - distributed collector capacity plan checks the 20,000-device target, overload, uncovered sites, single points of failure and upstreams
   ---
-  duration_ms: 16.2565
+  duration_ms: 31.2445
   type: 'test'
   ...
 # Subtest: scale benchmark stores and pages 2,000 devices correctly with bounded view latency
 ok 72 - scale benchmark stores and pages 2,000 devices correctly with bounded view latency
   ---
-  duration_ms: 507.188
+  duration_ms: 434.4588
   type: 'test'
   ...
 # Subtest: optional agents report event-log channels, Sysmon, services, processes and AV/EDR state with explicit gaps and no command lines
 ok 73 - optional agents report event-log channels, Sysmon, services, processes and AV/EDR state with explicit gaps and no command lines
   ---
-  duration_ms: 13.0588
+  duration_ms: 10.1501
   type: 'test'
   ...
 # Subtest: sensitive change monitoring records registry, file, service, software, firewall, account and policy changes with before/after state and risk
 ok 74 - sensitive change monitoring records registry, file, service, software, firewall, account and policy changes with before/after state and risk
   ---
-  duration_ms: 22.7264
+  duration_ms: 10.3301
   type: 'test'
   ...
 # Subtest: versioned detection rules raise evidence-linked alerts for malicious commands, unsigned persistence, tampering, ransomware and unprotected devices
 ok 75 - versioned detection rules raise evidence-linked alerts for malicious commands, unsigned persistence, tampering, ransomware and unprotected devices
   ---
-  duration_ms: 13.9398
+  duration_ms: 12.8475
   type: 'test'
   ...
 # Subtest: software and update inventory links installed versions to imported vulnerability catalogs, honours fixing updates and reports unknown versions
 ok 76 - software and update inventory links installed versions to imported vulnerability catalogs, honours fixing updates and reports unknown versions
   ---
-  duration_ms: 18.3459
+  duration_ms: 11.908
   type: 'test'
   ...
 # Subtest: identity directory snapshots integrate local, AD, Entra and cloud IAM read-only and alert on privileged group additions and privilege grants
 ok 77 - identity directory snapshots integrate local, AD, Entra and cloud IAM read-only and alert on privileged group additions and privilege grants
   ---
-  duration_ms: 12.623
+  duration_ms: 14.3944
   type: 'test'
   ...
 # Subtest: identity threat detection finds missing MFA, stale accounts, spraying, brute force, impossible travel, risky OAuth and unauthorized IdP changes
 ok 78 - identity threat detection finds missing MFA, stale accounts, spraying, brute force, impossible travel, risky OAuth and unauthorized IdP changes
   ---
-  duration_ms: 19.3943
+  duration_ms: 17.318
   type: 'test'
   ...
 # Subtest: log batches are normalised on ingest, raw lines are not stored, IDS severity raises alerts and the common model is searchable
 ok 79 - log batches are normalised on ingest, raw lines are not stored, IDS severity raises alerts and the common model is searchable
   ---
-  duration_ms: 13.2069
+  duration_ms: 14.6869
   type: 'test'
   ...
 # Subtest: network analysis runs over stored normalised logs and raises lateral-movement and exposure alerts
 ok 80 - network analysis runs over stored normalised logs and raises lateral-movement and exposure alerts
   ---
-  duration_ms: 9.2355
+  duration_ms: 9.1707
   type: 'test'
   ...
 # Subtest: firewall rulesets are validated, analysed per device against the previous ruleset and raise any-any, expired-exception and new-exposure alerts
 ok 81 - firewall rulesets are validated, analysed per device against the previous ruleset and raise any-any, expired-exception and new-exposure alerts
   ---
-  duration_ms: 17.3814
+  duration_ms: 13.3869
   type: 'test'
   ...
 # Subtest: device configuration snapshots are monitored per device and DNS, management and firmware downgrade changes raise alerts
 ok 82 - device configuration snapshots are monitored per device and DNS, management and firmware downgrade changes raise alerts
   ---
-  duration_ms: 18.4521
+  duration_ms: 10.8532
   type: 'test'
   ...
 # Subtest: security integrations compare declared controls with received logs and alert on WAF critical blocks and repeated NAC/ZTNA failures
 ok 83 - security integrations compare declared controls with received logs and alert on WAF critical blocks and repeated NAC/ZTNA failures
   ---
-  duration_ms: 15.7981
+  duration_ms: 13.7309
   type: 'test'
   ...
 # Subtest: vulnerability assessment runs only inside an approved scope and window and enriches findings with NVD, EPSS, CISA KEV and exposure evidence
 ok 84 - vulnerability assessment runs only inside an approved scope and window and enriches findings with NVD, EPSS, CISA KEV and exposure evidence
   ---
-  duration_ms: 57.2656
+  duration_ms: 43.6851
   type: 'test'
   ...
 # Subtest: vulnerability catalog cache follows catalog updates: a newer catalog version replaces the cached ranges
 ok 85 - vulnerability catalog cache follows catalog updates: a newer catalog version replaces the cached ranges
   ---
-  duration_ms: 11.1148
+  duration_ms: 12.6309
   type: 'test'
   ...
 # Subtest: vulnerability risk ranks by exploitation evidence, exposure, asset importance and evidenced controls, not CVSS alone
 ok 86 - vulnerability risk ranks by exploitation evidence, exposure, asset importance and evidenced controls, not CVSS alone
   ---
-  duration_ms: 28.751
+  duration_ms: 24.2063
   type: 'test'
   ...
 # Subtest: validation tiers enforce passive, low-impact and lab-only adversary emulation rules and flag runs outside their approved plan
 ok 87 - validation tiers enforce passive, low-impact and lab-only adversary emulation rules and flag runs outside their approved plan
   ---
-  duration_ms: 19.6266
+  duration_ms: 19.0288
   type: 'test'
   ...
 # Subtest: detection coverage measures alerts during validation runs and records rule and visibility gaps instead of assuming exploitability
 ok 88 - detection coverage measures alerts during validation runs and records rule and visibility gaps instead of assuming exploitability
   ---
-  duration_ms: 16.5236
+  duration_ms: 11.1889
   type: 'test'
   ...
 # Subtest: critical production assets enforce a non-bypassable validation safety floor even for administrators
 ok 89 - critical production assets enforce a non-bypassable validation safety floor even for administrators
   ---
-  duration_ms: 11.0576
+  duration_ms: 9.2348
   type: 'test'
   ...
 # Subtest: typed response actions cover the CG-029 catalog and require approval, scoped connector execution evidence and verified rollback
 ok 90 - typed response actions cover the CG-029 catalog and require approval, scoped connector execution evidence and verified rollback
   ---
-  duration_ms: 19.6462
+  duration_ms: 20.6404
   type: 'test'
   ...
 # Subtest: permanent service removal and change reject blind execution and require current preflight, recovery plan and separate safety approval
 ok 91 - permanent service removal and change reject blind execution and require current preflight, recovery plan and separate safety approval
   ---
-  duration_ms: 24.1259
+  duration_ms: 19.303
   type: 'test'
   ...
 # Subtest: temporary permits bind every CG-031 scope field and automatically expire with append-only revocation evidence
 ok 92 - temporary permits bind every CG-031 scope field and automatically expire with append-only revocation evidence
   ---
-  duration_ms: 10.4548
+  duration_ms: 18.1009
   type: 'test'
   ...
 # Subtest: management safety preflight preserves channels and prohibits disruption of core switches domain controllers and the security platform
 ok 93 - management safety preflight preserves channels and prohibits disruption of core switches domain controllers and the security platform
   ---
-  duration_ms: 28.211
+  duration_ms: 16.2797
   type: 'test'
   ...
 # Subtest: AI may only propose bounded catalog actions as typed targets; raw commands and policy violations are rejected and audited; humans promote and approve
 ok 94 - AI may only propose bounded catalog actions as typed targets; raw commands and policy violations are rejected and audited; humans promote and approve
   ---
-  duration_ms: 36.0444
+  duration_ms: 23.3101
   type: 'test'
   ...
 # Subtest: incident reconstruction separates a proven timeline and evidence graph from a scored attack-path hypothesis
 ok 95 - incident reconstruction separates a proven timeline and evidence graph from a scored attack-path hypothesis
   ---
-  duration_ms: 10.4615
+  duration_ms: 11.8667
   type: 'test'
   ...
 # Subtest: database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
 ok 96 - database survives reopen; migration rerun preserves records; audit rejects modification and detects tampering
   ---
-  duration_ms: 106.2011
+  duration_ms: 138.4494
   type: 'test'
   ...
 # Subtest: coverage understands CIDR containment, port ranges, protocol any and direction
 ok 97 - coverage understands CIDR containment, port ranges, protocol any and direction
   ---
-  duration_ms: 2.1292
+  duration_ms: 3.5753
   type: 'test'
   ...
 # Subtest: first-match rulesets report duplicates, shadowed and redundant rules; broad, stale and expiring rules are flagged
 ok 98 - first-match rulesets report duplicates, shadowed and redundant rules; broad, stale and expiring rules are flagged
   ---
-  duration_ms: 3.0313
+  duration_ms: 3.751
   type: 'test'
   ...
 # Subtest: deny-overrides rulesets flag allow rules overridden by a covering block, skip unreadable rules, and change impact detects new admin exposure
 ok 99 - deny-overrides rulesets flag allow rules overridden by a covering block, skip unreadable rules, and change impact detects new admin exposure
   ---
-  duration_ms: 0.6508
+  duration_ms: 0.7021
   type: 'test'
   ...
 # Subtest: scope constraints (user, package, service, owner) stop false conflicts and false any-any findings
 ok 100 - scope constraints (user, package, service, owner) stop false conflicts and false any-any findings
   ---
-  duration_ms: 0.3979
+  duration_ms: 0.5499
   type: 'test'
   ...
 # Subtest: administrative exposure needs explicit admin ports, or any port on TCP/UDP without an application, service or keyword scope
 ok 101 - administrative exposure needs explicit admin ports, or any port on TCP/UDP without an application, service or keyword scope
   ---
-  duration_ms: 0.5203
+  duration_ms: 0.4225
   type: 'test'
   ...
 # Subtest: PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects
 ok 102 - PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects
   ---
-  duration_ms: 13.9778
+  duration_ms: 12.3976
   type: 'test'
   ...
 # Subtest: vendor rulesets are analysed by the CG-020 firewall analyzer
 ok 103 - vendor rulesets are analysed by the CG-020 firewall analyzer
   ---
-  duration_ms: 36.1252
+  duration_ms: 35.8937
   type: 'test'
   ...
 # Subtest: Google Cloud converters read projects, SCC, IAM and service state without guessing (CG-048)
 ok 104 - Google Cloud converters read projects, SCC, IAM and service state without guessing (CG-048)
   ---
-  duration_ms: 37.8382
+  duration_ms: 41.3318
   type: 'test'
   ...
 # Subtest: VPC firewall rules and Cloud Armor policies feed the CG-020 analyzer in GCP evaluation order (CG-048)
 ok 105 - VPC firewall rules and Cloud Armor policies feed the CG-020 analyzer in GCP evaluation order (CG-048)
   ---
-  duration_ms: 13.6075
+  duration_ms: 20.1621
   type: 'test'
   ...
 # Subtest: Cloud Audit Logs, VPC Flow Logs, Firewall Rules Logging and Cloud Armor logs normalise into the common event model (CG-048)
 ok 106 - Cloud Audit Logs, VPC Flow Logs, Firewall Rules Logging and Cloud Armor logs normalise into the common event model (CG-048)
   ---
-  duration_ms: 19.7947
+  duration_ms: 11.223
   type: 'test'
   ...
 # Subtest: Google Cloud inventory, SCC, IAM and logs raise alerts and show coverage gaps per project and service (CG-048)
 ok 107 - Google Cloud inventory, SCC, IAM and logs raise alerts and show coverage gaps per project and service (CG-048)
   ---
-  duration_ms: 1954.8319
+  duration_ms: 1677.6842
   type: 'test'
   ...
 # Subtest: the Google Cloud access list grants viewer and reviewer roles only (CG-048)
 ok 108 - the Google Cloud access list grants viewer and reviewer roles only (CG-048)
   ---
-  duration_ms: 0.8275
+  duration_ms: 1.167
   type: 'test'
   ...
 # Subtest: first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
 ok 109 - first-run setup is token-gated, one-time, and creates hashed credentials and secure session attributes
   ---
-  duration_ms: 1221.2939
+  duration_ms: 1186.9099
   type: 'test'
   ...
 # Subtest: unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
 ok 110 - unauthenticated, cross-origin, forged host, CSRF and viewer mutations are rejected
   ---
-  duration_ms: 1515.5785
+  duration_ms: 1463.2829
   type: 'test'
   ...
 # Subtest: authenticated response connector receives only approved typed jobs and returns execution and rollback evidence
 ok 111 - authenticated response connector receives only approved typed jobs and returns execution and rollback evidence
   ---
-  duration_ms: 1140.8027
+  duration_ms: 1193.3848
   type: 'test'
   ...
 # Subtest: high-risk permanent service work needs fresh recovery evidence and a third standing administrator safety approval
 ok 112 - high-risk permanent service work needs fresh recovery evidence and a third standing administrator safety approval
   ---
-  duration_ms: 1243.1737
+  duration_ms: 1200.2119
   type: 'test'
   ...
 # Subtest: temporary permit API requires exact scope and independent approval then proves automatic expiry
 ok 113 - temporary permit API requires exact scope and independent approval then proves automatic expiry
   ---
-  duration_ms: 854.7161
+  duration_ms: 823.1935
   type: 'test'
   ...
 # Subtest: recent TOTP, two-person control and bounded break-glass protect sensitive operations with append-only evidence
 ok 114 - recent TOTP, two-person control and bounded break-glass protect sensitive operations with append-only evidence
   ---
-  duration_ms: 1566.2287
+  duration_ms: 1575.2975
   type: 'test'
   ...
 # Subtest: cloud AI is optional and receives only the fixed redacted payload after current customer consent
 ok 115 - cloud AI is optional and receives only the fixed redacted payload after current customer consent
   ---
-  duration_ms: 446.0543
+  duration_ms: 438.5461
   type: 'test'
   ...
 # Subtest: incident playbook API requires recent MFA and independent approval before low-risk local automation
 ok 116 - incident playbook API requires recent MFA and independent approval before low-risk local automation
   ---
-  duration_ms: 1441.5284
+  duration_ms: 1188.8851
   type: 'test'
   ...
 # Subtest: unsupported HTTP methods cannot mutate routes that accept both reads and writes
 ok 117 - unsupported HTTP methods cannot mutate routes that accept both reads and writes
   ---
-  duration_ms: 591.4211
+  duration_ms: 465.8156
   type: 'test'
   ...
 # Subtest: three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
 ok 118 - three explicit operating modes expose their capabilities and visibility boundaries without leaking lab authorization
   ---
-  duration_ms: 941.49
+  duration_ms: 851.7743
   type: 'test'
   ...
 # Subtest: Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
 ok 119 - Windows export HTTP import records parser provenance, reports skipped records and deduplicates safely
   ---
-  duration_ms: 509.4846
+  duration_ms: 488.2103
   type: 'test'
   ...
 # Subtest: real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
 ok 120 - real HTTP ingestion persists evidence, exposes actual metrics and keeps collector tokens out of reads
   ---
-  duration_ms: 1405.6676
+  duration_ms: 1481.0166
   type: 'test'
   ...
 # Subtest: login attempts are bounded and unknown accounts use the same public failure
 ok 121 - login attempts are bounded and unknown accounts use the same public failure
   ---
-  duration_ms: 1785.4275
+  duration_ms: 1842.2575
   type: 'test'
   ...
 # Subtest: the self-signed certificate is a valid X.509 v3 server certificate for localhost only (CG-052)
 ok 122 - the self-signed certificate is a valid X.509 v3 server certificate for localhost only (CG-052)
   ---
-  duration_ms: 115.7408
+  duration_ms: 119.2251
   type: 'test'
   ...
 # Subtest: HTTPS serves CyberGuard with TLS 1.2+, HSTS and Secure session cookies, and keeps the key out of the repository (CG-052)
 ok 123 - HTTPS serves CyberGuard with TLS 1.2+, HSTS and Secure session cookies, and keeps the key out of the repository (CG-052)
   ---
-  duration_ms: 1003.4866
+  duration_ms: 1089.164
   type: 'test'
   ...
 # Subtest: Huawei NCE-Campus devices, VRP configuration and LLDP neighbours convert without copying secrets
 ok 124 - Huawei NCE-Campus devices, VRP configuration and LLDP neighbours convert without copying secrets
   ---
-  duration_ms: 58.2272
+  duration_ms: 25.1309
   type: 'test'
   ...
 # Subtest: Huawei telemetry drives device health alerts, configuration checks and LLDP topology
 ok 125 - Huawei telemetry drives device health alerts, configuration checks and LLDP topology
   ---
-  duration_ms: 52.0991
+  duration_ms: 41.3903
   type: 'test'
   ...
 # Subtest: fixed English texts returned by the API all have Arabic versions
 ok 126 - fixed English texts returned by the API all have Arabic versions
   ---
-  duration_ms: 8.5621
+  duration_ms: 7.1555
   type: 'test'
   ...
 # Subtest: analyzer finding details are translated by pattern with their values kept
 ok 127 - analyzer finding details are translated by pattern with their values kept
   ---
-  duration_ms: 2.592
+  duration_ms: 5.1063
   type: 'test'
   ...
 # Subtest: just-in-time elevation needs a reason, a higher role, a different standing admin, and ends at expiry or the action cap with audit
 ok 128 - just-in-time elevation needs a reason, a higher role, a different standing admin, and ends at expiry or the action cap with audit
   ---
-  duration_ms: 83.1224
+  duration_ms: 23.3886
   type: 'test'
   ...
 # Subtest: local collection requires no shell and records only available identity without inferring prevention
 ok 129 - local collection requires no shell and records only available identity without inferring prevention
   ---
-  duration_ms: 12.3275
+  duration_ms: 13.0148
   type: 'test'
   ...
 # Subtest: syslog RFC 5424, RFC 3164 and journald lines normalise with host, program and severity
 ok 130 - syslog RFC 5424, RFC 3164 and journald lines normalise with host, program and severity
   ---
-  duration_ms: 9.1705
+  duration_ms: 5.1671
   type: 'test'
   ...
 # Subtest: NetFlow/IPFIX exports from nfdump CSV and goflow2 JSON become flow records with bytes and packets
 ok 131 - NetFlow/IPFIX exports from nfdump CSV and goflow2 JSON become flow records with bytes and packets
   ---
-  duration_ms: 4.1968
+  duration_ms: 1.191
   type: 'test'
   ...
 # Subtest: Suricata EVE alerts, DNS and flows; BIND queries; ISC dhcpd leases; OpenVPN logins normalise to their categories
 ok 132 - Suricata EVE alerts, DNS and flows; BIND queries; ISC dhcpd leases; OpenVPN logins normalise to their categories
   ---
-  duration_ms: 5.7839
+  duration_ms: 1.8154
   type: 'test'
   ...
 # Subtest: iptables, Windows Firewall and pfSense filterlog lines normalise allow/block decisions with five-tuples and redact secrets
 ok 133 - iptables, Windows Firewall and pfSense filterlog lines normalise allow/block decisions with five-tuples and redact secrets
   ---
-  duration_ms: 1.4628
+  duration_ms: 2.013
   type: 'test'
   ...
 # Subtest: connections are grouped by zone and Internet exposure flags allowed inbound administrative services
 ok 134 - connections are grouped by zone and Internet exposure flags allowed inbound administrative services
   ---
-  duration_ms: 1.8747
+  duration_ms: 4.3272
   type: 'test'
   ...
 # Subtest: lateral movement needs one internal host reaching five or more internal hosts on administrative ports
 ok 135 - lateral movement needs one internal host reaching five or more internal hosts on administrative ports
   ---
-  duration_ms: 0.5597
+  duration_ms: 0.553
   type: 'test'
   ...
 # Subtest: unusual DNS flags random-looking labels, very long names, TXT queries and many unique subdomains, but not ordinary names
 ok 136 - unusual DNS flags random-looking labels, very long names, TXT queries and many unique subdomains, but not ordinary names
   ---
-  duration_ms: 2.826
+  duration_ms: 2.2307
   type: 'test'
   ...
 # Subtest: every NSG flow log is matched to its VNets: migrate, covered (disable to avoid double charges) or NIC-only (CG-051)
 ok 137 - every NSG flow log is matched to its VNets: migrate, covered (disable to avoid double charges) or NIC-only (CG-051)
   ---
-  duration_ms: 18.1052
+  duration_ms: 17.1483
   type: 'test'
   ...
 # Subtest: existing NSG flow log files stay readable in the common flow model until retirement (CG-051)
 ok 138 - existing NSG flow log files stay readable in the common flow model until retirement (CG-051)
   ---
-  duration_ms: 6.0153
+  duration_ms: 7.2712
   type: 'test'
   ...
 # Subtest: uncovered NSG flow logs raise alerts that become high in the last 90 days, and the plan is served with live days left (CG-051)
 ok 139 - uncovered NSG flow logs raise alerts that become high in the last 90 days, and the plan is served with live days left (CG-051)
   ---
-  duration_ms: 328.5744
+  duration_ms: 211.2077
   type: 'test'
   ...
 # Subtest: PowerShell scripts parse the same on Windows PowerShell 5.1 and PowerShell 7
 ok 140 - PowerShell scripts parse the same on Windows PowerShell 5.1 and PowerShell 7
   ---
-  duration_ms: 21.3408
+  duration_ms: 13.3051
   type: 'test'
   ...
 # Subtest: precision, false positives, MTTD/MTTR, device and rule coverage and response failures are measured from real triage (CG-058)
 ok 141 - precision, false positives, MTTD/MTTR, device and rule coverage and response failures are measured from real triage (CG-058)
   ---
-  duration_ms: 2855.1967
+  duration_ms: 2872.2588
   type: 'test'
   ...
 # Subtest: remote access is loopback by default and ZTNA or VPN must be configured completely (CG-053)
 ok 142 - remote access is loopback by default and ZTNA or VPN must be configured completely (CG-053)
   ---
-  duration_ms: 2.4905
+  duration_ms: 3.088
   type: 'test'
   ...
 # Subtest: VPN mode accepts only TLS clients from the VPN pools and, with a device CA, only certificate-holding devices (CG-053)
 ok 143 - VPN mode accepts only TLS clients from the VPN pools and, with a device CA, only certificate-holding devices (CG-053)
   ---
-  duration_ms: 2.4918
+  duration_ms: 2.5758
   type: 'test'
   ...
 # Subtest: mutual TLS refuses devices without a certificate from the organisation device CA (CG-053)
 ok 144 - mutual TLS refuses devices without a certificate from the organisation device CA (CG-053)
   ---
-  duration_ms: 813.317
+  duration_ms: 605.1743
   type: 'test'
   ...
 # Subtest: behind a Zero Trust gateway only signed, unexpired assertions for this audience from compliant devices get through (CG-053)
 ok 145 - behind a Zero Trust gateway only signed, unexpired assertions for this audience from compliant devices get through (CG-053)
   ---
-  duration_ms: 915.0243
+  duration_ms: 1261.1378
   type: 'test'
   ...
 # Subtest: the app installs on Windows desktop, tablets and phones as a standalone web app (CG-053)
 ok 146 - the app installs on Windows desktop, tablets and phones as a standalone web app (CG-053)
   ---
-  duration_ms: 111.4398
+  duration_ms: 143.0122
   type: 'test'
   ...
 # Subtest: all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
 ok 147 - all 1440 IDs, source lines, 12 chunks and embedded sources retain their original content
   ---
-  duration_ms: 370.7064
+  duration_ms: 296.1725
   type: 'test'
   ...
 # Subtest: traceability preserves raw text and never turns inventory into verified product coverage
 ok 148 - traceability preserves raw text and never turns inventory into verified product coverage
   ---
-  duration_ms: 480.2837
+  duration_ms: 547.2287
   type: 'test'
   ...
 # Subtest: subset evidence does not count as full acceptance and stale evidence is not promoted
 ok 149 - subset evidence does not count as full acceptance and stale evidence is not promoted
   ---
-  duration_ms: 557.3619
+  duration_ms: 339.0654
   type: 'test'
   ...
 # Subtest: full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
 ok 150 - full acceptance requires requirement-specific code, tests and a fresh passing source fingerprint
   ---
-  duration_ms: 301.3312
+  duration_ms: 338.3836
   type: 'test'
   ...
 # Subtest: first 300 requirements receive non-acceptance semantic triage without changing their source text
 ok 151 - first 300 requirements receive non-acceptance semantic triage without changing their source text
   ---
-  duration_ms: 277.3445
+  duration_ms: 391.9004
   type: 'test'
   ...
 # Subtest: requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
 ok 152 - requirements 301 through 600 receive non-acceptance semantic triage with complete non-overlapping coverage
   ---
-  duration_ms: 220.3191
+  duration_ms: 258.6792
   type: 'test'
   ...
 # Subtest: connector secrets are encrypted at rest, write-only, released only to delegated sources and rotated on schedule (CG-055)
 ok 153 - connector secrets are encrypted at rest, write-only, released only to delegated sources and rotated on schedule (CG-055)
   ---
-  duration_ms: 1994.8241
+  duration_ms: 1920.7924
   type: 'test'
   ...
 # Subtest: ModSecurity and AWS WAF logs normalise to WAF records with block decisions and rule signatures
 ok 154 - ModSecurity and AWS WAF logs normalise to WAF records with block decisions and rule signatures
   ---
-  duration_ms: 3.9833
+  duration_ms: 4.9021
   type: 'test'
   ...
 # Subtest: dnsmasq/Pi-hole, Zeek conn, FreeRADIUS and Cloudflare Access logs normalise to DNS security, NDR, NAC and ZTNA records
 ok 155 - dnsmasq/Pi-hole, Zeek conn, FreeRADIUS and Cloudflare Access logs normalise to DNS security, NDR, NAC and ZTNA records
   ---
-  duration_ms: 2.6835
+  duration_ms: 2.8974
   type: 'test'
   ...
 # Subtest: OIDC SSO signs users in only with a verified, MFA-backed ID token and maps IdP groups to the least role and site scope (CG-052)
 ok 156 - OIDC SSO signs users in only with a verified, MFA-backed ID token and maps IdP groups to the least role and site scope (CG-052)
   ---
-  duration_ms: 1510.2662
+  duration_ms: 1398.3956
   type: 'test'
   ...
 # Subtest: ID token verification also accepts the acr route to MFA and rejects unsupported algorithms (CG-052)
 ok 157 - ID token verification also accepts the acr route to MFA and rejects unsupported algorithms (CG-052)
   ---
-  duration_ms: 59.0528
+  duration_ms: 60.0088
+  type: 'test'
+  ...
+# Subtest: each tenant is a separate instance with its own data, keys, audit chain and identities (CG-059)
+ok 158 - each tenant is a separate instance with its own data, keys, audit chain and identities (CG-059)
+  ---
+  duration_ms: 2195.1083
+  type: 'test'
+  ...
+# Subtest: tenant limits refuse telemetry with an alert, retention ages out activity only, both admin with MFA (CG-059)
+ok 159 - tenant limits refuse telemetry with an alert, retention ages out activity only, both admin with MFA (CG-059)
+  ---
+  duration_ms: 1253.8351
   type: 'test'
   ...
 # Subtest: SOC shell exposes every required navigation destination as an operable view
-ok 158 - SOC shell exposes every required navigation destination as an operable view
+ok 160 - SOC shell exposes every required navigation destination as an operable view
   ---
-  duration_ms: 7.1293
+  duration_ms: 7.1379
   type: 'test'
   ...
 # Subtest: bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
-ok 159 - bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
+ok 161 - bilingual RTL and responsive contracts cover desktop, tablet and mobile layouts
   ---
-  duration_ms: 4.4556
+  duration_ms: 6.9172
   type: 'test'
   ...
 # Subtest: security posture UI keeps unknown, not configured and unverified evidence explicit
-ok 160 - security posture UI keeps unknown, not configured and unverified evidence explicit
+ok 162 - security posture UI keeps unknown, not configured and unverified evidence explicit
   ---
-  duration_ms: 3.8773
+  duration_ms: 3.8687
   type: 'test'
   ...
 # Subtest: discovery view exposes authorization, evidence boundaries and central asset observations
-ok 161 - discovery view exposes authorization, evidence boundaries and central asset observations
+ok 163 - discovery view exposes authorization, evidence boundaries and central asset observations
   ---
-  duration_ms: 3.6448
+  duration_ms: 12.6388
   type: 'test'
   ...
 # Subtest: settings exposes all operating modes and the PC visibility boundary
-ok 162 - settings exposes all operating modes and the PC visibility boundary
+ok 164 - settings exposes all operating modes and the PC visibility boundary
   ---
-  duration_ms: 1.9824
+  duration_ms: 7.3789
   type: 'test'
   ...
 # Subtest: action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
-ok 163 - action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
+ok 165 - action review exposes dry run, impact, approval lifecycle, verification, audit and rollback evidence
   ---
-  duration_ms: 4.5248
+  duration_ms: 13.1829
   type: 'test'
   ...
 # Subtest: response view exposes every typed CG-029 action and authenticated connector evidence without raw commands
-ok 164 - response view exposes every typed CG-029 action and authenticated connector evidence without raw commands
+ok 166 - response view exposes every typed CG-029 action and authenticated connector evidence without raw commands
   ---
-  duration_ms: 10.8219
+  duration_ms: 27.1866
   type: 'test'
   ...
 # Subtest: response view marks permanent service work as CG-030 high risk with preflight, recovery and separate safety approval
-ok 165 - response view marks permanent service work as CG-030 high risk with preflight, recovery and separate safety approval
+ok 167 - response view marks permanent service work as CG-030 high risk with preflight, recovery and separate safety approval
   ---
-  duration_ms: 4.6996
+  duration_ms: 8.8591
   type: 'test'
   ...
 # Subtest: response view exposes CG-031 exact temporary permits, independent approval and expiration evidence
-ok 166 - response view exposes CG-031 exact temporary permits, independent approval and expiration evidence
+ok 168 - response view exposes CG-031 exact temporary permits, independent approval and expiration evidence
   ---
-  duration_ms: 4.5209
+  duration_ms: 11.5796
   type: 'test'
   ...
 # Subtest: response safety contract enforces CG-033 management-channel and protected-infrastructure guards
-ok 167 - response safety contract enforces CG-033 management-channel and protected-infrastructure guards
+ok 169 - response safety contract enforces CG-033 management-channel and protected-infrastructure guards
   ---
-  duration_ms: 8.9523
+  duration_ms: 34.5523
   type: 'test'
   ...
 # Subtest: settings exposes CG-034 recent MFA two-person control bounded break-glass and append-only evidence
-ok 168 - settings exposes CG-034 recent MFA two-person control bounded break-glass and append-only evidence
+ok 170 - settings exposes CG-034 recent MFA two-person control bounded break-glass and append-only evidence
   ---
-  duration_ms: 4.1645
+  duration_ms: 19.2409
   type: 'test'
   ...
 # Subtest: CG-035 incident playbooks cover supported incident types and gate low-risk automation behind approval
-ok 169 - CG-035 incident playbooks cover supported incident types and gate low-risk automation behind approval
+ok 171 - CG-035 incident playbooks cover supported incident types and gate low-risk automation behind approval
   ---
-  duration_ms: 5.4271
+  duration_ms: 40.1327
   type: 'test'
   ...
 # Subtest: CG-036 local analyst exposes bilingual what why evidence confidence and solution without an external model
-ok 170 - CG-036 local analyst exposes bilingual what why evidence confidence and solution without an external model
+ok 172 - CG-036 local analyst exposes bilingual what why evidence confidence and solution without an external model
   ---
-  duration_ms: 6.3008
+  duration_ms: 11.3735
   type: 'test'
   ...
 # Subtest: CG-037 analyst shows a recorded source for every claim and withholds unsupported facts
-ok 171 - CG-037 analyst shows a recorded source for every claim and withholds unsupported facts
+ok 173 - CG-037 analyst shows a recorded source for every claim and withholds unsupported facts
   ---
-  duration_ms: 3.5625
+  duration_ms: 8.7241
   type: 'test'
   ...
 # Subtest: CG-038 keeps local analysis primary and gates optional cloud use behind consent and fixed redaction
-ok 172 - CG-038 keeps local analysis primary and gates optional cloud use behind consent and fixed redaction
+ok 174 - CG-038 keeps local analysis primary and gates optional cloud use behind consent and fixed redaction
   ---
-  duration_ms: 3.0137
+  duration_ms: 10.6891
   type: 'test'
   ...
 # Subtest: source health UI distinguishes managed agents, log forwarders and delivery failures
-ok 173 - source health UI distinguishes managed agents, log forwarders and delivery failures
+ok 175 - source health UI distinguishes managed agents, log forwarders and delivery failures
   ---
-  duration_ms: 2.7897
+  duration_ms: 2.8196
   type: 'test'
   ...
 # Subtest: remote access UI distinguishes application presence, connection phase and evidence assessment
-ok 174 - remote access UI distinguishes application presence, connection phase and evidence assessment
+ok 176 - remote access UI distinguishes application presence, connection phase and evidence assessment
   ---
-  duration_ms: 3.9677
+  duration_ms: 14.4553
   type: 'test'
   ...
 # Subtest: policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps
-ok 175 - policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps
+ok 177 - policies view maps all six NIST CSF 2.0 functions to evidence and coverage gaps
   ---
-  duration_ms: 37.3516
+  duration_ms: 16.6173
   type: 'test'
   ...
 # Subtest: policies view exposes a versioned threat model for every registered environment
-ok 176 - policies view exposes a versioned threat model for every registered environment
+ok 178 - policies view exposes a versioned threat model for every registered environment
   ---
-  duration_ms: 3.9283
+  duration_ms: 3.7754
   type: 'test'
   ...
 # Subtest: reports view exposes the institutional risk register and review deadlines
-ok 177 - reports view exposes the institutional risk register and review deadlines
+ok 179 - reports view exposes the institutional risk register and review deadlines
   ---
-  duration_ms: 59.4252
+  duration_ms: 4.2654
   type: 'test'
   ...
 # Subtest: reports view exposes a legacy compatibility matrix without converting not-tested into support
-ok 178 - reports view exposes a legacy compatibility matrix without converting not-tested into support
+ok 180 - reports view exposes a legacy compatibility matrix without converting not-tested into support
   ---
-  duration_ms: 5.1422
+  duration_ms: 3.474
   type: 'test'
   ...
 # Subtest: reports view exposes evidence-backed legacy compensating controls through migration
-ok 179 - reports view exposes evidence-backed legacy compensating controls through migration
+ok 181 - reports view exposes evidence-backed legacy compensating controls through migration
   ---
-  duration_ms: 5.1455
+  duration_ms: 3.3221
   type: 'test'
   ...
 # Subtest: reports view exposes backup copy separation, immutability, change monitoring and permission review
-ok 180 - reports view exposes backup copy separation, immutability, change monitoring and permission review
+ok 182 - reports view exposes backup copy separation, immutability, change monitoring and permission review
   ---
-  duration_ms: 5.6494
+  duration_ms: 4.2128
   type: 'test'
   ...
 # Subtest: reports view keeps backup presence separate from restore readiness and measured RPO or RTO
-ok 181 - reports view keeps backup presence separate from restore readiness and measured RPO or RTO
+ok 183 - reports view keeps backup presence separate from restore readiness and measured RPO or RTO
   ---
-  duration_ms: 3.29
+  duration_ms: 3.3917
   type: 'test'
   ...
 # Subtest: reports view exposes ordered incident recovery and blocks reconnection before threat clearance
-ok 182 - reports view exposes ordered incident recovery and blocks reconnection before threat clearance
+ok 184 - reports view exposes ordered incident recovery and blocks reconnection before threat clearance
   ---
-  duration_ms: 3.2103
+  duration_ms: 5.4575
   type: 'test'
   ...
 # Subtest: reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe
-ok 183 - reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe
+ok 185 - reports view exposes evidence-gated network and SOC resilience controls with an expiring automatic policy fail-safe
   ---
-  duration_ms: 5.644
+  duration_ms: 5.1986
   type: 'test'
   ...
 # Subtest: identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence
-ok 184 - identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence
+ok 186 - identity view exposes AD and Entra privilege, change, service-account, trust and sign-in policy audit evidence
   ---
-  duration_ms: 4.365
+  duration_ms: 6.4801
   type: 'test'
   ...
 # Subtest: identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values
-ok 185 - identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values
+ok 187 - identity view exposes per-device Windows LAPS policy, rotation failures and secret-view audit metadata without secret values
   ---
-  duration_ms: 3.2632
+  duration_ms: 12.7182
   type: 'test'
   ...
 # Subtest: identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes
-ok 186 - identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes
+ok 188 - identity view exposes AD CS services and issuance, Kerberos delegation, legacy NTLM and access-decided authentication changes
   ---
-  duration_ms: 5.675
+  duration_ms: 8.2403
   type: 'test'
   ...
 # Subtest: identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence
-ok 187 - identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence
+ok 189 - identity view exposes JIT and PIM, PAW posture, temporary administrative sessions and high-sensitivity review evidence
   ---
-  duration_ms: 4.917
+  duration_ms: 8.285
   type: 'test'
   ...
 # Subtest: identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities
-ok 188 - identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities
+ok 190 - identity view inventories SaaS OAuth applications and service identities with owners, credential rotation, permissions and activities
   ---
-  duration_ms: 3.9467
+  duration_ms: 5.9977
   type: 'test'
   ...
 # Subtest: identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack
-ok 189 - identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack
+ok 191 - identity view correlates sign-in MFA token privilege file resource and network evidence without confirming an attack
   ---
-  duration_ms: 5.3701
+  duration_ms: 7.7286
   type: 'test'
   ...
 # Subtest: identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values
-ok 190 - identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values
+ok 192 - identity view shows help desk reset verification approval audit and temporary-access follow-up without secret values
   ---
-  duration_ms: 3.8587
+  duration_ms: 4.0483
   type: 'test'
   ...
 # Subtest: threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict
-ok 191 - threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict
+ok 193 - threats view shows process causality tree, persistence changes, connections and masked command lines without a malware verdict
   ---
-  duration_ms: 4.1872
+  duration_ms: 4.1354
   type: 'test'
   ...
 # Subtest: threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering
-ok 192 - threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering
+ok 194 - threats view shows defense tamper classification between authorized change, fault and suspected deliberate tampering
   ---
-  duration_ms: 3.7716
+  duration_ms: 8.6298
   type: 'test'
   ...
 # Subtest: threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store
-ok 193 - threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store
+ok 195 - threats view shows anti-ransomware posture with CFA/ASR availability, file-activity indicators, backup integrity and recovery store
   ---
-  duration_ms: 3.8044
+  duration_ms: 9.5162
   type: 'test'
   ...
 # Subtest: discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter
-ok 194 - discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter
+ok 196 - discover view shows the sequential discovery run with ordered stages, merged devices, neighbour links and a read-only local exporter
   ---
-  duration_ms: 9.2121
+  duration_ms: 7.6783
   type: 'test'
   ...
 # Subtest: data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark
-ok 195 - data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark
+ok 197 - data sources view shows the distributed 20,000-device collector plan and the measured single-node benchmark
   ---
-  duration_ms: 6.7429
+  duration_ms: 8.5687
   type: 'test'
   ...
 # Subtest: data sources view shows optional managed-device agents and both agents stay read only
-ok 196 - data sources view shows optional managed-device agents and both agents stay read only
+ok 198 - data sources view shows optional managed-device agents and both agents stay read only
   ---
-  duration_ms: 7.2417
+  duration_ms: 6.3251
   type: 'test'
   ...
 # Subtest: policies view shows sensitive change monitoring and the snapshot monitor stays read only
-ok 197 - policies view shows sensitive change monitoring and the snapshot monitor stays read only
+ok 199 - policies view shows sensitive change monitoring and the snapshot monitor stays read only
   ---
-  duration_ms: 22.9469
+  duration_ms: 7.0288
   type: 'test'
   ...
 # Subtest: threats view lists the versioned malware, ransomware and tamper detection rules with alert counts
-ok 198 - threats view lists the versioned malware, ransomware and tamper detection rules with alert counts
+ok 200 - threats view lists the versioned malware, ransomware and tamper detection rules with alert counts
   ---
-  duration_ms: 8.9503
+  duration_ms: 2.8076
   type: 'test'
   ...
 # Subtest: vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only
-ok 199 - vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only
+ok 201 - vulnerabilities view shows software and update inventory linked to imported catalogs by installed version, and the exporter is read only
   ---
-  duration_ms: 8.5122
+  duration_ms: 5.6094
   type: 'test'
   ...
 # Subtest: identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only
-ok 200 - identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only
+ok 202 - identity view shows directory integration with group and privilege change monitoring, and the snapshot exporter is read only
   ---
-  duration_ms: 14.7267
+  duration_ms: 10.0666
   type: 'test'
   ...
 # Subtest: identity view shows identity threat findings and the account posture exporter is read only
-ok 201 - identity view shows identity threat findings and the account posture exporter is read only
+ok 203 - identity view shows identity threat findings and the account posture exporter is read only
   ---
-  duration_ms: 13.2314
+  duration_ms: 4.5935
   type: 'test'
   ...
 # Subtest: no evidence schema field name is one that the secret redactor would erase
-ok 202 - no evidence schema field name is one that the secret redactor would erase
+ok 204 - no evidence schema field name is one that the secret redactor would erase
   ---
-  duration_ms: 7.4919
+  duration_ms: 3.7151
   type: 'test'
   ...
 # Subtest: settings view offers just-in-time privilege requests with approval, revocation and visible expiry
-ok 203 - settings view offers just-in-time privilege requests with approval, revocation and visible expiry
+ok 205 - settings view offers just-in-time privilege requests with approval, revocation and visible expiry
   ---
-  duration_ms: 4.3299
+  duration_ms: 8.312
   type: 'test'
   ...
 # Subtest: events view shows normalised logs from every supported source family
-ok 204 - events view shows normalised logs from every supported source family
+ok 206 - events view shows normalised logs from every supported source family
   ---
-  duration_ms: 2.7187
+  duration_ms: 3.2573
   type: 'test'
   ...
 # Subtest: network map view shows connection zones, Internet exposure, unusual DNS and lateral movement, and the connection exporter is read only
-ok 205 - network map view shows connection zones, Internet exposure, unusual DNS and lateral movement, and the connection exporter is read only
+ok 207 - network map view shows connection zones, Internet exposure, unusual DNS and lateral movement, and the connection exporter is read only
   ---
-  duration_ms: 3.5872
+  duration_ms: 3.9214
   type: 'test'
   ...
 # Subtest: every browser script parses as valid JavaScript
-ok 206 - every browser script parses as valid JavaScript
+ok 208 - every browser script parses as valid JavaScript
   ---
-  duration_ms: 312.8072
+  duration_ms: 355.3627
   type: 'test'
   ...
 # Subtest: policies view shows the firewall rule analyzer and the Windows rule exporter is read only
-ok 207 - policies view shows the firewall rule analyzer and the Windows rule exporter is read only
+ok 209 - policies view shows the firewall rule analyzer and the Windows rule exporter is read only
   ---
-  duration_ms: 3.8709
+  duration_ms: 3.1539
   type: 'test'
   ...
 # Subtest: network map view shows device versions, DNS, VPN and management monitoring and both collectors keep secrets out
-ok 208 - network map view shows device versions, DNS, VPN and management monitoring and both collectors keep secrets out
+ok 210 - network map view shows device versions, DNS, VPN and management monitoring and both collectors keep secrets out
   ---
-  duration_ms: 3.9069
+  duration_ms: 4.5567
   type: 'test'
   ...
 # Subtest: data sources view shows security control integrations for DNS security, WAF, IDS/IPS, NAC, NDR and ZTNA
-ok 209 - data sources view shows security control integrations for DNS security, WAF, IDS/IPS, NAC, NDR and ZTNA
+ok 211 - data sources view shows security control integrations for DNS security, WAF, IDS/IPS, NAC, NDR and ZTNA
   ---
-  duration_ms: 2.221
+  duration_ms: 2.4694
   type: 'test'
   ...
 # Subtest: data sources view shows device capability negotiation with the reason for every unavailable capability
-ok 210 - data sources view shows device capability negotiation with the reason for every unavailable capability
+ok 212 - data sources view shows device capability negotiation with the reason for every unavailable capability
   ---
-  duration_ms: 2.0213
+  duration_ms: 3.2191
   type: 'test'
   ...
 # Subtest: network map shows controller topology with device health and no guessed links
-ok 211 - network map shows controller topology with device health and no guessed links
+ok 213 - network map shows controller topology with device health and no guessed links
   ---
-  duration_ms: 1.8877
+  duration_ms: 2.7945
   type: 'test'
   ...
 # Subtest: case view reconstructs the incident with proven timeline and graph separate from the attack-path hypothesis
-ok 212 - case view reconstructs the incident with proven timeline and graph separate from the attack-path hypothesis
+ok 214 - case view reconstructs the incident with proven timeline and graph separate from the attack-path hypothesis
   ---
-  duration_ms: 2.2974
+  duration_ms: 3.337
   type: 'test'
   ...
 # Subtest: AI analyst shows typed catalog proposals, their human decision state and rejected raw-command attempts
-ok 213 - AI analyst shows typed catalog proposals, their human decision state and rejected raw-command attempts
+ok 215 - AI analyst shows typed catalog proposals, their human decision state and rejected raw-command attempts
   ---
-  duration_ms: 1.8362
+  duration_ms: 2.5287
   type: 'test'
   ...
 # Subtest: vulnerabilities view measures detection during tests and lists detection gaps
-ok 214 - vulnerabilities view measures detection during tests and lists detection gaps
+ok 216 - vulnerabilities view measures detection during tests and lists detection gaps
   ---
-  duration_ms: 2.0228
+  duration_ms: 3.4051
   type: 'test'
   ...
 # Subtest: vulnerabilities view shows the non-bypassable critical production validation safety floor
-ok 215 - vulnerabilities view shows the non-bypassable critical production validation safety floor
+ok 217 - vulnerabilities view shows the non-bypassable critical production validation safety floor
   ---
-  duration_ms: 3.4094
+  duration_ms: 4.8689
   type: 'test'
   ...
 # Subtest: vulnerabilities view shows the three validation tiers, their enforced rules and out-of-plan runs
-ok 216 - vulnerabilities view shows the three validation tiers, their enforced rules and out-of-plan runs
+ok 218 - vulnerabilities view shows the three validation tiers, their enforced rules and out-of-plan runs
   ---
-  duration_ms: 2.6088
+  duration_ms: 3.0034
   type: 'test'
   ...
 # Subtest: vulnerabilities view ranks risk with visible factors, evidence and the CVSS-only rank for comparison
-ok 217 - vulnerabilities view ranks risk with visible factors, evidence and the CVSS-only rank for comparison
+ok 219 - vulnerabilities view ranks risk with visible factors, evidence and the CVSS-only rank for comparison
   ---
-  duration_ms: 1.775
+  duration_ms: 2.9585
   type: 'test'
   ...
 # Subtest: vulnerabilities view shows authorized assessment scopes, feed freshness, KEV/EPSS/CVSS enrichment and exposure evidence
-ok 218 - vulnerabilities view shows authorized assessment scopes, feed freshness, KEV/EPSS/CVSS enrichment and exposure evidence
+ok 220 - vulnerabilities view shows authorized assessment scopes, feed freshness, KEV/EPSS/CVSS enrichment and exposure evidence
   ---
-  duration_ms: 2.102
+  duration_ms: 2.8151
   type: 'test'
   ...
 # Subtest: network map view renders a bounded visibility-gap registry without guessed topology
-ok 219 - network map view renders a bounded visibility-gap registry without guessed topology
+ok 221 - network map view renders a bounded visibility-gap registry without guessed topology
   ---
-  duration_ms: 4.3802
+  duration_ms: 9.7934
   type: 'test'
   ...
 # Subtest: asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence
-ok 220 - asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence
+ok 222 - asset detail renders ownership, business context, site, sensitivity, maintenance and criticality evidence
   ---
-  duration_ms: 2.0626
+  duration_ms: 2.7684
   type: 'test'
   ...
 # Subtest: asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan
-ok 221 - asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan
+ok 223 - asset detail renders lifecycle versions, support dates, extended support and the owned upgrade or replacement plan
   ---
-  duration_ms: 3.4219
+  duration_ms: 4.4906
   type: 'test'
   ...
 # Subtest: browser markup respects the style-src CSP and uses pattern attributes that compile under the v flag
-ok 222 - browser markup respects the style-src CSP and uses pattern attributes that compile under the v flag
+ok 224 - browser markup respects the style-src CSP and uses pattern attributes that compile under the v flag
   ---
-  duration_ms: 6.2266
+  duration_ms: 7.5779
   type: 'test'
   ...
 # Subtest: every server description has an Arabic version and the interface shows it in the interface language
-ok 223 - every server description has an Arabic version and the interface shows it in the interface language
+ok 225 - every server description has an Arabic version and the interface shows it in the interface language
   ---
-  duration_ms: 6.236
+  duration_ms: 6.4376
   type: 'test'
   ...
 # Subtest: cloud view shows AWS coverage per account and service with every gap and active finding
-ok 224 - cloud view shows AWS coverage per account and service with every gap and active finding
+ok 226 - cloud view shows AWS coverage per account and service with every gap and active finding
   ---
-  duration_ms: 2.7186
+  duration_ms: 4.2473
   type: 'test'
   ...
 # Subtest: cloud view reviews temporary least-privilege access with the reason for every violation (CG-049)
-ok 225 - cloud view reviews temporary least-privilege access with the reason for every violation (CG-049)
+ok 227 - cloud view reviews temporary least-privilege access with the reason for every violation (CG-049)
   ---
-  duration_ms: 1.9008
+  duration_ms: 3.3669
   type: 'test'
   ...
 # Subtest: cloud view unifies inventory, alerts, policies, access, regional gaps and charges across providers (CG-050)
-ok 226 - cloud view unifies inventory, alerts, policies, access, regional gaps and charges across providers (CG-050)
+ok 228 - cloud view unifies inventory, alerts, policies, access, regional gaps and charges across providers (CG-050)
   ---
-  duration_ms: 1.6995
+  duration_ms: 2.5927
   type: 'test'
   ...
 # Subtest: cloud view plans the NSG to VNet flow log migration with days left and an action per NSG (CG-051)
-ok 227 - cloud view plans the NSG to VNet flow log migration with days left and an action per NSG (CG-051)
+ok 229 - cloud view plans the NSG to VNet flow log migration with days left and an action per NSG (CG-051)
   ---
-  duration_ms: 1.8178
+  duration_ms: 3.619
   type: 'test'
   ...
 # Subtest: login offers SSO with clear refusal reasons, settings manage SSO and per-user tenant/site/area scope, and site-limited users get a scoped workspace (CG-052)
-ok 228 - login offers SSO with clear refusal reasons, settings manage SSO and per-user tenant/site/area scope, and site-limited users get a scoped workspace (CG-052)
+ok 230 - login offers SSO with clear refusal reasons, settings manage SSO and per-user tenant/site/area scope, and site-limited users get a scoped workspace (CG-052)
   ---
-  duration_ms: 1.7681
+  duration_ms: 2.854
   type: 'test'
   ...
 # Subtest: settings explain how CyberGuard is reached remotely and whether devices must prove compliance (CG-053)
-ok 229 - settings explain how CyberGuard is reached remotely and whether devices must prove compliance (CG-053)
+ok 231 - settings explain how CyberGuard is reached remotely and whether devices must prove compliance (CG-053)
   ---
-  duration_ms: 7.2627
+  duration_ms: 6.2827
   type: 'test'
   ...
 # Subtest: settings manage connector secrets as write-only metadata with rotation status and explain separation of duties (CG-055)
-ok 230 - settings manage connector secrets as write-only metadata with rotation status and explain separation of duties (CG-055)
+ok 232 - settings manage connector secrets as write-only metadata with rotation status and explain separation of duties (CG-055)
   ---
-  duration_ms: 2.3421
+  duration_ms: 8.4037
   type: 'test'
   ...
 # Subtest: threats show measured detection and response quality and alerts take an analyst disposition (CG-058)
-ok 231 - threats show measured detection and response quality and alerts take an analyst disposition (CG-058)
+ok 233 - threats show measured detection and response quality and alerts take an analyst disposition (CG-058)
   ---
-  duration_ms: 4.3521
+  duration_ms: 10.6573
+  type: 'test'
+  ...
+# Subtest: settings show the tenant isolation model, resource usage against limits and retention (CG-059)
+ok 234 - settings show the tenant isolation model, resource usage against limits and retention (CG-059)
+  ---
+  duration_ms: 7.6891
   type: 'test'
   ...
 # Subtest: CISA KEV, FIRST EPSS and NVD CVE 2.0 feeds parse into dated intelligence entries with CVSS, attack vector and ransomware use
-ok 232 - CISA KEV, FIRST EPSS and NVD CVE 2.0 feeds parse into dated intelligence entries with CVSS, attack vector and ransomware use
+ok 235 - CISA KEV, FIRST EPSS and NVD CVE 2.0 feeds parse into dated intelligence entries with CVSS, attack vector and ransomware use
   ---
-  duration_ms: 6.4962
+  duration_ms: 4.7877
   type: 'test'
   ...
 # Subtest: NVD application CPE matches become catalog version ranges; OS/hardware CPEs and single-word products need a version after them or the vendor alias
-ok 233 - NVD application CPE matches become catalog version ranges; OS/hardware CPEs and single-word products need a version after them or the vendor alias
+ok 236 - NVD application CPE matches become catalog version ranges; OS/hardware CPEs and single-word products need a version after them or the vendor alias
   ---
-  duration_ms: 1.4695
+  duration_ms: 1.3952
   type: 'test'
   ...
 # Subtest: authorized scope networks match IPv4 and IPv6 addresses by prefix
-ok 234 - authorized scope networks match IPv4 and IPv6 addresses by prefix
+ok 237 - authorized scope networks match IPv4 and IPv6 addresses by prefix
   ---
-  duration_ms: 7.9056
+  duration_ms: 8.2303
   type: 'test'
   ...
 # Subtest: feed converter writes vulnerability.intel and vulnerability.catalog telemetry, filtered to requested CVEs, without uploading
-ok 235 - feed converter writes vulnerability.intel and vulnerability.catalog telemetry, filtered to requested CVEs, without uploading
+ok 238 - feed converter writes vulnerability.intel and vulnerability.catalog telemetry, filtered to requested CVEs, without uploading
   ---
-  duration_ms: 832.9647
+  duration_ms: 992.309
   type: 'test'
   ...
 # Subtest: Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
-ok 236 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
+ok 239 - Windows 4624 type10 maps to authentication, preserves A/B separation and raw provenance
   ---
-  duration_ms: 16.3486
+  duration_ms: 18.5867
   type: 'test'
   ...
 # Subtest: non-RDP logons are explicitly skipped; failure without source remains unknown
-ok 237 - non-RDP logons are explicitly skipped; failure without source remains unknown
+ok 240 - non-RDP logons are explicitly skipped; failure without source remains unknown
   ---
-  duration_ms: 0.8826
+  duration_ms: 2.4847
   type: 'test'
   ...
 # Subtest: Windows logon correlation is scoped to boot and rejects records from before boot
-ok 238 - Windows logon correlation is scoped to boot and rejects records from before boot
+ok 241 - Windows logon correlation is scoped to boot and rejects records from before boot
   ---
-  duration_ms: 0.7561
+  duration_ms: 1.0872
   type: 'test'
   ...
 # Subtest: Windows logoff closes the correlated session without erasing previously observed source identity
-ok 239 - Windows logoff closes the correlated session without erasing previously observed source identity
+ok 242 - Windows logoff closes the correlated session without erasing previously observed source identity
   ---
-  duration_ms: 16.4719
+  duration_ms: 19.6206
   type: 'test'
   ...
-1..239
-# tests 239
+1..242
+# tests 242
 # suites 0
-# pass 239
+# pass 242
 # fail 0
 # cancelled 0
 # skipped 0
 # todo 0
-# duration_ms 15283.9365
+# duration_ms 14857.8902

@@ -1,0 +1,38 @@
+# One CyberGuard instance per tenant (CG-059): cyberguard@<tenant>.service, installed by deploy/linux/add-tenant.sh.
+# Each tenant gets its own transient service user (DynamicUser), data directory, database, keys and audit chain.
+[Unit]
+Description=CyberGuard AI tenant %i
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+DynamicUser=yes
+StateDirectory=cyberguard-tenants/%i
+StateDirectoryMode=0700
+WorkingDirectory=/opt/cyberguard
+EnvironmentFile=/etc/cyberguard/tenants/%i.env
+Environment=CG_TENANT=%i
+Environment=CG_DATA_DIR=/var/lib/cyberguard-tenants/%i
+ExecStart=/usr/bin/env node /opt/cyberguard/server.js
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=yes
+PrivateTmp=yes
+PrivateDevices=yes
+ProtectSystem=strict
+ProtectHome=yes
+ProtectKernelTunables=yes
+ProtectKernelModules=yes
+ProtectControlGroups=yes
+RestrictSUIDSGID=yes
+RestrictNamespaces=yes
+LockPersonality=yes
+CapabilityBoundingSet=
+AmbientCapabilities=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+SystemCallArchitectures=native
+
+[Install]
+WantedBy=multi-user.target

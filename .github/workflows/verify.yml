@@ -108,3 +108,18 @@ jobs:
           test "$(sudo stat -c %U /var/lib/cyberguard)" = cyberguard
           if curl -fsS --max-time 3 "http://$(hostname -I | awk '{print $1}'):4310/api/health"; then echo 'CyberGuard must not listen beyond loopback'; exit 1; fi
           sudo systemd-analyze security cyberguard --no-pager | tail -1
+      - name: Run two isolated tenants as separate systemd services on Linux (CG-059)
+        if: runner.os == 'Linux'
+        run: |
+          sh -n deploy/linux/add-tenant.sh
+          sudo sh deploy/linux/add-tenant.sh acme-bank 4411
+          sudo sh deploy/linux/add-tenant.sh north-clinic 4412
+          if sudo sh deploy/linux/add-tenant.sh other-co 4411; then echo 'a used port must be refused'; exit 1; fi
+          for p in 4411 4412; do for i in $(seq 1 30); do curl -fsS http://127.0.0.1:$p/api/health >/dev/null 2>&1 && break; sleep 1; done; curl -fsS http://127.0.0.1:$p/api/setup/status | grep -q '"setup_required":true'; done
+          systemctl is-active cyberguard@acme-bank cyberguard@north-clinic
+          A=$(sudo stat -c %u /var/lib/private/cyberguard-tenants/acme-bank); B=$(sudo stat -c %u /var/lib/private/cyberguard-tenants/north-clinic)
+          test "$A" != "$B" && test "$A" != 0 && test "$B" != 0
+          sudo test -f /var/lib/private/cyberguard-tenants/acme-bank/cyberguard.sqlite
+          sudo test -f /var/lib/private/cyberguard-tenants/north-clinic/cyberguard.sqlite
+          test "$(sudo cat /var/lib/private/cyberguard-tenants/acme-bank/setup-token)" != "$(sudo cat /var/lib/private/cyberguard-tenants/north-clinic/setup-token)"
+          sudo systemd-analyze security cyberguard@acme-bank --no-pager | tail -1
