@@ -484,3 +484,7 @@ test('settings show rollout stages with measured gates and second-administrator 
 test('achievements state whether the final development prompt may be generated and what blocks it (CG-063)',()=>{
   const app=read('app.js');for(const marker of ['data-development-prompt','The final development prompt is not written yet','node scripts/development-prompt.js --write','CG-063']) assert.ok(app.includes(marker),marker);
 });
+test('incidents show the documented incident study library with stage visibility here, rules, response and prevention (CG-064)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/incident-studies/);
+  for(const marker of ['Documented incident study library','Visible here','Blind here','Evidence and visibility','Prevention','rel="noopener noreferrer"','CG-064']) assert.ok(app.includes(marker),marker);
+});

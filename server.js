@@ -214,6 +214,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(aiDecision&&method==='POST'){roles(['admin','analyst']);if(aiDecision[2]==='promote'){auth.requireRecentMfa(user);return send(res,201,domain.promoteAiProposal(user.id,aiDecision[1],await body(req)));}return send(res,200,domain.dismissAiProposal(user.id,aiDecision[1]));}
       const cloudAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/cloud$/);
       if(cloudAnalysis&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);fail(typeof cloudAiInvoke==='function',503,'cloud_ai_connector_unavailable');const prepared=domain.prepareAiCloudAnalysis(user.id,cloudAnalysis[1],await body(req)),raw=await cloudAiInvoke({provider:prepared.consent.provider,payload:prepared.payload}),result=validateCloudResult(raw);return send(res,200,domain.recordAiCloudAnalysis(user.id,prepared,result));}
+      if(p==='/api/incident-studies'&&method==='GET') return send(res,200,domain.incidentStudies({q:url.searchParams.get('q')||''}));
       if(p==='/api/reconciliation'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.reconciliation());}
       if(p==='/api/quality-metrics'&&method==='GET') return send(res,200,domain.qualityMetrics({days:url.searchParams.get('days')||30}));
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));

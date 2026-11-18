@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T20:25:06.150Z",
+  "at": "2026-11-18T20:30:12.630Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -93,7 +93,8 @@
     "reconciliation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-060", "response_panel": "Outage operation and change reconciliation", "summary_cards": 6, "empty_states_explained": true, "mobile_overflow": false, "console_errors": 0},
     "rollout": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-062", "settings_panel": "Rollout stages: lab, pilot, expansion", "undeclared_state_visible": true, "gate_checks_localized": true, "arabic_view_clean": true, "mobile_overflow": false, "console_errors": 0},
     "development_prompt": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-063", "achievements_hint": "not written yet with blocking counts", "prompt_file_absent": true, "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 85, "next": "CG-064"}
+    "incident_studies": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-064", "incidents_panel": "Documented incident study library", "studies": 8, "stage_visibility_shown": true, "arabic_prevention": true, "mobile_overflow": false, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 86, "next": "CG-065"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

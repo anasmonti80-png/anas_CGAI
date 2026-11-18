@@ -599,6 +599,13 @@
       "tests": ["tests/development-prompt.test.js: the final development prompt is refused until every requirement is reviewed and accepted, then built only from approved text (CG-063)", "tests/ui-contract.test.js: achievements state whether the final development prompt may be generated and what blocks it (CG-063)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The source marks CG-063 as deferred; what is accepted is the enforced gate and generator, while the prompt itself is produced only when the gate opens. Engineering continues in requirement order under the owner instruction."]
+    },
+    "CG-064": {
+      "reason": "lib/incident-studies.js is a library of eight publicly documented incidents (Colonial Pipeline, WannaCry, NotPetya, SolarWinds Orion, MOVEit CL0P, Log4Shell, Scattered Spider, Volt Typhoon), each citing its official CISA advisory. Every incident is broken into attack stages with MITRE ATT&CK tactic and technique IDs, and every stage names the CyberGuard evidence kinds that would show it (the visibility sources), the CyberGuard rules that alert on it, the typed response actions from the response catalog and the preventive controls, in Arabic and English. Tests check that every referenced evidence kind, rule and response action exists in CyberGuard and every advisory link is an official HTTPS source. /api/incident-studies maps each stage to this installation: visible or blind from the evidence kinds received in the last 30 days, and how often its rules fired in the last 90 days, searchable by name or technique. The incidents page shows the library. It is reference material and never triggers an action.",
+      "code": ["lib/incident-studies.js", "lib/domain.js", "server.js", "public/app.js"],
+      "tests": ["tests/incident-studies.test.js: every incident study cites an official advisory and maps each stage to real evidence kinds, rules, actions and controls (CG-064)", "tests/incident-studies.test.js: incident studies show per installation which stages are visible and how often their rules fired (CG-064)", "tests/ui-contract.test.js: incidents show the documented incident study library with stage visibility here, rules, response and prevention (CG-064)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Study content is limited to what the cited advisories state; the library is curated in code and grows through reviewed changes (CG-066), not by fetching web content."]
     }
   }
 }
