@@ -2,7 +2,7 @@
   "schema_version": 1,
   "registered": 1440,
   "tracked": 1440,
-  "verified": 70,
+  "verified": 71,
   "production_ready": false,
   "semantic_review_complete": false,
   "by_area": {
@@ -32,9 +32,9 @@
     "Tickets-boundary": 1
   },
   "by_status": {
-    "acceptance-verified": 70,
+    "acceptance-verified": 71,
     "partially-implemented": 19,
-    "planned": 1351
+    "planned": 1350
   },
   "reviewed_subset_boundaries": 37,
   "semantic_triage": {

@@ -41,6 +41,8 @@ test('Cisco telemetry feeds topology, health alerts, the firewall analyzer and d
   const collector = { external_id: 'cisco-connector', hostname: 'collector', os_family: 'linux', device_type: 'server', addresses: [] };
   const ev = (id, kind, details, asset = collector) => ({ event_id: id, kind, observed_at: at, asset, details });
   const ingest = events => d.ingest('admin-a', source.id, { schema_version: 'cg.telemetry/1', events });
+  // CG-045: ISE registration and jobs use a separate response-connector source.
+  const responder = d.createSource('admin-a', { name: 'ISE response connector', stale_seconds: 3600, source_type: 'response-connector' }), respond = events => d.ingest('admin-a', responder.id, { schema_version: 'cg.telemetry/1', events });
   ingest(catalystInventory(fx('catalyst-network-device.json')).map((x, i) => ev(`inv-${i}`, 'asset.observed', {}, x.asset)));
   const topo = catalystTopology(fx('catalyst-physical-topology.json'));
   ingest([ev('topo', 'network.topology', { topology_id: 'cisco-catalyst-physical', source: 'cisco-catalyst-center', nodes: topo.nodes, links: topo.links }), ev('health', 'network.device_health', { snapshot_id: 'cisco-catalyst-health', source: 'cisco-catalyst-center', devices: catalystHealth(fx('catalyst-device-health.json')) })]);
@@ -60,16 +62,16 @@ test('Cisco telemetry feeds topology, health alerts, the firewall analyzer and d
   assert.deepEqual(validateResponseTarget('network.nac-quarantine-endpoint', target), target);
   assert.throws(() => validateResponseTarget('network.nac-quarantine-endpoint', { ...target, mac: '00:00:5E:00:53' }), /invalid_response_mac/);
   assert.throws(() => validateResponseTarget('network.nac-quarantine-endpoint', { ...target, policy_name: 'x; rm -rf' }), /invalid_response_anc_policy/);
-  ingest([ev('ise-cap', 'response.capability', { connector_id: 'SYN-ISE-041', owner_system: 'cisco-ise', capabilities: ['network.nac-quarantine-endpoint', 'network.nac-release-endpoint'], target_asset_refs: [ref], tested_at: at, evidence_ref: 'SYN-ISE-TEST-041', status: 'active' }),
+  respond([ev('ise-cap', 'response.capability', { connector_id: 'SYN-ISE-041', owner_system: 'cisco-ise', capabilities: ['network.nac-quarantine-endpoint', 'network.nac-release-endpoint'], target_asset_refs: [ref], tested_at: at, evidence_ref: 'SYN-ISE-TEST-041', status: 'active' }),
     ev('ise-mgmt', 'response.management_preflight', { connector_id: 'SYN-ISE-041', action_type: 'network.nac-quarantine-endpoint', target_hash: digest(target), protected_role: 'none', management_channel_impact: 'none', alternate_management: { status: 'not-applicable', evidence_ref: null }, captured_at: at, evidence_ref: 'SYN-ISE-MGMT-041' }, { external_id: ref, hostname: 'isr-edge-01', os_family: 'network', device_type: 'router', addresses: ['192.0.2.1'] })]);
   const asset = d.list('assets').items.find(a => a.external_id === ref);
   const action = d.previewAction('admin-a', { type: 'network.nac-quarantine-endpoint', asset_id: asset.id, target, connector_id: 'SYN-ISE-041', authorization_ref: 'IR-041', reason: 'Quarantine synthetic endpoint via ISE ANC', ttl_seconds: 600 });
   assert.equal(action.status, 'pending-approval'); assert.throws(() => d.approveAction('admin-a', action.id), /independent_approver_required/);
   d.approveAction('admin-b', action.id); d.executeAction('admin-a', action.id);
-  let jobs = d.responseJobs(source.id); assert.equal(jobs.items[0].request.action_type, 'network.nac-quarantine-endpoint');
+  let jobs = d.responseJobs(responder.id); assert.equal(jobs.items[0].request.action_type, 'network.nac-quarantine-endpoint');
   assert.deepEqual(iseAncRequest('execute', jobs.items[0].request.target), { method: 'PUT', path: '/ers/config/ancendpoint/apply', body: { OperationAdditionalData: { additionalData: [{ name: 'macAddress', value: '00:00:5E:00:53:AA' }, { name: 'policyName', value: 'ANC_Quarantine' }] } } });
-  assert.equal(d.completeResponseJob(source.id, action.id, { phase: 'execute', outcome: 'succeeded', observed_state: 'ISE ANC applied', evidence_ref: 'ise-ers:synthetic', rollback_supported: true }).status, 'verified');
-  d.rollbackAction('admin-b', action.id); jobs = d.responseJobs(source.id);
+  assert.equal(d.completeResponseJob(responder.id, action.id, { phase: 'execute', outcome: 'succeeded', observed_state: 'ISE ANC applied', evidence_ref: 'ise-ers:synthetic', rollback_supported: true }).status, 'verified');
+  d.rollbackAction('admin-b', action.id); jobs = d.responseJobs(responder.id);
   assert.equal(jobs.items[0].request.action_type, 'network.nac-release-endpoint'); assert.equal(iseAncRequest('rollback', jobs.items[0].request.target).path, '/ers/config/ancendpoint/clear');
-  assert.equal(d.completeResponseJob(source.id, action.id, { phase: 'rollback', outcome: 'succeeded', observed_state: 'ISE ANC cleared', evidence_ref: 'ise-ers:synthetic', rollback_supported: true }).status, 'rolled-back');
+  assert.equal(d.completeResponseJob(responder.id, action.id, { phase: 'rollback', outcome: 'succeeded', observed_state: 'ISE ANC cleared', evidence_ref: 'ise-ers:synthetic', rollback_supported: true }).status, 'rolled-back');
 });

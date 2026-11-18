@@ -31,7 +31,8 @@ test('a response action is refused when the target probe shows the needed capabi
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', at); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `s-${id}`, 'totp', at, new Date(now + 5 * 60000).toISOString(), digest({ id, now })); }
   const source = d.createSource('admin-a', { name: 'Probe test', stale_seconds: 3600 }), asset = { external_id: 'host-01', hostname: 'HOST-01', os_family: 'windows', device_type: 'workstation', addresses: [] };
   const ingest = events => d.ingest('admin-a', source.id, { schema_version: 'cg.telemetry/1', events });
-  ingest([{ event_id: 'cap', kind: 'response.capability', observed_at: at, asset, details: { connector_id: 'EDR-1', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device'], target_asset_refs: ['host-01'], tested_at: at, evidence_ref: 'EDR-TEST', status: 'active' } },
+  const responder = d.createSource('admin-a', { name: 'EDR response connector', stale_seconds: 3600, source_type: 'response-connector' }), respond = events => d.ingest('admin-a', responder.id, { schema_version: 'cg.telemetry/1', events });
+  respond([{ event_id: 'cap', kind: 'response.capability', observed_at: at, asset, details: { connector_id: 'EDR-1', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device'], target_asset_refs: ['host-01'], tested_at: at, evidence_ref: 'EDR-TEST', status: 'active' } },
     { event_id: 'mgmt', kind: 'response.management_preflight', observed_at: at, asset, details: { connector_id: 'EDR-1', action_type: 'endpoint.isolate-device', target_hash: digest({ device_ref: 'host-01' }), protected_role: 'none', management_channel_impact: 'none', alternate_management: { status: 'not-applicable', evidence_ref: null }, captured_at: at, evidence_ref: 'MGMT' } }]);
   const assetId = d.list('assets').items.find(a => a.external_id === 'host-01').id, request = () => d.previewAction('admin-a', { type: 'endpoint.isolate-device', asset_id: assetId, target: { device_ref: 'host-01' }, connector_id: 'EDR-1', authorization_ref: 'IR-044', reason: 'Contain', ttl_seconds: 600 });
   const probeEvent = (id, status) => ({ event_id: id, kind: 'device.capability_probe', observed_at: new Date(now).toISOString(), asset, details: { probe_id: 'local-host-01', device_ref: 'host-01', vendor: 'microsoft-windows', model: 'Windows 11 Pro', version: '10.0.26200', license: { edition: 'Pro', features: [] }, probed_at: new Date(now).toISOString(), probe_method: 'local-script', capabilities: [{ capability: 'isolation', status, method: 'Windows Firewall', evidence: status === 'supported' ? 'administrator' : 'not administrator', min_version: null, license_feature: null }] } });
@@ -41,4 +42,23 @@ test('a response action is refused when the target probe shows the needed capabi
   now += 60000; ingest([probeEvent('probe-2', 'supported')]);
   assert.equal(request().status, 'pending-approval', 'a newer probe confirming isolation lets the governed request proceed');
   assert.throws(() => ingest([{ ...probeEvent('bad', 'supported'), details: { ...probeEvent('bad', 'supported').details, capabilities: [{ capability: 'teleport', status: 'supported', method: null, evidence: null, min_version: null, license_feature: null }] } }]), /invalid_probe_capability_0_name/);
+});
+
+test('read collectors and response connectors are separate privilege classes with explicit asset authorization (CG-045)', t => {
+  const s = new Store(':memory:'); t.after(() => s.close());
+  const now = Date.parse('2026-11-18T06:00:00.000Z'), at = new Date(now).toISOString(), d = new Domain(s, { clock: () => now });
+  s.run('INSERT INTO users VALUES (?,?,?,?,?)', 'admin-a', 'admin-a', 'fixture-not-a-password-hash', 'admin', at);
+  const reader = d.createSource('admin-a', { name: 'Read collector', stale_seconds: 3600, source_type: 'network-collector' }), writer = d.createSource('admin-a', { name: 'Response connector', stale_seconds: 3600, source_type: 'response-connector' });
+  const asset = { external_id: 'host-45', hostname: 'HOST-45', os_family: 'windows', device_type: 'workstation', addresses: [] };
+  const send = (src, id, kind, details) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: [{ event_id: id, kind, observed_at: at, asset, details }] });
+  const cap = refs => ({ connector_id: 'EDR-45', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device'], target_asset_refs: refs, tested_at: at, evidence_ref: 'EDR-TEST-45', status: 'active' });
+  assert.throws(() => send(reader, 'c1', 'response.capability', cap(['host-45'])), /response_registration_requires_response_connector_source/);
+  assert.throws(() => send(writer, 't1', 'auth.failed', { account: 'x', source_ip: '198.51.100.9', protocol: 'rdp' }), /response_connector_cannot_ingest_telemetry/);
+  for (const bad of [['*'], ['any'], ['host-*']]) assert.throws(() => send(writer, `w-${bad}`, 'response.capability', cap(bad)), /response_capability_requires_explicit_assets/);
+  assert.doesNotThrow(() => send(writer, 'c2', 'response.capability', cap(['host-45'])));
+  assert.doesNotThrow(() => send(reader, 't2', 'auth.failed', { account: 'x', source_ip: '198.51.100.9', protocol: 'rdp' }));
+  assert.throws(() => d.responseJobs(reader.id), /source_not_authorized_for_response_jobs/);
+  assert.equal(d.responseJobs(writer.id).items.length, 0);
+  const listed = Object.fromEntries(d.sources().map(x => [x.name, [x.source_type, x.privilege]]));
+  assert.deepEqual(listed['Response connector'], ['response-connector', 'write']); assert.deepEqual(listed['Read collector'], ['network-collector', 'read']);
 });

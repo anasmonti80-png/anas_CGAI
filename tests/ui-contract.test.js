@@ -346,6 +346,7 @@ test('data sources view shows security control integrations for DNS security, WA
 
 test('data sources view shows device capability negotiation with the reason for every unavailable capability',()=>{
   const app=read('app.js');assert.match(app,/\/api\/device-capabilities/);
+  for(const marker of ['Read: telemetry only','Write: approved response jobs only','Response Connector (write only)']) assert.ok(app.includes(marker),marker);
   for(const marker of ['Device capability negotiation','Port shutdown','licence expired','version too old','scripts/Probe-LocalCapabilities.ps1','CG-044']) assert.ok(app.includes(marker),marker);
 });
 

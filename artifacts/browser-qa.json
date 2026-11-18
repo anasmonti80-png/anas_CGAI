@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T05:09:46.179Z",
+  "at": "2026-11-18T05:17:24.681Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -78,7 +78,8 @@
     "huawei_connectors": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-042", "nce_devices": 4, "offline_alert": "AirEngine-AP-01", "vrp_management_enabled": ["telnet", "ssh", "https", "snmpv2c", "snmpv3"], "secrets_copied": 0, "lldp_formats": 2, "topology": {"devices": 3, "links": 2}, "defects_fixed": ["LLDP topology labelled as controller data", "LLDP neighbours did not show controller health"], "english_view_clean": true, "console_errors": 0, "evidence_visible": true},
     "multi_vendor_firewalls": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-020", "vendors_converted": ["palo-alto", "fortigate", "mikrotik", "opnsense", "juniper-srx", "iptables"], "vendors_in_ui": 4, "admin_port_open_flagged": "iptables SSH from any", "unresolved_objects_marked_unreadable": true, "research_doc": "docs/engineering/VENDOR_CONNECTORS_AR.md", "console_errors": 0, "evidence_visible": true},
     "capability_negotiation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-044", "real_windows_probe": {"administrator": false, "available": ["read", "config"], "unavailable": ["logs", "policy", "isolation", "undo", "port-shutdown"]}, "cisco_example": {"config": "version-too-old (16.3.1 < 16.6)", "policy": "license-expired"}, "enforcement": "isolation refused when the probe shows it unavailable", "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 70, "next": "CG-045"}
+    "read_write_separation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-045", "http": {"connector_token_jobs": 200, "wrong_token": 401, "read_source_jobs": 403}, "rules_tested": ["read source cannot register capabilities", "connector cannot send telemetry", "wildcard assets rejected", "read source cannot fetch jobs"], "ui_privilege_badges": ["Read: telemetry only", "Write: approved response jobs only"], "source_creation_requires_recent_mfa": true, "defects_fixed": ["sources API reported unknown source types as generic", "preflights matched by source-scoped internal asset id"], "english_view_clean": true, "console_errors": 0, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 71, "next": "CG-046"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

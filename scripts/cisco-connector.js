@@ -7,7 +7,8 @@
 //      (--input <saved.json> | --url <https://host/api-path>) --output <file.json> [--device-ref <ref>] [--policy-name <n>] [--model <platform>]
 //   live auth: CG_CISCO_TOKEN (Catalyst Center X-Auth-Token / FMC X-auth-access-token) or CG_CISCO_USER + CG_CISCO_PASSWORD (Basic)
 // node scripts/cisco-connector.js ise-anc-jobs --cyberguard <https://cg> --source-id <uuid> --ise <https://ise:9060> [--dry-run]
-//   auth: CG_SOURCE_TOKEN (CyberGuard connector source), CG_ISE_USER + CG_ISE_PASSWORD (ISE ERS)
+//   auth: CG_SOURCE_TOKEN of a CyberGuard source of type response-connector (CG-045: read collectors cannot fetch jobs),
+//         CG_ISE_USER + CG_ISE_PASSWORD (ISE ERS)
 import fs from 'node:fs';
 import os from 'node:os';
 import { randomUUID } from 'node:crypto';
