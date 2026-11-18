@@ -33,7 +33,7 @@ async function mockIdp(t) {
 }
 
 test('OIDC SSO signs users in only with a verified, MFA-backed ID token and maps IdP groups to the least role and site scope (CG-052)', async t => {
-  const idp = await mockIdp(t), dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cg052sso-')), app = createApp({ dataDir, setupToken: 'sso-setup-token-0000001' });
+  const idp = await mockIdp(t), dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'cg052sso-')), app = createApp({ dataDir, setupToken: 'sso-setup-token-0000001', tenant: 'tenant-a' });
   t.after(async () => { await app.close(); fs.rmSync(dataDir, { recursive: true, force: true }); });
   const { port } = await app.listen(0), base = `http://localhost:${port}`;
   const req = async (p, { method = 'GET', data, cookie, csrf } = {}) => { const r = await fetch(base + p, { method, redirect: 'manual', headers: { ...(data ? { 'Content-Type': 'application/json', Origin: base } : {}), ...(cookie ? { Cookie: cookie, 'X-CSRF-Token': csrf } : {}) }, body: data ? JSON.stringify(data) : undefined }); const text = await r.text(); let json = null; try { json = JSON.parse(text); } catch {} return { status: r.status, headers: r.headers, data: json }; };
@@ -45,6 +45,7 @@ test('OIDC SSO signs users in only with a verified, MFA-backed ID token and maps
   const config = { issuer: idp.issuer, client_id: 'cyberguard-local', client_secret_env: 'CG_SSO_CLIENT_SECRET', tenant: 'tenant-a', role_map: [{ group: 'soc-analysts-riyadh', role: 'analyst', tenant: 'tenant-a', sites: ['riyadh'] }, { group: 'soc-viewers', role: 'viewer', tenant: 'tenant-a', sites: ['*'] }, { group: 'soc-admins', role: 'admin', tenant: 'tenant-a', sites: ['*'] }] };
   assert.equal((await req('/api/sso/config', { method: 'POST', data: { ...config, client_secret_env: 'not a name' }, ...admin })).status, 400, 'only the name of an environment variable is stored, never a secret');
   assert.equal((await req('/api/sso/config', { method: 'POST', data: { ...config, issuer: 'http://idp.example.com' }, ...admin })).status, 400, 'a remote provider must use HTTPS');
+  assert.equal((await req('/api/sso/config', { method: 'POST', data: { ...config, role_map: [{ group: 'x', role: 'viewer', tenant: 'tenant-b' }] }, ...admin })).data.error, 'sso_role_map_0_tenant_is_not_this_installation', 'a group cannot grant access to another tenant');
   r = await req('/api/sso/config', { method: 'POST', data: config, ...admin }); assert.equal(r.status, 200, JSON.stringify(r.data)); assert.equal(r.data.enabled, true);
   const login = async (claimsFn, opts) => { const start = await req('/api/sso/start'); assert.equal(start.status, 302); const loc = start.headers.get('location'), u = new URL(loc);
     assert.deepEqual([u.searchParams.get('code_challenge_method'), u.searchParams.get('response_type'), u.searchParams.get('scope')], ['S256', 'code', 'openid profile email']); assert.ok(u.searchParams.get('nonce') && u.searchParams.get('state'));

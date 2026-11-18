@@ -7,6 +7,7 @@ import { fileURLToPath } from 'node:url';
 import { Store } from './lib/store.js';
 import { Auth } from './lib/auth.js';
 import { Sso } from './lib/sso.js';
+import { scopeFor, pathDomain, siteScopedPath, scopeDomains } from './lib/access-scope.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
@@ -30,7 +31,7 @@ async function body(req) {
 }
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
-export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null,tls=process.env.CG_TLS_CERT&&process.env.CG_TLS_KEY?{certFile:process.env.CG_TLS_CERT,keyFile:process.env.CG_TLS_KEY}:process.env.CG_TLS==='self-signed'?'self-signed':null}={}) {
+export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null,tls=process.env.CG_TLS_CERT&&process.env.CG_TLS_KEY?{certFile:process.env.CG_TLS_CERT,keyFile:process.env.CG_TLS_KEY}:process.env.CG_TLS==='self-signed'?'self-signed':null,tenant=process.env.CG_TENANT||'default'}={}) {
   fail(OPERATING_MODES.includes(mode),400,'invalid_operating_mode');
   // CG-052 HTTPS: an operator certificate (CG_TLS_CERT/CG_TLS_KEY) or a self-signed one kept in the data directory.
   let tlsMaterial=null;
@@ -40,7 +41,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock});
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant});
   const setupFile=path.join(dataDir,'setup-token');
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -131,6 +132,17 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       const user=auth.session(req.headers.cookie);
       authenticatedActor=user.id;
+      // CG-052 ABAC: tenant, functional domain and site scope on top of the role.
+      const scope=scopeFor(store,user.id,tenant);user.scope=scope;
+      fail(scope.tenant===tenant,403,'tenant_scope_mismatch');
+      const area=pathDomain(p);fail(!area||scope.domains.includes('*')||scope.domains.includes(area),403,'domain_out_of_scope');
+      const allowedAssets=scope.restricted?domain.assetIdsForSites(scope.sites):null;
+      if(allowedAssets){
+        fail(siteScopedPath(p),403,'outside_site_scope');
+        const allowed=new Set(allowedAssets),inScope=ids=>ids.length>0&&ids.every(id=>id&&allowed.has(id)),detail=p.match(/^\/api\/(alerts|events|assets|cases|actions|ai-analysis|ai-action-proposals|playbook-runs)\/([0-9a-f-]{36})/);
+        if(detail)fail(inScope(domain.resourceAssetIds(detail[1],detail[2])),404,'not_found');
+        if(method==='POST'&&['/api/actions/preview','/api/cases','/api/playbook-runs'].includes(p)){const input=await body(req);const ids=p==='/api/cases'?(Array.isArray(input?.alert_ids)?input.alert_ids.flatMap(a=>domain.resourceAssetIds('alerts',String(a))):[null]):p==='/api/playbook-runs'?domain.resourceAssetIds('alerts',String(input?.alert_id||'')):[input?.asset_id||null];fail(inScope(ids),403,'outside_site_scope');}
+      }
       if(mutation) fail(equal(req.headers['x-csrf-token']||'',user.csrf),403,'csrf_required');
       const roles=(allowed)=>auth.require(user,allowed);
       if(mutation&&(user.jit||user.break_glass)&&!p.startsWith('/api/jit')&&!p.startsWith('/api/break-glass')&&!p.startsWith('/api/auth/mfa')&&p!=='/api/auth/logout') auth.recordPrivilegedUse(user,p);
@@ -146,9 +158,12 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/jit'&&method==='POST') return send(res,201,auth.requestJit(user,await body(req)));
       const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
       if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
+      if(p==='/api/scoped-overview'&&method==='GET') return send(res,200,domain.scopedOverview(allowedAssets||domain.list('assets',{limit:100000}).items.map(a=>a.id),scope.sites));
+      if(p==='/api/user-scopes'&&method==='GET'){auth.require(user,['admin']);return send(res,200,{items:store.all('SELECT s.*,u.username FROM user_scopes s JOIN users u ON u.id=s.user_id ORDER BY u.username').map(r=>({...r,sites:JSON.parse(r.sites),domains:JSON.parse(r.domains)})),tenant,domains:scopeDomains});}
+      if(p==='/api/user-scopes'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'scope_admin_requires_full_scope');const input=object(await body(req),['user_id','tenant','sites','domains'],'user_scope');const target=store.require('SELECT id FROM users WHERE id=?',[String(input.user_id)]);fail(target.id!==user.id,403,'cannot_change_own_scope');const list=(v,name,max,allowedValues)=>{fail(Array.isArray(v)&&v.length>=1&&v.length<=max&&v.every(x=>typeof x==='string'&&x.length>=1&&x.length<=200&&(!allowedValues||x==='*'||allowedValues.includes(x))),400,`invalid_${name}`);return [...new Set(v)];};const sites=list(input.sites,'scope_sites',100),domains=list(input.domains,'scope_domains',scopeDomains.length+1,scopeDomains),t=String(input.tenant||'');fail(/^[A-Za-z0-9_.-]{1,100}$/.test(t),400,'invalid_scope_tenant');const at=new Date().toISOString();store.transaction(()=>{store.run('INSERT INTO user_scopes VALUES (?,?,?,?,?,?,?) ON CONFLICT(user_id) DO UPDATE SET tenant=excluded.tenant,sites=excluded.sites,domains=excluded.domains,source=excluded.source,updated_by=excluded.updated_by,updated_at=excluded.updated_at',target.id,t,JSON.stringify(sites),JSON.stringify(domains),'admin',user.id,at);store.audit(user.id,'user.scope.set',target.id,{tenant:t,sites,domains},at);});return send(res,200,{user_id:target.id,tenant:t,sites,domains});}
       if(p==='/api/sso/config'&&method==='POST') return send(res,200,await sso.configure(user,object(await body(req),['issuer','client_id','client_secret_env','tenant','tenant_claim','groups_claim','role_map','mfa_amr','mfa_acr'],'sso_config')));
       if(p==='/api/sso/config'&&method==='GET') { auth.require(user,['admin']); const c=sso.config(); return send(res,200,c?{issuer:c.issuer,client_id:c.client_id,client_secret_env:c.client_secret_env,tenant:c.tenant,tenant_claim:c.tenant_claim,groups_claim:c.groups_claim,role_map:c.role_map,mfa_amr:c.mfa_amr,mfa_acr:c.mfa_acr,updated_at:c.updated_at}:null); }
-      if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit,break_glass:user.break_glass,mfa:user.mfa},csrf:user.csrf});
+      if(p==='/api/auth/me'&&method==='GET') return send(res,200,{user:{scope:user.scope,id:user.id,username:user.username,role:user.role,base_role:user.base_role,jit:user.jit,break_glass:user.break_glass,mfa:user.mfa},csrf:user.csrf});
       if(p==='/api/auth/logout'&&method==='POST') {auth.logout(user);res.setHeader('Set-Cookie',`cg_session=; ${cookieFlags}; Max-Age=0`);return send(res,200,{logged_out:true});}
       if(p==='/api/modes'&&method==='GET') return send(res,200,{active_mode:mode,lab_authorization_configured:mode==='authorized-defense-validation-lab',items:[
         {id:'pc-local',status:mode==='pc-local'?'active':'available',capabilities:['explicit local host inventory','manual evidence import'],limitations:['This host alone cannot see device-to-device traffic behind a switch.','No active network scan is performed.']},
@@ -247,7 +262,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(sourceAction&&method==='POST') { roles(['admin']);auth.requireRecentMfa(user);return send(res,200,sourceAction[2]==='rotate'?domain.rotateSource(user.id,sourceAction[1]):domain.revokeSource(user.id,sourceAction[1])); }
       if(ingest&&method==='POST') {roles(['admin','analyst']);return send(res,200,ingestInput(user.id,ingest[1],await body(req)));}
       const tables={'/api/assets':'assets','/api/events':'events','/api/alerts':'alerts','/api/remote-sessions':'remote_sessions','/api/cases':'cases','/api/actions':'actions','/api/audit':'audit'};
-      if(tables[p]&&method==='GET') {if(p==='/api/audit') roles(['admin']);return send(res,200,domain.list(tables[p],page(url.searchParams)));}
+      if(tables[p]&&method==='GET') {if(p==='/api/audit') roles(['admin']);return send(res,200,domain.list(tables[p],{...page(url.searchParams),assetIds:allowedAssets}));}
       const assetRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})(\/report)?$/);
       if(assetRoute&&method==='GET') return send(res,200,assetRoute[2]?domain.evidenceReport(assetRoute[1]):domain.asset(assetRoute[1]));
       const eventRoute=p.match(/^\/api\/events\/([a-f0-9-]{36})$/);

@@ -448,3 +448,9 @@ test('cloud view plans the NSG to VNet flow log migration with days left and an 
   const app=read('app.js');assert.match(app,/\/api\/nsg-flow-migration/);
   for(const marker of ['NSG to VNet flow log migration','Migrate: enable a VNet flow log','Covered: disable the NSG flow log to avoid paying twice','NIC-only: enable a VNet flow log on its network','days to','CG-051']) assert.ok(app.includes(marker),marker);
 });
+
+test('login offers SSO with clear refusal reasons, settings manage SSO and per-user tenant/site/area scope, and site-limited users get a scoped workspace (CG-052)',()=>{
+  const app=read('app.js');for(const p of ['/api/sso/status','/api/sso/config','/api/user-scopes','/api/scoped-overview']) assert.ok(app.includes(p),p);
+  for(const marker of ['Sign in with SSO','The identity provider did not prove multi-factor authentication.','None of your groups is mapped to a CyberGuard role.','OIDC single sign-on and tenant/site scope','Tenant, site and area scope per user','Overview of your sites only.','This view aggregates every site; your access is limited to specific sites.','CG-052']) assert.ok(app.includes(marker),marker);
+  assert.ok(app.includes("state.user.scope?.restricted"),'site-limited users get the scoped workspace');
+});
