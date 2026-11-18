@@ -18,8 +18,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-16
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-073 and CG-075..CG-091 are acceptance-verified. CG-038 makes local analysis primary and gates the optional cloud connector behind recent MFA, current customer consent and a fixed redacted payload allowlist. Full verification passes 177/177; isolated Chromium shows both routes, all allowed fields and prohibited classes in Arabic and English. Traceability reports 1,440 tracked, 64 accepted, source integrity passing and CG-039 next.
-- In progress: no unpublished requirement checkpoint after CG-072. Next is the lowest unaccepted ID: CG-074; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-091 are acceptance-verified. CG-038 makes local analysis primary and gates the optional cloud connector behind recent MFA, current customer consent and a fixed redacted payload allowlist. Full verification passes 177/177; isolated Chromium shows both routes, all allowed fields and prohibited classes in Arabic and English. Traceability reports 1,440 tracked, 64 accepted, source integrity passing and CG-039 next.
+- In progress: no unpublished requirement checkpoint after CG-074. Next is the lowest unaccepted ID: CG-092; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -40,6 +40,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Claude | Completed CG-074 governed prevention priorities: owners, risk-band or KEV due dates, time-boxed MFA exceptions, overdue alerts and measured remediation quality; 266/266 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-072 external attack surface management of authorized assets with DNS, TLS, service and header checks, optional Linux nmap, and no contact outside the authorized ranges; 264/264 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-067 environment- and asset-aware remediation guidance with non-applicable options explained, verification and stated uncertainty; 260/260 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-066 signed, versioned detection content: Ed25519-signed approved versions, tamper refusal, safe revisions, immediate rollback and trusted signed rule packs; 257/257 Unit Tested and Chromium checked. | current checkpoint |

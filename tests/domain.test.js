@@ -804,3 +804,36 @@ test('database survives reopen; migration rerun preserves records; audit rejects
     assert.throws(()=>new Store(file),/audit_integrity_failure/);
   } finally {s?.close();fs.rmSync(dir,{recursive:true,force:true});}
 });
+
+test('prioritized vulnerabilities are governed with owners, risk-band or KEV due dates, time-boxed exceptions and measured quality (CG-074)',t=>{
+  const {d,s,event,ingest,advance}=fixture(t),A={external_id:'risk-a',hostname:'PAYROLL-01',addresses:['192.0.2.10']},B={external_id:'risk-b',hostname:'KIOSK-01',addresses:['10.20.0.5']};
+  const range=(vuln_id,product,max,cvss=null)=>({vuln_id,vendor:null,product,product_aliases:[],affected:{min_version:null,min_version_exclusive:null,max_version_exclusive:max,max_version_inclusive:null},fixed_version:max,fixed_by_update:null,cvss,kev:false,summary:'synthetic'});
+  ingest([event('risk-cat','vulnerability.catalog',{catalog_id:'RISK-025',source:'synthetic',published_at:'2026-11-11T00:00:00.000Z',entries:[range('CVE-2026-3001','gateway agent','5.0'),range('CVE-2026-3002','imaging suite','9.0'),range('CVE-2026-3003','legacy tool','2.0')]})]);
+  ingest([event('risk-kev','vulnerability.intel',{intel_id:'kev',feed:'cisa-kev',feed_version:'2026.11.10',published_at:'2026-11-10T00:00:00.000Z',entries:[{cve_id:'CVE-2026-3001',date_added:'2026-10-01T00:00:00.000Z',due_date:'2026-10-22T00:00:00.000Z',known_ransomware:null,vendor:'x',product:'x',name:'x'}]}),
+    event('risk-epss','vulnerability.intel',{intel_id:'epss',feed:'first-epss',feed_version:'v1',published_at:'2026-11-11T00:00:00.000Z',entries:[{cve_id:'CVE-2026-3002',epss:0.001,percentile:0.2}]}),
+    event('risk-nvd','vulnerability.intel',{intel_id:'nvd',feed:'nvd-cve',feed_version:'2.0',published_at:'2026-11-11T00:00:00.000Z',entries:[{cve_id:'CVE-2026-3001',cvss:6.5,cvss_version:'3.1',vector:'CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N',attack_vector:'network',severity:'medium',cwe:[],published:null,status:null},{cve_id:'CVE-2026-3002',cvss:9.8,cvss_version:'3.1',vector:'CVSS:3.1/AV:L/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H',attack_vector:'local',severity:'critical',cwe:[],published:null,status:null}]})]);
+  const rule={rule_id:'any-in',name:'Gateway from anywhere',position:1,enabled:true,direction:'in',action:'allow',protocol:'tcp',src:['any'],dst:['any'],src_ports:['any'],dst_ports:['8443'],application:null,profile:'any',last_hit_at:null,hit_count:null,expires_at:null,owner:null,created_at:null,filters_readable:true,scope_constraints:[]};
+  const context=(service_criticality,data_sensitivity)=>({owner:{owner_id:'team',display_name:'Team',contact:null},business_service:service_criticality==='critical'?'Payroll':'Lobby kiosk',service_name:null,site:'HQ',data_sensitivity,maintenance_windows:[],service_criticality});
+  const controls={network_segmentation:{status:'enforced',boundary:'Kiosk VLAN',evidence_ref:'SYN-FW'},jump_host:{status:'not-enforced',host_ref:null,evidence_ref:'SYN-JUMP'},internet_access:{status:'blocked',exceptions:[],evidence_ref:'SYN-EGRESS'},entry_mfa:{status:'enforced',method:'TOTP',evidence_ref:'SYN-MFA'},backups:{status:'operational',last_success_at:'2026-11-10T02:00:00.000Z',restore_test_status:'not-tested',last_restore_test_at:null,evidence_ref:'SYN-BACKUP'},monitoring:{status:'operational',coverage:'host events',last_signal_at:'2026-11-11T09:00:00.000Z',evidence_ref:'SYN-MON'},migration:{status:'unknown',owner_id:null,target:null,due_at:null}};
+  const inv=(id,asset,apps)=>event(id,'software.inventory',{inventory_id:`INV-${asset.external_id}`,os:{name:'Microsoft Windows 11 Pro',version:'10.0.26200',build:'26200'},software:apps.map(([name,version])=>({name,vendor:null,version,install_date:null,source:'uninstall-registry'})),updates:[],evidence_ref:'SYNTHETIC'},asset);
+  ingest([event('ctx-a','asset.context',context('critical','restricted'),A),event('ctx-b','asset.context',context('low','internal'),B),event('ctl-b','asset.compensating_controls',controls,B),event('fw-a','firewall.ruleset',{ruleset_id:'FW-A',device_ref:'win:a',vendor:'windows-firewall',evaluation:'deny-overrides',rules:[rule]},A)]);
+  ingest([event('scope-025','vulnerability.assessment_scope',{assessment_id:'VA-025',authorization_ref:'CHG-025',approved_by:'ciso',window_start:'2026-11-11T09:00:00.000Z',window_end:'2026-11-11T12:00:00.000Z',targets:{asset_refs:['risk-a','risk-b'],networks:[]},methods:['inventory-version-match','passive-exposure-evidence'],status:'approved',notes:null})]);
+  ingest([inv('inv-a',A,[['Gateway Agent','4.2'],['Legacy Tool','1.0']]),inv('inv-b',B,[['Imaging Suite','8.1']])]);
+  let g=d.vulnerabilityGovernance(),by=id=>g.items.find(x=>x.vuln_id===id);
+  assert.equal(g.items.length,3);assert.equal(by('CVE-2026-3001').sla_state,'overdue','the CISA KEV due date already passed');assert.equal(by('CVE-2026-3001').due_at,'2026-10-22T00:00:00.000Z');assert.equal(by('CVE-2026-3001').owner.display_name,'Team');
+  assert.equal(by('CVE-2026-3002').due_at,'2027-05-10T10:00:00.000Z','low band: 180 days');assert.equal(by('CVE-2026-3002').sla_state,'on-track');
+  assert.equal(s.all("SELECT * FROM alerts WHERE rule_id='CG-VULN-SLA-074'").length,1,'overdue critical raises a governance alert');
+  assert.deepEqual(g.metrics.overdue,{critical:1,high:0,medium:0,low:0});assert.equal(g.metrics.sla_compliance_percent,null,'no resolutions yet: not measured');
+  assert.equal(g.input_quality.with_exploitation_intel_percent,66.7);assert.equal(g.input_quality.with_owner_percent,100);assert.ok(/[؀-ۿ]/.test(g.claim_ar));
+  // Exceptions are time-boxed by band (critical 30, high 90, others 180 days) and suspend the overdue state.
+  const key=id=>by(id).key,iso=days=>new Date(Date.parse('2026-11-11T10:00:00.000Z')+days*86400000).toISOString();
+  assert.throws(()=>d.createVulnerabilityException('admin-a',{key:key('CVE-2026-3001'),reason:'Vendor patch pending',compensating_control:'Port 8443 blocked at the edge',expires_at:iso(40)}),/exception_expiry_outside_allowed_period/);
+  d.createVulnerabilityException('admin-a',{key:key('CVE-2026-3002'),reason:'Imaging vendor certification',compensating_control:'Kiosk VLAN isolation',expires_at:iso(60)});
+  g=d.vulnerabilityGovernance();assert.equal(by('CVE-2026-3002').sla_state,'excepted');assert.equal(g.metrics.excepted,1);assert.equal(s.all("SELECT * FROM audit WHERE action='vulnerability.exception_approved'").length,1);
+  // Remediation inside the assessment window: the upgraded agent is resolved and measured (late, so SLA compliance 0%).
+  advance(30*60000);ingest([inv('inv-a2',A,[['Gateway Agent','5.0'],['Legacy Tool','1.0']])]);
+  g=d.vulnerabilityGovernance();assert.equal(by('CVE-2026-3001'),undefined);assert.deepEqual([g.metrics.resolved,g.metrics.sla_compliance_percent,g.metrics.fixed_30d,g.metrics.risk_reduced_30d],[1,0,1,83]);
+  assert.equal(g.metrics.mean_days_to_remediate.critical,0);assert.equal(g.input_quality.with_exploitation_intel_percent,50);
+  // After the assessment window closes nothing is reported as fixed just because it is no longer assessed.
+  advance(3*3600000);g=d.vulnerabilityGovernance();assert.equal(g.items.length,2);assert.equal(g.metrics.resolved,1);
+});

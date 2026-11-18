@@ -503,3 +503,6 @@ test('vulnerabilities show the external attack surface of authorized assets with
   const app=read('app.js');assert.match(app,/\/api\/attack-surface/);
   for(const marker of ['External attack surface of authorized assets','Not probed (outside authorization)','Ownership verified by DNS','node scripts/attack-surface.js scan','CG-072']) assert.ok(app.includes(marker),marker);
 });
+test('vulnerabilities show prevention governance with owners, due dates, time-boxed exceptions and quality measures (CG-074)',()=>{
+  const app=read('app.js');for(const marker of ['/api/vulnerability-governance','/api/vulnerability-exceptions','Prevention priority governance and quality','SLA compliance','Time-boxed exception','Input completeness','Approve exception (recent MFA required)','CG-074']) assert.ok(app.includes(marker),marker);
+});
