@@ -9,6 +9,7 @@ import { Auth } from './lib/auth.js';
 import { Sso } from './lib/sso.js';
 import { scopeFor, pathDomain, siteScopedPath, scopeDomains } from './lib/access-scope.js';
 import { remoteAccessConfig, RemoteAccessGate } from './lib/remote-access.js';
+import { SecretStore } from './lib/secret-store.js';
 import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
@@ -18,6 +19,7 @@ import { validateCloudResult } from './lib/ai-model-policy.js';
 
 const ROOT=fileURLToPath(new URL('./',import.meta.url));
 const MIME={'.html':'text/html; charset=utf-8','.js':'text/javascript; charset=utf-8','.css':'text/css; charset=utf-8','.svg':'image/svg+xml','.webmanifest':'application/manifest+json; charset=utf-8'};
+const FETCH_BLOCKED_PORTS=new Set([1,7,9,11,13,15,17,19,20,21,22,23,25,37,42,43,53,69,77,79,87,95,101,102,103,104,109,110,111,113,115,117,119,123,135,137,139,143,161,179,389,427,465,512,513,514,515,526,530,531,532,540,548,554,556,563,587,601,636,989,990,993,995,1719,1720,1723,2049,3659,4045,4190,5060,5061,6000,6566,6665,6666,6667,6668,6669,6679,6697,10080]);
 const STATIC=new Set(['/','/app.js','/dashboard.js','/styles.css','/soc.css','/icon.svg','/manifest.webmanifest']);
 const COOKIE='Path=/; HttpOnly; SameSite=Strict';
 const OPERATING_MODES=['pc-local','enterprise-collectors','authorized-defense-validation-lab'];
@@ -44,7 +46,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const store=new Store(path.join(dataDir,'cyberguard.sqlite'));
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant});
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock});
   const setupFile=path.join(dataDir,'setup-token');
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -84,9 +86,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const ingest=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/events$/);
       const responseJobs=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs$/);
       const responseResult=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs\/([a-f0-9-]{36})\/result$/);
+      const secretRelease=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/secrets\/([a-z0-9._-]{3,100})$/);
       if(mutation) {
         fail(method==='POST',405,'method_not_allowed');
-        if (!(bearer&&(ingest||responseResult))) fail(req.headers.origin===`${secureFor(req)?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
+        if (!(bearer&&(ingest||responseResult||secretRelease))) fail(req.headers.origin===`${secureFor(req)?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
       }
       if(method==='GET' && STATIC.has(p)) {
         const file=path.join(ROOT,'public',p==='/'?'index.html':p.slice(1));
@@ -121,6 +124,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         const source=domain.sourceToken(bearer,responseJobs[1]);
         return send(res,200,domain.responseJobs(source.id));
       }
+      // CG-055 a delegated connector source fetches a secret with its own token, for a stated purpose (audited).
+      if(bearer && secretRelease && method==='POST') { const source=domain.sourceToken(bearer,secretRelease[1]); const input=object(await body(req),['purpose'],'secret_release'); return send(res,200,secrets.release(source.id,secretRelease[2],input.purpose)); }
       if(bearer && responseResult && method==='POST') {
         const source=domain.sourceToken(bearer,responseResult[1]);
         return send(res,200,domain.completeResponseJob(source.id,responseResult[2],await body(req)));
@@ -161,6 +166,9 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/jit'&&method==='POST') return send(res,201,auth.requestJit(user,await body(req)));
       const jitAction=p.match(/^\/api\/jit\/([0-9a-f-]{36})\/(approve|deny|revoke)$/);
       if(jitAction&&method==='POST'){const input=await body(req);if(jitAction[2]==='revoke')return send(res,200,auth.revokeJit(user,jitAction[1]));return send(res,200,auth.decideJit(user,jitAction[1],jitAction[2],typeof input?.note==='string'?input.note.slice(0,300):null));}
+      if(p==='/api/secrets'&&method==='GET'){auth.require(user,['admin']);return send(res,200,{items:secrets.list(),claim:'Connector secrets are encrypted with a per-secret data key wrapped by a store key that never leaves the data directory. Values are write-only: users see metadata only, and a value is released only to a delegated connector source, for a stated purpose, with an audit record. Each secret has a rotation period; overdue secrets raise CG-SECRET-ROTATION-055.',claim_ar:'أسرار الموصلات مشفرة بمفتاح بيانات لكل سر، ومفتاح البيانات مغلف بمفتاح مخزن لا يغادر مجلد البيانات. القيم للكتابة فقط: يرى المستخدمون البيانات الوصفية فقط، ولا تُسلَّم القيمة إلا لمصدر موصل مفوض، لغرض مذكور، مع سجل تدقيق. لكل سر مدة تدوير، والأسرار المتأخرة ترفع CG-SECRET-ROTATION-055.'});}
+      if(p==='/api/secrets'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);fail(!scope.restricted&&scope.domains.includes('*'),403,'secret_admin_requires_full_scope');return send(res,201,secrets.put(user,object(await body(req),['ref','kind','value','purpose','rotation_days','delegated_sources'],'secret')));}
+      const secretRevoke=p.match(/^\/api\/secrets\/([a-z0-9._-]{3,100})\/revoke$/);if(secretRevoke&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,secrets.revoke(user,secretRevoke[1]));}
       if(p==='/api/remote-access'&&method==='GET') return send(res,200,{...gate.summary(),this_request:req.cgAccess,claim:'CyberGuard is reachable from this machine, through a Zero Trust gateway that signs every request with an access assertion (and, when required, a device posture claim), or over a VPN with TLS from the VPN address pools and, when a device CA is set, only from devices holding a certificate it issued. Direct exposure on other addresses is refused.',claim_ar:'يمكن الوصول إلى CyberGuard من هذا الجهاز، أو عبر بوابة Zero Trust توقّع كل طلب بتأكيد وصول (ومطالبة بحالة الجهاز عند اشتراطها)، أو عبر VPN مع TLS من نطاقات عناوين الـVPN، وعند ضبط جهة إصدار للأجهزة لا يُقبل إلا جهاز يحمل شهادة صادرة منها. ويُرفض التعريض المباشر على عناوين أخرى.'});
       if(p==='/api/scoped-overview'&&method==='GET') return send(res,200,domain.scopedOverview(allowedAssets||domain.list('assets',{limit:100000}).items.map(a=>a.id),scope.sites));
       if(p==='/api/user-scopes'&&method==='GET'){auth.require(user,['admin']);return send(res,200,{items:store.all('SELECT s.*,u.username FROM user_scopes s JOIN users u ON u.id=s.user_id ORDER BY u.username').map(r=>({...r,sites:JSON.parse(r.sites),domains:JSON.parse(r.domains)})),tenant,domains:scopeDomains});}
@@ -318,12 +326,15 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   };
   const server=tlsMaterial?https.createServer({...tlsMaterial,minVersion:'TLSv1.2',...(accessConfig.device_certificates?{ca:clientCa,requestCert:true,rejectUnauthorized:true}:{})},handler):http.createServer(handler);
   server.requestTimeout=15000; server.headersTimeout=10000; server.keepAliveTimeout=5000; server.maxHeadersCount=50;
-  const monitor=setInterval(()=>{try{domain.checkHealth();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
+  const checkSecretRotation=()=>{for(const x of secrets.list().filter(x=>x.status==='rotation-overdue'))domain.alert({key:`CG-SECRET-ROTATION-055:${x.ref}:v${x.version}`,rule:'CG-SECRET-ROTATION-055',severity:'medium',title:`Secret rotation overdue / سر متأخر عن التدوير: ${x.ref} (due ${x.rotation_due_at.slice(0,10)})`});};
+  const monitor=setInterval(()=>{try{domain.checkHealth();checkSecretRotation();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
-  return {server,store,auth,domain,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
+  return {server,store,auth,domain,secrets,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host)||(accessConfig.mode==='vpn'&&host===accessConfig.vpn.listen_host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
-    return new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>{server.removeListener('error',reject);resolve(server.address());});});
+    // A random port (0) never lands on a port that browsers and fetch refuse by specification (Windows may hand out ports from 1024).
+    const once=()=>new Promise((resolve,reject)=>{server.once('error',reject);server.listen(port,host,()=>{server.removeListener('error',reject);resolve(server.address());});});
+    return (async()=>{for(let i=0;i<20;i++){const a=await once();if(port!==0||!FETCH_BLOCKED_PORTS.has(a.port))return a;await new Promise(r=>server.close(r));}throw new AppError(500,'no_usable_port');})();
   },async close(){clearInterval(monitor);clearInterval(permitExpiryMonitor);if(server.listening){server.closeAllConnections();await new Promise(resolve=>server.close(resolve));}store.close();}};
 }
 if(process.argv[1] && path.resolve(process.argv[1])===fileURLToPath(import.meta.url)) {

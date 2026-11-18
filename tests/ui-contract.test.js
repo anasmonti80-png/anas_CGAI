@@ -459,3 +459,9 @@ test('settings explain how CyberGuard is reached remotely and whether devices mu
   const app=read('app.js'),html=read('index.html');assert.match(app,/\/api\/remote-access/);assert.match(html,/manifest\.webmanifest/);
   for(const marker of ['Remote access and devices','Through a Zero Trust gateway','Over VPN with TLS','Device posture rule','Device certificates (mTLS)','Install app','CG-053']) assert.ok(app.includes(marker),marker);
 });
+
+test('settings manage connector secrets as write-only metadata with rotation status and explain separation of duties (CG-055)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/secrets/);
+  for(const marker of ['Connector secret store and separation of duties','Value (never shown after saving)','Rotation overdue','Delegate to source','approval by an independent administrator','CG-055']) assert.ok(app.includes(marker),marker);
+  assert.ok(app.includes('type="password" required autocomplete="new-password"'),'the value field is a password input');
+});

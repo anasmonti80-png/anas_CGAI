@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-18T14:35:17.314Z",
+  "at": "2026-11-18T18:05:17.848Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -87,7 +87,8 @@
     "nsg_flow_migration": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-051", "days_to_retirement_shown": 316, "nsg_flow_logs": 3, "actions": {"migrate": "dev-nsg (enable on dev-vnet)", "covered": "web-nsg (disable to avoid paying twice)", "nic_only": "app-nic-nsg"}, "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
     "https_sso_abac": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-052", "sso_browser_flow": "login page -> provider -> callback -> session as sara@acme.example (analyst, MFA recent)", "site_scope": {"sites": ["riyadh"], "assets_visible": 1, "other_site_alert_hidden": true, "dashboard_api": 403}, "settings_panels": ["OIDC single sign-on and tenant/site scope", "Tenant, site and area scope per user"], "https": "covered by automated TLS tests (self-signed certificate not trusted by the pane)", "defects_fixed": ["CSRF origin check refused every mutation over HTTPS", "mfa_assertions could not record OIDC evidence", "alert status and area labels in English in the Arabic view"], "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true},
     "remote_access_devices": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-053", "tablet_768_overflow": false, "mobile_375_overflow": false, "pages_checked": ["overview", "threats", "incidents", "cloud", "settings", "network-map", "vulnerabilities"], "manifest": {"name": "CyberGuard AI", "display": "standalone"}, "settings_panel": "Remote access and devices: mode, this request path, device certificates", "defects_fixed": ["Arabic wording of the remote access description"], "english_view_clean": true, "console_errors": 0, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 79, "next": "CG-055"}
+    "secret_store": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-055", "settings_panel": "Connector secret store and separation of duties", "value_field": "password input, never shown after saving", "delegation_options": "sources list", "english_view_clean": true, "mobile_overflow": false, "console_errors": 0, "evidence_visible": true, "also_fixed": "random test ports could land on ports fetch refuses (Windows dynamic range starts at 1024); listen(0) now skips them"},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 80, "next": "CG-058"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
