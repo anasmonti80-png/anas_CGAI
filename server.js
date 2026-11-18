@@ -310,6 +310,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const ack=p.match(/^\/api\/alerts\/([a-f0-9-]{36})\/ack$/);
       const alertRoute=p.match(/^\/api\/alerts\/([a-f0-9-]{36})$/);
       if(alertRoute&&method==='GET') return send(res,200,domain.decode(store.require('SELECT * FROM alerts WHERE id=?',[alertRoute[1]])));
+      const remediationRoute=p.match(/^\/api\/alerts\/([a-f0-9-]{36})\/remediation$/);
+      if(remediationRoute&&method==='GET') return send(res,200,domain.remediation(remediationRoute[1]));
       if(ack&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.acknowledge(user.id,ack[1]));}
       const disposition=p.match(/^\/api\/alerts\/([a-f0-9-]{36})\/disposition$/);
       if(disposition&&method==='POST') {roles(['admin','analyst']); return send(res,200,domain.dispositionAlert(user.id,disposition[1],await body(req)));}

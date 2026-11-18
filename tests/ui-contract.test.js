@@ -496,3 +496,6 @@ test('threats show signed rule versions with rollback and signed update packs fr
   const app=read('app.js');for(const marker of ['/api/rule-keys','/api/rule-packs/export','/api/rule-packs/import','Rule signing, versions and update packs','Running version','Trust publisher (recent MFA required)','Import as drafts (recent MFA required)','CG-066']) assert.ok(app.includes(marker),marker);
   assert.match(app,/Roll back to v\$\{v\.version\}/);
 });
+test('alert details show the best fix for the environment with non-applicable options, verification and uncertainty (CG-067)',()=>{
+  const app=read('app.js');for(const marker of ['/remediation`','data-remediation','Best way to fix','Not applicable here','Verify the fix','Low confidence','CG-067']) assert.ok(app.includes(marker),marker);
+});
