@@ -492,3 +492,7 @@ test('threats manage detection hypotheses from published evidence with manual te
   const app=read('app.js');assert.match(app,/\/api\/hypotheses/);
   for(const marker of ['Detection hypotheses from published evidence','Manually tested','I reviewed the hypothesis and its results manually','Save as draft','Run test','CG-065']) assert.ok(app.includes(marker),marker);
 });
+test('threats show signed rule versions with rollback and signed update packs from trusted publishers (CG-066)',()=>{
+  const app=read('app.js');for(const marker of ['/api/rule-keys','/api/rule-packs/export','/api/rule-packs/import','Rule signing, versions and update packs','Running version','Trust publisher (recent MFA required)','Import as drafts (recent MFA required)','CG-066']) assert.ok(app.includes(marker),marker);
+  assert.match(app,/Roll back to v\$\{v\.version\}/);
+});
