@@ -473,3 +473,7 @@ test('settings show the tenant isolation model, resource usage against limits an
   const app=read('app.js');assert.match(app,/\/api\/tenant-policy/);
   for(const marker of ['Tenant isolation, limits and retention','Daily event limit','Activity retention (days)','Storage limit (MB)','Apply retention now','CG-059']) assert.ok(app.includes(marker),marker);
 });
+test('response shows outage reconciliation: waiting jobs, expired jobs, verified rollbacks and delivery backlog (CG-060)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/reconciliation/);
+  for(const marker of ['Outage operation and change reconciliation','Awaiting connector','Expired before execution','Rollbacks verified','Sources with backlog','New request and approval against current state','CG-060']) assert.ok(app.includes(marker),marker);
+});

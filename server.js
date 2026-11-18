@@ -119,7 +119,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       if(bearer && ingest && method==='POST') {
         const source=domain.sourceToken(bearer,ingest[1]);
-        return send(res,200,ingestInput(`source:${source.id}`,source.id,await body(req)));
+        const result=ingestInput(`source:${source.id}`,source.id,await body(req));
+        // CG-060 store-and-forward senders report their queue with each batch.
+        if(req.headers['x-cg-queue-depth']!==undefined)result.delivery=domain.recordDelivery(source.id,{depth:Number(req.headers['x-cg-queue-depth']),oldest:String(req.headers['x-cg-oldest-queued-at']||'')||null,attempt:Number(req.headers['x-cg-delivery-attempt']||1)});
+        return send(res,200,result);
       }
       if(bearer && responseJobs && method==='GET') {
         const source=domain.sourceToken(bearer,responseJobs[1]);
@@ -206,6 +209,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(aiDecision&&method==='POST'){roles(['admin','analyst']);if(aiDecision[2]==='promote'){auth.requireRecentMfa(user);return send(res,201,domain.promoteAiProposal(user.id,aiDecision[1],await body(req)));}return send(res,200,domain.dismissAiProposal(user.id,aiDecision[1]));}
       const cloudAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/cloud$/);
       if(cloudAnalysis&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);fail(typeof cloudAiInvoke==='function',503,'cloud_ai_connector_unavailable');const prepared=domain.prepareAiCloudAnalysis(user.id,cloudAnalysis[1],await body(req)),raw=await cloudAiInvoke({provider:prepared.consent.provider,payload:prepared.payload}),result=validateCloudResult(raw);return send(res,200,domain.recordAiCloudAnalysis(user.id,prepared,result));}
+      if(p==='/api/reconciliation'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.reconciliation());}
       if(p==='/api/quality-metrics'&&method==='GET') return send(res,200,domain.qualityMetrics({days:url.searchParams.get('days')||30}));
       if(p==='/api/dashboard'&&method==='GET') return send(res,200,domain.dashboard(url.searchParams.get('severity')||'all'));
       if(p==='/api/security-outcomes'&&method==='GET') return send(res,200,domain.securityOutcomes());
@@ -334,7 +338,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   const server=tlsMaterial?https.createServer({...tlsMaterial,minVersion:'TLSv1.2',...(accessConfig.device_certificates?{ca:clientCa,requestCert:true,rejectUnauthorized:true}:{})},handler):http.createServer(handler);
   server.requestTimeout=15000; server.headersTimeout=10000; server.keepAliveTimeout=5000; server.maxHeadersCount=50;
   const checkSecretRotation=()=>{for(const x of secrets.list().filter(x=>x.status==='rotation-overdue'))domain.alert({key:`CG-SECRET-ROTATION-055:${x.ref}:v${x.version}`,rule:'CG-SECRET-ROTATION-055',severity:'medium',title:`Secret rotation overdue / سر متأخر عن التدوير: ${x.ref} (due ${x.rotation_due_at.slice(0,10)})`});};
-  const monitor=setInterval(()=>{try{domain.checkHealth();checkSecretRotation();tenancy.maybeRetention();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
+  const monitor=setInterval(()=>{try{domain.checkHealth();checkSecretRotation();tenancy.maybeRetention();domain.expireStaleResponseJobs();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
   return {server,store,auth,domain,secrets,tenancy,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host)||(accessConfig.mode==='vpn'&&host===accessConfig.vpn.listen_host),400,'loopback_only');
