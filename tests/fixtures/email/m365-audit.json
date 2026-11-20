@@ -1,0 +1,64 @@
+[
+ {
+  "CreationTime": "2026-11-19T07:40:00",
+  "Operation": "New-InboxRule",
+  "UserId": "finance@example.org",
+  "Workload": "Exchange",
+  "Parameters": [
+   {
+    "Name": "Name",
+    "Value": "."
+   },
+   {
+    "Name": "From",
+    "Value": "it-security@example.org"
+   },
+   {
+    "Name": "ForwardTo",
+    "Value": "collect@payout-desk.test"
+   },
+   {
+    "Name": "DeleteMessage",
+    "Value": "True"
+   }
+  ]
+ },
+ {
+  "CreationTime": "2026-11-19T07:45:00",
+  "Operation": "Set-Mailbox",
+  "UserId": "ceo@example.org",
+  "Workload": "Exchange",
+  "Parameters": [
+   {
+    "Name": "Identity",
+    "Value": "ceo"
+   },
+   {
+    "Name": "ForwardingSmtpAddress",
+    "Value": "smtp:ceo.personal@mail.test"
+   }
+  ]
+ },
+ {
+  "CreationTime": "2026-11-19T08:00:00",
+  "Operation": "New-InboxRule",
+  "UserId": "hr@example.org",
+  "Workload": "Exchange",
+  "Parameters": [
+   {
+    "Name": "Name",
+    "Value": "to team"
+   },
+   {
+    "Name": "RedirectTo",
+    "Value": "hr-team@example.org"
+   }
+  ]
+ },
+ {
+  "CreationTime": "2026-11-19T08:05:00",
+  "Operation": "MailItemsAccessed",
+  "UserId": "x@example.org",
+  "Workload": "Exchange"
+ }
+]

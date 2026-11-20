@@ -1,0 +1,20 @@
+Authentication-Results: mx.example.org; spf=pass smtp.mailfrom=partner.test; dkim=pass header.d=partner.test; dmarc=pass header.from=partner.test
+From: Partner Billing <billing@partner.test>
+To: <finance@example.org>
+Subject: November statement
+Date: Thu, 19 Nov 2026 09:00:00 +0000
+Message-ID: <ok-002@partner.test>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="B1"
+
+--B1
+Content-Type: text/html; charset=utf-8
+
+<p>Statement at <a href="https://portal.partner.test/s/11">portal.partner.test</a></p>
+--B1
+Content-Type: application/pdf; name="statement.pdf"
+Content-Disposition: attachment; filename="statement.pdf"
+Content-Transfer-Encoding: base64
+
+JVBERi0xLjcgc3ludGhldGlj
+--B1--

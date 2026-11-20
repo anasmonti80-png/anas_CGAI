@@ -1,0 +1,23 @@
+Return-Path: <billing@examp1e-payments.test>
+Authentication-Results: mx.example.org; spf=fail smtp.mailfrom=examp1e-payments.test; dkim=none; dmarc=fail action=quarantine header.from=examp1e-payments.test
+From: "Example IT Support" <billing@examp1e-payments.test>
+Reply-To: <collect@payout-desk.test>
+To: <finance@example.org>
+Subject: Urgent: overdue invoice
+Date: Thu, 19 Nov 2026 08:15:00 +0000
+Message-ID: <phish-001@examp1e-payments.test>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="XYZ"
+
+--XYZ
+Content-Type: text/html; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+
+<p>Please review <a href=3D"https://login-example-org.payout-desk.test/auth">https://portal.example.org/invoices</a> or <a href=3D"http://203.0.113.66/pay">pay here</a></p>
+--XYZ
+Content-Type: application/octet-stream; name="invoice.pdf.exe"
+Content-Disposition: attachment; filename="invoice.pdf.exe"
+Content-Transfer-Encoding: base64
+
+TVogc3ludGhldGljIHBheWxvYWQ=
+--XYZ--

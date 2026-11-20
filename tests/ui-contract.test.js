@@ -569,3 +569,7 @@ test('vulnerabilities show API and web security from WAF events and authorized U
   const app=read('app.js');assert.match(app,/\/api\/web-security/);
   for(const marker of ['API and web security','Rate limit','events in 7 days','node scripts/web-check.js scan','CG-107']) assert.ok(app.includes(marker),marker);
 });
+test('identity shows email security: domain posture, analysed messages and forwarding rules (CG-108)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/email-security/);
+  for(const marker of ['Email security and phishing','No analysed messages.','Mail forwarding rules','node scripts/email-security.js domain','CG-108']) assert.ok(app.includes(marker),marker);
+});
