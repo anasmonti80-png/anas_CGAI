@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T10:22:40.112Z",
+  "at": "2026-11-20T10:26:25.959Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -110,7 +110,8 @@
     "ot_safety": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-100", "discovery_panel": "OT/ICS safety mode", "devices": ["PLC-LINE-3 with 5 findings", "SIS-BOILER safety system with no findings"], "exclusions_shown": true, "nist_guidance_arabic": true, "console_errors": 0},
     "network_path": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-101", "asset_modal_section": "Path verification before isolation", "vm_db": "not safe: port Gi1/0/12 serves esx-host-07", "console_errors": 0},
     "management_plane": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-102", "network_map_panel": "Management plane protection", "sessions": 2, "violating_session": "RDP from 10.20.10.21 without reference: 3 violations", "console_errors": 0, "also_fixed": "the policy field require_authorization_ref would have been erased by the secret redactor; renamed to reference_required"},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 102, "next": "CG-103"}
+    "ocsf": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-103", "events_panel": "OCSF normalization layer", "classes_shown": ["Network Activity", "HTTP Activity", "Detection Finding", "DNS Activity"], "console_errors": 0, "also_fixed": "Suricata alerts and DNS in one format were shown as one class; quality is now per format and class"},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 103, "next": "CG-104"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

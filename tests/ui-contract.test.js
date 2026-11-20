@@ -549,3 +549,7 @@ test('the network map shows management plane protection with session violations 
   const app=read('app.js');assert.match(app,/\/api\/management-plane/);
   for(const marker of ['Management plane protection','Within the approved procedure','Not covered by a policy','Insecure management protocols in configurations','CG-102']) assert.ok(app.includes(marker),marker);
 });
+test('events show the OCSF normalization layer with per-format missing fields and meaning lost (CG-103)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/ocsf\/export/);
+  for(const marker of ['OCSF normalization layer','Missing fields','Records with meaning lost','Download OCSF events (JSON)','CG-103']) assert.ok(app.includes(marker),marker);
+});
