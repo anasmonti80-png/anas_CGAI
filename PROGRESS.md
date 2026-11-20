@@ -7,16 +7,16 @@ Read this file and `AI_CLOUD_HANDOFF.md` before modifying the project. Treat the
 ## Current checkpoint
 
 - **Branch:** `codex/cg001-600`
-- **Latest verified implementation checkpoint:** CG-111 (Codex) completes Detection-as-Code environment tuning, signed versions, unit/replay quality gates, false-positive budgets, safe failed updates and signed rollback.
-- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-111 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
-- **Validation:** Unit Tested — Codex verification on 2026-11-20 passes 337, fails 0 and skips 1 environment-gated test across 338 tests on Windows x64, Node 24.21.0, SQLite 3.53.4. The CG-111 threat panel was inspected in Arabic and English using an isolated local Chromium instance with synthetic data. No vendor integration is Production Validated without its required authorized account or lab.
+- **Latest verified implementation checkpoint:** CG-112 (Codex) completes threat intelligence quality metadata, trust and expiry evaluation, redistribution enforcement and context-only matching without automatic blocking.
+- **Latest requirements checkpoint:** CG-001..CG-600 have semantic scope/delivery triage. CG-001..CG-112 have current requirement-specific acceptance evidence and are the only rows labelled `acceptance-verified`.
+- **Validation:** Unit Tested — verification passes 340, fails 0 and skips 1 environment-gated test across 341 tests on Windows x64, Node 24.21.0 and SQLite 3.53.4. The CG-112 panel was inspected in Arabic and English using an isolated local Chromium instance with synthetic data. No intelligence feed or vendor integration is Production Validated without its required authorized account or lab.
 - **Current integration:** the live UI includes every required CG-002 sidebar destination, a shared Achievements ledger for CG-001..CG-600, a central asset record with evidence-linked governance context, an evidence-readiness score, a Discover view for authorized observations, and a Settings view that states actual PC/collector/lab visibility boundaries. Unsupported integrations render an explicit evidence/visibility status instead of a simulated result.
 - **Running preview:** `http://127.0.0.1:4313` from this worktree; first-run setup is required. QA data stays in an ignored, isolated data directory.
 - **Published state:** `codex/cg001-600` is published on `origin` and is the shared Codex/Claude handoff branch. `HANDOFF.md` is the single canonical coordination notebook.
 
 ## Safe next work
 
-1. Continue CG-112, the lowest unaccepted requirement; do not skip it for a higher CG number.
+1. Continue CG-113, the lowest unaccepted requirement; do not skip it for a higher CG number.
 2. Promote only requirements whose complete acceptance boundary has current code, test and platform evidence.
 3. Keep the Achievements ledger and Claude handoff current after every implementation phase.
 

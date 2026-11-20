@@ -781,6 +781,13 @@
       "tests": ["tests/rule-versions.test.js: Detection-as-Code versions environment tuning, measures false positives and keeps the signed version active after a failed update (CG-111)", "tests/ui-contract.test.js: threats show Detection-as-Code quality gates environment tuning false positives and signed rollback (CG-111)", "tests/migration.test.js: every schema migration upgrades an older database without data loss"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Unit Tested with an isolated local Chromium instance; not Production Validated. Environment tuning uses declared field exclusions rather than vendor-specific rule compilers. False-positive quality is measured only after analysts disposition alerts in this installation and remains not measured when there are no dispositions."]
+    },
+    "CG-112": {
+      "reason": "Threat intelligence quality is enforced per indicator. lib/threat-intelligence.js validates the indicator type and value, requires an HTTPS source reference, publication and expiry dates, a 0-100 confidence score, explicit source verification and redistribution rights. Current indicators are trusted only when the source is verified and confidence is at least 70; expired or lower-quality indicators remain context only. Matching returns an investigation classification and can never create an action or permit automatic blocking. The export contains only current indicators whose redistribution right is permitted. The threats page shows source, publication date, confidence, expiry, rights and the manual-review-only enforcement in Arabic and English.",
+      "code": ["lib/threat-intelligence.js", "lib/store.js", "server.js", "public/app.js"],
+      "tests": ["tests/threat-intelligence.test.js: threat intelligence records source, dates, confidence, expiry and redistribution rights (CG-112)", "tests/threat-intelligence.test.js: untrusted and expired IOC matches stay context-only, never block, and redistribution rights are enforced (CG-112)", "tests/ui-contract.test.js: threats show indicator source, dates, confidence, expiry, redistribution rights and no automatic block (CG-112)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Unit Tested with isolated synthetic indicators and local Chromium; no commercial or live intelligence feed is Production Validated. Matching is exact for the supported IP, domain, URL and SHA-256 types; relationship scoring and feed-specific trust policies require their own connectors."]
     }
   }
 }
