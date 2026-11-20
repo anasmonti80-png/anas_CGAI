@@ -55,7 +55,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
   const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
-  const setupFile=path.join(dataDir,'setup-token');
+  const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
     bootstrap=fs.existsSync(setupFile)?fs.readFileSync(setupFile,'utf8').trim():token();
@@ -91,6 +91,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       fail(['GET','POST'].includes(method),405,'method_not_allowed');
       const mutation=!['GET','HEAD'].includes(method);
       const bearer=String(req.headers.authorization||'').startsWith('Bearer ')?String(req.headers.authorization).slice(7):null;
+      // CG-107 unauthenticated API requests are rate limited per client address (120 per minute) with RateLimit headers.
+      if(p.startsWith('/api/')&&!bearer&&!/(^|;\s*)cg_session=/.test(String(req.headers.cookie||''))){const key=req.socket.remoteAddress||'unknown',now=Date.now(),b=anonBuckets.get(key)||{start:now,count:0};if(now-b.start>=60000){b.start=now;b.count=0;}b.count++;anonBuckets.set(key,b);if(anonBuckets.size>10000)anonBuckets.clear();
+        res.setHeader('RateLimit-Limit','120');res.setHeader('RateLimit-Remaining',String(Math.max(0,120-b.count)));res.setHeader('RateLimit-Reset',String(Math.ceil((b.start+60000-now)/1000)));
+        if(b.count>120){res.setHeader('Retry-After',String(Math.ceil((b.start+60000-now)/1000)));return send(res,429,{error:'rate_limited'});}}
       const ingest=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/events$/);
       const responseJobs=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs$/);
       const responseResult=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs\/([a-f0-9-]{36})\/result$/);
@@ -242,6 +246,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const detonationDecision=p.match(/^\/api\/detonations\/(\d{1,9})\/(approve|reject)$/);if(detonationDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,sandbox.decide(user.id,Number(detonationDecision[1]),detonationDecision[2]));}
       if(p==='/api/firewall-rules/what-if'&&method==='POST'){roles(['admin','analyst']);return send(res,200,domain.firewallChangeImpact(await body(req)));}
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
+      if(p==='/api/web-security'&&method==='GET') return send(res,200,domain.webSecurity());
       if(p==='/api/supply-chain'&&method==='GET') return send(res,200,domain.supplyChain());
       if(p==='/api/kubernetes-security'&&method==='GET') return send(res,200,domain.kubernetesSecurity());
       if(p==='/api/cloud-detection-coverage'&&method==='GET') return send(res,200,domain.cloudDetectionCoverage());

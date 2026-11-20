@@ -174,3 +174,9 @@
 - SBOM: `node scripts/supply-chain.js sbom --input sbom.json --osv osv.json --project <اسم> --output out.json` يقرأ CycloneDX أو SPDX ويطابق التبعيات مع نشرات OSV (يرفع CG-SUPPLY-106 لما له إصلاح) ويعد المكونات بلا معرف حزمة أو بصمة أو ترخيص.
 - CI/CD: `ci --repo <مسار>` يكشف الإجراءات الخارجية غير المثبتة على بصمة، وpull_request_target الذي يجلب شيفرة غير موثوقة، وصلاحيات الرمز الواسعة أو غير المقيدة، وطباعة الأسرار، والأسرار المحفوظة في المستودع (دون تخزين قيمتها). مستودع CyberGuard نفسه نظيف.
 - البرامج المنشورة: `verify --artifact <ملف> --checksums SHA256SUMS --signature <توقيع> --public-key <مفتاح> --provenance <SLSA> --trusted-builder <id>`.
+
+## أمان واجهات API والويب (CG-107)
+
+- `node scripts/web-check.js scan --scope web-scope.json --output web.json`: يفحص فقط العناوين المدرجة في نطاق مصرح به (مرجع التفويض، المالك، نهاية النافذة، البيئة).
+- يكشف: CORS الذي يعكس أي أصل (مع بيانات الاعتماد = مرتفع)، نقاطًا تجيب دون المصادقة المطلوبة، مفاتيح API في الرابط، غياب تحديد المعدل (طلبات متكررة فقط في بيئة test أو staging)، وترويسات الأمان وخصائص ملفات تعريف الارتباط وكشف إصدار الخادم. لا تُحفظ معاملات الاستعلام.
+- أحداث WAF (ModSecurity وAWS WAF وCloud Armor) تُلخص في صفحة الثغرات. التطبيق نفسه (CyberGuard) اجتاز هذا الفحص.

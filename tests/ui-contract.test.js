@@ -565,3 +565,7 @@ test('vulnerabilities show the software supply chain per project: SBOM, CI/CD re
   const app=read('app.js');assert.match(app,/\/api\/supply-chain/);
   for(const marker of ['Software supply chain','Affected dependencies','CI/CD review','Published artifacts','Failed verification','CG-106']) assert.ok(app.includes(marker),marker);
 });
+test('vulnerabilities show API and web security from WAF events and authorized URL checks (CG-107)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/web-security/);
+  for(const marker of ['API and web security','Rate limit','events in 7 days','node scripts/web-check.js scan','CG-107']) assert.ok(app.includes(marker),marker);
+});

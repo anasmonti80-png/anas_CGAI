@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T15:58:24.495Z",
+  "at": "2026-11-20T16:09:32.109Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -114,7 +114,8 @@
     "cloud_coverage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-104", "cloud_panel": "Cloud detection coverage", "aws": "identity, compute, keys, network, logging covered; storage control plane only", "azure_gcp": "blind (no audit log received)", "console_errors": 0},
     "kubernetes": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-105", "cloud_panel": "Kubernetes and container security", "cluster": "prod-eu with audit, RBAC/PSA and one image scan", "findings": 10, "console_errors": 0, "also_fixed": "the built-in system:masters binding and anonymous /version were flagged as noise"},
     "supply_chain": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-106", "real_review": "CyberGuard repository: 337 files, no findings", "vulnerabilities_panel": "Software supply chain", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 106, "next": "CG-107"}
+    "web_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-107", "real_check": "CyberGuard itself: page, API 401 and health with rate limit present, no findings", "found_and_fixed": "unauthenticated API requests were not rate limited", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 107, "next": "CG-108"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
