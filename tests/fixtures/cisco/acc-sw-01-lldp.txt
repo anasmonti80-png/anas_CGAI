@@ -1,0 +1,25 @@
+------------------------------------------------
+Local Intf: Gi1/0/12
+Chassis id: 0050.56aa.0001
+Port id: vmnic2
+System Name: esx-host-07
+
+System Description:
+VMware ESX Server 8.0.2 build-22380479
+
+Time remaining: 101 seconds
+System Capabilities: B,S
+Enabled Capabilities: S
+------------------------------------------------
+Local Intf: Gi1/0/48
+Chassis id: 7018.a7c0.0000
+Port id: Te1/1/1
+System Name: CORE-SW-01
+
+System Description:
+Cisco IOS Software [Dublin], Catalyst L3 Switch Software
+
+System Capabilities: B,R
+Enabled Capabilities: B,R
+
+Total entries displayed: 2

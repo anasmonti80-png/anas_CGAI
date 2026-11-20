@@ -1,0 +1,25 @@
+Name: Gi1/0/5
+Switchport: Enabled
+Administrative Mode: static access
+Operational Mode: static access
+Administrative Trunking Encapsulation: dot1q
+Negotiation of Trunking: Off
+Access Mode VLAN: 10 (USERS)
+Trunking Native Mode VLAN: 1 (default)
+Voice VLAN: 20 (VOICE)
+
+Name: Gi1/0/12
+Switchport: Enabled
+Administrative Mode: static access
+Operational Mode: static access
+Access Mode VLAN: 10 (USERS)
+Voice VLAN: none
+
+Name: Gi1/0/48
+Switchport: Enabled
+Administrative Mode: trunk
+Operational Mode: trunk
+Administrative Trunking Encapsulation: dot1q
+Access Mode VLAN: 1 (default)
+Trunking Native Mode VLAN: 999 (NATIVE)
+Voice VLAN: none

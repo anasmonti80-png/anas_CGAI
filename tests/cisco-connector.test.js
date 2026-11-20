@@ -59,6 +59,8 @@ test('Cisco telemetry feeds topology, health alerts, the firewall analyzer and d
   assert.ok(cfg.findings.some(f => f.type === 'insecure-management-protocol'), 'Telnet over RESTCONF configuration is flagged by the CG-021 checks');
   // ISE ANC isolation through the normal governed path.
   const target = { mac: '00:00:5E:00:53:AA', policy_name: 'ANC_Quarantine' };
+  // CG-101: the endpoint MAC must be learned on exactly one edge access port before ISE may quarantine it.
+  ingest([ev('portmap-041', 'network.port_map', { switch_ref: 'acc-sw-041', authorization_ref: 'NET-041', arp: [], mac_table: [{ vlan: 10, mac: '00:00:5e:00:53:aa', type: 'dynamic', interface: 'Gi1/0/7' }], switchports: [{ interface: 'Gi1/0/7', mode: 'access', access_vlan: 10, voice_vlan: null }], lldp: [] }, { external_id: 'acc-sw-041', hostname: 'ACC-SW-041', os_family: 'network', device_type: 'switch', addresses: [] })]);
   assert.deepEqual(validateResponseTarget('network.nac-quarantine-endpoint', target), target);
   assert.throws(() => validateResponseTarget('network.nac-quarantine-endpoint', { ...target, mac: '00:00:5E:00:53' }), /invalid_response_mac/);
   assert.throws(() => validateResponseTarget('network.nac-quarantine-endpoint', { ...target, policy_name: 'x; rm -rf' }), /invalid_response_anc_policy/);

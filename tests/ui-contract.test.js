@@ -541,3 +541,7 @@ test('discovery shows OT/ICS safety mode with passive-first, scan exclusions, sa
   const app=read('app.js');assert.match(app,/\/api\/ot-safety/);
   for(const marker of ['OT/ICS safety mode','Passive first','Addresses excluded from any active scan','Actions awaiting safety approval','Safety system','CG-100']) assert.ok(app.includes(marker),marker);
 });
+test('asset details show the verified IP-MAC-port-VLAN-user path before isolation (CG-101)',()=>{
+  const app=read('app.js');assert.match(app,/\/network-path`/);
+  for(const marker of ['Path verification before isolation','Safe to isolate','Not safe to isolate','Blocks isolation','MAC → switch port','CG-101']) assert.ok(app.includes(marker),marker);
+});
