@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T09:29:50.486Z",
+  "at": "2026-11-20T09:36:04.985Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -102,7 +102,8 @@
     "file_triage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-092", "real_files": "Windows notepad.exe trusted with a valid Microsoft signature; synthetic marker file malicious and quarantined", "threats_panel": "Suspicious file triage without execution", "mobile_overflow": false, "console_errors": 0, "also_fixed": "option values (rules file, output) were treated as files to scan and could be quarantined"},
     "detonation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-093", "threats_panel": "Isolated lab detonation", "default_state": "Not enabled, no sandbox registered", "console_errors": 0},
     "linux_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-094", "sources_panel": "Linux security: auditd, journald, eBPF, Falco, sudo and persistence", "change_shown": "added /etc/cron.d/update-check", "arabic_ebpf_reason": true, "console_errors": 0, "also_fixed": "the NOPASSWD count field was hidden by secret redaction because its name contained passwd; renamed to no_prompt_rules"},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 94, "next": "CG-095"}
+    "mobile_coverage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-095", "sources_panel": "macOS, mobile and BYOD coverage", "platforms": ["macOS", "iOS", "Android", "Windows"], "capability_matrix_arabic": true, "byod_pseudonymised": true, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 95, "next": "CG-096"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

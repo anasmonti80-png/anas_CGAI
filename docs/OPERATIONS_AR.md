@@ -107,3 +107,9 @@
 - على كل جهاز لينكس مُدار: `sudo bash scripts/agent/linux-security.sh out.json <مرجع>` (للقراءة فقط). يجمع حالة auditd وعدد قواعده، وقابلية قراءة journald، ودعم eBPF بحسب النواة وBTF مع السبب عند عدم الدعم، وحالة Falco، وبصمات ملفات sudoers وعدد قواعد NOPASSWD ومنح ALL وأعضاء sudo/wheel واستخدام sudo خلال 24 ساعة، وبصمات ملفات cron ووحدات systemd. لا يُنسخ محتوى أي ملف.
 - يقارن CyberGuard كل لقطة بالسابقة: إضافة أو تعديل cron/systemd يرفع CG-LINUX-PERSIST-094، وتغيير sudoers أو وجود NOPASSWD يرفع CG-LINUX-SUDO-094، وغياب سجل تدقيق مقروء يرفع CG-LINUX-VISIBILITY-094.
 - تنبيهات Falco تُستورد بصيغة `falco-json` عبر `node scripts/logs-to-telemetry.js` وتظهر كأحداث IDS. يُختبر الجمع فعليًا كـroot في CI على Ubuntu مع كشف مهمة cron مضافة.
+
+## تغطية macOS والجوال والأجهزة الشخصية (CG-095)
+
+- يصدّر مسؤول Intune قائمة الأجهزة للقراءة فقط (`GET /deviceManagement/managedDevices` بصلاحية DeviceManagementManagedDevices.Read.All)، ثم: `CG_MDM_SALT=<قيمة سرية> node scripts/mdm-to-telemetry.js managedDevices.json out.json`.
+- الأجهزة الشخصية (BYOD) تُحفظ بمرجع مستعار فقط مع وضعها الأمني؛ لا يُحفظ اسم المستخدم ولا الرقم التسلسلي ولا رقم الهاتف ولا IMEI ولا الموقع.
+- التنبيهات: كسر حماية/root (مرتفع)، عدم الامتثال، جهاز مؤسسة غير مشفر، انقطاع أكثر من 7 أيام. وتعرض صفحة المصادر ما تراه الإدارة وما لا تراه لكل منصة حتى لا يُعتبر الجوال المُدار مراقبًا بالكامل.

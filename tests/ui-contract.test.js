@@ -518,3 +518,7 @@ test('sources show Linux security coverage with eBPF reasons, sudo and persisten
   const app=read('app.js');assert.match(app,/\/api\/linux-security/);
   for(const marker of ['Linux security: auditd, journald, eBPF, Falco, sudo and persistence','First snapshot (baseline)','Persistence changes','sudo bash scripts/agent/linux-security.sh','CG-094']) assert.ok(app.includes(marker),marker);
 });
+test('sources show macOS, mobile and BYOD coverage with platform visibility limits and privacy (CG-095)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/mobile-coverage/);
+  for(const marker of ['macOS, mobile and BYOD coverage','What management sees','Not visible','Jailbroken','node scripts/mdm-to-telemetry.js','CG-095']) assert.ok(app.includes(marker),marker);
+});
