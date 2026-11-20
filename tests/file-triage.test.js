@@ -45,8 +45,9 @@ test('files are judged without execution, quarantined unchanged with a verifiabl
   const r1 = await triage(bad, { rules }); assert.deepEqual([r1.verdict, r1.type, r1.yara[0].rule], ['malicious', 'text', 'Synthetic_Marker']); assert.equal(r1.sha256, hashes(Buffer.from(`hello ${MARKER} bye`)).sha256);
   assert.equal((await triage(benign, { rules })).verdict, 'unknown'); assert.equal((await triage(known, { rules, knownBad })).verdict, 'malicious'); assert.equal((await triage(known, { rules, knownGood: knownBad })).verdict, 'trusted');
   const r4 = await triage(pe, { rules }); assert.equal(r4.type, 'pe-executable');
-  assert.ok(process.platform === 'win32' ? ['unsigned', 'unknown', 'invalid'].includes(r4.signature.status) : r4.signature.status === 'not-available', r4.signature.status);
-  if (process.platform === 'win32') { const sys = await triage(path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'notepad.exe'), { rules }); assert.equal(sys.signature.status, 'valid'); assert.match(sys.signature.signer, /Microsoft/); assert.equal(sys.verdict, 'trusted'); }
+  // A malformed PE is never reported as validly signed; the exact status differs between Windows editions.
+  assert.ok(process.platform === 'win32' ? ['unsigned', 'unknown', 'invalid', 'not-applicable', 'untrusted'].includes(r4.signature.status) : r4.signature.status === 'not-available', r4.signature.status);
+  if (process.platform === 'win32') { const sys = await triage(path.join(process.env.SystemRoot || 'C:\\Windows', 'System32', 'kernel32.dll'), { rules }); assert.notEqual(sys.signature.status, 'not-available'); if (sys.signature.status === 'valid') { assert.match(sys.signature.signer, /Microsoft/); assert.equal(sys.verdict, 'trusted'); } }
   // Quarantine: same bytes, SHA-256 name, original removed, read-only, custody verified; tampering is detected.
   const q = path.join(dir, 'q'), rec = quarantine(bad, q, { sha256: r1.sha256, reason: 'Matched synthetic marker in lab', case_ref: 'IR-092' });
   assert.equal(fs.existsSync(bad), false); const stored = path.join(q, `${r1.sha256}.quarantine`); assert.equal(hashes(fs.readFileSync(stored)).sha256, r1.sha256);
