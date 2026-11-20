@@ -529,3 +529,7 @@ test('the network map shows posture by area with not-collected and not-readable 
 test('firewall review separates traffic classes and computes the impact of a change before applying it (CG-097)',()=>{
   const app=read('app.js');for(const marker of ['/api/firewall-rules/what-if','Firewall review: impact before change','Compute impact without applying','Partial overlap, different action','East-west fully open','Unfiltered egress','Flows opened','CG-097']) assert.ok(app.includes(marker),marker);
 });
+test('the network map shows NAC and Zero Trust posture per site against observed authentications (CG-098)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/nac-posture/);
+  for(const marker of ['Zero Trust and NAC: device and user authenticity, new-device policy','Observed in NAC logs over 30 days','MAC-based logins','Sites without a NAC policy','CG-098']) assert.ok(app.includes(marker),marker);
+});
