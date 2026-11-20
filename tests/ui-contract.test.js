@@ -533,3 +533,7 @@ test('the network map shows NAC and Zero Trust posture per site against observed
   const app=read('app.js');assert.match(app,/\/api\/nac-posture/);
   for(const marker of ['Zero Trust and NAC: device and user authenticity, new-device policy','Observed in NAC logs over 30 days','MAC-based logins','Sites without a NAC policy','CG-098']) assert.ok(app.includes(marker),marker);
 });
+test('threats show cross-source network correlation with confirming sources and encryption limits (CG-099)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/network-correlation/);
+  for(const marker of ['Network threat correlation across sources','Confirming sources','Algorithm-like domain','TLS without server name','No correlated threats in the last 24 hours.','CG-099']) assert.ok(app.includes(marker),marker);
+});
