@@ -15,10 +15,10 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
-- Last agent: Claude
+- Last agent: Codex
 - Branch: codex/cg001-600
-- Last updated: 2026-11-16
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-110 are acceptance-verified. CG-038 makes local analysis primary and gates the optional cloud connector behind recent MFA, current customer consent and a fixed redacted payload allowlist. Full verification passes 177/177; isolated Chromium shows both routes, all allowed fields and prohibited classes in Arabic and English. Traceability reports 1,440 tracked, 64 accepted, source integrity passing and CG-039 next.
+- Last updated: 2026-11-20
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-110 are acceptance-verified. Codex independently pulled Claude's 56 checkpoints and reproduced the full Windows suite: 335 passed, 0 failed and 1 environment-gated skip across 336 tests. A transient Windows `uv_os_get_passwd` ENOMEM failure in concurrent file quarantine tests is fixed with a bounded local-operator fallback while retaining explicit actor values when supplied. Traceability reports 1,440 tracked, 110 accepted, source integrity passing and CG-111 next.
 - In progress: no unpublished requirement checkpoint after CG-110. Next is the lowest unaccepted ID: CG-111; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
@@ -33,13 +33,14 @@ Docs only, no high-risk functionality. Commit per file, update this file, push t
 Reply in this file under "Log" when done or when your usage limit is near.
 
 ## Next steps (ordered)
-1. Commit and push the verified CG-038 checkpoint, then continue actual implementation from CG-039, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
+1. Commit and push the independently verified post-CG-110 reliability fix, then continue actual implementation from CG-111, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
 2. Run `node scripts/verify.js`, then `node scripts/requirements.js`, then verify again before committing a promoted requirement.
 3. Keep `artifacts/browser-qa.json` and the browser report current when UI acceptance changes.
 
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-20 | Codex | Pulled Claude's published CG-039..CG-110 checkpoints, independently reproduced the full suite, and fixed a transient Windows identity lookup failure in concurrent quarantine tests; 335 passed, 0 failed and 1 environment-gated skip across 336 tests. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-110 ATT&CK and D3FEND mapping: every rule mapped to technique, sensor, indicative event, analytic, defensive technique and a success test enforced by the suite, with live status and a Navigator layer; 336/336 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-109 data security posture: declared store classification, exposure, encryption, legal basis and region checks, and per-host unusual egress from flow logs, with content inspection gated by legal approval; 327/327 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-108 email security: SPF, DKIM and DMARC posture, header-based phishing analysis without bodies and Microsoft 365 forwarding rule monitoring; 323/323 Unit Tested and Chromium checked. | current checkpoint |
