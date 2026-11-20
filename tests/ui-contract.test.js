@@ -553,3 +553,7 @@ test('events show the OCSF normalization layer with per-format missing fields an
   const app=read('app.js');assert.match(app,/\/api\/ocsf\/export/);
   for(const marker of ['OCSF normalization layer','Missing fields','Records with meaning lost','Download OCSF events (JSON)','CG-103']) assert.ok(app.includes(marker),marker);
 });
+test('cloud shows detection coverage per provider and domain with control-plane-only storage (CG-104)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/cloud-detection-coverage/);
+  for(const marker of ['Cloud detection coverage','Control plane only','Visible, no detection','Blind','CG-104']) assert.ok(app.includes(marker),marker);
+});
