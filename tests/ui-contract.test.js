@@ -578,3 +578,8 @@ test('cloud shows data security posture and unusual egress without content inspe
   const app=read('app.js');assert.match(app,/\/api\/data-security/);
   for(const marker of ['Data security posture and DLP','No data stores declared.','Approved for content inspection','Unusual egress','CG-109']) assert.ok(app.includes(marker),marker);
 });
+
+test('threats shows the ATT&CK and D3FEND mapping with live status and a Navigator layer download (CG-110)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/attack-mapping/);assert.match(app,/navigator-layer/);
+  for(const marker of ['ATT&CK and D3FEND mapping','Download ATT&CK Navigator layer','Techniques with sensor data','No sensor data','Success test','CG-110']) assert.ok(app.includes(marker),marker);
+});

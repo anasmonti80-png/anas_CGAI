@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T16:20:05.414Z",
+  "at": "2026-11-20T16:30:39.228Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -117,7 +117,8 @@
     "web_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-107", "real_check": "CyberGuard itself: page, API 401 and health with rate limit present, no findings", "found_and_fixed": "unauthenticated API requests were not rate limited", "console_errors": 0},
     "email_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-108", "live_dns": "example.com: SPF -all, DMARC reject, one low finding (no rua)", "phishing_message": "6 findings", "console_errors": 0},
     "data_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-109", "stores": 2, "public_confidential_store": "critical finding in Arabic", "unusual_egress": "10.0.5.20 2048 MB vs 30 MB daily median", "alerts": ["CG-DATA-109 critical", "CG-DATA-109 high", "CG-DATA-EGRESS-109 high"], "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 109, "next": "CG-110"}
+    "attack_mapping": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-110", "mapped_rules": 80, "attack_techniques": 66, "d3fend_techniques": 52, "techniques_with_sensor_data": 8, "rules_fired": 2, "navigator_layer": "enterprise-attack, 63 techniques, T1133 scored 1 from CG-REMOTE-EXPOSURE", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 110, "next": "CG-111"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
