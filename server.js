@@ -239,6 +239,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/sandboxes'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,sandbox.register(user.id,await body(req)));}
       if(p==='/api/detonations'&&method==='POST'){roles(['admin','analyst']);return send(res,201,sandbox.request(user.id,await body(req)));}
       const detonationDecision=p.match(/^\/api\/detonations\/(\d{1,9})\/(approve|reject)$/);if(detonationDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,sandbox.decide(user.id,Number(detonationDecision[1]),detonationDecision[2]));}
+      if(p==='/api/linux-security'&&method==='GET') return send(res,200,domain.linuxSecurity());
       if(p==='/api/file-triage'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.fileTriage());}
       if(p==='/api/attack-surface'&&method==='GET') return send(res,200,domain.attackSurface());
       if(p==='/api/incident-studies'&&method==='GET') return send(res,200,domain.incidentStudies({q:url.searchParams.get('q')||''}));

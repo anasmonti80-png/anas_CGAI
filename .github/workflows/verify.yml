@@ -146,3 +146,20 @@ jobs:
           test ! -e "$RUNNER_TEMP/triage/eicar.com" && test -e "$RUNNER_TEMP/triage/readme.txt"
           node scripts/file-triage.js verify-custody --quarantine "$RUNNER_TEMP/quarantine"
           node -e "const t=require(process.argv[1]);const e=t.events.find(x=>x.details.name==='eicar.com');console.log(JSON.stringify(e.details.yara));if(e.details.verdict!=='malicious'||e.details.yara[0].engine!=='yara'||e.details.quarantine.state!=='quarantined')process.exit(1)" "$RUNNER_TEMP/triage.json"
+      - name: Collect the Linux security posture as root and detect a new cron job (CG-094)
+        if: runner.os == 'Linux'
+        run: |
+          bash -n scripts/agent/linux-security.sh
+          sudo bash scripts/agent/linux-security.sh "$RUNNER_TEMP/linux1.json" ci-runner
+          echo '# CI synthetic persistence check' | sudo tee /etc/cron.d/cg-ci-check >/dev/null
+          sudo bash scripts/agent/linux-security.sh "$RUNNER_TEMP/linux2.json" ci-runner
+          sudo rm -f /etc/cron.d/cg-ci-check
+          sudo chown "$(id -u)" "$RUNNER_TEMP/linux1.json" "$RUNNER_TEMP/linux2.json"
+          node --input-type=module -e "
+          import { Store } from './lib/store.js'; import { Domain } from './lib/domain.js'; import fs from 'node:fs';
+          const s=new Store(':memory:'),d=new Domain(s,{clock:()=>Date.now()});s.run('INSERT INTO users VALUES (?,?,?,?,?)','a','a','x','admin',new Date().toISOString());
+          const src=d.createSource('a',{name:'Linux',stale_seconds:3600});
+          for(const f of ['linux1','linux2'])d.ingest('a',src.id,JSON.parse(fs.readFileSync(process.env.RUNNER_TEMP+'/'+f+'.json','utf8')));
+          const v=d.linuxSecurity().items[0];console.log(JSON.stringify({coverage:v.coverage,changes:v.changes.persistence,files:v.files}));
+          if(!v.changes.persistence.some(c=>c.path==='/etc/cron.d/cg-ci-check'&&c.change==='added'))process.exit(1);
+          if(!s.get(\"SELECT id FROM alerts WHERE rule_id='CG-LINUX-PERSIST-094'\"))process.exit(1);"

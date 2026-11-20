@@ -514,3 +514,7 @@ test('threats show isolated lab detonation as not enabled until a sandbox is reg
   const app=read('app.js');assert.match(app,/\/api\/detonations/);
   for(const marker of ['Isolated lab detonation','Not enabled','No sandbox registered; detonation is not enabled.','Awaiting another administrator','Isolation check stale','CG-093']) assert.ok(app.includes(marker),marker);
 });
+test('sources show Linux security coverage with eBPF reasons, sudo and persistence changes (CG-094)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/linux-security/);
+  for(const marker of ['Linux security: auditd, journald, eBPF, Falco, sudo and persistence','First snapshot (baseline)','Persistence changes','sudo bash scripts/agent/linux-security.sh','CG-094']) assert.ok(app.includes(marker),marker);
+});
