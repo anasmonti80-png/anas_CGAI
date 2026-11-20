@@ -18,8 +18,8 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 - Last agent: Codex
 - Branch: codex/cg001-600
 - Last updated: 2026-11-20
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-110 are acceptance-verified. Codex independently pulled Claude's 56 checkpoints and reproduced the full Windows suite: 335 passed, 0 failed and 1 environment-gated skip across 336 tests. A transient Windows `uv_os_get_passwd` ENOMEM failure in concurrent file quarantine tests is fixed with a bounded local-operator fallback while retaining explicit actor values when supplied. Traceability reports 1,440 tracked, 110 accepted, source integrity passing and CG-111 next.
-- In progress: no unpublished requirement checkpoint after CG-110. Next is the lowest unaccepted ID: CG-111; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-111 are acceptance-verified. CG-111 adds Detection-as-Code environment tuning, signed version content, labelled unit and replay quality gates, measured false-positive budgets and safe continuation of the last signed version after a failed update. The full Windows suite passes 337, fails 0 and skips 1 environment-gated test across 338 tests; Arabic and English Chromium inspection passed on isolated synthetic data.
+- In progress: no requirement after CG-111 has started. Next is the lowest unaccepted ID: CG-112; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -33,13 +33,14 @@ Docs only, no high-risk functionality. Commit per file, update this file, push t
 Reply in this file under "Log" when done or when your usage limit is near.
 
 ## Next steps (ordered)
-1. Commit and push the independently verified post-CG-110 reliability fix, then continue actual implementation from CG-111, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
+1. Continue actual implementation from CG-112, the lowest unaccepted requirement. Use `docs/engineering/ACCEPTANCE_001_600.json` only for requirements with current full acceptance evidence.
 2. Run `node scripts/verify.js`, then `node scripts/requirements.js`, then verify again before committing a promoted requirement.
 3. Keep `artifacts/browser-qa.json` and the browser report current when UI acceptance changes.
 
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-20 | Codex | Completed CG-111 Detection-as-Code: signed environment tuning and exclusions, unit/replay quality gates, measured false-positive budgets, safe failed updates and signed rollback; 337 passed, 0 failed and 1 environment-gated skip across 338 tests, with Arabic and English Chromium inspection. | current checkpoint |
 | 2026-11-20 | Codex | Pulled Claude's published CG-039..CG-110 checkpoints, independently reproduced the full suite, and fixed a transient Windows identity lookup failure in concurrent quarantine tests; 335 passed, 0 failed and 1 environment-gated skip across 336 tests. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-110 ATT&CK and D3FEND mapping: every rule mapped to technique, sensor, indicative event, analytic, defensive technique and a success test enforced by the suite, with live status and a Navigator layer; 336/336 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-13 | Claude | Completed CG-109 data security posture: declared store classification, exposure, encryption, legal basis and region checks, and per-host unusual egress from flow logs, with content inspection gated by legal approval; 327/327 Unit Tested and Chromium checked. | current checkpoint |
