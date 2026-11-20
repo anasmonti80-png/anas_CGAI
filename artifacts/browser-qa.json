@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T16:13:52.832Z",
+  "at": "2026-11-20T16:20:05.414Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -116,7 +116,8 @@
     "supply_chain": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-106", "real_review": "CyberGuard repository: 337 files, no findings", "vulnerabilities_panel": "Software supply chain", "console_errors": 0},
     "web_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-107", "real_check": "CyberGuard itself: page, API 401 and health with rate limit present, no findings", "found_and_fixed": "unauthenticated API requests were not rate limited", "console_errors": 0},
     "email_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-108", "live_dns": "example.com: SPF -all, DMARC reject, one low finding (no rua)", "phishing_message": "6 findings", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 108, "next": "CG-109"}
+    "data_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-109", "stores": 2, "public_confidential_store": "critical finding in Arabic", "unusual_egress": "10.0.5.20 2048 MB vs 30 MB daily median", "alerts": ["CG-DATA-109 critical", "CG-DATA-109 high", "CG-DATA-EGRESS-109 high"], "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 109, "next": "CG-110"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

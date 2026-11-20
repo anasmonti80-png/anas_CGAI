@@ -573,3 +573,8 @@ test('identity shows email security: domain posture, analysed messages and forwa
   const app=read('app.js');assert.match(app,/\/api\/email-security/);
   for(const marker of ['Email security and phishing','No analysed messages.','Mail forwarding rules','node scripts/email-security.js domain','CG-108']) assert.ok(app.includes(marker),marker);
 });
+
+test('cloud shows data security posture and unusual egress without content inspection (CG-109)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/data-security/);
+  for(const marker of ['Data security posture and DLP','No data stores declared.','Approved for content inspection','Unusual egress','CG-109']) assert.ok(app.includes(marker),marker);
+});
