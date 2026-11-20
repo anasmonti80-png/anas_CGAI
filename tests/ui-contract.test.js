@@ -561,3 +561,7 @@ test('cloud shows Kubernetes and container security with per-cluster source cove
   const app=read('app.js');assert.match(app,/\/api\/kubernetes-security/);
   for(const marker of ['Kubernetes and container security','Audit log','Image scans','node scripts/k8s-to-telemetry.js','CG-105']) assert.ok(app.includes(marker),marker);
 });
+test('vulnerabilities show the software supply chain per project: SBOM, CI/CD review and artifact verification (CG-106)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/supply-chain/);
+  for(const marker of ['Software supply chain','Affected dependencies','CI/CD review','Published artifacts','Failed verification','CG-106']) assert.ok(app.includes(marker),marker);
+});

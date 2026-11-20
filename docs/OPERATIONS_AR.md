@@ -168,3 +168,9 @@
 - سجل التدقيق: `node scripts/k8s-to-telemetry.js audit --input audit.jsonl --cluster-ref <عنقود> --output out.json` يرفع CG-K8S-AUDIT-105 على فتح طرفية في الحاويات، وقراءة الأسرار من غير مكونات النظام، ومنح cluster-admin، والأحمال المميزة (privileged/hostPID/hostNetwork)، والوصول المجهول المسموح. لا تُنسخ أجسام الطلبات.
 - RBAC وPod Security Admission: `rbac --clusterrolebindings <kubectl get clusterrolebindings -o json> --clusterroles ... --namespaces ...` (CG-K8S-RBAC-105).
 - صور الحاويات: `trivy --input <trivy image -f json>` يرفع CG-CONTAINER-VULN-105 للثغرات الحرجة التي لها إصلاح. وتنبيهات Falco تأتي بصيغة falco-json. ودعم EKS/AKS/GKE المُدار مرحلة لاحقة.
+
+## سلسلة توريد البرمجيات (CG-106)
+
+- SBOM: `node scripts/supply-chain.js sbom --input sbom.json --osv osv.json --project <اسم> --output out.json` يقرأ CycloneDX أو SPDX ويطابق التبعيات مع نشرات OSV (يرفع CG-SUPPLY-106 لما له إصلاح) ويعد المكونات بلا معرف حزمة أو بصمة أو ترخيص.
+- CI/CD: `ci --repo <مسار>` يكشف الإجراءات الخارجية غير المثبتة على بصمة، وpull_request_target الذي يجلب شيفرة غير موثوقة، وصلاحيات الرمز الواسعة أو غير المقيدة، وطباعة الأسرار، والأسرار المحفوظة في المستودع (دون تخزين قيمتها). مستودع CyberGuard نفسه نظيف.
+- البرامج المنشورة: `verify --artifact <ملف> --checksums SHA256SUMS --signature <توقيع> --public-key <مفتاح> --provenance <SLSA> --trusted-builder <id>`.

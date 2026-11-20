@@ -10,11 +10,12 @@ import { createApp } from '../server.js';
 import { totpCode } from '../lib/auth.js';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url)), TENANTS = path.join(ROOT, 'scripts', 'tenants.js');
-const freePort = () => new Promise(r => { const s = net.createServer().listen(0, '127.0.0.1', () => { const { port } = s.address(); s.close(() => r(port)); }); });
+// Both ports are held open together before release, so the operating system cannot hand out the same port twice.
+const freePorts = async n => { const servers = await Promise.all(Array.from({ length: n }, () => new Promise(r => { const s = net.createServer().listen(0, '127.0.0.1', () => r(s)); }))), ports = servers.map(s => s.address().port); await Promise.all(servers.map(s => new Promise(r => s.close(r)))); return ports; };
 const asset = { external_id: 'tenant-host-01', hostname: 'TENANT-01', os_family: 'linux', device_type: 'server', addresses: ['192.0.2.30'] };
 
 test('each tenant is a separate instance with its own data, keys, audit chain and identities (CG-059)', async t => {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cg059-tenants-')), [pa, pb] = [await freePort(), await freePort()];
+  const root = fs.mkdtempSync(path.join(os.tmpdir(), 'cg059-tenants-')), [pa, pb] = await freePorts(2);
   const cli = (...a) => execFileSync(process.execPath, [TENANTS, ...a, '--root', root], { encoding: 'utf8', stdio: 'pipe' });
   cli('add', 'acme-bank', '--port', String(pa)); cli('add', 'north-clinic', '--port', String(pb));
   assert.throws(() => cli('add', 'acme-bank', '--port', '45999'), /already exists/); assert.throws(() => cli('add', 'other-co', '--port', String(pa)), /already used by acme-bank/); assert.throws(() => cli('add', 'Bad_ID', '--port', '45998'), /tenant id/);
