@@ -242,6 +242,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const detonationDecision=p.match(/^\/api\/detonations\/(\d{1,9})\/(approve|reject)$/);if(detonationDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,sandbox.decide(user.id,Number(detonationDecision[1]),detonationDecision[2]));}
       if(p==='/api/firewall-rules/what-if'&&method==='POST'){roles(['admin','analyst']);return send(res,200,domain.firewallChangeImpact(await body(req)));}
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
+      if(p==='/api/management-plane'&&method==='GET') return send(res,200,domain.managementPlane());
       if(p==='/api/ot-safety'&&method==='GET'){roles(['admin','analyst']);return send(res,200,otSafety.overview());}
       if(p==='/api/ot-safety/approvers'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,otSafety.designate(user.id,await body(req)));}
       if(p==='/api/ot-safety/approvals'&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);return send(res,201,otSafety.approve(user.id,await body(req)));}

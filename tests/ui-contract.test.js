@@ -545,3 +545,7 @@ test('asset details show the verified IP-MAC-port-VLAN-user path before isolatio
   const app=read('app.js');assert.match(app,/\/network-path`/);
   for(const marker of ['Path verification before isolation','Safe to isolate','Not safe to isolate','Blocks isolation','MAC → switch port','CG-101']) assert.ok(app.includes(marker),marker);
 });
+test('the network map shows management plane protection with session violations and insecure protocols (CG-102)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/management-plane/);
+  for(const marker of ['Management plane protection','Within the approved procedure','Not covered by a policy','Insecure management protocols in configurations','CG-102']) assert.ok(app.includes(marker),marker);
+});

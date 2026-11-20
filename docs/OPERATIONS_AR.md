@@ -147,3 +147,8 @@
 - من كل محول وصول (أوامر قراءة فقط): `node scripts/port-map.js --switch-ref <محول> --authorization-ref <مرجع> --output out.json --mac-table <show mac address-table> --switchport <show interfaces switchport> --arp <show ip arp> --lldp <show lldp neighbors detail>`.
 - يتحقق CyberGuard من المسار IP ← MAC ← منفذ المحول ← VLAN ← المستخدم (من سجلات NAC) ← الأصل، ويرفض العزل إذا كان العنوان يرتبط بعدة عناوين MAC، أو المنفذ trunk أو صاعدًا لمحول/موجه، أو يخدم مضيفًا افتراضيًا أو عدة أجهزة، أو VLAN لا تطابق.
 - إيقاف منفذ محول أو عزل NAC لا يُقبل إلا بعد هذا التحقق، ويظهر المسار في نافذة تفاصيل الأصل.
+
+## حماية مستوى الإدارة (CG-102)
+
+- سياسة `management.policy` تحدد الأجهزة المشمولة، والمضيفات الوسيطة أو شبكات الإدارة المعتمدة، والبروتوكولات المعتمدة (ssh/https/snmpv3/...)، واشتراط مرجع تغيير، وساعات الإدارة.
+- كل جلسة إدارية موثقة (`remote.authenticated`) على جهاز مشمول تُفحص: مصدر غير معتمد أو بروتوكول غير معتمد أو بلا مرجع أو خارج الساعات دون مرجع طارئ ترفع CG-MGMT-ACCESS-102. وتُعرض الأجهزة التي ما زالت تفعّل Telnet أو HTTP أو SNMPv1/v2c.
