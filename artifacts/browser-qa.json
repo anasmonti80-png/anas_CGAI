@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T09:54:58.686Z",
+  "at": "2026-11-20T09:59:49.063Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -107,7 +107,8 @@
     "firewall_review": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-097", "policies_panel": "Firewall review: impact before change", "traffic_classes_shown": "ingress 2, egress 1, east-west 1", "what_if_result": "adding an SSH rule at the top opens 2 flows, including from the blocked 198.51.100.0/24 range, and raises an admin exposure and an overlap", "console_errors": 0},
     "nac_posture": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-098", "network_map_panel": "Zero Trust and NAC", "sites": {"Branch-7": 0, "HQ": 90}, "observed_counts_shown": true, "console_errors": 0},
     "network_correlation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-099", "threats_panel": "Network threat correlation across sources", "findings": 2, "confirming_sources": "DNS + flows + IDS + proxy + TLS", "limits_arabic": true, "console_errors": 0, "also_fixed": "a DNS anchor took the resolver as destination"},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 99, "next": "CG-100"}
+    "ot_safety": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-100", "discovery_panel": "OT/ICS safety mode", "devices": ["PLC-LINE-3 with 5 findings", "SIS-BOILER safety system with no findings"], "exclusions_shown": true, "nist_guidance_arabic": true, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 100, "next": "CG-101"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

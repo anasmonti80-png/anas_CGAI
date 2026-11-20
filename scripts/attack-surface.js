@@ -22,7 +22,10 @@ if (fs.existsSync(output)) { console.error('Output already exists. Choose a new 
 let nmap = null, tool = 'tcp-connect';
 if (args.includes('--nmap')) { const v = await nmapAvailable(); if (!v) { console.error('nmap is not installed (Linux: sudo apt install nmap). Run without --nmap to use TCP connect checks.'); process.exit(1); } nmap = runNmap; tool = 'nmap'; console.error(`Using nmap ${v} service detection on in-scope addresses only.`); }
 try {
-  const result = await collect(JSON.parse(fs.readFileSync(scopeFile, 'utf8')), { nmap, log: m => console.error(`checking ${m}`) });
+  const scope = JSON.parse(fs.readFileSync(scopeFile, 'utf8'));
+  // CG-100 --ot-exclusions <file>: the exclusions list from GET /api/ot-safety (OT addresses are never probed).
+  if (flag('--ot-exclusions')) { const ex = JSON.parse(fs.readFileSync(flag('--ot-exclusions'), 'utf8')); scope.exclusions = [...(scope.exclusions || []), ...(Array.isArray(ex) ? ex : ex.exclusions || [])]; }
+  const result = await collect(scope, { nmap, log: m => console.error(`checking ${m}`) });
   fs.writeFileSync(output, JSON.stringify(toTelemetry(result, { tool }), null, 2), { mode: 0o600, flag: 'wx' });
   const findings = result.observations.flatMap(o => o.findings), notProbed = result.observations.flatMap(o => o.not_probed);
   console.log(JSON.stringify({ targets: result.observations.length, open_services: result.observations.reduce((n, o) => n + o.services.length, 0), findings: findings.length, high_or_critical: findings.filter(f => ['high', 'critical'].includes(f.severity)).length, not_probed: notProbed.length, tool, output }, null, 2));

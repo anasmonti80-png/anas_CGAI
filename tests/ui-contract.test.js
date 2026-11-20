@@ -537,3 +537,7 @@ test('threats show cross-source network correlation with confirming sources and 
   const app=read('app.js');assert.match(app,/\/api\/network-correlation/);
   for(const marker of ['Network threat correlation across sources','Confirming sources','Algorithm-like domain','TLS without server name','No correlated threats in the last 24 hours.','CG-099']) assert.ok(app.includes(marker),marker);
 });
+test('discovery shows OT/ICS safety mode with passive-first, scan exclusions, safety approvals and NIST SP 800-82 guidance (CG-100)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/ot-safety/);
+  for(const marker of ['OT/ICS safety mode','Passive first','Addresses excluded from any active scan','Actions awaiting safety approval','Safety system','CG-100']) assert.ok(app.includes(marker),marker);
+});
