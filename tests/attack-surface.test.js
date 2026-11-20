@@ -29,7 +29,8 @@ test('the attack surface scope must be authorized, current, owned and narrow (CG
 test('a real TLS service and DNS records are checked; names resolving outside the authorized ranges are never contacted (CG-072)', async t => {
   const cert = selfSignedCertificate({ commonName: 'portal.example.org', hosts: ['portal.example.org'], days: 10 });
   const tlsServer = tls.createServer({ cert: cert.cert, key: cert.key, minVersion: 'TLSv1.2' }, s => s.on('data', () => s.end('HTTP/1.1 200 OK\r\nServer: synthetic\r\nContent-Length: 0\r\n\r\n')));
-  const closed = net.createServer(); const tlsPort = await listen(tlsServer), closedPort = await listen(closed); await new Promise(r => closed.close(r));
+  // Port 1 (tcpmux) has no listener on developer machines or CI runners; a just-released ephemeral port could be reused by a parallel test.
+  const tlsPort = await listen(tlsServer), closedPort = 1;
   t.after(() => tlsServer.close());
   const contacted = [], connect = (ip, port) => { contacted.push(ip); return tcpConnect(ip, port); };
   const records = { 'example.org': { A: ['127.0.0.1', '198.51.100.7'], TXT: [['cyberguard-verify=tok-123'], ['v=other']], MX: [{ exchange: 'mail.example.org' }] }, 'other.example.org': { A: ['127.0.0.1'], TXT: [['cyberguard-verify=wrong']] } };

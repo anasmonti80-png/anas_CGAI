@@ -526,3 +526,6 @@ test('the network map shows posture by area with not-collected and not-readable 
   const app=read('app.js');assert.match(app,/\/api\/network-posture/);
   for(const marker of ['Network posture by area','Not collected','Not readable','Not in configuration','node scripts/network-posture.js','CG-096']) assert.ok(app.includes(marker),marker);
 });
+test('firewall review separates traffic classes and computes the impact of a change before applying it (CG-097)',()=>{
+  const app=read('app.js');for(const marker of ['/api/firewall-rules/what-if','Firewall review: impact before change','Compute impact without applying','Partial overlap, different action','East-west fully open','Unfiltered egress','Flows opened','CG-097']) assert.ok(app.includes(marker),marker);
+});

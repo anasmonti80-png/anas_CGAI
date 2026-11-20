@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T09:40:22.482Z",
+  "at": "2026-11-20T09:46:52.162Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -104,7 +104,8 @@
     "linux_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-094", "sources_panel": "Linux security: auditd, journald, eBPF, Falco, sudo and persistence", "change_shown": "added /etc/cron.d/update-check", "arabic_ebpf_reason": true, "console_errors": 0, "also_fixed": "the NOPASSWD count field was hidden by secret redaction because its name contained passwd; renamed to no_prompt_rules"},
     "mobile_coverage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-095", "sources_panel": "macOS, mobile and BYOD coverage", "platforms": ["macOS", "iOS", "Android", "Windows"], "capability_matrix_arabic": true, "byod_pseudonymised": true, "console_errors": 0},
     "network_posture": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-096", "network_map_panel": "Network posture by area", "areas": 11, "findings": 18, "arabic_findings": true, "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 96, "next": "CG-097"}
+    "firewall_review": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-097", "policies_panel": "Firewall review: impact before change", "traffic_classes_shown": "ingress 2, egress 1, east-west 1", "what_if_result": "adding an SSH rule at the top opens 2 flows, including from the blocked 198.51.100.0/24 range, and raises an admin exposure and an overlap", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 97, "next": "CG-098"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
