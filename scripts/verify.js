@@ -18,4 +18,6 @@ fs.mkdirSync(path.join(ROOT,'artifacts'),{recursive:true});
 fs.writeFileSync(path.join(ROOT,'artifacts/tests.tap'),run.stdout);
 fs.writeFileSync(path.join(ROOT,'artifacts/verification.json'),JSON.stringify(report,null,2)+'\n');
 process.stdout.write(run.stdout);if(run.stderr)process.stderr.write(run.stderr);
+// In GitHub Actions, failing tests become annotations (readable from the public checks API without signing in).
+if(process.env.GITHUB_ACTIONS==='true'&&run.status!==0){const out=run.stdout.split('\n');out.forEach((line,i)=>{const m=/^\s*not ok \d+ - (.*)$/.exec(line);if(!m)return;const detail=out.slice(i+1,i+40).filter(l=>/error:|message:|expected:|actual:|code:|location:/.test(l)).slice(0,6).map(l=>l.trim()).join(' | ');console.log(`::error title=${m[1].replace(/[\r\n:,]/g,' ').slice(0,180)}::${detail.replace(/[\r\n]/g,' ').slice(0,900)||'see test output'}`);});}
 console.log(JSON.stringify(report));process.exitCode=run.status===0?0:1;
