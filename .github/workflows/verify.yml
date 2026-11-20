@@ -133,3 +133,16 @@ jobs:
           node -e "const t=require(process.argv[1]);const s=t.events.flatMap(e=>e.details.services);console.log(JSON.stringify(s));if(!s.some(x=>x.port===4310&&x.via==='nmap'))process.exit(1);if(t.events[0].details.tool!=='nmap')process.exit(1)" "$RUNNER_TEMP/easm-nmap.json"
           node scripts/attack-surface.js scan --scope "$RUNNER_TEMP/scope.json" --output "$RUNNER_TEMP/easm-tcp.json"
           node -e "const t=require(process.argv[1]);if(!t.events.flatMap(e=>e.details.services).some(x=>x.port===4310&&x.via==='tcp-connect'))process.exit(1)" "$RUNNER_TEMP/easm-tcp.json"
+      - name: Triage the EICAR test file with Linux YARA and quarantine it with a chain of custody (CG-092)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get install -y -qq yara >/dev/null
+          yara --version
+          mkdir -p "$RUNNER_TEMP/triage"
+          printf '%s' 'X5O!P%@AP[4\PZX54(P^)7CC)7}$EICAR-STANDARD-ANTIVIRUS-TEST-FILE!$H+H*' > "$RUNNER_TEMP/triage/eicar.com"
+          printf 'benign text\n' > "$RUNNER_TEMP/triage/readme.txt"
+          printf 'rule EICAR_Test_File : test {\n  meta:\n    severity = "high"\n  strings:\n    $e = "EICAR-STANDARD-ANTIVIRUS-TEST-FILE"\n  condition:\n    $e\n}\n' > "$RUNNER_TEMP/eicar.yar"
+          node scripts/file-triage.js scan "$RUNNER_TEMP/triage/eicar.com" "$RUNNER_TEMP/triage/readme.txt" --rules "$RUNNER_TEMP/eicar.yar" --yara --output "$RUNNER_TEMP/triage.json" --quarantine "$RUNNER_TEMP/quarantine" --reason "CI EICAR triage"
+          test ! -e "$RUNNER_TEMP/triage/eicar.com" && test -e "$RUNNER_TEMP/triage/readme.txt"
+          node scripts/file-triage.js verify-custody --quarantine "$RUNNER_TEMP/quarantine"
+          node -e "const t=require(process.argv[1]);const e=t.events.find(x=>x.details.name==='eicar.com');console.log(JSON.stringify(e.details.yara));if(e.details.verdict!=='malicious'||e.details.yara[0].engine!=='yara'||e.details.quarantine.state!=='quarantined')process.exit(1)" "$RUNNER_TEMP/triage.json"

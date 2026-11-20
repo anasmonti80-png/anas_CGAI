@@ -506,3 +506,7 @@ test('vulnerabilities show the external attack surface of authorized assets with
 test('vulnerabilities show prevention governance with owners, due dates, time-boxed exceptions and quality measures (CG-074)',()=>{
   const app=read('app.js');for(const marker of ['/api/vulnerability-governance','/api/vulnerability-exceptions','Prevention priority governance and quality','SLA compliance','Time-boxed exception','Input completeness','Approve exception (recent MFA required)','CG-074']) assert.ok(app.includes(marker),marker);
 });
+test('threats show suspicious file triage without execution with YARA, signature, reputation and quarantine (CG-092)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/file-triage/);
+  for(const marker of ['Suspicious file triage without execution','YARA rules','Known-bad hash','Not available on this system','node scripts/file-triage.js scan','CG-092']) assert.ok(app.includes(marker),marker);
+});

@@ -229,6 +229,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const hypothesisDecision=p.match(/^\/api\/hypotheses\/(\d{1,9})\/(approve|reject|retire)$/);if(hypothesisDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);const input=object(await body(req),['note'],'hypothesis_decision');return send(res,200,hypotheses.decide(user.id,Number(hypothesisDecision[1]),hypothesisDecision[2],input.note));}
       if(p==='/api/vulnerability-governance'&&method==='GET') return send(res,200,domain.vulnerabilityGovernance());
       if(p==='/api/vulnerability-exceptions'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,domain.createVulnerabilityException(user.id,await body(req)));}
+      if(p==='/api/file-triage'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.fileTriage());}
       if(p==='/api/attack-surface'&&method==='GET') return send(res,200,domain.attackSurface());
       if(p==='/api/incident-studies'&&method==='GET') return send(res,200,domain.incidentStudies({q:url.searchParams.get('q')||''}));
       if(p==='/api/reconciliation'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.reconciliation());}
