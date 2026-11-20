@@ -557,3 +557,7 @@ test('cloud shows detection coverage per provider and domain with control-plane-
   const app=read('app.js');assert.match(app,/\/api\/cloud-detection-coverage/);
   for(const marker of ['Cloud detection coverage','Control plane only','Visible, no detection','Blind','CG-104']) assert.ok(app.includes(marker),marker);
 });
+test('cloud shows Kubernetes and container security with per-cluster source coverage (CG-105)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/kubernetes-security/);
+  for(const marker of ['Kubernetes and container security','Audit log','Image scans','node scripts/k8s-to-telemetry.js','CG-105']) assert.ok(app.includes(marker),marker);
+});

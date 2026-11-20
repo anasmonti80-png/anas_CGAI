@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T10:30:39.222Z",
+  "at": "2026-11-20T10:37:49.111Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -112,7 +112,8 @@
     "management_plane": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-102", "network_map_panel": "Management plane protection", "sessions": 2, "violating_session": "RDP from 10.20.10.21 without reference: 3 violations", "console_errors": 0, "also_fixed": "the policy field require_authorization_ref would have been erased by the secret redactor; renamed to reference_required"},
     "ocsf": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-103", "events_panel": "OCSF normalization layer", "classes_shown": ["Network Activity", "HTTP Activity", "Detection Finding", "DNS Activity"], "console_errors": 0, "also_fixed": "Suricata alerts and DNS in one format were shown as one class; quality is now per format and class"},
     "cloud_coverage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-104", "cloud_panel": "Cloud detection coverage", "aws": "identity, compute, keys, network, logging covered; storage control plane only", "azure_gcp": "blind (no audit log received)", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 104, "next": "CG-105"}
+    "kubernetes": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-105", "cloud_panel": "Kubernetes and container security", "cluster": "prod-eu with audit, RBAC/PSA and one image scan", "findings": 10, "console_errors": 0, "also_fixed": "the built-in system:masters binding and anonymous /version were flagged as noise"},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 105, "next": "CG-106"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

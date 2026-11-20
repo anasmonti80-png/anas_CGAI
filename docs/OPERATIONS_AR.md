@@ -162,3 +162,9 @@
 
 - صفحة السحابة تعرض لكل مزود (AWS وAzure وGoogle Cloud) ولكل مجال (الهوية، الحوسبة، التخزين، المفاتيح، الشبكة، السجلات) هل وصل سجل التدقيق وملاحظات التهديد وسجلات التدفق خلال 30 يومًا، وكم قاعدة وملاحظة تغطيه: مغطى، أو مستوى التحكم فقط (التخزين يحتاج سجلات البيانات)، أو مرئي بلا قواعد، أو غير مرئي.
 - إذا كانت حسابات مزود مجرودة ولم يصل سجل تدقيقها خلال 30 يومًا تُرفع CG-CLOUD-COVERAGE-104.
+
+## أمان Kubernetes والحاويات (CG-105)
+
+- سجل التدقيق: `node scripts/k8s-to-telemetry.js audit --input audit.jsonl --cluster-ref <عنقود> --output out.json` يرفع CG-K8S-AUDIT-105 على فتح طرفية في الحاويات، وقراءة الأسرار من غير مكونات النظام، ومنح cluster-admin، والأحمال المميزة (privileged/hostPID/hostNetwork)، والوصول المجهول المسموح. لا تُنسخ أجسام الطلبات.
+- RBAC وPod Security Admission: `rbac --clusterrolebindings <kubectl get clusterrolebindings -o json> --clusterroles ... --namespaces ...` (CG-K8S-RBAC-105).
+- صور الحاويات: `trivy --input <trivy image -f json>` يرفع CG-CONTAINER-VULN-105 للثغرات الحرجة التي لها إصلاح. وتنبيهات Falco تأتي بصيغة falco-json. ودعم EKS/AKS/GKE المُدار مرحلة لاحقة.

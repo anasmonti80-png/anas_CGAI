@@ -1,0 +1,54 @@
+{
+ "apiVersion": "v1",
+ "kind": "List",
+ "items": [
+  {
+   "kind": "ClusterRoleBinding",
+   "metadata": {
+    "name": "cluster-admin"
+   },
+   "roleRef": {
+    "kind": "ClusterRole",
+    "name": "cluster-admin"
+   },
+   "subjects": [
+    {
+     "kind": "Group",
+     "name": "system:masters"
+    }
+   ]
+  },
+  {
+   "kind": "ClusterRoleBinding",
+   "metadata": {
+    "name": "temp-admin"
+   },
+   "roleRef": {
+    "kind": "ClusterRole",
+    "name": "cluster-admin"
+   },
+   "subjects": [
+    {
+     "kind": "User",
+     "name": "contractor-x"
+    }
+   ]
+  },
+  {
+   "kind": "ClusterRoleBinding",
+   "metadata": {
+    "name": "view-all"
+   },
+   "roleRef": {
+    "kind": "ClusterRole",
+    "name": "view"
+   },
+   "subjects": [
+    {
+     "kind": "Group",
+     "name": "system:authenticated"
+    }
+   ]
+  }
+ ]
+}
