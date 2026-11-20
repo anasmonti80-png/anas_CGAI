@@ -510,3 +510,7 @@ test('threats show suspicious file triage without execution with YARA, signature
   const app=read('app.js');assert.match(app,/\/api\/file-triage/);
   for(const marker of ['Suspicious file triage without execution','YARA rules','Known-bad hash','Not available on this system','node scripts/file-triage.js scan','CG-092']) assert.ok(app.includes(marker),marker);
 });
+test('threats show isolated lab detonation as not enabled until a sandbox is registered, with independent approval (CG-093)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/detonations/);
+  for(const marker of ['Isolated lab detonation','Not enabled','No sandbox registered; detonation is not enabled.','Awaiting another administrator','Isolation check stale','CG-093']) assert.ok(app.includes(marker),marker);
+});

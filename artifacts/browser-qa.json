@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T09:19:32.196Z",
+  "at": "2026-11-20T09:23:59.950Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -100,7 +100,8 @@
     "attack_surface": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-072", "real_local_self_check": "scope 127.0.0.1/32 on the owner workstation: 445/smb, 3389/rdp, 5985/winrm open, 3 high or critical findings", "vulnerabilities_panel": "External attack surface of authorized assets", "mobile_overflow": false, "console_errors": 0},
     "vulnerability_governance": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-074", "vulnerabilities_panel": "Prevention priority governance and quality", "open": 3, "overdue_kev_item_shown": true, "input_completeness_shown": true, "exception_button": true, "mobile_overflow": false, "console_errors": 0},
     "file_triage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-092", "real_files": "Windows notepad.exe trusted with a valid Microsoft signature; synthetic marker file malicious and quarantined", "threats_panel": "Suspicious file triage without execution", "mobile_overflow": false, "console_errors": 0, "also_fixed": "option values (rules file, output) were treated as files to scan and could be quarantined"},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 92, "next": "CG-093"}
+    "detonation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-093", "threats_panel": "Isolated lab detonation", "default_state": "Not enabled, no sandbox registered", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 93, "next": "CG-094"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

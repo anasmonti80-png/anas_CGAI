@@ -13,6 +13,7 @@ import { SecretStore } from './lib/secret-store.js';
 import { TenantPolicy } from './lib/tenancy.js';
 import { Rollout } from './lib/rollout.js';
 import { Hypotheses } from './lib/hypotheses.js';
+import { Sandbox } from './lib/sandbox.js';
 import { RuleSigner } from './lib/rule-signing.js';
 import { evidenceKinds } from './lib/domain.js';
 import { readiness as developmentPromptReadiness } from './scripts/development-prompt.js';
@@ -52,7 +53,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const sandbox=new Sandbox(store,{clock,domain});
   const setupFile=path.join(dataDir,'setup-token');
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -93,9 +94,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const responseJobs=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs$/);
       const responseResult=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/response-jobs\/([a-f0-9-]{36})\/result$/);
       const secretRelease=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/secrets\/([a-z0-9._-]{3,100})$/);
+      const sandboxIsolation=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/sandbox\/isolation$/),sandboxJobs=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/sandbox\/jobs$/),sandboxReport=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/sandbox\/jobs\/(\d{1,9})\/report$/);
       if(mutation) {
         fail(method==='POST',405,'method_not_allowed');
-        if (!(bearer&&(ingest||responseResult||secretRelease))) fail(req.headers.origin===`${secureFor(req)?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
+        if (!(bearer&&(ingest||responseResult||secretRelease||sandboxIsolation||sandboxReport))) fail(req.headers.origin===`${secureFor(req)?'https':'http'}://${req.headers.host}`,403,'origin_not_allowed');
       }
       if(method==='GET' && STATIC.has(p)) {
         const file=path.join(ROOT,'public',p==='/'?'index.html':p.slice(1));
@@ -133,6 +135,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
         const source=domain.sourceToken(bearer,responseJobs[1]);
         return send(res,200,domain.responseJobs(source.id));
       }
+      // CG-093 the registered isolated sandbox reports its isolation, fetches approved jobs and reports results with its own token.
+      if(bearer&&sandboxIsolation&&method==='POST'){const source=domain.sourceToken(bearer,sandboxIsolation[1]);return send(res,200,sandbox.isolationCheck(source.id,await body(req)));}
+      if(bearer&&sandboxJobs&&method==='GET'){const source=domain.sourceToken(bearer,sandboxJobs[1]);return send(res,200,sandbox.jobsFor(source.id));}
+      if(bearer&&sandboxReport&&method==='POST'){const source=domain.sourceToken(bearer,sandboxReport[1]);return send(res,200,sandbox.report(source.id,Number(sandboxReport[2]),await body(req)));}
       // CG-055 a delegated connector source fetches a secret with its own token, for a stated purpose (audited).
       if(bearer && secretRelease && method==='POST') { const source=domain.sourceToken(bearer,secretRelease[1]); const input=object(await body(req),['purpose'],'secret_release'); return send(res,200,secrets.release(source.id,secretRelease[2],input.purpose)); }
       if(bearer && responseResult && method==='POST') {
@@ -229,6 +235,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const hypothesisDecision=p.match(/^\/api\/hypotheses\/(\d{1,9})\/(approve|reject|retire)$/);if(hypothesisDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);const input=object(await body(req),['note'],'hypothesis_decision');return send(res,200,hypotheses.decide(user.id,Number(hypothesisDecision[1]),hypothesisDecision[2],input.note));}
       if(p==='/api/vulnerability-governance'&&method==='GET') return send(res,200,domain.vulnerabilityGovernance());
       if(p==='/api/vulnerability-exceptions'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,domain.createVulnerabilityException(user.id,await body(req)));}
+      if(p==='/api/detonations'&&method==='GET'){roles(['admin','analyst']);return send(res,200,sandbox.overview());}
+      if(p==='/api/sandboxes'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,sandbox.register(user.id,await body(req)));}
+      if(p==='/api/detonations'&&method==='POST'){roles(['admin','analyst']);return send(res,201,sandbox.request(user.id,await body(req)));}
+      const detonationDecision=p.match(/^\/api\/detonations\/(\d{1,9})\/(approve|reject)$/);if(detonationDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,sandbox.decide(user.id,Number(detonationDecision[1]),detonationDecision[2]));}
       if(p==='/api/file-triage'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.fileTriage());}
       if(p==='/api/attack-surface'&&method==='GET') return send(res,200,domain.attackSurface());
       if(p==='/api/incident-studies'&&method==='GET') return send(res,200,domain.incidentStudies({q:url.searchParams.get('q')||''}));
@@ -367,7 +377,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   const checkSecretRotation=()=>{for(const x of secrets.list().filter(x=>x.status==='rotation-overdue'))domain.alert({key:`CG-SECRET-ROTATION-055:${x.ref}:v${x.version}`,rule:'CG-SECRET-ROTATION-055',severity:'medium',title:`Secret rotation overdue / سر متأخر عن التدوير: ${x.ref} (due ${x.rotation_due_at.slice(0,10)})`});};
   const monitor=setInterval(()=>{try{domain.checkHealth();checkSecretRotation();tenancy.maybeRetention();domain.expireStaleResponseJobs();monitorError=false;}catch{monitorError=true;}},30000); monitor.unref();
   const permitExpiryMonitor=setInterval(()=>{try{domain.expireTemporaryPermits();}catch{monitorError=true;}},1000);permitExpiryMonitor.unref();
-  return {server,store,auth,domain,secrets,tenancy,rollout,hypotheses,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
+  return {server,store,auth,domain,secrets,tenancy,rollout,hypotheses,sandbox,checkSecretRotation,setupFile,operatingMode:mode,scheme:tlsMaterial?'https':'http',certificate:tlsMaterial?tlsMaterial.cert:null,listen(port=4310,host='127.0.0.1'){
     fail(['127.0.0.1','::1'].includes(host)||(accessConfig.mode==='vpn'&&host===accessConfig.vpn.listen_host),400,'loopback_only');
     fail(Number.isInteger(port)&&port>=0&&port<=65535,400,'invalid_port');
     // A random port (0) never lands on a port that browsers and fetch refuse by specification (Windows may hand out ports from 1024).
