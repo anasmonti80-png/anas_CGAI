@@ -120,7 +120,8 @@
     "attack_mapping": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-110", "mapped_rules": 80, "attack_techniques": 66, "d3fend_techniques": 52, "techniques_with_sensor_data": 8, "rules_fired": 2, "navigator_layer": "enterprise-attack, 63 techniques, T1133 scored 1 from CG-REMOTE-EXPOSURE", "console_errors": 0},
     "detection_as_code": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-111", "languages_checked": ["ar", "en"], "running_rule": "CG-HYP-0001 v1 signed", "environment": "production", "exclusions": 1, "false_positive_budget_percent": 10, "unit_samples": 2, "replay_events": 1, "failed_update_keeps_signed_version": true, "console_errors": 0, "evidence_visible": true},
     "threat_intelligence_quality": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-112", "languages_checked": ["ar", "en"], "indicators": 2, "trusted": 1, "untrusted": 1, "source_dates_confidence_expiry_visible": true, "redistribution_rights_visible": true, "automatic_blocking_not_allowed_visible": true, "console_errors": 0, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 112, "next": "CG-113"}
+    "multi_signal_correlation": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-113", "languages_checked": ["ar", "en"], "correlations": 1, "domains": ["endpoint", "identity", "network", "cloud"], "raw_alerts": 5, "deduplicated_signals": 4, "important_alerts_preserved": 2, "suppressed_alerts": 0, "asset_context_visible": true, "console_errors": 0, "evidence_visible": true},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 113, "next": "CG-114"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
