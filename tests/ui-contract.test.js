@@ -522,3 +522,7 @@ test('sources show macOS, mobile and BYOD coverage with platform visibility limi
   const app=read('app.js');assert.match(app,/\/api\/mobile-coverage/);
   for(const marker of ['macOS, mobile and BYOD coverage','What management sees','Not visible','Jailbroken','node scripts/mdm-to-telemetry.js','CG-095']) assert.ok(app.includes(marker),marker);
 });
+test('the network map shows posture by area with not-collected and not-readable states (CG-096)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/network-posture/);
+  for(const marker of ['Network posture by area','Not collected','Not readable','Not in configuration','node scripts/network-posture.js','CG-096']) assert.ok(app.includes(marker),marker);
+});

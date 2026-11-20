@@ -113,3 +113,9 @@
 - يصدّر مسؤول Intune قائمة الأجهزة للقراءة فقط (`GET /deviceManagement/managedDevices` بصلاحية DeviceManagementManagedDevices.Read.All)، ثم: `CG_MDM_SALT=<قيمة سرية> node scripts/mdm-to-telemetry.js managedDevices.json out.json`.
 - الأجهزة الشخصية (BYOD) تُحفظ بمرجع مستعار فقط مع وضعها الأمني؛ لا يُحفظ اسم المستخدم ولا الرقم التسلسلي ولا رقم الهاتف ولا IMEI ولا الموقع.
 - التنبيهات: كسر حماية/root (مرتفع)، عدم الامتثال، جهاز مؤسسة غير مشفر، انقطاع أكثر من 7 أيام. وتعرض صفحة المصادر ما تراه الإدارة وما لا تراه لكل منصة حتى لا يُعتبر الجوال المُدار مراقبًا بالكامل.
+
+## وضع الشبكة لكل مجال (CG-096)
+
+- من تصدير `show running-config` مصرح به وللقراءة فقط: `node scripts/network-posture.js running-config.txt --device-ref <جهاز> --authorization-ref <مرجع> --output out.json [--sections acl,nat,...]`.
+- يقيّم IPv4 وIPv6 (مرشحات وRA Guard) وWi-Fi (شبكات مفتوحة/WPA1) وDNS وDHCP (snooping) وVPN (IKE/ESP ضعيفة) وVLAN 1 ومنافذ Trunk (DTP، كل الشبكات، native VLAN 1) وACL (permit ip any any) وNAT الثابت المكشوف وBGP (مصادقة ومرشحات) وOSPF (مصادقة).
+- المجال غير المصدَّر يظهر «لم يُجمع»، والتصدير الذي فيه أخطاء صلاحية يظهر «غير مقروء»؛ ولا يُفترض أن أي منهما آمن. كل ملاحظة ترفع CG-NETPOSTURE-096 مع طريقة الإصلاح.
