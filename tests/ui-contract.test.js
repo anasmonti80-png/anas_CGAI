@@ -606,3 +606,8 @@ test('response shows a read-only preflight across IP, MAC, hostname and cloud id
   const app=read('app.js');assert.match(app,/\/api\/response-preflight/);
   for(const marker of ['Response preflight','Run preflight','Blocking checks','Ready for the governed preview','No action (target and impact only)','CG-117']) assert.ok(app.includes(marker),marker);
 });
+
+test('response shows control outcomes: independent verification, duration in force and failed rollbacks (CG-118)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/control-outcomes/);
+  for(const marker of ['Control outcome verification','Independently verified','Connector-reported only','Rollback failed','still in force','CG-118']) assert.ok(app.includes(marker),marker);
+});
