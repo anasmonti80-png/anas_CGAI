@@ -38,4 +38,14 @@ if (command === 'add') {
     return child;
   });
   for (const s of ['SIGINT', 'SIGTERM']) process.once(s, () => { for (const c of children) c.kill('SIGTERM'); });
-} else die('usage: node scripts/tenants.js add <tenant-id> --port <port> | list | run [--root <dir>]');
+} else if (command === 'verify') {
+  // CG-126 cross-tenant isolation check: separate, non-nested folders and ports, distinct keys, each database bound to its own tenant.
+  const { DatabaseSync } = await import('node:sqlite'), { createHash } = await import('node:crypto'), tenants = load().tenants, problems = [], keys = new Map();
+  const dirs = tenants.map(t => path.resolve(root, t.data_dir));
+  tenants.forEach((t, i) => { dirs.forEach((d, j) => { if (i !== j && (d === dirs[i] || d.startsWith(dirs[i] + path.sep))) problems.push(`${t.tenant}: data folder overlaps ${tenants[j].tenant}`); });
+    if (tenants.filter(x => x.port === t.port).length > 1) problems.push(`${t.tenant}: port ${t.port} shared`);
+    const db = path.join(dirs[i], 'cyberguard.sqlite'), key = db + '.secret-key';
+    if (fs.existsSync(key)) { const h = createHash('sha256').update(fs.readFileSync(key)).digest('hex'); if (keys.has(h)) problems.push(`${t.tenant}: secret key identical to ${keys.get(h)}`); keys.set(h, t.tenant); }
+    if (fs.existsSync(db)) { const conn = new DatabaseSync(db, { readOnly: true }); try { const row = conn.prepare('SELECT tenant FROM instance_identity WHERE id=1').get(); if (row && row.tenant !== t.tenant) problems.push(`${t.tenant}: database is bound to tenant ${row.tenant}`); } catch { } finally { conn.close(); } } });
+  console.log(JSON.stringify({ tenants: tenants.length, isolated: !problems.length, problems }, null, 2)); process.exit(problems.length ? 1 : 0);
+} else die('usage: node scripts/tenants.js add <tenant-id> --port <port> | list | run | verify [--root <dir>]');

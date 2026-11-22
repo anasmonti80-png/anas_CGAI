@@ -652,3 +652,8 @@ test('settings show managed SOC readiness with licence, residency and customer r
   const app=read('app.js');assert.match(app,/\/api\/msoc\/readiness/);assert.match(app,/\/api\/msoc\/customers/);assert.match(app,/msoc_not_ready/);
   for(const marker of ['Managed SOC service readiness','Service cannot be offered yet','Licence number','Inside the Kingdom','Register customer','CG-125']) assert.ok(app.includes(marker),marker);
 });
+
+test('settings show tenant isolation, the residency map, full export and two-person erasure (CG-126)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/data-governance/);assert.match(app,/\/api\/data-governance\/export/);assert.match(app,/erasures\/\$\{/);
+  for(const marker of ['Tenant isolation and data residency','Export all data','Re-enter the identifier','Legal hold','Inside tenant folder','CG-126']) assert.ok(app.includes(marker),marker);
+});

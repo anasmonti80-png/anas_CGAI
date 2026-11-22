@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-22T12:21:36.847Z",
+  "at": "2026-11-22T12:27:25.051Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -133,7 +133,8 @@
     "ai_evaluation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-123", "run_button": "16/16 cases passed", "categories": ["hallucination", "accuracy", "privilege-escalation", "cost", "impact"], "daily_budget": "0/200", "console_errors": 0},
     "nca_compliance": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-124", "profile": "government, uses cloud, critical systems", "applicability": {"ECC-2:2024": "mandatory", "CCC-2:2024": "mandatory", "OTCC-1:2022": "not-applicable", "CSCC-1:2019": "mandatory", "DCC-1:2022": "not-applicable"}, "ecc_2_7": "technical evidence available (CG-109)", "ecc_2_14": "organisational evidence required", "export": "cg.nca-evidence/1 with 24 CCC subdomains", "console_errors": 0},
     "msoc_readiness": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-125", "before_provider_details": "customer refused: licence, residency, analysts, subcontracting, ownership notice, national integration", "after_provider_details": "Tier 2 customer registered", "government_customer_on_tier_2": "refused: licence tier", "console_errors": "only the intended 409 rejections"},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 125, "next": "CG-126"}
+    "data_governance": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-126", "residency": "database declared inside the Kingdom; six data classes all inside the tenant folder", "export": "23 lines with X-Export-SHA256", "erasure": "requested by qa-admin (5 matching), same-admin approval refused, approved by qa-admin2 with MFA: 5 erased", "console_errors": "one 403 from the pre-MFA session check"},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 126, "next": "CG-127"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
