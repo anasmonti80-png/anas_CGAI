@@ -611,3 +611,8 @@ test('response shows control outcomes: independent verification, duration in for
   const app=read('app.js');assert.match(app,/\/api\/control-outcomes/);
   for(const marker of ['Control outcome verification','Independently verified','Connector-reported only','Rollback failed','still in force','CG-118']) assert.ok(app.includes(marker),marker);
 });
+
+test('response shows the four safety tiers, actions awaiting confirmation and change windows (CG-119)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/safety-tiers/);assert.match(app,/\/api\/change-windows/);assert.match(app,/\/confirm/);
+  for(const marker of ['Response safety tiers','Read-only','Low-impact response','Sensitive change','Destructive action','Type the target name','Add change window','CG-119']) assert.ok(app.includes(marker),marker);
+});

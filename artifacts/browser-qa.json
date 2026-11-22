@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-22T11:17:12.176Z",
+  "at": "2026-11-22T11:28:27.538Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -126,7 +126,8 @@
     "hunt_workbench": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-116", "account_hunt": "4 rows (3 failed RDP logons and one RDP session) for finance-admin, top host SRV-01", "saved_hunt": "listed", "note": 201, "report": "4 rows, 1 note, result hash recorded", "fixed_during_qa": "default form times were UTC read as local time; now local", "console_errors": 0},
     "response_preflight": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-117", "mac_plus_hostname": "resolved to WS-ALICE, isolation path verified to acc-sw-01 Gi1/0/5, business service Payroll", "isolate_without_connector": "blocked (connector, management channel)", "conflicting_identifiers": "blocked, names the identifier that matched nothing", "console_errors": 0},
     "control_outcomes": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-118", "governed_actions": 3, "isolation": "verified-effective by an independent probe, rollback failed and still in force with the agent error", "block_ip_contradicted": "ineffective (probe observed reachable)", "block_ip_failed": "execution-failed showing 403 Forbidden", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 118, "next": "CG-119"}
+    "safety_tiers": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-119", "mfa": "QA admin enrolled and verified TOTP", "wrong_typed_name": "refused with an Arabic message", "sensitive_isolation": "confirmed with a declared emergency, then dispatched", "destructive_shutdown": "refused without a change window, dispatched after a window was added from the form and confirmed again", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 119, "next": "CG-120"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
