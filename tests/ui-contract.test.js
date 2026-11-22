@@ -596,3 +596,8 @@ test('vulnerabilities show the detection validation lab with expected and observ
   const app=read('app.js');assert.match(app,/\/api\/validation-lab/);assert.match(app,/lab-run/);
   for(const marker of ['Detection validation lab','Run all scenarios','Expected','Observed','Replays of stored events','CG-115']) assert.ok(app.includes(marker),marker);
 });
+
+test('events show the hunt workbench with time queries, saved hunts, notes and reports (CG-116)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/hunts\/run/);assert.match(app,/hunt-report/);
+  for(const marker of ['Hunt workbench','Run hunt','Save hunt','Saved hunts','No results in this window.','CG-116']) assert.ok(app.includes(marker),marker);
+});

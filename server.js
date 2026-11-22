@@ -1,6 +1,7 @@
 import http from 'node:http';
 import { EvidenceVault, MAX_EVIDENCE_BYTES } from './lib/evidence-vault.js';
 import { ValidationLab } from './lib/validation-lab.js';
+import { HuntWorkbench } from './lib/hunt.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -62,7 +63,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
   const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -260,6 +261,16 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-116 hunt workbench.
+      {let m;
+        if(p==='/api/hunts/run'&&method==='POST'){roles(['admin','analyst']);return send(res,200,hunts.run(await body(req)));}
+        if(p==='/api/hunts'&&method==='GET'){roles(['admin','analyst']);return send(res,200,{items:hunts.list()});}
+        if(p==='/api/hunts'&&method==='POST'){roles(['admin','analyst']);return send(res,201,hunts.save(user.id,await body(req)));}
+        if((m=p.match(/^\/api\/hunts\/([\w-]+)$/))&&method==='GET'){roles(['admin','analyst']);return send(res,200,hunts.get(m[1]));}
+        if((m=p.match(/^\/api\/hunts\/([\w-]+)\/notes$/))&&method==='POST'){roles(['admin','analyst']);return send(res,201,hunts.note(user.id,m[1],await body(req)));}
+        if((m=p.match(/^\/api\/hunts\/([\w-]+)\/reports$/))&&method==='POST'){roles(['admin','analyst']);return send(res,201,hunts.report(user.id,m[1],await body(req)));}
+        if((m=p.match(/^\/api\/hunt-reports\/([\w-]+)$/))&&method==='GET'){roles(['admin','analyst']);return send(res,200,hunts.getReport(m[1]));}
+      }
       // CG-115 detection validation lab (isolated synthetic scenarios and replay of stored events).
       if(p==='/api/validation-lab'&&method==='GET'){roles(['admin','analyst']);return send(res,200,validationLab.view());}
       if(p==='/api/validation-lab/run'&&method==='POST'){roles(['admin','analyst']);const input=await body(req);return send(res,200,input.scenario_id==='all'?validationLab.runAll(user.id):validationLab.runScenario(user.id,input.scenario_id));}
