@@ -626,3 +626,14 @@ test('the AI analyst shows the prompt-injection defense with refusals and a scan
   const app=read('app.js');assert.match(app,/\/api\/ai-guard/);assert.match(app,/\/api\/ai-guard\/scan/);
   for(const marker of ['Prompt-injection defense','Evidence with AI instructions','Refused proposals','Fixed system policy SHA-256','treated as untrusted data','CG-121']) assert.ok(app.includes(marker),marker);
 });
+
+test('AI explanations show dated cited snapshots, uncertainty per claim and stored answers (CG-122)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/ai-answers/);assert.match(app,/groundingHtml\(a\)/);
+  for(const marker of ['Dated sources and uncertainty','Cited snapshots','Stored analyst answers','values hidden','CG-122']) assert.ok(app.includes(marker),marker);
+});
+
+test('viewers can open every page: panels backed by admin or analyst APIs are skipped, not fatal',()=>{
+  const app=read('app.js');assert.match(app,/const optionalApi=p=>canWrite\(\)\?api\(p\):Promise\.resolve\(null\)/);
+  const restricted=/[\[,]api\('\/api\/(ot-safety|hypotheses|threat-intelligence|file-triage|detonations|reconciliation|ocsf\/export|evidence|evidence-integrity|validation-lab|hunts|control-outcomes|safety-tiers|orchestrations|ai-guard)['?]/;
+  assert.doesNotMatch(app,restricted,'a view loads an admin/analyst-only API without optionalApi');
+});

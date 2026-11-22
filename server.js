@@ -7,6 +7,7 @@ import { ControlOutcomes } from './lib/control-outcome.js';
 import { SafetyGate } from './lib/safety-tiers.js';
 import { Orchestrator } from './lib/orchestration.js';
 import { SYSTEM_POLICY, POLICY_SHA256, PATTERNS as INJECTION_PATTERNS, envelope as promptEnvelope } from './lib/prompt-guard.js';
+import { EvidenceRag } from './lib/evidence-rag.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -68,7 +69,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const evidenceRag=new EvidenceRag(store,{clock}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
   const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -232,7 +233,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       }
       if(p==='/api/overview'&&method==='GET') return send(res,200,domain.summary());
       const aiAnalysis=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})$/);
-      if(aiAnalysis&&method==='GET') return send(res,200,domain.aiAnalysis(aiAnalysis[1]));
+      // CG-122 the analysis is grounded in dated source snapshots, stored, and redacted for the reader's role.
+      if(aiAnalysis&&method==='GET') return send(res,200,evidenceRag.ground(user,domain.aiAnalysis(aiAnalysis[1])));
+      if(p==='/api/ai-answers'&&method==='GET') return send(res,200,{items:evidenceRag.recent(user)});
+      {const m=p.match(/^\/api\/ai-answers\/([a-f0-9-]{36})$/);if(m&&method==='GET'){const a=evidenceRag.get(user,m[1]);fail(a,404,'not_found');return send(res,200,a);}}
+      {const m=p.match(/^\/api\/ai-snapshots\/([a-f0-9-]{36})$/);if(m&&method==='GET'){const a=evidenceRag.snapshotFor(user,m[1]);fail(a,404,'not_found');return send(res,200,a);}}
       if(p==='/api/ai-model-policy'&&method==='GET') return send(res,200,domain.aiModelPolicy(typeof cloudAiInvoke==='function'));
       if(p==='/api/ai-cloud-consents'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,domain.createAiCloudConsent(user.id,await body(req)));}
       const aiPropose=p.match(/^\/api\/ai-analysis\/([a-f0-9-]{36})\/proposals$/);
