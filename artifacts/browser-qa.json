@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-22T07:09:51.555Z",
+  "at": "2026-11-22T10:59:25.870Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -122,7 +122,8 @@
     "threat_intelligence_quality": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-112", "languages_checked": ["ar", "en"], "indicators": 2, "trusted": 1, "untrusted": 1, "source_dates_confidence_expiry_visible": true, "redistribution_rights_visible": true, "automatic_blocking_not_allowed_visible": true, "console_errors": 0, "evidence_visible": true},
     "multi_signal_correlation": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-113", "languages_checked": ["ar", "en"], "correlations": 1, "domains": ["endpoint", "identity", "network", "cloud"], "raw_alerts": 5, "deduplicated_signals": 4, "important_alerts_preserved": 2, "suppressed_alerts": 0, "asset_context_visible": true, "console_errors": 0, "evidence_visible": true},
     "evidence_vault": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-114", "upload": "201 with SHA-256 matching the bytes; future collection time refused", "access_without_purpose": 400, "access_with_purpose": "200, X-Evidence-SHA256 header matches", "custody": ["collected", "accessed", "exported", "verified"], "export_signed": true, "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 114, "next": "CG-115"}
+    "validation_lab": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-115", "scenarios_passed": "9/9 from the Run all button", "benign_false_positive_check": "no alert", "replay": "expected CG-REPORTED-FINDING, observed CG-REPORTED-FINDING, passed", "production_alerts_after_runs": ["CG-REPORTED-FINDING"], "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 115, "next": "CG-116"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

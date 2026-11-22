@@ -591,3 +591,8 @@ test('incidents show the evidence vault with integrity of evidence, events and t
   const app=read('app.js');assert.match(app,/\/api\/evidence-integrity/);assert.match(app,/evidence-verify/);
   for(const marker of ['Evidence vault and chain of custody','Events hash-checked','Custody records','Every access to evidence content requires a purpose','CG-114']) assert.ok(app.includes(marker),marker);
 });
+
+test('vulnerabilities show the detection validation lab with expected and observed alerts per scenario (CG-115)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/validation-lab/);assert.match(app,/lab-run/);
+  for(const marker of ['Detection validation lab','Run all scenarios','Expected','Observed','Replays of stored events','CG-115']) assert.ok(app.includes(marker),marker);
+});
