@@ -642,3 +642,8 @@ test('the AI analyst shows the evaluation suite, the daily cloud budget and esti
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/ai-evaluation'\)/);assert.match(app,/\/api\/ai-evaluation\/run/);
   for(const marker of ['AI evaluation and guardrails','Run evaluation','Daily cloud budget','Estimated tokens today','Privilege escalation','CG-123']) assert.ok(app.includes(marker),marker);
 });
+
+test('policies show the NCA evidence mapping with applicability and an export, without a compliance claim (CG-124)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/compliance\/nca/);assert.match(app,/\/api\/compliance\/nca\/export/);
+  for(const marker of ['NCA controls evidence mapping','Organisational evidence required','Technical evidence available','Save entity profile','Export evidence pack','CG-124']) assert.ok(app.includes(marker),marker);
+});
