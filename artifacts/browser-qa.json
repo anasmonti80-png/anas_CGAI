@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-20T16:30:39.228Z",
+  "at": "2026-11-22T07:09:51.555Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -121,7 +121,8 @@
     "detection_as_code": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-111", "languages_checked": ["ar", "en"], "running_rule": "CG-HYP-0001 v1 signed", "environment": "production", "exclusions": 1, "false_positive_budget_percent": 10, "unit_samples": 2, "replay_events": 1, "failed_update_keeps_signed_version": true, "console_errors": 0, "evidence_visible": true},
     "threat_intelligence_quality": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-112", "languages_checked": ["ar", "en"], "indicators": 2, "trusted": 1, "untrusted": 1, "source_dates_confidence_expiry_visible": true, "redistribution_rights_visible": true, "automatic_blocking_not_allowed_visible": true, "console_errors": 0, "evidence_visible": true},
     "multi_signal_correlation": {"result": "pass", "agent": "Codex", "requirement_link_visible": "CG-113", "languages_checked": ["ar", "en"], "correlations": 1, "domains": ["endpoint", "identity", "network", "cloud"], "raw_alerts": 5, "deduplicated_signals": 4, "important_alerts_preserved": 2, "suppressed_alerts": 0, "asset_context_visible": true, "console_errors": 0, "evidence_visible": true},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 113, "next": "CG-114"}
+    "evidence_vault": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-114", "upload": "201 with SHA-256 matching the bytes; future collection time refused", "access_without_purpose": 400, "access_with_purpose": "200, X-Evidence-SHA256 header matches", "custody": ["collected", "accessed", "exported", "verified"], "export_signed": true, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 114, "next": "CG-115"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

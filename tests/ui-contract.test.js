@@ -586,3 +586,8 @@ test('threats shows the ATT&CK and D3FEND mapping with live status and a Navigat
   const app=read('app.js');assert.match(app,/\/api\/attack-mapping/);assert.match(app,/navigator-layer/);
   for(const marker of ['ATT&CK and D3FEND mapping','Download ATT&CK Navigator layer','Techniques with sensor data','No sensor data','Success test','CG-110']) assert.ok(app.includes(marker),marker);
 });
+
+test('incidents show the evidence vault with integrity of evidence, events and the audit chain (CG-114)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/evidence-integrity/);assert.match(app,/evidence-verify/);
+  for(const marker of ['Evidence vault and chain of custody','Events hash-checked','Custody records','Every access to evidence content requires a purpose','CG-114']) assert.ok(app.includes(marker),marker);
+});

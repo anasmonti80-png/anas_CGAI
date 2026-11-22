@@ -15,11 +15,11 @@ Rules, scope and safety live in `AGENTS.md`; do not duplicate them here.
 8. After every verified checkpoint, commit with an agent prefix (`[Codex]` or `[Claude]`) and push `codex/cg001-600`. The next agent pulls this branch and resumes the first unfinished item without duplicating completed work.
 
 ## Current state
-- Last agent: Codex
+- Last agent: Claude
 - Branch: codex/cg001-600
 - Last updated: 2026-11-20
-- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-113 are acceptance-verified. CG-113 correlates existing endpoint, identity, network and cloud alerts by central asset and time window, compacts duplicate copies while preserving occurrences and evidence, attaches current asset context, and keeps every high or critical alert visible without mutating alert state. The Windows suite passes 344, fails 0 and skips 1 environment-gated test across 345 tests; Arabic and English Chromium inspection passed on isolated synthetic data.
-- In progress: no requirement after CG-113 has started. Next is the lowest unaccepted ID: CG-114; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
+- Completed: Documentation and runnable platform merged; CG-001..CG-600 triaged; CG-001..CG-114 are acceptance-verified. CG-113 correlates existing endpoint, identity, network and cloud alerts by central asset and time window, compacts duplicate copies while preserving occurrences and evidence, attaches current asset context, and keeps every high or critical alert visible without mutating alert state. The Windows suite passes 344, fails 0 and skips 1 environment-gated test across 345 tests; Arabic and English Chromium inspection passed on isolated synthetic data.
+- In progress: no unpublished requirement checkpoint after CG-114. Next is the lowest unaccepted ID: CG-115; never skip a lower unaccepted ID (rule 9). CI runs the real collectors on Windows and Linux runners and must stay green. Never name a schema field with password/secret/token/authorization (except authorization_ref): the redactor erases it. Schema changes go in a new entry of the migrations array in lib/store.js. Run verify -> requirements -> verify and check the verified count before committing.
 - GitHub handoff: active. `codex/cg001-600` is published and tracks `origin/codex/cg001-600`. The newest `[Codex]` checkpoint in the Log is the source of truth available to Claude.
 - Blockers: Vendor EDR/cloud/macOS/Linux/network integrations require authorized accounts, licenses, and real lab environments before they can be labelled working.
 
@@ -40,6 +40,7 @@ Reply in this file under "Log" when done or when your usage limit is near.
 ## Log (newest first)
 | Date | Agent | Summary | Commit |
 |------|-------|---------|--------|
+| 2026-11-13 | Claude | Completed CG-114 evidence integrity and chain of custody: content-addressed read-only originals, derived copies, purpose-recorded access, per-item hash chains, immutable records, tamper detection and signed custody exports; 349/349 Unit Tested and Chromium checked. | current checkpoint |
 | 2026-11-20 | Codex | Completed CG-113 multi-signal correlation across endpoint, identity, network and cloud: duplicate copies are compacted with occurrences and evidence preserved, central asset context attached and every high or critical alert retained; 344 passed, 0 failed and 1 environment-gated skip across 345 tests, with Arabic and English Chromium inspection. | current checkpoint |
 | 2026-11-20 | Codex | Completed CG-112 threat intelligence quality: source, publication and expiry, confidence, source verification and redistribution rights, with untrusted/expired context-only matching and no automatic block; 340 passed, 0 failed and 1 environment-gated skip across 341 tests, with Arabic and English Chromium inspection. | current checkpoint |
 | 2026-11-20 | Codex | Completed CG-111 Detection-as-Code: signed environment tuning and exclusions, unit/replay quality gates, measured false-positive budgets, safe failed updates and signed rollback; 337 passed, 0 failed and 1 environment-gated skip across 338 tests, with Arabic and English Chromium inspection. | current checkpoint |

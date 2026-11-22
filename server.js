@@ -1,4 +1,5 @@
 import http from 'node:http';
+import { EvidenceVault, MAX_EVIDENCE_BYTES } from './lib/evidence-vault.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -41,6 +42,11 @@ async function body(req) {
   for await (const chunk of req) { size+=chunk.length; fail(size<=MAX_INGEST_BYTES,413,'request_too_large'); chunks.push(chunk); }
   try { return JSON.parse(Buffer.concat(chunks).toString('utf8')); } catch { throw new AppError(400,'invalid_json'); }
 }
+// CG-114 evidence upload: raw bytes (application/octet-stream), streamed with a size cap.
+async function rawBody(req,max) {
+  fail(String(req.headers['content-type']||'').split(';')[0].trim()==='application/octet-stream',415,'octet_stream_content_type_required');
+  const chunks=[]; let size=0; for await (const chunk of req) { size+=chunk.length; fail(size<=max,413,'evidence_too_large'); chunks.push(chunk); } return Buffer.concat(chunks);
+}
 function send(res,status,value) { res.writeHead(status,{'Content-Type':'application/json; charset=utf-8'}); res.end(JSON.stringify(value)); }
 
 export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data'),clock,setupToken,browserQa=process.env.CG_BROWSER_QA==='1',mode=process.env.CG_MODE||'pc-local',labAuthorizationRef=process.env.CG_LAB_AUTHORIZATION_REF||null,cloudAiInvoke=null,tls=process.env.CG_TLS_CERT&&process.env.CG_TLS_KEY?{certFile:process.env.CG_TLS_CERT,keyFile:process.env.CG_TLS_KEY}:process.env.CG_TLS==='self-signed'?'self-signed':null,tenant=process.env.CG_TENANT||'default',remoteAccess=process.env,clientCa=process.env.CG_TLS_CLIENT_CA?fs.readFileSync(process.env.CG_TLS_CLIENT_CA,'utf8'):null,jwksFetcher=null}={}) {
@@ -55,7 +61,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
   const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -253,6 +259,17 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-114 evidence vault and chain of custody.
+      {const q=k=>url.searchParams.get(k);let m;
+        if((m=p.match(/^\/api\/cases\/([\w-]+)\/evidence$/))){roles(['admin','analyst']);if(method==='GET')return send(res,200,{items:evidenceVault.list(m[1])});if(method==='POST')return send(res,201,evidenceVault.collect(user.id,m[1],{name:q('name'),media_type:q('media_type'),source_ref:q('source_ref'),acquisition:q('acquisition'),collected_at:q('collected_at'),collected_by:q('collected_by'),expected_sha256:q('expected_sha256')},await rawBody(req,MAX_EVIDENCE_BYTES)));}
+        if(p==='/api/evidence'&&method==='GET'){roles(['admin','analyst']);return send(res,200,{items:evidenceVault.list(null)});}
+        if(p==='/api/evidence-integrity'&&method==='GET'){roles(['admin','analyst']);return send(res,200,evidenceVault.integrity(user.id));}
+        if((m=p.match(/^\/api\/evidence\/([\w-]+)$/))&&method==='GET'){roles(['admin','analyst']);return send(res,200,evidenceVault.item(m[1]));}
+        if((m=p.match(/^\/api\/evidence\/([\w-]+)\/content$/))&&method==='POST'){roles(['admin','analyst']);const {item,bytes}=evidenceVault.read(user.id,m[1],(await body(req)).purpose);res.writeHead(200,{'Content-Type':'application/octet-stream','Content-Disposition':`attachment; filename="${encodeURIComponent(item.name)}"`,'X-Evidence-SHA256':item.sha256,'Cache-Control':'no-store'});return res.end(bytes);}
+        if((m=p.match(/^\/api\/evidence\/([\w-]+)\/derive$/))&&method==='POST'){roles(['admin','analyst']);return send(res,201,evidenceVault.derive(user.id,m[1],{name:q('name'),transform:q('transform'),media_type:q('media_type')},await rawBody(req,MAX_EVIDENCE_BYTES)));}
+        if((m=p.match(/^\/api\/evidence\/([\w-]+)\/verify$/))&&method==='POST'){roles(['admin','analyst']);return send(res,200,evidenceVault.verify(user.id,m[1]));}
+        if((m=p.match(/^\/api\/evidence\/([\w-]+)\/custody-export$/))&&method==='POST'){roles(['admin','analyst']);return send(res,200,evidenceVault.exportCustody(user.id,m[1],(await body(req)).purpose));}
+      }
       if(p==='/api/data-security'&&method==='GET') return send(res,200,domain.dataSecurity({allowedRegions:(url.searchParams.get('allowed_regions')||'').split(',').filter(Boolean)}));
       if(p==='/api/email-security'&&method==='GET') return send(res,200,domain.emailSecurity());
       if(p==='/api/web-security'&&method==='GET') return send(res,200,domain.webSecurity());
