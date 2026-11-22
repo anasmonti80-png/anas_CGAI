@@ -5,6 +5,7 @@ import { HuntWorkbench } from './lib/hunt.js';
 import { ResponsePreflight } from './lib/response-preflight.js';
 import { ControlOutcomes } from './lib/control-outcome.js';
 import { SafetyGate } from './lib/safety-tiers.js';
+import { Orchestrator } from './lib/orchestration.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -66,7 +67,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
   const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -264,6 +265,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-120 cross-provider playbooks.
+      if(p==='/api/orchestrations'&&method==='GET'){roles(['admin','analyst']);return send(res,200,orchestrator.view());}
+      if(p==='/api/orchestrations/plan'&&method==='POST'){roles(['admin','analyst']);const input=await body(req);return send(res,200,orchestrator.plan(String(input.playbook_id||''),String(input.asset_id||''),input.params||{}));}
+      if(p==='/api/orchestrations'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,orchestrator.start(user.id,await body(req)));}
+      {const m=p.match(/^\/api\/orchestrations\/([a-f0-9-]{36})\/advance$/);if(m&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,orchestrator.advance(user.id,m[1]));}}
       // CG-119 safety tiers: confirmation, change windows and status.
       if(p==='/api/safety-tiers'&&method==='GET'){roles(['admin','analyst']);return send(res,200,safetyGate.view());}
       if(p==='/api/change-windows'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,safetyGate.addWindow(user.id,await body(req)));}

@@ -616,3 +616,8 @@ test('response shows the four safety tiers, actions awaiting confirmation and ch
   const app=read('app.js');assert.match(app,/\/api\/safety-tiers/);assert.match(app,/\/api\/change-windows/);assert.match(app,/\/confirm/);
   for(const marker of ['Response safety tiers','Read-only','Low-impact response','Sensitive change','Destructive action','Type the target name','Add change window','CG-119']) assert.ok(app.includes(marker),marker);
 });
+
+test('response shows cross-provider playbooks with the provider choice per step and runs (CG-120)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/orchestrations/);assert.match(app,/\/api\/orchestrations\/plan/);
+  for(const marker of ['Cross-provider playbooks','Show provider choice','Chosen provider','Rolled back after failure','A required step has no available provider','CG-120']) assert.ok(app.includes(marker),marker);
+});
