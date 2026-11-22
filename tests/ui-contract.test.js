@@ -601,3 +601,8 @@ test('events show the hunt workbench with time queries, saved hunts, notes and r
   const app=read('app.js');assert.match(app,/\/api\/hunts\/run/);assert.match(app,/hunt-report/);
   for(const marker of ['Hunt workbench','Run hunt','Save hunt','Saved hunts','No results in this window.','CG-116']) assert.ok(app.includes(marker),marker);
 });
+
+test('response shows a read-only preflight across IP, MAC, hostname and cloud id with blocking checks (CG-117)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/response-preflight/);
+  for(const marker of ['Response preflight','Run preflight','Blocking checks','Ready for the governed preview','No action (target and impact only)','CG-117']) assert.ok(app.includes(marker),marker);
+});

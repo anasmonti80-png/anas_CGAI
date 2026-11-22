@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-22T11:04:52.626Z",
+  "at": "2026-11-22T11:11:12.338Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -124,7 +124,8 @@
     "evidence_vault": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-114", "upload": "201 with SHA-256 matching the bytes; future collection time refused", "access_without_purpose": 400, "access_with_purpose": "200, X-Evidence-SHA256 header matches", "custody": ["collected", "accessed", "exported", "verified"], "export_signed": true, "console_errors": 0},
     "validation_lab": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-115", "scenarios_passed": "9/9 from the Run all button", "benign_false_positive_check": "no alert", "replay": "expected CG-REPORTED-FINDING, observed CG-REPORTED-FINDING, passed", "production_alerts_after_runs": ["CG-REPORTED-FINDING"], "console_errors": 0},
     "hunt_workbench": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-116", "account_hunt": "4 rows (3 failed RDP logons and one RDP session) for finance-admin, top host SRV-01", "saved_hunt": "listed", "note": 201, "report": "4 rows, 1 note, result hash recorded", "fixed_during_qa": "default form times were UTC read as local time; now local", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 116, "next": "CG-117"}
+    "response_preflight": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-117", "mac_plus_hostname": "resolved to WS-ALICE, isolation path verified to acc-sw-01 Gi1/0/5, business service Payroll", "isolate_without_connector": "blocked (connector, management channel)", "conflicting_identifiers": "blocked, names the identifier that matched nothing", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 117, "next": "CG-118"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
