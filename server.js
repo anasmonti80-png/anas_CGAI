@@ -10,6 +10,7 @@ import { SYSTEM_POLICY, POLICY_SHA256, PATTERNS as INJECTION_PATTERNS, envelope 
 import { EvidenceRag } from './lib/evidence-rag.js';
 import { AiEvaluation } from './lib/ai-eval.js';
 import { NcaCompliance } from './lib/compliance-nca.js';
+import { MsocReadiness } from './lib/msoc-readiness.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -71,7 +72,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const evidenceRag=new EvidenceRag(store,{clock}); const aiEvaluation=new AiEvaluation(store,{clock,domain,Domain}); const ncaCompliance=new NcaCompliance(store,{clock}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const evidenceRag=new EvidenceRag(store,{clock}); const aiEvaluation=new AiEvaluation(store,{clock,domain,Domain}); const ncaCompliance=new NcaCompliance(store,{clock}); const msocReadiness=new MsocReadiness(store,{clock}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
   const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -273,6 +274,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-125 managed SOC regulatory readiness (NPMSOC-1:2024, RFMSOC-1:2024).
+      if(p==='/api/msoc/readiness'&&method==='GET'){roles(['admin']);return send(res,200,msocReadiness.readiness());}
+      if(p==='/api/msoc/provider'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,msocReadiness.saveProvider(user.id,await body(req)));}
+      if(p==='/api/msoc/customers'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,msocReadiness.addCustomer(user.id,await body(req)));}
       // CG-124 NCA compliance evidence mapping (ECC-2:2024, CCC-2:2024; OTCC/CSCC/DCC applicability).
       if(p==='/api/compliance/nca'&&method==='GET') return send(res,200,ncaCompliance.view());
       if(p==='/api/compliance/nca/profile'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,ncaCompliance.saveProfile(user.id,await body(req)));}

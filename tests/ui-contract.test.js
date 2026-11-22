@@ -647,3 +647,8 @@ test('policies show the NCA evidence mapping with applicability and an export, w
   const app=read('app.js');assert.match(app,/\/api\/compliance\/nca/);assert.match(app,/\/api\/compliance\/nca\/export/);
   for(const marker of ['NCA controls evidence mapping','Organisational evidence required','Technical evidence available','Save entity profile','Export evidence pack','CG-124']) assert.ok(app.includes(marker),marker);
 });
+
+test('settings show managed SOC readiness with licence, residency and customer registration (CG-125)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/msoc\/readiness/);assert.match(app,/\/api\/msoc\/customers/);assert.match(app,/msoc_not_ready/);
+  for(const marker of ['Managed SOC service readiness','Service cannot be offered yet','Licence number','Inside the Kingdom','Register customer','CG-125']) assert.ok(app.includes(marker),marker);
+});
