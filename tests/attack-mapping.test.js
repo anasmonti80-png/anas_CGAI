@@ -32,7 +32,7 @@ test('every rule raised in lib/ is mapped to ATT&CK, a sensor, D3FEND and an exi
   const tests = new Map();
   for (const m of MAPPINGS) {
     assert.ok(m.use_case && m.use_case_ar && m.sensor && m.indicator && m.analytic && m.response && m.test, `${m.rule} has every field`);
-    for (const t of m.techniques) { assert.match(t, /^T\d{4}(\.\d{3})?$/); assert.ok(TECHNIQUES[t], `${m.rule}: technique ${t} named`); }
+    for (const t of m.techniques) { assert.match(t, /^(AML\.)?T\d{4}(\.\d{3})?$/); assert.ok(TECHNIQUES[t], `${m.rule}: technique ${t} named`); }
     for (const t of m.tactics) assert.ok(TACTICS[t], `${m.rule}: tactic ${t}`);
     for (const d of [...m.d3fend_detect, ...m.d3fend_respond]) { assert.match(d, /^D3-[A-Z]+$/); assert.ok(D3FEND[d], `${m.rule}: D3FEND ${d} named`); }
     if (m.category === 'detection' && m.rule !== 'CG-HYP-*' && m.rule !== 'CG-REPORTED-FINDING') { assert.ok(m.techniques.length, `${m.rule} detection names a technique`); assert.ok(m.d3fend_detect.length, `${m.rule} names a D3FEND detect technique`); }

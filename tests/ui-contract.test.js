@@ -621,3 +621,8 @@ test('response shows cross-provider playbooks with the provider choice per step 
   const app=read('app.js');assert.match(app,/\/api\/orchestrations/);assert.match(app,/\/api\/orchestrations\/plan/);
   for(const marker of ['Cross-provider playbooks','Show provider choice','Chosen provider','Rolled back after failure','A required step has no available provider','CG-120']) assert.ok(app.includes(marker),marker);
 });
+
+test('the AI analyst shows the prompt-injection defense with refusals and a scan form (CG-121)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/ai-guard/);assert.match(app,/\/api\/ai-guard\/scan/);
+  for(const marker of ['Prompt-injection defense','Evidence with AI instructions','Refused proposals','Fixed system policy SHA-256','treated as untrusted data','CG-121']) assert.ok(app.includes(marker),marker);
+});

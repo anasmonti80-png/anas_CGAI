@@ -6,6 +6,7 @@ import { ResponsePreflight } from './lib/response-preflight.js';
 import { ControlOutcomes } from './lib/control-outcome.js';
 import { SafetyGate } from './lib/safety-tiers.js';
 import { Orchestrator } from './lib/orchestration.js';
+import { SYSTEM_POLICY, POLICY_SHA256, PATTERNS as INJECTION_PATTERNS, envelope as promptEnvelope } from './lib/prompt-guard.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -30,7 +31,7 @@ import { Domain } from './lib/domain.js';
 import { localObservation } from './lib/local-collector.js';
 import { normalizeWindowsExport } from './lib/windows-events.js';
 import { toAr } from './lib/i18n-ar.js';
-import { AppError, fail, equal, object, page, token, MAX_INGEST_BYTES } from './lib/common.js';
+import { AppError, fail, equal, object, page, token, text, choice, MAX_INGEST_BYTES } from './lib/common.js';
 import { validateCloudResult } from './lib/ai-model-policy.js';
 
 const ROOT=fileURLToPath(new URL('./',import.meta.url));
@@ -265,6 +266,9 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-121 prompt-injection defense: policy, recent refusals and a scan endpoint for connectors.
+      if(p==='/api/ai-guard'&&method==='GET'){roles(['admin','analyst']);const refused=store.all("SELECT at,actor,action,target,details FROM audit WHERE action='ai.proposal.rejected' ORDER BY seq DESC LIMIT 50").map(r=>({...r,details:JSON.parse(r.details)}));return send(res,200,{policy_sha256:POLICY_SHA256,policy:SYSTEM_POLICY,patterns:INJECTION_PATTERNS.map(x=>({id:x.id,severity:x.severity})),flagged_alerts:store.get("SELECT COUNT(*) n FROM alerts WHERE rule_id='CG-AI-INJECTION-121'").n,refusals:refused,claim:'Evidence is untrusted data: it is scanned for instructions, cleaned of hidden characters, labelled with its source and hash and kept apart from the fixed system policy. Proposals whose rationale carries instructions or whose target appears only in instructing text, and model answers that carry instructions, are refused.',claim_ar:'الأدلة بيانات غير موثوقة: تُفحص بحثًا عن تعليمات، وتُنظف من الأحرف المخفية، وتُوسم بمصدرها وبصمتها، وتُعزل عن سياسة النظام الثابتة. تُرفض المقترحات التي يحمل مبررها تعليمات أو يظهر هدفها فقط في نص يوجه التعليمات، وتُرفض إجابات النموذج التي تحمل تعليمات.'});}
+      if(p==='/api/ai-guard/scan'&&method==='POST'){roles(['admin','analyst']);const input=object(await body(req),['items'],'ai_guard_scan');fail(Array.isArray(input.items)&&input.items.length>=1&&input.items.length<=50,400,'invalid_ai_guard_items');const env=promptEnvelope(input.items.map((x,i)=>{object(x,['source_type','source_ref','content'],`ai_guard_item_${i}`);return {source_type:choice(x.source_type,['log','email','ticket','search-result','document'],'ai_guard_source_type'),source_ref:text(x.source_ref,'ai_guard_source_ref',300),content:text(x.content,'ai_guard_content',20000)};}));return send(res,200,{policy_sha256:env.policy.sha256,data:env.data});}
       // CG-120 cross-provider playbooks.
       if(p==='/api/orchestrations'&&method==='GET'){roles(['admin','analyst']);return send(res,200,orchestrator.view());}
       if(p==='/api/orchestrations/plan'&&method==='POST'){roles(['admin','analyst']);const input=await body(req);return send(res,200,orchestrator.plan(String(input.playbook_id||''),String(input.asset_id||''),input.params||{}));}
