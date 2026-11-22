@@ -637,3 +637,8 @@ test('viewers can open every page: panels backed by admin or analyst APIs are sk
   const restricted=/[\[,]api\('\/api\/(ot-safety|hypotheses|threat-intelligence|file-triage|detonations|reconciliation|ocsf\/export|evidence|evidence-integrity|validation-lab|hunts|control-outcomes|safety-tiers|orchestrations|ai-guard)['?]/;
   assert.doesNotMatch(app,restricted,'a view loads an admin/analyst-only API without optionalApi');
 });
+
+test('the AI analyst shows the evaluation suite, the daily cloud budget and estimated tokens (CG-123)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/ai-evaluation'\)/);assert.match(app,/\/api\/ai-evaluation\/run/);
+  for(const marker of ['AI evaluation and guardrails','Run evaluation','Daily cloud budget','Estimated tokens today','Privilege escalation','CG-123']) assert.ok(app.includes(marker),marker);
+});
