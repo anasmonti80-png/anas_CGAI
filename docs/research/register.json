@@ -917,6 +917,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented read-only."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-157"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-040",
+      "title": "AWS Backup Vault Lock, ListBackupVaults and restore testing",
+      "source_type": "official",
+      "url": "https://docs.aws.amazon.com/aws-backup/latest/devguide/vault-lock.html",
+      "source_date": "2026-11-27",
+      "summary": "Governance mode can be removed by users with sufficient IAM permissions; compliance mode (ChangeableForDays of at least 3) can be changed until LockDate, after which the vault and lock cannot be changed or deleted by any user or by AWS. Min and max retention reject jobs outside the range. Backups in a locked vault cannot be deleted until their lifecycle completes, so retention must be set carefully to avoid persistent cost. ListBackupVaults returns Locked, LockDate, MinRetentionDays, MaxRetentionDays and NumberOfRecoveryPoints; ListRestoreJobs returns Status, CreatedBy.RestoreTestingPlanArn and ValidationStatus.",
+      "applicability": "Mode, reversibility and cost risk per vault, with restore proof before relying on it.",
+      "risks": "Lock mode is inferred from the presence of LockDate; ValidationStatus values were not enumerated in the pages read.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/backup-vault-lock.js",
+        "scripts/backup-vault-lock.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented read-only."
     }
   ],
   "rounds": [

@@ -807,3 +807,8 @@ test('the cloud page shows Azure JIT coverage, request log and least-privilege p
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/azure-jit')"));
   for(const marker of ['Azure VM just-in-time access','VMs with a JIT policy','Access request log','No justification','Least-privilege permissions','CG-156']) assert.ok(app.includes(marker),marker);
 });
+
+test('the risk page shows AWS Backup Vault Lock mode, reversibility, cost risk and restore proof (CG-157)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/backup-vault-lock')"));
+  for(const marker of ['Immutable backups (AWS Backup Vault Lock)','Restore proven','Restore not tested','Lock date','CG-157']) assert.ok(app.includes(marker),marker);
+});

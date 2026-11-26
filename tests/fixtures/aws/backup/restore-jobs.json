@@ -1,0 +1,4 @@
+{ "RestoreJobs": [
+  { "RestoreJobId": "rj-157-1", "BackupVaultArn": "arn:aws:backup:us-east-1:111122223333:backup-vault:prod-immutable", "Status": "COMPLETED", "CreationDate": 1794787200, "CompletionDate": 1794790800, "ResourceType": "RDS", "CreatedBy": { "RestoreTestingPlanArn": "arn:aws:backup:us-east-1:111122223333:restore-testing-plan:monthly" }, "ValidationStatus": "SUCCESSFUL" },
+  { "RestoreJobId": "rj-157-2", "BackupVaultArn": "arn:aws:backup:us-east-1:111122223333:backup-vault:logs-governance", "Status": "FAILED", "CreationDate": 1795651200, "ResourceType": "S3", "StatusMessage": "Access denied to target bucket" }
+] }

@@ -1,0 +1,6 @@
+{ "BackupVaultList": [
+  { "BackupVaultName": "prod-immutable", "BackupVaultArn": "arn:aws:backup:us-east-1:111122223333:backup-vault:prod-immutable", "VaultType": "BACKUP_VAULT", "Locked": true, "LockDate": 1767225600, "MinRetentionDays": 35, "MaxRetentionDays": 400, "NumberOfRecoveryPoints": 120, "CreationDate": 1735689600 },
+  { "BackupVaultName": "finance-compliance-new", "BackupVaultArn": "arn:aws:backup:us-east-1:111122223333:backup-vault:finance-compliance-new", "VaultType": "BACKUP_VAULT", "Locked": true, "LockDate": 1796083200, "MinRetentionDays": 365, "NumberOfRecoveryPoints": 12, "CreationDate": 1795478400 },
+  { "BackupVaultName": "logs-governance", "BackupVaultArn": "arn:aws:backup:us-east-1:111122223333:backup-vault:logs-governance", "VaultType": "BACKUP_VAULT", "Locked": true, "MinRetentionDays": 7, "MaxRetentionDays": 90, "NumberOfRecoveryPoints": 30, "CreationDate": 1735689600 },
+  { "BackupVaultName": "default", "BackupVaultArn": "arn:aws:backup:us-east-1:111122223333:backup-vault:Default", "VaultType": "BACKUP_VAULT", "Locked": false, "NumberOfRecoveryPoints": 8, "CreationDate": 1735689600 }
+] }
