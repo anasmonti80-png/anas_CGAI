@@ -777,3 +777,8 @@ test('the identity page shows phishing-resistant authentication posture by tier,
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/auth-strength')"));
   for(const marker of ['Phishing-resistant authentication posture','Administrators without a phishing-resistant method','Legacy protocols not blocked by an enabled policy','Successful legacy protocol sign-ins (bypass MFA)','Applications that cannot use phishing-resistant methods (declared exceptions)','CG-150']) assert.ok(app.includes(marker),marker);
 });
+
+test('the cloud page shows service-to-service zero trust with mTLS, authorization tier, credentials and certificate lifetime (CG-151)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/service-zero-trust')"));
+  for(const marker of ['Service-to-service zero trust (NIST SP 800-207A)','Identity tier (service identities)','No service mesh observed — mesh checks not applicable','Service-to-service credentials','Workload certificates','CG-151']) assert.ok(app.includes(marker),marker);
+});

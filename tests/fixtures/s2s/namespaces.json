@@ -1,0 +1,1 @@
+{ "items": [ { "metadata": { "name": "istio-system" } }, { "metadata": { "name": "kube-system" } }, { "metadata": { "name": "payments" } }, { "metadata": { "name": "billing" } }, { "metadata": { "name": "reporting" } } ] }

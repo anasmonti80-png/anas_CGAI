@@ -775,6 +775,53 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented; registration is never read as enforcement."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-151"
+      ],
+      "topic": "saas-baselines",
+      "source_type": "official",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "decision": "accepted",
+      "id": "R-034",
+      "title": "NIST SP 800-207A Zero Trust Architecture Model for Access Control in Cloud-Native Applications in Multi-Cloud Environments",
+      "url": "https://csrc.nist.gov/pubs/sp/800/207/a/final",
+      "source_date": "2023-09-13",
+      "summary": "Shifts access control from network parameters to application and service identities, with identity-tier and network-tier policies, service mesh and SPIFFE application identity infrastructure.",
+      "applicability": "Namespaces are classed by identity-tier versus network-tier authorization over effective mTLS.",
+      "risks": "Policies describe intent; actual traffic needs proxy access logs.",
+      "evidence_files": [
+        "lib/service-zero-trust.js",
+        "docs/research/S2S_ZERO_TRUST_AR.md"
+      ],
+      "decision_reason": "Implemented for Istio exports and a declared inventory; not applicable without a mesh."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-151"
+      ],
+      "topic": "saas-baselines",
+      "source_type": "official",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "decision": "accepted",
+      "id": "R-035",
+      "title": "SPIFFE concepts and SPIRE server defaults; Istio PeerAuthentication and AuthorizationPolicy",
+      "url": "https://spiffe.io/docs/latest/deploying/spire_server/",
+      "source_date": "2026-11-27",
+      "summary": "SPIFFE IDs spiffe://trust-domain/workload; keys short lived and rotated automatically; SPIRE default_x509_svid_ttl 1h and default_jwt_svid_ttl 5m. Istio mTLS UNSET without a parent is PERMISSIVE (plaintext or mTLS); an ALLOW AuthorizationPolicy with an empty spec allows nothing; source.principals requires mTLS.",
+      "applicability": "Effective mTLS, authorization tier and certificate lifetime checks.",
+      "risks": "No official Istio default workload certificate lifetime was confirmed, so the owner sets the limit.",
+      "evidence_files": [
+        "lib/service-zero-trust.js"
+      ],
+      "decision_reason": "Implemented."
     }
   ],
   "rounds": [

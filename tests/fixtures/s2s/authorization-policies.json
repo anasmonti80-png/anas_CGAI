@@ -1,0 +1,5 @@
+{ "items": [
+  { "kind": "AuthorizationPolicy", "metadata": { "name": "allow-nothing", "namespace": "payments" }, "spec": {} },
+  { "kind": "AuthorizationPolicy", "metadata": { "name": "api-from-frontend", "namespace": "payments" }, "spec": { "selector": { "matchLabels": { "app": "api" } }, "action": "ALLOW", "rules": [ { "from": [ { "source": { "principals": ["cluster.local/ns/frontend/sa/web"] } } ], "to": [ { "operation": { "methods": ["POST"], "paths": ["/charge"] } } ] } ] } },
+  { "kind": "AuthorizationPolicy", "metadata": { "name": "billing-from-subnet", "namespace": "billing" }, "spec": { "action": "ALLOW", "rules": [ { "from": [ { "source": { "ipBlocks": ["10.20.0.0/16"] } } ] } ] } }
+] }

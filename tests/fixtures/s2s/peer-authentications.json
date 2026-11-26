@@ -1,0 +1,5 @@
+{ "items": [
+  { "kind": "PeerAuthentication", "metadata": { "name": "default", "namespace": "istio-system" }, "spec": { "mtls": { "mode": "PERMISSIVE" } } },
+  { "kind": "PeerAuthentication", "metadata": { "name": "strict", "namespace": "payments" }, "spec": { "mtls": { "mode": "STRICT" } } },
+  { "kind": "PeerAuthentication", "metadata": { "name": "metrics-port", "namespace": "payments" }, "spec": { "selector": { "matchLabels": { "app": "api" } }, "mtls": { "mode": "STRICT" }, "portLevelMtls": { "9090": { "mode": "DISABLE" } } } }
+] }

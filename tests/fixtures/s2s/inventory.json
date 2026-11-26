@@ -1,0 +1,7 @@
+[
+  { "from": "frontend/web", "to": "payments/api", "method": "mtls-workload-identity" },
+  { "from": "payments/api", "to": "billing/ledger", "method": "api-key", "credential_store": "vault", "last_rotated": "2026-03-01", "rotation_days": 90 },
+  { "from": "reporting/export", "to": "billing/ledger", "method": "oauth-client-credentials", "credential_store": "k8s-secret", "last_rotated": "2026-11-01", "rotation_days": 180 },
+  { "from": "billing/ledger", "to": "legacy-erp", "method": "shared-secret" },
+  { "from": "reporting/cron", "to": "reporting/db-proxy", "method": "none" }
+]
