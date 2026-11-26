@@ -1,0 +1,7 @@
+{"value":[
+{"id":"g1","clientId":"sp-mailsync","consentType":"Principal","principalId":"user-a","resourceId":"sp-graph","scope":"openid offline_access Mail.Read"},
+{"id":"g2","clientId":"sp-mailsync","consentType":"Principal","principalId":"user-b","resourceId":"sp-graph","scope":"openid Mail.Read"},
+{"id":"g3","clientId":"sp-analytics","consentType":"AllPrincipals","principalId":null,"resourceId":"sp-graph","scope":"User.Read Files.ReadWrite.All"},
+{"id":"g4","clientId":"sp-hr","consentType":"AllPrincipals","principalId":null,"resourceId":"sp-graph","scope":"User.Read"},
+{"id":"g5","clientId":"sp-notes","consentType":"Principal","principalId":"user-c","resourceId":"sp-graph","scope":"User.Read"}
+]}

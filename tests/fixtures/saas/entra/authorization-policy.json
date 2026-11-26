@@ -1,0 +1,1 @@
+{"@odata.context":"https://graph.microsoft.com/v1.0/$metadata#policies/authorizationPolicy/$entity","id":"authorizationPolicy","displayName":"Authorization Policy","defaultUserRolePermissions":{"allowedToCreateApps":true,"permissionGrantPoliciesAssigned":["ManagePermissionGrantsForSelf.microsoft-user-default-legacy","ManagePermissionGrantsForOwnedResource.DeveloperConsent"]}}

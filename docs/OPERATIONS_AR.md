@@ -181,6 +181,33 @@
 - يكشف: CORS الذي يعكس أي أصل (مع بيانات الاعتماد = مرتفع)، نقاطًا تجيب دون المصادقة المطلوبة، مفاتيح API في الرابط، غياب تحديد المعدل (طلبات متكررة فقط في بيئة test أو staging)، وترويسات الأمان وخصائص ملفات تعريف الارتباط وكشف إصدار الخادم. لا تُحفظ معاملات الاستعلام.
 - أحداث WAF (ModSecurity وAWS WAF وCloud Armor) تُلخص في صفحة الثغرات. التطبيق نفسه (CyberGuard) اجتاز هذا الفحص.
 
+## وصول التطبيقات الخارجية وShadow IT في SaaS (CG-159)
+
+- لا يسجّل CyberGuard الدخول إلى المستأجر. يصدّر المالك ما يلي بصلاحية قراءة فقط.
+- **Entra:**
+  - المصادر: `GET /policies/authorizationPolicy` و`GET /servicePrincipals` و`GET /oauth2PermissionGrants`.
+  - مستوى المشاركة الخارجية يُنقل من مركز إدارة SharePoint.
+  `node scripts/saas-app-access.js --provider entra --tenant-ref <ref> --authorization-ref <ref> --authorization-policy ap.json --service-principals sp.json --grants grants.json --tenant-id <guid> --sharing anyone --anyone-link-expiry-days 30 --output saas.json`
+- **Google:**
+  - المصادر: `tokens.list` لكل مستخدم، مجمّعة في مصفوفة `items` واحدة.
+  - قائمة التطبيقات من API controls، بالحقلين `clientId` و`access`.
+  - إعداد التطبيقات غير المُعدة.
+  `node scripts/saas-app-access.js --provider google --tenant-ref <ref> --authorization-ref <ref> --tokens tokens.json --app-access apps.json --unconfigured sign-in-only --output saas.json`
+- **الخصوصية:**
+  - لا تُحفظ معرّفات المستخدمين، بل عددهم فقط.
+  - مشاركة الملفات اختيارية، ولا تُعد إلا مع `--privacy-policy-ref`، ويُضاف لها `--file-permissions perms.json --internal-domains example.com`.
+  - تُحفظ أعداد فقط، دون أسماء ملفات ودون عناوين خارجية.
+  - لا يُقرأ محتوى بريد أو ملفات أو محادثات.
+- **`CG-SAAS-APP-ACCESS-159`** يُطلق في الحالات التالية:
+  - موافقة مستخدم مفتوحة لأي تطبيق.
+  - تطبيق غير موثق أو غير مُراجع بنطاقات عالية الخطورة.
+  - موافقة مسؤول لكل المستخدمين بنطاقات عالية الخطورة.
+  - تطبيق محظور ما زال يملك رموزًا.
+  - عميل OAuth مجهول.
+  - روابط Anyone دون انتهاء.
+  - ملفات عامة قابلة للبحث.
+- لا يُلغي CyberGuard أي منح. التنفيذ عند المالك: يحصر موافقة المستخدم على الناشرين الموثقين، ويراجع التطبيق أو يحظره، ثم يلغي منحه.
+
 ## سلامة القطع الموقعة والقبول (CG-158)
 
 - يجمع سجل واحد سلامة ما يشغّله CyberGuard:

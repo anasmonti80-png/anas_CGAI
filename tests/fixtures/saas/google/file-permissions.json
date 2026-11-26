@@ -1,0 +1,6 @@
+{"files":[
+{"id":"f1","name":"ignored-by-cyberguard","permissions":[{"type":"user","role":"owner","emailAddress":"owner@example.com"},{"type":"anyone","role":"reader","allowFileDiscovery":true}]},
+{"id":"f2","permissions":[{"type":"anyone","role":"reader","allowFileDiscovery":false}]},
+{"id":"f3","permissions":[{"type":"user","role":"writer","emailAddress":"someone@partner.example"},{"type":"domain","role":"reader","domain":"example.com","allowFileDiscovery":true}]},
+{"id":"f4","permissions":[{"type":"user","role":"owner","emailAddress":"owner@example.com"}]}
+]}

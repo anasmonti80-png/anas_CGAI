@@ -965,6 +965,56 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented with the existing signed release manifest and rule signing."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-159"
+      ],
+      "topic": "saas-baselines",
+      "source_type": "official",
+      "source_date": "2026-11-27",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/saas-app-access.js",
+        "scripts/saas-app-access.js",
+        "docs/research/SAAS_APP_ACCESS_AR.md"
+      ],
+      "decision": "accepted",
+      "id": "R-042",
+      "title": "Entra user consent policy, oauth2PermissionGrant and SharePoint external sharing",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/enterprise-apps/configure-user-consent",
+      "summary": "authorizationPolicy.defaultUserRolePermissions.permissionGrantPoliciesAssigned decides user consent: no ManagePermissionGrantsForSelf.* entry turns it off, microsoft-user-default-low allows verified publishers and tenant apps for low-impact permissions, microsoft-user-default-legacy allows any app; Microsoft recommends verified publishers only, and changes do not remove existing grants. oauth2PermissionGrant has clientId (service principal object id), consentType AllPrincipals or Principal, principalId and a space-separated scope. SharePoint sharing levels are Anyone, New and existing guests, Existing guests and Only people in your organization, with optional Anyone link expiration.",
+      "applicability": "Consent policy, per-app grants with user counts and verified publisher, tenant sharing level.",
+      "risks": "Risky Entra scopes reuse the CG-012 pattern; permission classification for low impact is tenant specific.",
+      "decision_reason": "Implemented as a read-only import; users are counted, not stored."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-159"
+      ],
+      "topic": "saas-baselines",
+      "source_type": "official",
+      "source_date": "2026-11-27",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/saas-app-access.js",
+        "scripts/saas-app-access.js",
+        "docs/research/SAAS_APP_ACCESS_AR.md"
+      ],
+      "decision": "accepted",
+      "id": "R-043",
+      "title": "Google Workspace tokens.list, API controls app access and Drive permissions",
+      "url": "https://developers.google.com/workspace/admin/directory/reference/rest/v1/tokens",
+      "summary": "Directory API tokens.list returns clientId, displayText, scopes, anonymous, nativeApp and userKey per user. API controls configure apps as Trusted, Limited, Specific Google data or Blocked, and unconfigured third-party apps as allowed, Sign in with Google basic info only, or not allowed; Gmail, Drive and Chat publish high-risk OAuth scopes such as https://mail.google.com/ and drive. Drive permission type is user, group, domain or anyone, and allowFileDiscovery applies to domain and anyone.",
+      "applicability": "Shadow IT as tokens of apps with no admin access setting; blocked apps still holding tokens; file exposure counted only under a privacy policy.",
+      "risks": "The high-risk scope list in code is a subset of the published list; tokens.list has no verified-publisher field.",
+      "decision_reason": "Implemented with counts only and no content access."
     }
   ],
   "rounds": [

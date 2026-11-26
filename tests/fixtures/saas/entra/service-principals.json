@@ -1,0 +1,7 @@
+{"value":[
+{"id":"sp-mailsync","appId":"11111111-0000-4000-8000-000000000001","displayName":"Contoso Mail Sync","appOwnerOrganizationId":"22222222-0000-4000-8000-000000000001","verifiedPublisher":{"displayName":null},"servicePrincipalType":"Application"},
+{"id":"sp-analytics","appId":"11111111-0000-4000-8000-000000000002","displayName":"Fabrikam Analytics","appOwnerOrganizationId":"22222222-0000-4000-8000-000000000002","verifiedPublisher":{"displayName":"Fabrikam, Inc.","verifiedPublisherId":"1234567"},"servicePrincipalType":"Application"},
+{"id":"sp-hr","appId":"11111111-0000-4000-8000-000000000003","displayName":"Internal HR Portal","appOwnerOrganizationId":"00000000-0000-4000-8000-000000000159","verifiedPublisher":{"displayName":null},"servicePrincipalType":"Application"},
+{"id":"sp-notes","appId":"11111111-0000-4000-8000-000000000004","displayName":"Quick Notes Add-in","appOwnerOrganizationId":"22222222-0000-4000-8000-000000000004","verifiedPublisher":{},"servicePrincipalType":"Application"},
+{"id":"sp-graph","appId":"00000003-0000-0000-c000-000000000000","displayName":"Microsoft Graph","appOwnerOrganizationId":"f8cdef31-a31e-4b4a-93e4-5f571e91255a","verifiedPublisher":{},"servicePrincipalType":"Application"}
+]}

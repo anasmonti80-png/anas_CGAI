@@ -817,3 +817,8 @@ test('the cloud page shows the signed artifact integrity register and Kubernetes
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/artifact-integrity')"));
   for(const marker of ['Signed artifact integrity and admission','Kubernetes container image admission','Warn mode only — does not block','Referenced by tag, not digest','Unsigned (development build)','CG-158']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows SaaS app-to-app access, consent policy, shadow IT and privacy-gated file sharing (CG-159)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/saas-app-access')"));
+  for(const marker of ['SaaS app-to-app access and shadow IT','Users can consent to any app','Unreviewed app with high-risk scopes (shadow IT)','Blocked app still holds tokens','File sharing not counted: it requires an employee privacy policy reference.','file_sharing_requires_privacy_policy','CG-159']) assert.ok(app.includes(marker),marker);
+});
