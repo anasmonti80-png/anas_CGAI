@@ -797,3 +797,8 @@ test('the cloud page shows GCP attack exposure from Security Command Center with
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/gcp-attack-exposure')"));
   for(const marker of ['GCP attack exposure posture (Security Command Center)','Not available — no substitute score is computed','No score from SCC','active findings without an SCC score (left unscored, never zero)','CG-154']) assert.ok(app.includes(marker),marker);
 });
+
+test('the cloud page shows AWS account and Region completeness with Security Hub CSPM history limits (CG-155)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/aws-completeness')"));
+  for(const marker of ['AWS multi-account and multi-Region completeness','enabled Regions with gaps','No findings before this date','Regions not enabled','CG-155']) assert.ok(app.includes(marker),marker);
+});

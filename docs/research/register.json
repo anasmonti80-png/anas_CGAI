@@ -869,6 +869,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented; never invents a score."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-155"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-038",
+      "title": "AWS Security Hub CSPM scope, AWS Config prerequisite, cross-Region aggregation and Account Management ListRegions",
+      "source_type": "official",
+      "url": "https://docs.aws.amazon.com/securityhub/latest/userguide/what-is-securityhub.html",
+      "source_date": "2026-11-27",
+      "summary": "Security Hub CSPM only detects and consolidates findings generated after it is enabled and does not retroactively collect earlier ones; it only receives and processes findings in Regions where it is enabled; AWS Config must be enabled in each Region where it is enabled to receive control findings; cross-Region aggregation only aggregates Regions where it is enabled and does not enable it. ListRegions returns Regions with RegionOptStatus ENABLED, ENABLING, DISABLING, DISABLED or ENABLED_BY_DEFAULT.",
+      "applicability": "Per-account and per-Region completeness with the enablement date as the history bound.",
+      "risks": "The aggregation linking mode and the hub subscription date are declared by the owner rather than parsed from an API response.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/aws-completeness.js",
+        "scripts/aws-region-completeness.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented."
     }
   ],
   "rounds": [

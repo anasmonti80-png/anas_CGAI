@@ -1,0 +1,16 @@
+{ "inventory_id": "aws:o-example", "provider": "aws", "organization_id": "o-example", "collected_by": "organizations",
+  "accounts": [ { "account_id": "111122223333", "name": "Management", "status": "active", "access": "management" }, { "account_id": "444455556666", "name": "Production", "status": "active", "access": "assumed" }, { "account_id": "777788889999", "name": "Sandbox", "status": "active", "access": "denied" } ],
+  "services": [
+    { "account_id": "111122223333", "region": "us-east-1", "service": "security-hub", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "us-east-1", "service": "config", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "us-east-1", "service": "guardduty", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "us-east-1", "service": "cloudtrail", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "eu-west-1", "service": "security-hub", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "eu-west-1", "service": "config", "status": "disabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "eu-west-1", "service": "guardduty", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "111122223333", "region": "eu-west-1", "service": "cloudtrail", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "444455556666", "region": "us-east-1", "service": "security-hub", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "444455556666", "region": "us-east-1", "service": "config", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "444455556666", "region": "us-east-1", "service": "guardduty", "status": "enabled", "detail": "read-only check" },
+    { "account_id": "444455556666", "region": "us-east-1", "service": "cloudtrail", "status": "enabled", "detail": "read-only check" }
+  ] }
