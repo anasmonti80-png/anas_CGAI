@@ -1,0 +1,3 @@
+{"count":2,"next":null,"previous":null,"results":[
+{"id":201,"device":{"id":11,"name":"WS-ALICE"},"name":"eth0","mac_address":"A4:BB:6D:11:20:21","untagged_vlan":{"id":30,"vid":10,"name":"Users"},"connected_endpoints":[{"device":{"name":"acc-sw-01"},"name":"Gi1/0/5"}],"last_updated":"2026-09-01T08:00:00.000000Z"},
+{"id":202,"device":{"id":12,"name":"PRN-FLOOR2"},"name":"eth0","mac_address":"00:11:22:33:44:40","untagged_vlan":{"id":31,"vid":30,"name":"Printers"},"connected_endpoints":[{"device":{"name":"acc-sw-01"},"name":"Gi1/0/7"}],"last_updated":"2025-02-10T08:00:00.000000Z"}]}

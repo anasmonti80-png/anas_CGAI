@@ -1,0 +1,4 @@
+{"count":3,"next":null,"previous":null,"results":[
+{"id":11,"name":"WS-ALICE","role":{"id":3,"name":"Workstation","slug":"workstation"},"site":{"id":1,"name":"HQ"},"tenant":{"id":2,"name":"Finance"},"primary_ip4":{"id":101,"address":"10.20.10.21/24"},"last_updated":"2026-09-01T08:00:00.000000Z"},
+{"id":12,"name":"PRN-FLOOR2","role":{"id":4,"name":"Printer","slug":"printer"},"site":{"id":1,"name":"HQ"},"tenant":null,"primary_ip4":{"id":102,"address":"10.20.10.40/24"},"last_updated":"2025-02-10T08:00:00.000000Z"},
+{"id":13,"name":"OLD-NAS","role":{"id":5,"name":"Storage","slug":"storage"},"site":{"id":1,"name":"HQ"},"tenant":{"id":3,"name":"IT"},"primary_ip4":{"id":103,"address":"10.20.10.77/24"},"last_updated":"2024-06-01T08:00:00.000000Z"}]}

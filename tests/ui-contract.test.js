@@ -682,3 +682,8 @@ test('the network map shows network change safety with required flows and before
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/change-safety'\)/);assert.match(app,/\/api\/change-safety\/analyse/);
   for(const marker of ['Network change safety','Required flows','Analyse a change before applying it','Cannot verify','Breaks','CG-131']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows intended versus observed state with per-difference review and a NetBox patch (CG-132)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/intended-state'\)/);assert.match(app,/\/api\/intended-state\/patch/);
+  for(const marker of ['Intended versus observed state','Interface mismatch','VLAN mismatch','Update source of truth','Download reviewed NetBox patch','CG-132']) assert.ok(app.includes(marker),marker);
+});
