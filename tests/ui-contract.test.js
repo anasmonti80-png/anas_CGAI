@@ -752,3 +752,8 @@ test('the threats page shows attack technique coverage by evidence with missing 
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/coverage-evidence'\)/);assert.match(app,/\/api\/coverage-evidence\/navigator-layer/);
   for(const marker of ['Attack technique coverage by evidence','Covered by evidence','Posture rules only (not counted)','No passing detection test','Performance limits undocumented','Record a detection test','CG-145']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows the Microsoft 365 baseline with deviations, policy versions, unassessed products and least privilege (CG-146)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/m365-baseline')"));
+  for(const marker of ['Microsoft 365 baseline assessment (CISA SCuBA)','SHALL deviations','Products not assessed — no compliance is claimed','Policy version changed (reference change, not a regression)','Least privilege to run ScubaGear','No — write-capable','CG-146']) assert.ok(app.includes(marker),marker);
+});

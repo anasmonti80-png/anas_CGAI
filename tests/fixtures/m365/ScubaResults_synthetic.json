@@ -1,0 +1,51 @@
+{
+  "MetaData": {
+    "TenantId": "00000000-0000-0000-0000-000000000146",
+    "DisplayName": "Synthetic Lab Tenant",
+    "DomainName": "lab.example",
+    "ProductSuite": "Microsoft 365",
+    "ProductsAssessed": ["Azure Active Directory", "Security Suite", "Exchange Online", "Microsoft Teams"],
+    "ProductAbbreviationMapping": { "Azure Active Directory": "AAD", "Security Suite": "SecuritySuite", "Exchange Online": "EXO", "Microsoft Teams": "Teams" },
+    "Tool": "ScubaGear",
+    "ToolVersion": "2.0.0",
+    "TimestampZulu": "2026-10-15T21:46:53.179Z",
+    "ReportUUID": "00000000-0000-4000-8000-000000000146"
+  },
+  "Summary": {},
+  "Results": {
+    "AAD": [
+      { "GroupName": "Legacy Authentication", "GroupNumber": "1", "GroupReferenceURL": "https://example.invalid/aad#1", "Controls": [
+        { "Control ID": "MS.AAD.1.1v1", "Requirement": "Legacy authentication SHALL be blocked.<span class=\"badge\">BOD 25-01 Requirement</span><span class=\"badge\">Automated Check</span>", "Result": "Pass", "Criticality": "Shall", "Details": "1 conditional access policy(s) found that meet(s) all requirements" }
+      ] },
+      { "GroupName": "Strong Authentication and a Secure Registration Process", "GroupNumber": "3", "GroupReferenceURL": "https://example.invalid/aad#3", "Controls": [
+        { "Control ID": "MS.AAD.3.1v1", "Requirement": "Phishing-resistant MFA SHALL be enforced for all users.<span class=\"badge\">BOD 25-01 Requirement</span>", "Result": "Fail", "Criticality": "Shall", "Details": "0 conditional access policy(s) found that meet(s) all requirements" },
+        { "Control ID": "MS.AAD.3.5v2", "Requirement": "The authentication methods SMS, Voice Call, and Email One-Time Passcode (OTP) SHALL be disabled.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met" },
+        { "Control ID": "MS.AAD.3.4v1", "Requirement": "The Authentication Methods Manage Migration feature SHALL be set to Migration Complete.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met" },
+        { "Control ID": "MS.AAD.3.8v1", "Requirement": "Managed Devices SHOULD be required to register MFA.", "Result": "Warning", "Criticality": "Should", "Details": "0 conditional access policy(s) found that meet(s) all requirements" }
+      ] },
+      { "GroupName": "Highly Privileged User Access", "GroupNumber": "7", "GroupReferenceURL": "https://example.invalid/aad#7", "Controls": [
+        { "Control ID": "MS.AAD.7.9v1", "Requirement": "User activation of other highly privileged roles SHOULD trigger an alert.", "Result": "N/A", "Criticality": "Should/Not-Implemented", "Details": "This policy is not implemented in the tool; check it manually" },
+        { "Control ID": "MS.AAD.7.4v1", "Requirement": "Permanent active role assignments SHALL NOT be allowed for highly privileged roles.", "Result": "Error - Test results missing", "Criticality": "Shall", "Details": "Report this issue on GitHub" }
+      ] }
+    ],
+    "SecuritySuite": [
+      { "GroupName": "Preset Security Policies", "GroupNumber": "1", "GroupReferenceURL": "https://example.invalid/ss#1", "Controls": [
+        { "Control ID": "MS.SECURITYSUITE.1.1v1", "Requirement": "The standard and strict preset security policies SHALL be enabled.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met" },
+        { "Control ID": "MS.SECURITYSUITE.2.1v1", "Requirement": "A third-party email filtering solution MAY be used if it provides equivalent protection.", "Result": "N/A", "Criticality": "Should/3rd Party", "Details": "Check the third-party solution" }
+      ] }
+    ],
+    "EXO": [
+      { "GroupName": "Automatic Forwarding to External Domains", "GroupNumber": "1", "GroupReferenceURL": "https://example.invalid/exo#1", "Controls": [
+        { "Control ID": "MS.EXO.1.1v2", "Requirement": "Automatic forwarding to external domains SHALL be disabled.<span class=\"badge\">BOD 25-01 Requirement</span>", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met" }
+      ] },
+      { "GroupName": "DMARC", "GroupNumber": "4", "GroupReferenceURL": "https://example.invalid/exo#4", "Controls": [
+        { "Control ID": "MS.EXO.4.4v1", "Requirement": "An agency&#39;s point of contact SHOULD be included for aggregate reports.", "Result": "Omitted", "Criticality": "Should", "Details": "", "OmittedEvaluationResult": "Fail", "OmittedEvaluationDetails": "Owner rationale: reports go to a managed DMARC service (ticket SEC-146)" }
+      ] }
+    ],
+    "Teams": [
+      { "GroupName": "External User Access", "GroupNumber": "2", "GroupReferenceURL": "https://example.invalid/teams#2", "Controls": [
+        { "Control ID": "MS.TEAMS.2.1v2", "Requirement": "External access for users SHALL only be enabled on a per-domain basis.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met" }
+      ] }
+    ]
+  }
+}

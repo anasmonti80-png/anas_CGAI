@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T11:32:11.090Z",
+  "at": "2026-11-26T20:39:01.109Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -153,7 +153,8 @@
     "hunt_hypotheses": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-143", "h_ia_01": "found: 6 failures then RDP success from 203.0.113.50 on SRV-01", "h_p_01": "found: service SyntheticSvc created", "h_ex_01": "insufficient visibility: no flow logs with byte counts", "retention": "shown as shorter than required for hour-old data", "console_errors": 0},
     "post_patch": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-144", "web_01": "CVE-2099-0144 (KEV) vulnerable for 9 days with exposure from 198.51.100.144, patched yesterday: investigation opened automatically", "conclusions": "three clean and one insufficient evidence recorded from the page", "closure": "refused without a gaps reason (400), closed with gaps after the reason", "console_errors": "only the expected 400 refusal"},
     "coverage_evidence": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-145", "t1110": "partial before, covered by evidence after telemetry, the brute-force-rdp lab run and documented limits", "t1568": "purple-team test recorded from the page; still partial because telemetry does not arrive", "summary": "1 covered, 69 partial, 7 posture only, 1 of 56 detection rules proven", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 145, "next": "CG-146"}
+    "m365_baseline": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-146", "tenant": "tenant-lab (synthetic), ScubaGear 2.0.0, 2 imports", "summary": "3 SHALL deviations, 1 SHOULD deviation, 4 meet, 2 manual or third-party, 1 omitted, 1 not assessed, automated 50%", "drift": "MS.EXO.1.1v2 regressed and raised CG-M365-DRIFT-146; MS.TEAMS.2.1 v2 to v3 shown as a reference change", "products_not_assessed": "Power BI, Power Platform, SharePoint Online", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 146, "next": "CG-147"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
