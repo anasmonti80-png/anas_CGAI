@@ -712,3 +712,8 @@ test('the network map shows the management-plane audit with the version baseline
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/mgmt-plane'\)/);
   for(const marker of ['Infrastructure management-plane audit','Baseline','Compliance','Regressed since','Expected','Observed','CG-137']) assert.ok(app.includes(marker),marker);
 });
+
+test('the sources page shows the vendor adapter registry with function-level support and lab tests (CG-138)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/adapters'\)/);assert.match(app,/\/api\/adapters\/support/);
+  for(const marker of ['Vendor adapter validation registry','Fixture-verified only','Lab-validated','Is this function supported?','Record a lab test','Undo verified','CG-138']) assert.ok(app.includes(marker),marker);
+});

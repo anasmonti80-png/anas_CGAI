@@ -1,0 +1,663 @@
+{
+  "schema_version": "cg.adapter-registry/1",
+  "policy": {
+    "stale_after_days": 180,
+    "claim": "Support is claimed per function, model and firmware with the evidence level, never by vendor name. fixture-verified means the converter was tested on the vendor documented response shape, not on a device; only a recorded lab test of a model and firmware makes a function lab-validated."
+  },
+  "entries": [
+    {
+      "id": "A-001",
+      "vendor": "cisco",
+      "product": "Catalyst Center",
+      "function": "inventory-read",
+      "api": "Intent API GET /dna/intent/api/v1/network-device",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/cisco.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Cisco Catalyst Center inventory, physical topology and device health convert from the Intent API responses"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-002",
+      "vendor": "cisco",
+      "product": "Catalyst Center",
+      "function": "topology-read",
+      "api": "Intent API physical topology",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/cisco.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Cisco Catalyst Center inventory, physical topology and device health convert from the Intent API responses"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-003",
+      "vendor": "cisco",
+      "product": "Catalyst Center",
+      "function": "health-read",
+      "api": "Intent API device health",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/cisco.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Cisco Catalyst Center inventory, physical topology and device health convert from the Intent API responses"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-004",
+      "vendor": "cisco",
+      "product": "Secure Firewall Management Center",
+      "function": "firewall-policy-read",
+      "api": "FMC REST access policy rules",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/cisco.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Secure Firewall FMC access rules and IOS XE RESTCONF configuration convert without guessing unresolved objects"
+          },
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Cisco telemetry feeds topology, health alerts, the firewall analyzer and device configuration checks; ISE ANC isolation runs only as an approved governed job"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-005",
+      "vendor": "cisco",
+      "product": "IOS XE",
+      "function": "config-read",
+      "api": "RESTCONF Cisco-IOS-XE-native",
+      "models": [],
+      "firmware": {
+        "min": "16.6",
+        "basis": "IOS XE RESTCONF is available from 16.6 (lib/capability-negotiation.js)"
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/cisco.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Secure Firewall FMC access rules and IOS XE RESTCONF configuration convert without guessing unresolved objects"
+          },
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Cisco telemetry feeds topology, health alerts, the firewall analyzer and device configuration checks; ISE ANC isolation runs only as an approved governed job"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-006",
+      "vendor": "cisco",
+      "product": "Identity Services Engine",
+      "function": "endpoint-quarantine",
+      "api": "ERS ANC apply and clear",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": false,
+        "write": true,
+        "undo": true
+      },
+      "adapter_file": "lib/connectors/cisco.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/cisco-connector.test.js",
+            "name": "Cisco telemetry feeds topology, health alerts, the firewall analyzer and device configuration checks; ISE ANC isolation runs only as an approved governed job"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": "Runs only as an approved governed response job; release clears the ANC policy."
+    },
+    {
+      "id": "A-007",
+      "vendor": "cisco",
+      "product": "IOS / IOS XE",
+      "function": "config-audit",
+      "api": "show running-config export",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/mgmt-plane.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/mgmt-plane.test.js",
+            "name": "controls are compared with a baseline chosen by vendor and version, and the approved servers of the owner are enforced (CG-137)"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-008",
+      "vendor": "cisco",
+      "product": "IOS / IOS XE switches",
+      "function": "l2-security-read",
+      "api": "show running-config and show logging export",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/l2-security.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/l2-security.test.js",
+            "name": "DHCP snooping, ARP inspection, IP Source Guard and 802.1X are reported per device with the VLANs and ports they cover (CG-134)"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-009",
+      "vendor": "cisco",
+      "product": "IOS / IOS XE routers",
+      "function": "bgp-read",
+      "api": "show ip bgp and show running-config export",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/routing-security.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/routing-security.test.js",
+            "name": "route origin validation follows RFC 6811 and own prefixes are checked for ROA coverage and loose maxLength (CG-135)"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-010",
+      "vendor": "cisco",
+      "product": "Catalyst 9800 wireless controller",
+      "function": "wireless-read",
+      "api": "show running-config export",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/wireless.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/wireless.test.js",
+            "name": "SSIDs are inventoried with their security, 802.1X and RADIUS, management frame protection and guest isolation (CG-136)"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-011",
+      "vendor": "huawei",
+      "product": "iMaster NCE-Campus",
+      "function": "inventory-read",
+      "api": "Northbound GET /controller/campus/v3/devices",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/huawei.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/huawei-connector.test.js",
+            "name": "Huawei NCE-Campus devices, VRP configuration and LLDP neighbours convert without copying secrets"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-012",
+      "vendor": "huawei",
+      "product": "VRP",
+      "function": "config-read",
+      "api": "display version and display current-configuration",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/huawei.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/huawei-connector.test.js",
+            "name": "Huawei NCE-Campus devices, VRP configuration and LLDP neighbours convert without copying secrets"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-013",
+      "vendor": "huawei",
+      "product": "VRP",
+      "function": "topology-read",
+      "api": "display lldp neighbor brief",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/huawei.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/huawei-connector.test.js",
+            "name": "Huawei NCE-Campus devices, VRP configuration and LLDP neighbours convert without copying secrets"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-014",
+      "vendor": "paloalto",
+      "product": "PAN-OS",
+      "function": "firewall-policy-read",
+      "api": "REST SecurityRules",
+      "models": [],
+      "firmware": {
+        "min": "9.0",
+        "basis": "PAN-OS REST API is available from 9.0 (lib/capability-negotiation.js)"
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/firewall-vendors.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/firewall-vendors.test.js",
+            "name": "PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-015",
+      "vendor": "fortinet",
+      "product": "FortiOS",
+      "function": "firewall-policy-read",
+      "api": "REST cmdb/firewall/policy",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/firewall-vendors.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/firewall-vendors.test.js",
+            "name": "PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-016",
+      "vendor": "mikrotik",
+      "product": "RouterOS",
+      "function": "firewall-policy-read",
+      "api": "REST ip/firewall/filter",
+      "models": [],
+      "firmware": {
+        "min": "7.1",
+        "basis": "RouterOS REST API is available from 7.1 (lib/capability-negotiation.js)"
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/firewall-vendors.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/firewall-vendors.test.js",
+            "name": "PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-017",
+      "vendor": "opnsense",
+      "product": "OPNsense",
+      "function": "firewall-policy-read",
+      "api": "filter searchRule API",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/firewall-vendors.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/firewall-vendors.test.js",
+            "name": "PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-018",
+      "vendor": "juniper",
+      "product": "Junos",
+      "function": "firewall-policy-read",
+      "api": "show configuration | display set (security policies)",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/firewall-vendors.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/firewall-vendors.test.js",
+            "name": "PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    },
+    {
+      "id": "A-019",
+      "vendor": "linux",
+      "product": "netfilter",
+      "function": "firewall-policy-read",
+      "api": "iptables-save",
+      "models": [],
+      "firmware": {
+        "min": null,
+        "basis": null
+      },
+      "license": {
+        "required": null,
+        "feature": null,
+        "note": "Not confirmed: record it with the first lab validation"
+      },
+      "operations": {
+        "read": true,
+        "write": false,
+        "undo": false
+      },
+      "adapter_file": "lib/connectors/firewall-vendors.js",
+      "evidence": {
+        "kind": "fixture",
+        "tests": [
+          {
+            "file": "tests/firewall-vendors.test.js",
+            "name": "PAN-OS, FortiOS, MikroTik, OPNsense, Junos and iptables policies convert to the firewall rule shape without guessing objects"
+          }
+        ]
+      },
+      "last_verified": "2026-11-26",
+      "notes": null
+    }
+  ]
+}
