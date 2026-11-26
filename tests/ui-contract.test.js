@@ -662,3 +662,8 @@ test('incidents show the SOC workflow: on-call, escalations, tickets, closure po
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/soc'\)/);assert.match(app,/closure-review/);
   for(const marker of ['SOC workflow','Coverage gaps (7 days)','Case tickets','Request closure','Awaiting a second reviewer','Lessons learned','Tabletop exercises','CG-127']) assert.ok(app.includes(marker),marker);
 });
+
+test('settings show the platform self-defense posture and how to make a restore-tested backup (CG-128)',()=>{
+  const app=read('app.js');assert.match(app,/\/api\/self-defense/);
+  for(const marker of ['Platform self-defense','Administrator MFA','Code integrity and signature','Platform backup','platform-backup.js create','CG-128']) assert.ok(app.includes(marker),marker);
+});
