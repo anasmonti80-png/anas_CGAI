@@ -822,6 +822,29 @@
         "lib/service-zero-trust.js"
       ],
       "decision_reason": "Implemented."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-153"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-036",
+      "title": "Microsoft Defender for Cloud: Defender CSPM attack path analysis, EASM integration and sensitive data",
+      "source_type": "official",
+      "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/concept-cloud-security-posture-management",
+      "source_date": "2026-11-27",
+      "summary": "Attack path analysis and risk prioritization are in the paid Defender CSPM plan across Azure, AWS and GCP; external attack surface data validates internet exposure of entry points; data breach paths require sensitive data discovery.",
+      "applicability": "Comparison table and the validated versus inferred distinction.",
+      "risks": "Vendor graphs see more relationships (for example instance profiles) than imported records.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/cloud-attack-paths.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented from stored records with per-step evidence."
     }
   ],
   "rounds": [

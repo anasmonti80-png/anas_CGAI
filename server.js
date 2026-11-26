@@ -31,6 +31,7 @@ import { workloadView } from './lib/workload-identity.js';
 import { authPostureView } from './lib/phishing-resistant.js';
 import { s2sView } from './lib/service-zero-trust.js';
 import { PermissionReduction } from './lib/permission-reduction.js';
+import { attackPathView } from './lib/cloud-attack-paths.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
 import { telecomView } from './lib/telecom-hardening.js';
@@ -329,6 +330,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/permission-reduction'&&method==='GET'){roles(['admin','analyst']);return send(res,200,permissionReduction.view());}
       if(p==='/api/permission-reduction/dry-run'&&method==='GET'){roles(['admin','analyst']);res.writeHead(200,{'content-type':'application/json; charset=utf-8','content-disposition':'attachment; filename="cyberguard-permission-reduction-dry-run.json"','cache-control':'no-store'});return res.end(JSON.stringify(permissionReduction.dryRun(),null,2));}
       if(p==='/api/permission-reduction/transition'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);const input=await body(req);return send(res,200,permissionReduction.transition(user.id,String(input?.key||''),String(input?.to||''),input));}
+      if(p==='/api/cloud-attack-paths'&&method==='GET'){roles(['admin','analyst']);return send(res,200,attackPathView(store));}
       if(p==='/api/service-zero-trust'&&method==='GET'){roles(['admin','analyst']);return send(res,200,s2sView(store));}
       if(p==='/api/auth-strength'&&method==='GET'){roles(['admin','analyst']);return send(res,200,authPostureView(store));}
       if(p==='/api/workload-identities'&&method==='GET'){roles(['admin','analyst']);return send(res,200,workloadView(store));}
