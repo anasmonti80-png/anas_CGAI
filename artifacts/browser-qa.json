@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T23:19:00.889Z",
+  "at": "2026-11-26T23:27:39.646Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -167,7 +167,8 @@
     "backup_vault_lock": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-157", "vaults": "prod-immutable compliance immutable with a proven restore from a test plan; finance-compliance-new in grace until 2026-12-01 without restore proof and without max retention; logs-governance removable with a failed restore; default unlocked", "console_errors": 0},
     "artifact_admission": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-158", "register": "application and collectors unsigned development build, rules none approved, images failed (1 of 4 verified, 1 enforced)", "admission": "lab api enforced and verified; busybox not enforced under no-match warn and by tag; partner image warn mode with failed signature; dev namespace not covered", "console_errors": 0},
     "saas_app_access": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-159", "entra": "consent policy Any app; Contoso Mail Sync unverified with Mail.Read (2 users); Fabrikam admin consent with Files.ReadWrite.All; Anyone links without expiry", "google": "Mail Merge Helper unreviewed high-risk (shadow IT); Old Drive Tool blocked but holds tokens; Quiz Sign-in anonymous; file sharing counts under privacy policy", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 159, "next": "CG-160"}
+    "collection_preview": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-160", "catalog": "9 cloud sources with default state, provider record, billing units, enable/read permissions and regions", "estimate": "CloudTrail data events from a 1-hour sample: 8,640,000 events/month, ingestion 86.4 x 100k at the entered price, egress after the 100 GB free allowance, partial total", "stop": "source table with protected evidence and open cases", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 160, "next": "CG-161"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

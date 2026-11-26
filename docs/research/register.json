@@ -1015,6 +1015,52 @@
       "applicability": "Shadow IT as tokens of apps with no admin access setting; blocked apps still holding tokens; file exposure counted only under a privacy policy.",
       "risks": "The high-risk scope list in code is a subset of the published list; tokens.list has no verified-publisher field.",
       "decision_reason": "Implemented with counts only and no content access."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-160"
+      ],
+      "topic": "cloud-cost",
+      "source_type": "official",
+      "source_date": "2026-11-27",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/collection-preview.js"
+      ],
+      "decision": "accepted",
+      "id": "R-044",
+      "title": "AWS CloudTrail, VPC Flow Logs, GuardDuty and data transfer pricing structure",
+      "url": "https://aws.amazon.com/cloudtrail/pricing/",
+      "summary": "CloudTrail Event history gives 90 days of management events at no charge; one copy of management events can be delivered to S3 for free with a trail, additional copies and data events are billed per 100,000 events. VPC Flow Logs incur vended-log ingestion and archival charges per GB, tiered monthly. GuardDuty is priced on volume analyzed (CloudTrail events per million, flow and DNS logs per GB) with a 30-day free trial per account and Region. 100 GB of data transfer out to the internet is free each month across services and Regions.",
+      "applicability": "Billing components, free allowances and permissions per AWS source; costs from owner-entered unit prices.",
+      "risks": "Prices change and differ per Region and contract, so no amount is stored.",
+      "decision_reason": "Implemented as units and free allowances only."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-160"
+      ],
+      "topic": "cloud-cost",
+      "source_type": "official",
+      "source_date": "2026-11-27",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/collection-preview.js"
+      ],
+      "decision": "accepted",
+      "id": "R-045",
+      "title": "Azure Activity log and VNet flow logs, Google Cloud audit logs, Cloud Logging and VPC Flow Logs pricing",
+      "url": "https://cloud.google.com/logging/pricing",
+      "summary": "Azure keeps Activity log events 90 days at no charge and Log Analytics ingestion of activity logs is free; VNet flow logs are charged per GB collected with 5 GB per month per subscription free, storage separate and traffic analytics without a free tier. Google Admin Activity audit logs are always written, cannot be disabled and are kept 400 days in _Required at no charge; Data Access logs are off by default except BigQuery. Cloud Logging storage is billed per GiB after 50 GiB per project per month and includes 30 days; vended network logs have no free allotment, and VPC Flow Logs generation charges are waived when sent to Logging.",
+      "applicability": "Provider records that survive a CyberGuard stop, free allowances, retention billing.",
+      "risks": "Network telemetry and Network Watcher per-GB rates were not stored.",
+      "decision_reason": "Implemented as units and free allowances only."
     }
   ],
   "rounds": [

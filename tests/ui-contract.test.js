@@ -822,3 +822,8 @@ test('the identity page shows SaaS app-to-app access, consent policy, shadow IT 
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/saas-app-access')"));
   for(const marker of ['SaaS app-to-app access and shadow IT','Users can consent to any app','Unreviewed app with high-risk scopes (shadow IT)','Blocked app still holds tokens','File sharing not counted: it requires an employee privacy policy reference.','file_sharing_requires_privacy_policy','CG-159']) assert.ok(app.includes(marker),marker);
 });
+
+test('the cloud page shows the collection cost and permissions preview and the no-deletion stop (CG-160)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/collection-preview'"));
+  for(const marker of ['Cloud collection cost and permissions preview','Estimate before enabling','Not computed — no prices','Stopping collection without losing the incident record','needs the incident owner','open_incident_from_source_requires_incident_owner','CG-160']) assert.ok(app.includes(marker),marker);
+});
