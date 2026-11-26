@@ -782,3 +782,8 @@ test('the cloud page shows service-to-service zero trust with mTLS, authorizatio
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/service-zero-trust')"));
   for(const marker of ['Service-to-service zero trust (NIST SP 800-207A)','Identity tier (service identities)','No service mesh observed — mesh checks not applicable','Service-to-service credentials','Workload certificates','CG-151']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows permission reduction recommendations with decisions, a change workflow and a dry-run report (CG-152)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/permission-reduction')"));assert.ok(app.includes('/api/permission-reduction/dry-run'));
+  for(const marker of ['Permission reduction recommendations','Download dry-run report','Request change','Record owner approval','Owner approved — awaiting change outside the platform','Removed and verified by a later import','CG-152']) assert.ok(app.includes(marker),marker);
+});

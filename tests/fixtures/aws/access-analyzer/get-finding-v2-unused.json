@@ -1,0 +1,13 @@
+[
+  { "id": "33333333-aaaa-4bbb-8ccc-000000000152", "findingType": "UnusedPermission", "resource": "arn:aws:iam::111122223333:role/app-backend", "resourceType": "AWS::IAM::Role", "resourceOwnerAccount": "111122223333", "status": "ACTIVE",
+    "findingDetails": [ { "unusedPermissionDetails": { "serviceNamespace": "s3", "actions": [ { "action": "s3:DeleteBucket" }, { "action": "s3:PutBucketPolicy" } ] } },
+                        { "unusedPermissionDetails": { "serviceNamespace": "glacier", "lastAccessed": "2026-01-15T00:00:00Z", "actions": [ { "action": "glacier:InitiateJob", "lastAccessed": "2026-01-15T00:00:00Z" } ] } } ] },
+  { "id": "33333333-aaaa-4bbb-8ccc-000000000153", "findingType": "UnusedIAMRole", "resource": "arn:aws:iam::111122223333:role/legacy-deploy", "resourceType": "AWS::IAM::Role", "resourceOwnerAccount": "111122223333", "status": "ACTIVE",
+    "findingDetails": [ { "unusedIamRoleDetails": { "lastAccessed": "2025-12-01T00:00:00Z" } } ] },
+  { "id": "33333333-aaaa-4bbb-8ccc-000000000154", "findingType": "UnusedIAMUserAccessKey", "resource": "arn:aws:iam::111122223333:user/ci-bot", "resourceType": "AWS::IAM::User", "resourceOwnerAccount": "111122223333", "status": "ACTIVE",
+    "findingDetails": [ { "unusedIamUserAccessKeyDetails": { "accessKeyId": "example-key-152", "lastAccessed": "2025-10-01T00:00:00Z" } } ] },
+  { "id": "33333333-aaaa-4bbb-8ccc-000000000155", "findingType": "UnusedIAMRole", "resource": "arn:aws:iam::111122223333:role/break-glass-admin", "resourceType": "AWS::IAM::Role", "resourceOwnerAccount": "111122223333", "status": "ACTIVE",
+    "findingDetails": [ { "unusedIamRoleDetails": {} } ] },
+  { "id": "33333333-aaaa-4bbb-8ccc-000000000156", "findingType": "UnusedIAMRole", "resource": "arn:aws:iam::111122223333:role/old-thing", "resourceType": "AWS::IAM::Role", "resourceOwnerAccount": "111122223333", "status": "ARCHIVED",
+    "findingDetails": [ { "unusedIamRoleDetails": {} } ] }
+]

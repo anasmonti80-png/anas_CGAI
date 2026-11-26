@@ -1,0 +1,1 @@
+{ "arn:aws:iam::111122223333:role/app-backend": "team-payments", "arn:aws:iam::111122223333:role/legacy-deploy": "team-platform", "arn:aws:iam::111122223333:role/break-glass-admin": "security" }

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T21:19:02.546Z",
+  "at": "2026-11-26T21:25:13.847Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -159,7 +159,8 @@
     "workload_identities": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-149", "tenant": "synthetic tenant with 2 single-tenant apps, 1 multitenant app and 1 managed identity", "coverage": "1 covered, 1 excluded and not covered, 2 not coverable", "changes": "app role assignment and service principal credential added", "deviations": "payroll-sync from a new country (high), managed identity from a new address (medium)", "credentials": "expired, long-lived and client secret findings", "console_errors": 0},
     "phishing_resistant_auth": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-150", "users": "7 users: 2 phishing-resistant, 2 app or OTP, 1 SMS, 1 not MFA, 1 none; 1 unclassified method", "admins": "admin2 with push only flagged", "enforcement": "some users or roles (admin role policy); legacy block in report-only mode not counted", "legacy": "IMAP4 and Authenticated SMTP successful sign-ins listed", "exceptions": "2 declared, 1 review overdue", "console_errors": 0},
     "service_zero_trust": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-151", "namespaces": "payments STRICT with identity-tier authorization and a port exception; billing PERMISSIVE inherited with network-tier only; reporting PERMISSIVE and unrestricted", "credentials": "API key rotation overdue, shared secret without rotation, one pair without authentication", "certificates": "SPIFFE SVID 1 hour; static certificate 17520 hours long-lived", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 151, "next": "CG-152"}
+    "permission_reduction": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-152", "decisions": "2 recommended, 1 seasonal with insufficient window, 1 without owner, 1 break-glass excluded", "workflow": "change request CHG-152 opened from the page with MFA; approval by a non-owner refused with the Arabic message", "dry_run": "changes_made 0, two proposed changes with workflow state", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 152, "next": "CG-153"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
