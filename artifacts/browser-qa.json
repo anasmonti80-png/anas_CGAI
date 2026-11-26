@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T21:57:29.884Z",
+  "at": "2026-11-26T22:05:24.351Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -165,7 +165,8 @@
     "aws_completeness": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-155", "accounts": "3: Management incomplete (eu-west-1 without Config and not linked, me-central-1 never inspected, af-south-1 not enabled), Production complete with a Region enabling, Sandbox not assessed (access denied)", "statements": "no history before enablement, Regional scope, Config prerequisite, aggregation does not enable", "console_errors": 0},
     "azure_jit": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-156", "vms": "jump-1 restricted and complete; app-1 any source and 24 hours; app-2 without policy on Plan 2; dev-1 on Free without JIT", "requests": "dev request from any source without justification flagged; ops request with change reference", "permissions": "configure, request and read RBAC tables shown", "console_errors": 0},
     "backup_vault_lock": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-157", "vaults": "prod-immutable compliance immutable with a proven restore from a test plan; finance-compliance-new in grace until 2026-12-01 without restore proof and without max retention; logs-governance removable with a failed restore; default unlocked", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 157, "next": "CG-158"}
+    "artifact_admission": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-158", "register": "application and collectors unsigned development build, rules none approved, images failed (1 of 4 verified, 1 enforced)", "admission": "lab api enforced and verified; busybox not enforced under no-match warn and by tag; partner image warn mode with failed signature; dev namespace not covered", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 158, "next": "CG-159"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

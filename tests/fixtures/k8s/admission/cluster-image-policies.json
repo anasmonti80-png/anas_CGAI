@@ -1,0 +1,4 @@
+{ "items": [
+  { "metadata": { "name": "lab-images-signed" }, "spec": { "images": [ { "glob": "ghcr.io/lab/**" } ], "authorities": [ { "key": { "data": "-----BEGIN PUBLIC KEY-----\nEXAMPLE\n-----END PUBLIC KEY-----" } } ] } },
+  { "metadata": { "name": "partner-images-warn" }, "spec": { "mode": "warn", "images": [ { "glob": "registry.partner.example/**" } ], "authorities": [ { "keyless": { "identities": [ { "issuer": "https://token.actions.githubusercontent.com", "subject": "https://github.com/partner/app/.github/workflows/release.yml@refs/heads/main" } ] } } ] } }
+] }

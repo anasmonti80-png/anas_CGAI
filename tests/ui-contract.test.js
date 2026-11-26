@@ -812,3 +812,8 @@ test('the risk page shows AWS Backup Vault Lock mode, reversibility, cost risk a
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/backup-vault-lock')"));
   for(const marker of ['Immutable backups (AWS Backup Vault Lock)','Restore proven','Restore not tested','Lock date','CG-157']) assert.ok(app.includes(marker),marker);
 });
+
+test('the cloud page shows the signed artifact integrity register and Kubernetes image admission (CG-158)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/artifact-integrity')"));
+  for(const marker of ['Signed artifact integrity and admission','Kubernetes container image admission','Warn mode only — does not block','Referenced by tag, not digest','Unsigned (development build)','CG-158']) assert.ok(app.includes(marker),marker);
+});

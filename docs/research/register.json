@@ -941,6 +941,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented read-only."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-158"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-041",
+      "title": "Sigstore policy-controller and cosign verify",
+      "source_type": "official",
+      "url": "https://docs.sigstore.dev/policy-controller/overview/",
+      "source_date": "2026-11-27",
+      "summary": "Namespaces opt in with the label policy.sigstore.dev/include: \"true\". ClusterImagePolicy lists image globs and authorities (key or keyless identities with issuer and subject); matching policies are ANDed and authorities within a policy ORed; mode warn does not block admission; images matching no policy are rejected unless the no-match-policy in config-policy-controller is warn or allow. cosign verify checks signatures against a key or keyless certificate identity and issuer and outputs a JSON array with critical identity, image digest and type.",
+      "applicability": "Admission state per running image, warn mode and tag references flagged.",
+      "risks": "Running pods may predate the policy; the default enforce mode is inferred from the documented warn behaviour.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/artifact-admission.js",
+        "scripts/image-admission.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented with the existing signed release manifest and rule signing."
     }
   ],
   "rounds": [

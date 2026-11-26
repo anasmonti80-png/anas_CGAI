@@ -1,0 +1,1 @@
+[{"critical":{"identity":{"docker-reference":"ghcr.io/lab/api"},"image":{"docker-manifest-digest":"sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"},"type":"cosign container image signature"},"optional":null}]

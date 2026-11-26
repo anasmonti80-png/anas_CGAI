@@ -181,6 +181,26 @@
 - يكشف: CORS الذي يعكس أي أصل (مع بيانات الاعتماد = مرتفع)، نقاطًا تجيب دون المصادقة المطلوبة، مفاتيح API في الرابط، غياب تحديد المعدل (طلبات متكررة فقط في بيئة test أو staging)، وترويسات الأمان وخصائص ملفات تعريف الارتباط وكشف إصدار الخادم. لا تُحفظ معاملات الاستعلام.
 - أحداث WAF (ModSecurity وAWS WAF وCloud Armor) تُلخص في صفحة الثغرات. التطبيق نفسه (CyberGuard) اجتاز هذا الفحص.
 
+## سلامة القطع الموقعة والقبول (CG-158)
+
+- يجمع سجل واحد سلامة ما يشغّله CyberGuard:
+  - **التطبيق وسكربتات المجمّعات والوكيل:** بيان إصدار موقّع Ed25519 ‏(CG-128)، فأي ملف معدّل أو مضاف يُسقط التحقق.
+  - **قواعد الكشف:** كل نسخة معتمدة موقعة بمفتاح التثبيت (CG-066)، ويُعاد التحقق من النسخة العاملة.
+  - **صور الحاويات:** توقيعات Sigstore cosign يفرضها policy-controller في Kubernetes.
+- يصدّر مالك العنقود بصلاحية قراءة ما يلي، ثم يستورد:
+  - مساحات الأسماء.
+  - سياسات ClusterImagePolicy.
+  - إعداد config-policy-controller.
+  - الحاويات العاملة.
+  - نتائج `cosign verify` لكل صورة. ويُكتب FAILED عند فشل التحقق.
+  `node scripts/image-admission.js --cluster-ref <ref> --authorization-ref <ref> --namespaces ns.json --cluster-image-policies cip.json --config cfg.json --pods pods.json --cosign <image@digest>=verify.json --output adm.json`
+- قواعد الفرض:
+  - لا يُفرض القبول إلا في المساحات الموسومة `policy.sigstore.dev/include: "true"`.
+  - سياسة بوضع warn لا تمنع.
+  - الصور التي لا تطابق سياسة تُرفض افتراضيًا، إلا إذا غيّر `no-match-policy` ذلك.
+  - الصورة المشار إليها بالوسم لا بالبصمة تُوسم ملاحظةً.
+- `CG-IMAGE-ADMISSION-158` يُطلق عند فشل التحقق من توقيع، وعند وجود صورة عاملة في مساحة مشمولة دون فرض أو دون دليل توقيع.
+
 ## النسخ الاحتياطية الثابتة: AWS Backup Vault Lock (CG-157)
 
 - يصدّر المالك بصلاحية قراءة قائمة الخزائن (`aws backup list-backup-vaults`) ومهام الاستعادة (`aws backup list-restore-jobs`)، ثم يستورد:
