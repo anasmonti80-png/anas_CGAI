@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T02:08:53.770Z",
+  "at": "2026-11-26T02:13:34.140Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -136,7 +136,8 @@
     "data_governance": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-126", "residency": "database declared inside the Kingdom; six data classes all inside the tenant folder", "export": "23 lines with X-Export-SHA256", "erasure": "requested by qa-admin (5 matching), same-admin approval refused, approved by qa-admin2 with MFA: 5 erased", "console_errors": "one 403 from the pre-MFA session check"},
     "soc_workflow": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-127", "shift": "primary qa-admin, one coverage gap in 7 days", "ticket": "assigned, priority high, due date shown", "closure_without_lesson": "refused", "closure_after_lesson": "awaiting a second reviewer", "self_review": "refused with an Arabic message", "console_errors": "only the intended 409 and 403 refusals"},
     "self_defense": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-128", "before_mfa": "administrator MFA: fail", "after_mfa": "administrator MFA: pass", "posture": "9 pass, 1 warning (unsigned development build), 1 fail (no platform backup yet)", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 128, "next": "CG-129"}
+    "capacity_model": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-129", "profile": "62,756 EPS, 335 bytes per event, 25/25 detected under load", "plan_2000_eps_90_days": "57.89 GB per day, 5,209.9 GB storage, 1 core, 2 GB memory, no GPU", "monthly_cost_at_0_02_per_gb_month": 104.2, "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 129, "next": "CG-130"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

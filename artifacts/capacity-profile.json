@@ -1,0 +1,33 @@
+{
+  "schema_version": "cg.capacity-profile/1",
+  "measured_at": "2026-11-26T02:12:02.028Z",
+  "machine": {
+    "platform": "win32",
+    "arch": "x64",
+    "cpus": 12,
+    "cpu_model": "12th Gen Intel(R) Core(TM) i5-12400F",
+    "total_memory_gb": 32,
+    "node": "v24.21.0"
+  },
+  "workload": {
+    "events": 50000,
+    "batch_size": 500,
+    "batches": 100,
+    "format": "goflow-json"
+  },
+  "eps": 62756,
+  "cpu_seconds": 0.77,
+  "eps_per_cpu_core": 65359,
+  "bytes_per_event": 335,
+  "rss_mb": 100,
+  "batch_latency_ms": {
+    "p50": 6,
+    "p95": 15
+  },
+  "stored_batches": 100,
+  "detection_under_load": {
+    "injected": 25,
+    "detected": 25,
+    "reliability": 1
+  }
+}

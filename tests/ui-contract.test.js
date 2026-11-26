@@ -667,3 +667,8 @@ test('settings show the platform self-defense posture and how to make a restore-
   const app=read('app.js');assert.match(app,/\/api\/self-defense/);
   for(const marker of ['Platform self-defense','Administrator MFA','Code integrity and signature','Platform backup','platform-backup.js create','CG-128']) assert.ok(app.includes(marker),marker);
 });
+
+test('sources show the capacity and budget model from the measured profile (CG-129)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/capacity'/);
+  for(const marker of ['Capacity and budget model','Days until storage limit','Planned rate (EPS)','Storage for retention','Enter prices to calculate','capacity-benchmark.js','CG-129']) assert.ok(app.includes(marker),marker);
+});

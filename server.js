@@ -14,6 +14,7 @@ import { MsocReadiness } from './lib/msoc-readiness.js';
 import { DataGovernance, bindTenant } from './lib/data-governance.js';
 import { SocWorkflow } from './lib/soc-workflow.js';
 import { SelfDefense } from './lib/self-defense.js';
+import { plan as capacityPlan, live as capacityLive, loadProfile } from './lib/capacity-model.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -277,6 +278,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-129 budget and capacity model from the measured profile.
+      if(p==='/api/capacity'&&method==='GET'){roles(['admin','analyst']);const profile=loadProfile(path.join(ROOT,'artifacts','capacity-profile.json')),pol=tenancy.get(),q=Object.fromEntries(url.searchParams.entries());
+        const current=capacityLive(store,{maxDbMb:pol.max_db_mb,dbBytes:tenancy.dbMegabytes()*1048576,retentionDays:pol.retention_days});
+        return send(res,200,{profile,live:current,plan:profile?capacityPlan({eps:q.eps||Math.max(1,Math.ceil(current.average_eps)),retention_days:q.retention_days||pol.retention_days,sources:q.sources,api_calls_per_day:q.api_calls_per_day,ai_analyses_per_day:q.ai_analyses_per_day,price_storage_gb_month:q.price_storage_gb_month,price_api_call:q.price_api_call,price_ai_1k_tokens:q.price_ai_1k_tokens},profile):null,
+          claim:'Capacity planned from a measured benchmark on this hardware (event rate, stored bytes per event, CPU and memory) with detection checked under load; cost appears only for prices you enter.',claim_ar:'السعة مخططة من قياس فعلي على هذا الجهاز (معدل الأحداث، البايتات المخزنة لكل حدث، المعالج والذاكرة) مع التحقق من الكشف تحت الضغط؛ وتظهر الكلفة فقط للأسعار التي تدخلها.'});}
       // CG-128 product self-defense posture.
       if(p==='/api/self-defense'&&method==='GET'){roles(['admin']);return send(res,200,selfDefense.posture());}
       // CG-127 SOC workflow.
