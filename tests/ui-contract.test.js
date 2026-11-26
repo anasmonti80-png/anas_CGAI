@@ -672,3 +672,8 @@ test('sources show the capacity and budget model from the measured profile (CG-1
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/capacity'/);
   for(const marker of ['Capacity and budget model','Days until storage limit','Planned rate (EPS)','Storage for retention','Enter prices to calculate','capacity-benchmark.js','CG-129']) assert.ok(app.includes(marker),marker);
 });
+
+test('reports show the research evidence register with saturation per topic (CG-130)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/research-register'\)/);
+  for(const marker of ['Research evidence register','Review rounds','Stop research (saturated)','Verified in code','Deferred','CG-130']) assert.ok(app.includes(marker),marker);
+});

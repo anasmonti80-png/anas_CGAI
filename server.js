@@ -15,6 +15,7 @@ import { DataGovernance, bindTenant } from './lib/data-governance.js';
 import { SocWorkflow } from './lib/soc-workflow.js';
 import { SelfDefense } from './lib/self-defense.js';
 import { plan as capacityPlan, live as capacityLive, loadProfile } from './lib/capacity-model.js';
+import { registerView } from './lib/research-register.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -278,6 +279,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-130 research evidence register (versioned in docs/research/register.json).
+      if(p==='/api/research-register'&&method==='GET'){roles(['admin','analyst']);return send(res,200,registerView(ROOT));}
       // CG-129 budget and capacity model from the measured profile.
       if(p==='/api/capacity'&&method==='GET'){roles(['admin','analyst']);const profile=loadProfile(path.join(ROOT,'artifacts','capacity-profile.json')),pol=tenancy.get(),q=Object.fromEntries(url.searchParams.entries());
         const current=capacityLive(store,{maxDbMb:pol.max_db_mb,dbBytes:tenancy.dbMegabytes()*1048576,retentionDays:pol.retention_days});
