@@ -802,3 +802,8 @@ test('the cloud page shows AWS account and Region completeness with Security Hub
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/aws-completeness')"));
   for(const marker of ['AWS multi-account and multi-Region completeness','enabled Regions with gaps','No findings before this date','Regions not enabled','CG-155']) assert.ok(app.includes(marker),marker);
 });
+
+test('the cloud page shows Azure JIT coverage, request log and least-privilege permissions (CG-156)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/azure-jit')"));
+  for(const marker of ['Azure VM just-in-time access','VMs with a JIT policy','Access request log','No justification','Least-privilege permissions','CG-156']) assert.ok(app.includes(marker),marker);
+});

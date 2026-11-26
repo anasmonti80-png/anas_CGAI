@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T21:44:45.331Z",
+  "at": "2026-11-26T21:50:43.448Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -163,7 +163,8 @@
     "cloud_attack_paths": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-153", "paths": "3 paths: web-frontend to customer-exports and to public-reports with external reachability validated (critical), public-reports self path inferred (medium)", "steps": "exposure, misconfiguration, identity (declared), permission, sensitive target, each with its source", "comparison": "Defender for Cloud comparison table shown", "console_errors": 0},
     "gcp_attack_exposure": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-154", "organization": "123456789012 (synthetic), Premium, organization level, no high-value set defined", "shown": "2 toxic combinations (12.4 critical, 6.1 high), 1 chokepoint without score, top scored findings, 1 active finding left unscored", "notes": "default high-value set caveat shown", "console_errors": 0},
     "aws_completeness": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-155", "accounts": "3: Management incomplete (eu-west-1 without Config and not linked, me-central-1 never inspected, af-south-1 not enabled), Production complete with a Region enabling, Sandbox not assessed (access denied)", "statements": "no history before enablement, Regional scope, Config prerequisite, aggregation does not enable", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 155, "next": "CG-156"}
+    "azure_jit": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-156", "vms": "jump-1 restricted and complete; app-1 any source and 24 hours; app-2 without policy on Plan 2; dev-1 on Free without JIT", "requests": "dev request from any source without justification flagged; ops request with change reference", "permissions": "configure, request and read RBAC tables shown", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 156, "next": "CG-157"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

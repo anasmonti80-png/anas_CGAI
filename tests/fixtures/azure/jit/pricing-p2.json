@@ -1,0 +1,1 @@
+{ "value": [ { "name": "VirtualMachines", "properties": { "pricingTier": "Standard", "subPlan": "P2" } }, { "name": "KeyVaults", "properties": { "pricingTier": "Free" } } ] }

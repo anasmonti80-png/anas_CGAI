@@ -893,6 +893,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-156"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-039",
+      "title": "Microsoft Defender for Cloud just-in-time VM access",
+      "source_type": "official",
+      "url": "https://learn.microsoft.com/en-us/azure/defender-for-cloud/just-in-time-access-overview",
+      "source_date": "2026-11-27",
+      "summary": "JIT is offered by Defender for Servers Plan 2 for Resource Manager VMs, VMs behind Azure Firewall on the same VNet and AWS EC2 (preview). Deny rules stay on the selected ports; an approved request, after an RBAC check, allows the requester address for the requested time and the rules are then restored; established connections are not interrupted. Recommended ports 22, 3389, 5985, 5986; default maximum 3 hours. RBAC actions for configuring, requesting and reading are listed per task.",
+      "applicability": "Coverage, port, source and duration checks, request log and permission tables.",
+      "risks": "The JSON policy schema was read from PowerShell examples; Activity Log operation names were not confirmed.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/azure-jit.js",
+        "scripts/azure-jit.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented read-only."
     }
   ],
   "rounds": [
