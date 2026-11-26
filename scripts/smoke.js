@@ -42,6 +42,10 @@ try {
   check('audit chain intact', (await req('/api/audit/verify')).json?.valid === true);
   report.counts = { alerts: alerts.total, assets: (await req('/api/assets')).json.total, events: (await req('/api/events')).json.total };
 } catch (e) { check('smoke run', false, e.stack?.slice(0, 500)); }
-finally { await app.close(); fs.rmSync(dataDir, { recursive: true, force: true }); fs.rmSync(work, { recursive: true, force: true }); }
+finally {
+  // Windows can hold the database files briefly after close: retry, and never let cleanup fail a passing run.
+  try { await app.close(); } catch (e) { report.cleanup_error = String(e.message).slice(0, 200); }
+  for (const dir of [dataDir, work]) { try { fs.rmSync(dir, { recursive: true, force: true, maxRetries: 10, retryDelay: 200 }); } catch (e) { report.cleanup_error = String(e.message).slice(0, 200); } }
+}
 report.passed = report.failures.length === 0; report.total = report.checks.length; report.seconds = Math.round((Date.now() - started) / 100) / 10; delete report.checks;
 console.log(JSON.stringify(report, null, 2)); process.exit(report.passed ? 0 : 1);

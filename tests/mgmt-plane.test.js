@@ -33,7 +33,7 @@ test('controls are compared with a baseline chosen by vendor and version, and th
 test('a control that passed before and fails now raises a regression alert, and unknown vendors or versions get no baseline (CG-137)', t => {
   const { s, dir, run } = fixture(t); run(FX('mgmt-good.txt'));
   assert.equal(s.all("SELECT 1 FROM alerts WHERE rule_id LIKE 'CG-MGMT-%'").length, 0, 'a compliant device raises nothing');
-  const weakened = path.join(dir, 'weak.txt'); fs.writeFileSync(weakened, fs.readFileSync(FX('mgmt-good.txt'), 'utf8').replace('logging host 192.0.2.80\n', '').replace(/ transport input ssh\n/g, ' transport input telnet ssh\n'));
+  const weakened = path.join(dir, 'weak.txt'); fs.writeFileSync(weakened, fs.readFileSync(FX('mgmt-good.txt'), 'utf8').replace(/\r\n/g, '\n').replace('logging host 192.0.2.80\n', '').replace(/ transport input ssh\n/g, ' transport input telnet ssh\n'));
   run(weakened); const v = mgmtView(s).devices[0];
   assert.deepEqual(v.regressions.sort(), ['syslog-hosts', 'vty-ssh-only']);
   assert.deepEqual(s.all("SELECT severity FROM alerts WHERE rule_id='CG-MGMT-DRIFT-137'").map(a => a.severity), ['high', 'high']);
