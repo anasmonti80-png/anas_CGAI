@@ -742,3 +742,8 @@ test('the events page shows hypothesis-based hunting with required data, exclusi
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/hunt-hypotheses'\)/);assert.match(app,/\/api\/hunt-hypotheses\/\$\{b\.dataset\.id\}\/run/);
   for(const marker of ['Hypothesis-based threat hunting','Required data','Legitimate exclusions','Insufficient visibility','Not found with sufficient visibility','Retention too short','CG-143']) assert.ok(app.includes(marker),marker);
 });
+
+test('the events page shows post-patch investigations with per-item evidence, conclusions and closure (CG-144)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/post-patch'\)/);assert.match(app,/post_patch_investigation_open/);
+  for(const marker of ['Past-compromise check after patching','Evidence in the window','Insufficient evidence','Closed with gaps','Close investigation','CG-144']) assert.ok(app.includes(marker),marker);
+});
