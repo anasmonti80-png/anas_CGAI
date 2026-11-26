@@ -27,6 +27,7 @@ import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
 import { telecomView } from './lib/telecom-hardening.js';
 import { remoteCorrelationView } from './lib/remote-correlation.js';
+import { identityChainView } from './lib/identity-chain.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -291,6 +292,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
       // CG-132 intended (source of truth) versus observed state.
+      // CG-142 identity-to-endpoint kill chain.
+      if(p==='/api/identity-chain'&&method==='GET'){roles(['admin','analyst']);return send(res,200,identityChainView(domain));}
       // CG-141 remote-access session correlation.
       if(p==='/api/remote-correlation'&&method==='GET'){roles(['admin','analyst']);return send(res,200,remoteCorrelationView(domain));}
       // CG-140 telecom / Salt Typhoon defensive study.

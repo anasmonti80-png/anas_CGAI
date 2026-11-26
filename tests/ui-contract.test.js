@@ -732,3 +732,8 @@ test('the remote page shows remote-access correlation with separate stages, peer
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/remote-correlation'\)/);
   for(const marker of ['Remote-access session correlation','Behind a relay (peer hidden)','Suspected misuse — analyst must confirm','Identity and behaviour evidence','CG-141']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows the identity-to-endpoint chain with proven and account-only links (CG-142)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/identity-chain'\)/);
+  for(const marker of ['Identity-to-endpoint kill chain','Proven link','Account only — correlation, not cause','Steps before the sign-in (not its result)','CG-142']) assert.ok(app.includes(marker),marker);
+});
