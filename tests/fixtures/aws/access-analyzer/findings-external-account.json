@@ -1,0 +1,6 @@
+{
+  "findings": [
+    { "id": "11111111-aaaa-4bbb-8ccc-000000000148", "analyzedAt": "2026-11-20T08:00:00Z", "createdAt": "2026-11-01T08:00:00Z", "updatedAt": "2026-11-20T08:00:00Z", "findingType": "ExternalAccess", "resource": "arn:aws:s3:::example-reports", "resourceType": "AWS::S3::Bucket", "resourceOwnerAccount": "111122223333", "status": "ACTIVE" },
+    { "id": "11111111-aaaa-4bbb-8ccc-000000000149", "analyzedAt": "2026-11-20T08:00:00Z", "createdAt": "2026-11-02T08:00:00Z", "updatedAt": "2026-11-20T08:00:00Z", "findingType": "ExternalAccess", "resource": "arn:aws:iam::111122223333:role/partner-audit", "resourceType": "AWS::IAM::Role", "resourceOwnerAccount": "111122223333", "status": "ARCHIVED" }
+  ]
+}

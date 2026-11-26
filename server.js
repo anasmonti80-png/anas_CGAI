@@ -26,6 +26,7 @@ import { wirelessView } from './lib/wireless.js';
 import { mgmtView } from './lib/mgmt-plane.js';
 import { m365View } from './lib/m365-baseline.js';
 import { gwsView } from './lib/gws-baseline.js';
+import { accessAnalyzerView } from './lib/access-analyzer.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
 import { telecomView } from './lib/telecom-hardening.js';
@@ -320,6 +321,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/adapters/support'&&method==='POST'){roles(['admin','analyst']);return send(res,200,adapters.supports(await body(req)));}
       {const m=p.match(/^\/api\/adapters\/(A-\d{3})\/lab$/);if(m&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,adapters.recordLab(user.id,m[1],await body(req)));}}
       // CG-137 management-plane audit.
+      if(p==='/api/access-analyzer'&&method==='GET'){roles(['admin','analyst']);return send(res,200,accessAnalyzerView(store));}
       if(p==='/api/gws-baseline'&&method==='GET'){roles(['admin','analyst']);return send(res,200,gwsView(store));}
       if(p==='/api/m365-baseline'&&method==='GET'){roles(['admin','analyst']);return send(res,200,m365View(store));}
       if(p==='/api/mgmt-plane'&&method==='GET'){roles(['admin','analyst']);return send(res,200,mgmtView(store));}

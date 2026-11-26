@@ -703,6 +703,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Encoded as the documented edition list for GWS.COMMONCONTROLS.2."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-148"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-031",
+      "title": "AWS IAM Access Analyzer: analyzer types, ListFindingsV2 and pricing",
+      "source_type": "official",
+      "url": "https://docs.aws.amazon.com/IAM/latest/UserGuide/what-is-access-analyzer.html",
+      "source_date": "2026-11-26",
+      "summary": "Analyzer types ACCOUNT, ORGANIZATION, ACCOUNT_UNUSED_ACCESS, ORGANIZATION_UNUSED_ACCESS, ACCOUNT_INTERNAL_ACCESS, ORGANIZATION_INTERNAL_ACCESS set the zone of trust; status ACTIVE, CREATING, DISABLED, FAILED. ListFindingsV2 findingType ExternalAccess, UnusedIAMRole, UnusedIAMUserAccessKey, UnusedIAMUserPassword, UnusedPermission, InternalAccess; status ACTIVE, ARCHIVED, RESOLVED. External access has no additional charge and is regional; unused access is charged per IAM role or user analysed per month (one analyzer per partition); internal access is charged per resource monitored per region per month.",
+      "applicability": "Import of analyzers and findings with per-analysis state, region coverage and cost.",
+      "risks": "Pricing can change; the unused access age setting is read only through GetAnalyzer, which is not imported.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/access-analyzer.js",
+        "scripts/aws-access-analyzer.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented; analyses that are not active are never read as no exposure."
     }
   ],
   "rounds": [

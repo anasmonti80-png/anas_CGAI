@@ -1,0 +1,6 @@
+{
+  "analyzers": [
+    { "arn": "arn:aws:access-analyzer:us-east-1:111122223333:analyzer/external-account", "name": "external-account", "type": "ACCOUNT", "createdAt": "2026-09-01T10:00:00Z", "lastResourceAnalyzed": "arn:aws:s3:::example-reports", "lastResourceAnalyzedAt": "2026-11-20T08:00:00Z", "status": "ACTIVE" },
+    { "arn": "arn:aws:access-analyzer:us-east-1:111122223333:analyzer/unused-account", "name": "unused-account", "type": "ACCOUNT_UNUSED_ACCESS", "createdAt": "2026-09-01T10:00:00Z", "status": "ACTIVE" }
+  ]
+}

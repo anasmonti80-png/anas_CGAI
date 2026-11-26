@@ -762,3 +762,8 @@ test('the identity page shows Google Workspace baselines compared with Microsoft
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/gws-baseline')"));
   for(const marker of ['Google Workspace baselines (CISA SCuBA) compared with Microsoft 365','Comparison by area','Features that depend on the licensed edition','Access needed to run ScubaGoggles','No read-only form','Feature not documented for this edition','CG-147']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows AWS IAM Access Analyzer analyses with state, cost, regional scope and zone of trust (CG-148)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/access-analyzer')"));
+  for(const marker of ['AWS IAM Access Analyzer: external, internal and unused access','Partially active','Not active','Regional scope','Unused access findings raise no alert','CG-148']) assert.ok(app.includes(marker),marker);
+});
