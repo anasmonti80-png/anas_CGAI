@@ -757,3 +757,8 @@ test('the identity page shows the Microsoft 365 baseline with deviations, policy
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/m365-baseline')"));
   for(const marker of ['Microsoft 365 baseline assessment (CISA SCuBA)','SHALL deviations','Products not assessed — no compliance is claimed','Policy version changed (reference change, not a regression)','Least privilege to run ScubaGear','No — write-capable','CG-146']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows Google Workspace baselines compared with Microsoft 365 by area, with edition and log limits (CG-147)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/gws-baseline')"));
+  for(const marker of ['Google Workspace baselines (CISA SCuBA) compared with Microsoft 365','Comparison by area','Features that depend on the licensed edition','Access needed to run ScubaGoggles','No read-only form','Feature not documented for this edition','CG-147']) assert.ok(app.includes(marker),marker);
+});

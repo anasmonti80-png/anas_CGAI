@@ -631,6 +631,78 @@
       "evidence_files": [],
       "decision": "deferred",
       "decision_reason": "Added when an IOS XR configuration sample or port observation source is available."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-146"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-028",
+      "title": "CISA ScubaGear (SCuBA Microsoft 365 assessment tool) 2.0.0",
+      "source_type": "official",
+      "url": "https://github.com/cisagov/ScubaGear",
+      "source_date": "2026-10-22",
+      "summary": "ScubaResults_{UUID}.json with MetaData (Tool, ToolVersion, TimestampZulu, ReportUUID), Summary and Results per product (AAD, SecuritySuite, EXO, PowerBI, PowerPlatform, SharePoint, Teams); controls MS.<PRODUCT>.<group>.<n>v<version> with Result and Criticality (Shall/Should, Not-Implemented, 3rd Party). Defender policies moved into the Security Suite in 2.0.0. Global Reader suffices for most products; Power Platform and the SharePoint app permission are write-capable.",
+      "applicability": "Import of the owner run as read-only evidence with policy versions and drift.",
+      "risks": "Not-Implemented and 3rd Party controls need manual evidence; Power Platform has no read-only role.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/m365-baseline.js",
+        "scripts/m365-baseline.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented as an import; CyberGuard never holds tenant credentials."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-147"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-029",
+      "title": "CISA ScubaGoggles (SCuBA Google Workspace assessment tool) 1.1.0 and baselines",
+      "source_type": "official",
+      "url": "https://github.com/cisagov/ScubaGoggles",
+      "source_date": "2026-10-22",
+      "summary": "Same output schema as ScubaGear plus Result values No events found and Incorrect Result; Super Admin required; 9 of 11 OAuth scopes read-only (apps.licensing and apps.groups.settings are not); Common Controls, Gmail and Drive baselines assume Enterprise Plus; log-based checks miss settings never changed from default and reach back about six months.",
+      "applicability": "Import with a declared edition; log checks without events are unproven.",
+      "risks": "Super Admin is a high privilege for an assessment; the DLP edition list in the baseline is longer than what is encoded.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/gws-baseline.js",
+        "scripts/gws-baseline.js",
+        "docs/research/GWS_BASELINES_AR.md"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented with license-dependent and no-log-events states and a per-area comparison with Microsoft 365."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-147"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-030",
+      "title": "Google Workspace Help: Context-Aware Access editions",
+      "source_type": "official",
+      "url": "https://support.google.com/a/answer/9275380",
+      "source_date": "2026-11-26",
+      "summary": "Context-Aware Access is available in Frontline Standard and Plus, Enterprise Standard and Plus, Education Standard and Plus, Enterprise Essentials Plus and Cloud Identity Premium; users without a supported edition are not subject to its policies.",
+      "applicability": "Controls needing Context-Aware Access are license dependent on other editions.",
+      "risks": "Edition lists differ slightly between Google help pages; confirm in the Admin console.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/gws-baseline.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Encoded as the documented edition list for GWS.COMMONCONTROLS.2."
     }
   ],
   "rounds": [

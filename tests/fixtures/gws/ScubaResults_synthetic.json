@@ -1,0 +1,46 @@
+{
+  "MetaData": {
+    "TenantId": null, "DisplayName": null, "DomainName": "lab.example", "ProductSuite": "Google Workspace",
+    "ProductsAssessed": ["Common Controls", "Gmail", "Google Drive and Docs"],
+    "ProductAbbreviationMapping": { "Common Controls": "commoncontrols", "Gmail": "gmail", "Google Drive and Docs": "drive" },
+    "Tool": "ScubaGoggles", "ToolVersion": "1.1.0", "TimestampZulu": "2026-10-23T09:00:00.000Z", "ReportUUID": "00000000-0000-4000-8000-000000000148"
+  },
+  "AnnotatedFailedPolicies": {}, "Summary": {},
+  "Results": {
+    "commoncontrols": [
+      { "GroupName": "Phishing-Resistant Multi-Factor Authentication", "GroupNumber": "1", "GroupReferenceURL": "https://example.invalid/cc#1", "Controls": [
+        { "Control ID": "GWS.COMMONCONTROLS.1.1v1", "Requirement": "Phishing-Resistant MFA SHALL be required for all users.", "Result": "Fail", "Criticality": "Shall", "Details": "The following OUs are non-compliant: Sales" },
+        { "Control ID": "GWS.COMMONCONTROLS.1.3v1", "Requirement": "SMS or Voice SHALL NOT be used as the MFA method.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met in all OUs" },
+        { "Control ID": "GWS.COMMONCONTROLS.1.4v1", "Requirement": "The Google 2-Step Verification (2SV) new user enrollment period SHALL be set to at least one day and at most one week.", "Result": "No events found", "Criticality": "Shall", "Details": "No relevant event in the current logs" }
+      ] },
+      { "GroupName": "Context-Aware Access", "GroupNumber": "2", "GroupReferenceURL": "https://example.invalid/cc#2", "Controls": [
+        { "Control ID": "GWS.COMMONCONTROLS.2.1v1", "Requirement": "Policies restricting access to Google Workspace (GWS) based on enterprise device signals SHOULD be implemented.", "Result": "Warning", "Criticality": "Should", "Details": "No access levels configured" }
+      ] },
+      { "GroupName": "App Access to Google APIs", "GroupNumber": "10", "GroupReferenceURL": "https://example.invalid/cc#10", "Controls": [
+        { "Control ID": "GWS.COMMONCONTROLS.10.2v1", "Requirement": "Agencies SHALL NOT allow users to grant consent for access to low-risk scopes.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met" },
+        { "Control ID": "GWS.COMMONCONTROLS.10.4v1", "Requirement": "Agencies SHALL NOT allow users to access unconfigured third-party applications.", "Result": "Fail", "Criticality": "Shall", "Details": "Unconfigured third-party apps are allowed" }
+      ] },
+      { "GroupName": "Data Loss Prevention", "GroupNumber": "18", "GroupReferenceURL": "https://example.invalid/cc#18", "Controls": [
+        { "Control ID": "GWS.COMMONCONTROLS.18.1v1", "Requirement": "A custom policy SHALL be configured for Google Drive to protect PII and sensitive information.", "Result": "Fail", "Criticality": "Shall", "Details": "No DLP rule found" }
+      ] }
+    ],
+    "gmail": [
+      { "GroupName": "Mail Delegation", "GroupNumber": "1", "GroupReferenceURL": "https://example.invalid/gmail#1", "Controls": [
+        { "Control ID": "GWS.GMAIL.1.1v1", "Requirement": "Mail delegation SHOULD be disabled.", "Result": "Pass", "Criticality": "Should", "Details": "Requirement met in all OUs" }
+      ] },
+      { "GroupName": "Automatic Forwarding", "GroupNumber": "11", "GroupReferenceURL": "https://example.invalid/gmail#11", "Controls": [
+        { "Control ID": "GWS.GMAIL.11.1v1", "Requirement": "Automatic forwarding SHOULD be disabled, especially to external domains.", "Result": "Warning", "Criticality": "Should", "Details": "Automatic forwarding is enabled in: Root" }
+      ] },
+      { "GroupName": "Per-user Outbound Gateways", "GroupNumber": "12", "GroupReferenceURL": "https://example.invalid/gmail#12", "Controls": [
+        { "Control ID": "GWS.GMAIL.12.1v1", "Requirement": "Per-user outbound gateways that are not GWS mail servers SHALL be disabled.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met in all OUs" }
+      ] }
+    ],
+    "drive": [
+      { "GroupName": "Sharing Outside the Organization", "GroupNumber": "1", "GroupReferenceURL": "https://example.invalid/drive#1", "Controls": [
+        { "Control ID": "GWS.DRIVEDOCS.1.1v1", "Requirement": "External sharing SHALL be restricted to allowlisted domains.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met in all OUs" },
+        { "Control ID": "GWS.DRIVEDOCS.1.3v2", "Requirement": "External sharing warnings SHALL be enabled.", "Result": "Pass", "Criticality": "Shall", "Details": "Requirement met in all OUs" },
+        { "Control ID": "GWS.DRIVEDOCS.1.10v2", "Requirement": "Forms accepting responses from outside the organization SHOULD NOT be allowed.", "Result": "N/A", "Criticality": "Should/Not-implemented", "Details": "Manual check" }
+      ] }
+    ]
+  }
+}
