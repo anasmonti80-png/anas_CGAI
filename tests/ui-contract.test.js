@@ -697,3 +697,8 @@ test('the network map shows layer-2 security posture per device and signals with
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/l2-security'\)/);
   for(const marker of ['Layer-2 security posture','DHCP snooping','Dynamic ARP Inspection','IP Source Guard','Rogue DHCP','MAC move','ARP conflict','Single signal','Possible benign causes','CG-134']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows BGP routing security with ROV, prefix filters, ROA coverage, impact and the draft status of NIST SP 800-189 Rev. 1 (CG-135)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/routing-security'\)/);
+  for(const marker of ['BGP routing security and RPKI','Route origin validation','Inbound filter','Outbound filter','Loose maxLength','Announcement changes since','status_ar','CG-135']) assert.ok(app.includes(marker),marker);
+});

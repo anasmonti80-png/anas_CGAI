@@ -1,0 +1,19 @@
+{
+  "metadata": {
+    "generated": 1795600000
+  },
+  "roas": [
+    {
+      "asn": "AS65010",
+      "prefix": "203.0.113.0/24",
+      "maxLength": 25,
+      "ta": "synthetic"
+    },
+    {
+      "asn": "AS64500",
+      "prefix": "192.0.2.0/24",
+      "maxLength": 24,
+      "ta": "synthetic"
+    }
+  ]
+}

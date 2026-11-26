@@ -1,0 +1,23 @@
+Building configuration...
+!
+hostname BORDER-RTR-01
+!
+router bgp 65010
+ bgp log-neighbor-changes
+ bgp rpki server tcp 192.0.2.50 port 3323 refresh 600
+ network 203.0.113.0 mask 255.255.255.0
+ network 198.51.100.0 mask 255.255.255.128
+ neighbor 203.0.113.1 remote-as 64500
+ neighbor 203.0.113.1 route-map RPKI-IN in
+ neighbor 203.0.113.1 prefix-list OWN-OUT out
+ neighbor 192.0.2.9 remote-as 64600
+ neighbor 10.0.0.2 remote-as 65010
+!
+ip prefix-list OWN-OUT seq 5 permit 203.0.113.0/24
+ip prefix-list OWN-OUT seq 10 permit 198.51.100.0/25
+!
+route-map RPKI-IN deny 10
+ match rpki invalid
+route-map RPKI-IN permit 20
+!
+end

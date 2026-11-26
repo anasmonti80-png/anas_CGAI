@@ -499,6 +499,71 @@
       "requirements": [
         "CG-131"
       ]
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "evidence_files": [],
+      "requirements": [
+        "CG-135"
+      ],
+      "id": "R-022",
+      "topic": "routing-security",
+      "title": "NIST SP 800-189 Rev. 1 BGP security and resilience",
+      "source_type": "official",
+      "url": "https://csrc.nist.gov/pubs/sp/800/189/r1/ipd",
+      "source_date": "2025-01-03",
+      "summary": "Initial public draft (comments closed February 25, 2025) recommending RPKI, ROAs, ROA-based route origin validation and prefix filtering for BGP, source address validation against spoofing, and RTBH and Flowspec for DDoS.",
+      "applicability": "Organisations that run BGP with their own AS or address space; not small LANs without BGP.",
+      "risks": "Still a draft, not a final publication: cite it as a draft and recheck its status before relying on it.",
+      "priority": "P2",
+      "verification": "verified-source",
+      "decision": "accepted",
+      "decision_reason": "Defines the checks CG-135 runs (ROV, ROA coverage, prefix filters); the final 2019 SP 800-189 remains the published reference."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "evidence_files": [
+        "lib/routing-security.js"
+      ],
+      "requirements": [
+        "CG-135"
+      ],
+      "id": "R-023",
+      "topic": "routing-security",
+      "title": "RFC 6811 BGP prefix origin validation and RFC 9319 maxLength guidance",
+      "source_type": "official",
+      "url": "https://www.rfc-editor.org/rfc/rfc6811",
+      "source_date": "2013-01-01",
+      "summary": "Validation state of a route is valid, invalid or not-found against covering ROA payloads by origin AS and maxLength; RFC 9319 (BCP 185) advises against loose maxLength because it enables forged-origin sub-prefix hijacks.",
+      "applicability": "Route origin validation of routes in the router table and of the organisation prefixes.",
+      "risks": "Origin validation does not stop path manipulation with a forged origin AS.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "decision": "accepted",
+      "decision_reason": "Implemented natively in lib/routing-security.js with no dependency."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "evidence_files": [],
+      "requirements": [
+        "CG-135"
+      ],
+      "id": "R-024",
+      "topic": "routing-security",
+      "title": "Routinator and rpki-client relying party software",
+      "source_type": "repository",
+      "url": "https://github.com/NLnetLabs/routinator",
+      "source_date": "2025-01-01",
+      "summary": "Relying party software that fetches and validates the RPKI and exports validated ROA payloads as JSON (Routinator \"vrps --format json\"; rpki-client JSON output) and serves them to routers over RTR.",
+      "applicability": "Source of the validated ROA payloads imported by scripts/routing-security.js.",
+      "risks": "Running a validator is the operator's job; CyberGuard imports its export and does not validate the RPKI itself.",
+      "priority": "P2",
+      "verification": "partially-verified",
+      "decision": "deferred",
+      "decision_reason": "The JSON export is imported now; embedding a validator or querying it live is reconsidered if customers need continuous validation."
     }
   ],
   "rounds": [
@@ -537,6 +602,12 @@
       "at": "2026-11-26",
       "sources_reviewed": 3,
       "new_valuable_ideas": 1
+    },
+    {
+      "topic": "routing-security",
+      "at": "2026-11-26",
+      "sources_reviewed": 4,
+      "new_valuable_ideas": 3
     }
   ]
 }

@@ -1,0 +1,11 @@
+BGP table version is 42, local router ID is 203.0.113.2
+Status codes: s suppressed, d damped, h history, * valid, > best, i - internal,
+Origin codes: i - IGP, e - EGP, ? - incomplete
+RPKI validation codes: V valid, I invalid, N Not found
+
+     Network          Next Hop            Metric LocPrf Weight Path
+V*>  203.0.113.0/24   0.0.0.0                  0         32768 i
+N*>  198.51.100.0/25  0.0.0.0                  0         32768 i
+N*>  192.0.2.0/24     203.0.113.1              0             0 64500 i
+
+Total number of prefixes 3

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T02:50:34.174Z",
+  "at": "2026-11-26T02:58:30.677Z",
   "level": "Unit Tested",
   "environment": {
     "platform": "win32",
@@ -8,17 +8,17 @@
     "node": "v24.21.0",
     "sqlite": "3.53.4"
   },
-  "base_commit": "55111508a0dc4e93f5de1843e1aaa32280009b72",
+  "base_commit": "5b10cc3803dee832c7d5d350ead1269dad1e5620",
   "source": {
-    "sha256": "7f23a65710320d184a25f18dc0851e0876c5ec6d934b08c8f2a6e7be2cbb4c27",
-    "files": 313,
+    "sha256": "961639eba55746688cf32b9c0c2a823ffca9395268c46581b4ddbc39ea47399c",
+    "files": 320,
     "normalization": "UTF-8 text with LF"
   },
   "includes_uncommitted_work": true,
   "command": "node scripts/verify.js",
   "passed": true,
-  "tests": 429,
-  "pass": 428,
+  "tests": 433,
+  "pass": 432,
   "fail": 0,
   "skipped": 1,
   "coverage_scope": "Synthetic unit/integration/HTTP and pagination tests; not production or real endpoint validation"
