@@ -1,0 +1,8 @@
+{ "value": [
+  { "appId": "11111111-0000-4000-8000-000000000001", "displayName": "payroll-sync", "signInAudience": "AzureADMyOrg",
+    "passwordCredentials": [ { "keyId": "cccccccc-0000-4000-8000-000000000001", "displayName": "old-secret", "startDateTime": "2024-01-01T00:00:00Z", "endDateTime": "2025-01-01T00:00:00Z" },
+                             { "keyId": "cccccccc-0000-4000-8000-000000000002", "displayName": "two-year-secret", "startDateTime": "2026-01-01T00:00:00Z", "endDateTime": "2028-01-01T00:00:00Z" } ],
+    "keyCredentials": [] },
+  { "appId": "11111111-0000-4000-8000-000000000002", "displayName": "backup-runner", "signInAudience": "AzureADMyOrg", "passwordCredentials": [],
+    "keyCredentials": [ { "keyId": "cccccccc-0000-4000-8000-000000000003", "displayName": "cert", "type": "AsymmetricX509Cert", "usage": "Verify", "startDateTime": "2026-06-01T00:00:00Z", "endDateTime": "2027-06-01T00:00:00Z" } ] }
+] }

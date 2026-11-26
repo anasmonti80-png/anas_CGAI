@@ -1,0 +1,5 @@
+{ "value": [
+  { "activityDateTime": "2026-11-25T10:00:00Z", "activityDisplayName": "Add service principal credentials", "category": "ApplicationManagement", "initiatedBy": { "user": { "userPrincipalName": "admin@lab.example" } }, "targetResources": [ { "id": "aaaaaaaa-0000-4000-8000-000000000002", "displayName": "backup-runner", "type": "ServicePrincipal" } ] },
+  { "activityDateTime": "2026-11-25T11:00:00Z", "activityDisplayName": "Add app role assignment to service principal", "category": "ApplicationManagement", "initiatedBy": { "user": { "userPrincipalName": "admin@lab.example" } }, "targetResources": [ { "id": "aaaaaaaa-0000-4000-8000-000000000004", "displayName": "Example SaaS Connector", "type": "ServicePrincipal" } ] },
+  { "activityDateTime": "2026-11-25T12:00:00Z", "activityDisplayName": "Update user", "category": "UserManagement", "initiatedBy": { "user": { "userPrincipalName": "admin@lab.example" } }, "targetResources": [ { "id": "x", "displayName": "someone", "type": "User" } ] }
+] }

@@ -1,0 +1,6 @@
+{ "value": [
+  { "id": "dddddddd-0000-4000-8000-000000000001", "displayName": "Block workload identities outside trusted ranges", "state": "enabled",
+    "conditions": { "clientApplications": { "includeServicePrincipals": ["ServicePrincipalsInMyTenant"], "excludeServicePrincipals": ["aaaaaaaa-0000-4000-8000-000000000002"] }, "locations": { "includeLocations": ["All"], "excludeLocations": ["AllTrusted"] } },
+    "grantControls": { "operator": "OR", "builtInControls": ["block"] } },
+  { "id": "dddddddd-0000-4000-8000-000000000002", "displayName": "MFA for admins", "state": "enabled", "conditions": { "users": { "includeRoles": ["62e90394-69f5-4237-9190-012177145e10"] } }, "grantControls": { "operator": "OR", "builtInControls": ["mfa"] } }
+] }

@@ -767,3 +767,8 @@ test('the identity page shows AWS IAM Access Analyzer analyses with state, cost,
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/access-analyzer')"));
   for(const marker of ['AWS IAM Access Analyzer: external, internal and unused access','Partially active','Not active','Regional scope','Unused access findings raise no alert','CG-148']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows Entra workload identities with Conditional Access coverage, changes, sign-in deviations and product limits (CG-149)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/workload-identities')"));
+  for(const marker of ['Entra workload identity security','Not coverable','Permission and credential changes','Sign-in deviations','Conditional Access limits for workload identities','CG-149']) assert.ok(app.includes(marker),marker);
+});

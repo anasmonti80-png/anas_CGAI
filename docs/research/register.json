@@ -727,6 +727,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented; analyses that are not active are never read as no exposure."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-149"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-032",
+      "title": "Microsoft Entra: Conditional Access for workload identities and workload identity risk",
+      "source_type": "official",
+      "url": "https://learn.microsoft.com/en-us/entra/identity/conditional-access/workload-identity",
+      "source_date": "2026-05-18",
+      "summary": "Policies apply only to single-tenant service principals registered in the tenant; Microsoft and third-party SaaS apps including multitenant apps are not covered and managed identities are not covered; policies assigned to a group are not enforced for service principals in it; Workload Identities Premium is required to create or modify them; block is the only grant. ID Protection workload identity detections exclude managed identities. Audit activities: Add service principal credentials, Update application - Certificates and secrets management, Consent to application, Add delegated permission grant, Add app role assignment to service principal, Add owner to application.",
+      "applicability": "Coverage classes and alerts for workload identities.",
+      "risks": "Service principal sign-ins are exposed through the beta signIns API and need Entra ID P1 or P2.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/workload-identity.js",
+        "scripts/entra-workload-identity.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented; uncoverable identities are never shown as protected."
     }
   ],
   "rounds": [

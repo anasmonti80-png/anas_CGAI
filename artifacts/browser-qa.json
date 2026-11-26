@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T20:56:29.962Z",
+  "at": "2026-11-26T21:04:05.721Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -156,7 +156,8 @@
     "m365_baseline": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-146", "tenant": "tenant-lab (synthetic), ScubaGear 2.0.0, 2 imports", "summary": "3 SHALL deviations, 1 SHOULD deviation, 4 meet, 2 manual or third-party, 1 omitted, 1 not assessed, automated 50%", "drift": "MS.EXO.1.1v2 regressed and raised CG-M365-DRIFT-146; MS.TEAMS.2.1 v2 to v3 shown as a reference change", "products_not_assessed": "Power BI, Power Platform, SharePoint Online", "console_errors": 0},
     "gws_baseline": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-147", "domain": "gws-lab (synthetic), ScubaGoggles 1.1.0, Business Plus, 2 imports", "summary": "3 SHALL deviations, 1 SHOULD, 5 meet, 2 license dependent (Context-Aware Access, DLP), 1 without log events, 1 manual", "areas": "MFA SHALL deviation in both; sharing deviates in GWS and SharePoint not assessed; mail SHOULD deviation in GWS and meets in Microsoft 365; apps SHALL deviation", "drift": "GWS.DRIVEDOCS.1.1v1 regressed and raised CG-GWS-DRIFT-147", "console_errors": 0},
     "access_analyzer": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-148", "account": "111122223333 (AWS documentation example), regions us-east-1 and eu-west-1", "analyses": "external partially active (not analysed in eu-west-1), unused active with 3 findings, internal not active (paid)", "zone": "account zone of trust explained", "findings": "1 external, 1 unused role, 1 unused access key, 1 unused permissions; archived finding hidden", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 148, "next": "CG-149"}
+    "workload_identities": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-149", "tenant": "synthetic tenant with 2 single-tenant apps, 1 multitenant app and 1 managed identity", "coverage": "1 covered, 1 excluded and not covered, 2 not coverable", "changes": "app role assignment and service principal credential added", "deviations": "payroll-sync from a new country (high), managed identity from a new address (medium)", "credentials": "expired, long-lived and client secret findings", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 149, "next": "CG-150"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

@@ -1,0 +1,6 @@
+{ "value": [
+  { "id": "aaaaaaaa-0000-4000-8000-000000000001", "appId": "11111111-0000-4000-8000-000000000001", "displayName": "payroll-sync", "servicePrincipalType": "Application", "appOwnerOrganizationId": "00000000-0000-0000-0000-000000000149", "accountEnabled": true },
+  { "id": "aaaaaaaa-0000-4000-8000-000000000002", "appId": "11111111-0000-4000-8000-000000000002", "displayName": "backup-runner", "servicePrincipalType": "Application", "appOwnerOrganizationId": "00000000-0000-0000-0000-000000000149", "accountEnabled": true },
+  { "id": "aaaaaaaa-0000-4000-8000-000000000003", "appId": "11111111-0000-4000-8000-000000000003", "displayName": "vm-automation-identity", "servicePrincipalType": "ManagedIdentity", "accountEnabled": true },
+  { "id": "aaaaaaaa-0000-4000-8000-000000000004", "appId": "11111111-0000-4000-8000-000000000004", "displayName": "Example SaaS Connector", "servicePrincipalType": "Application", "appOwnerOrganizationId": "99999999-0000-4000-8000-000000000999", "accountEnabled": true }
+] }
