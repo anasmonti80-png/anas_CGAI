@@ -737,3 +737,8 @@ test('the identity page shows the identity-to-endpoint chain with proven and acc
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/identity-chain'\)/);
   for(const marker of ['Identity-to-endpoint kill chain','Proven link','Account only — correlation, not cause','Steps before the sign-in (not its result)','CG-142']) assert.ok(app.includes(marker),marker);
 });
+
+test('the events page shows hypothesis-based hunting with required data, exclusions, retention and three outcomes (CG-143)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/hunt-hypotheses'\)/);assert.match(app,/\/api\/hunt-hypotheses\/\$\{b\.dataset\.id\}\/run/);
+  for(const marker of ['Hypothesis-based threat hunting','Required data','Legitimate exclusions','Insufficient visibility','Not found with sufficient visibility','Retention too short','CG-143']) assert.ok(app.includes(marker),marker);
+});

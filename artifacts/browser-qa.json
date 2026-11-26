@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T11:13:57.797Z",
+  "at": "2026-11-26T11:19:40.972Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -150,7 +150,8 @@
     "telecom_hardening": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-140", "pe_edge_01": "two exports: Smart Install, web UI, Guest Shell, SSH 2222 and no flow export; undeclared ERSPAN session 2, GRE Tunnel99 to 198.51.100.66, ACL permit added for 198.51.100.66, static route added", "declared_session_1": "not reported", "alerts": "4 technique, 4 hardening", "arabic": "details translated", "console_errors": 0},
     "remote_correlation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-141", "srv_01": "RDP from 203.0.113.50 after 6 failed logons, then cmd, whoami and a new service: suspected misuse, analyst must confirm", "ws_01": "AnyDesk installed, started, connected and authenticated behind a relay (peer hidden): external session needs review", "console_errors": 0},
     "identity_chain": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-142", "alice": "sign-in from RO 198.51.100.200, OAuth consent (unverified publisher), CreateAccessKey from the same address (proven), PowerShell on WS-07 (account only), its connection to 203.0.113.99 (proven, same process); earlier PowerShell listed as preceding", "alerts": "medium then high", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 142, "next": "CG-143"}
+    "hunt_hypotheses": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-143", "h_ia_01": "found: 6 failures then RDP success from 203.0.113.50 on SRV-01", "h_p_01": "found: service SyntheticSvc created", "h_ex_01": "insufficient visibility: no flow logs with byte counts", "retention": "shown as shorter than required for hour-old data", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 143, "next": "CG-144"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
