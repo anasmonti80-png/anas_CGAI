@@ -657,3 +657,8 @@ test('settings show tenant isolation, the residency map, full export and two-per
   const app=read('app.js');assert.match(app,/\/api\/data-governance/);assert.match(app,/\/api\/data-governance\/export/);assert.match(app,/erasures\/\$\{/);
   for(const marker of ['Tenant isolation and data residency','Export all data','Re-enter the identifier','Legal hold','Inside tenant folder','CG-126']) assert.ok(app.includes(marker),marker);
 });
+
+test('incidents show the SOC workflow: on-call, escalations, tickets, closure policy, lessons and exercises (CG-127)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/soc'\)/);assert.match(app,/closure-review/);
+  for(const marker of ['SOC workflow','Coverage gaps (7 days)','Case tickets','Request closure','Awaiting a second reviewer','Lessons learned','Tabletop exercises','CG-127']) assert.ok(app.includes(marker),marker);
+});

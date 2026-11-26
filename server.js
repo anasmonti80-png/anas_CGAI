@@ -12,6 +12,7 @@ import { AiEvaluation } from './lib/ai-eval.js';
 import { NcaCompliance } from './lib/compliance-nca.js';
 import { MsocReadiness } from './lib/msoc-readiness.js';
 import { DataGovernance, bindTenant } from './lib/data-governance.js';
+import { SocWorkflow } from './lib/soc-workflow.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -73,7 +74,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
   fail(mode!=='authorized-defense-validation-lab'||(browserQa&&typeof labAuthorizationRef==='string'&&labAuthorizationRef.trim().length>=8),400,'lab_authorization_required');
   fs.mkdirSync(dataDir,{recursive:true,mode:0o700});
   const dbFile=path.join(dataDir,'cyberguard.sqlite'),store=new Store(dbFile);
-  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const evidenceRag=new EvidenceRag(store,{clock}); const aiEvaluation=new AiEvaluation(store,{clock,domain,Domain}); const ncaCompliance=new NcaCompliance(store,{clock}); const msocReadiness=new MsocReadiness(store,{clock}); bindTenant(store,tenant); const dataGovernance=new DataGovernance(store,{clock,tenant,dataDir,dbFile}); const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
+  const auth=new Auth(store,{clock}), domain=new Domain(store,{clock}), sso=new Sso(store,auth,{clock,tenant}), secrets=new SecretStore(store,{clock}), tenancy=new TenantPolicy(store,{clock,tenant,dbFile,domain}); domain.tenantGuard=tenancy; const rollout=new Rollout(store,{clock,domain,verificationFile:path.join(ROOT,'artifacts','verification.json')}); domain.rolloutGuard=rollout; const hypotheses=new Hypotheses(store,{clock,domain,evidenceKinds,signer:new RuleSigner(dataDir)}); domain.hypothesisEngine=hypotheses; const evidenceVault=new EvidenceVault(store,{dataDir,clock,signer:hypotheses.signer,domain}); const validationLab=new ValidationLab(store,{clock,domain,Domain}); const hunts=new HuntWorkbench(store,{clock}); const responsePreflight=new ResponsePreflight(store,{domain,clock}); const controlOutcomes=new ControlOutcomes(store,{domain,clock}); const safetyGate=new SafetyGate(store,{clock}); domain.safetyGate=safetyGate; const orchestrator=new Orchestrator(store,{domain,clock}); const evidenceRag=new EvidenceRag(store,{clock}); const aiEvaluation=new AiEvaluation(store,{clock,domain,Domain}); const ncaCompliance=new NcaCompliance(store,{clock}); const msocReadiness=new MsocReadiness(store,{clock}); bindTenant(store,tenant); const dataGovernance=new DataGovernance(store,{clock,tenant,dataDir,dbFile}); const socWorkflow=new SocWorkflow(store,{clock,hypotheses}); domain.socWorkflow=socWorkflow; const threatIntelligence=new ThreatIntelligence(store,{clock}),sandbox=new Sandbox(store,{clock,domain}), otSafety=new OtSafety(store,{clock,domain}); domain.otGuard=otSafety;
   const setupFile=path.join(dataDir,'setup-token'), anonBuckets=new Map();
   let bootstrap=setupToken;
   if (!store.get('SELECT id FROM users LIMIT 1') && !bootstrap) {
@@ -275,6 +276,19 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
+      // CG-127 SOC workflow.
+      if(p==='/api/soc'&&method==='GET'){roles(['admin','analyst']);return send(res,200,socWorkflow.view());}
+      if(p==='/api/soc/sla'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,socWorkflow.setSla(user.id,await body(req)));}
+      if(p==='/api/soc/shifts'&&method==='POST'){roles(['admin']);return send(res,201,socWorkflow.addShift(user.id,await body(req)));}
+      if(p==='/api/soc/escalations/run'&&method==='POST'){roles(['admin','analyst']);return send(res,200,{escalated:socWorkflow.escalate(user.id)});}
+      if(p==='/api/soc/lessons'&&method==='POST'){roles(['admin','analyst']);return send(res,201,socWorkflow.addLesson(user.id,await body(req)));}
+      if(p==='/api/soc/exercises'&&method==='POST'){roles(['admin','analyst']);return send(res,201,socWorkflow.planExercise(user.id,await body(req)));}
+      {let m;
+        if((m=p.match(/^\/api\/cases\/([a-f0-9-]{36})\/(assign|closure|closure-review)$/))&&method==='POST'){roles(['admin','analyst']);const input=await body(req);return send(res,200,m[2]==='assign'?socWorkflow.assign(user.id,m[1],input):m[2]==='closure'?socWorkflow.requestClosure(user.id,m[1],input):socWorkflow.reviewClosure(user.id,m[1],input.approve===true));}
+        if((m=p.match(/^\/api\/soc\/lessons\/([a-f0-9-]{36})$/))&&method==='GET'){roles(['admin','analyst']);return send(res,200,socWorkflow.lesson(m[1]));}
+        if((m=p.match(/^\/api\/soc\/lessons\/([a-f0-9-]{36})\/detection$/))&&method==='POST'){roles(['admin','analyst']);return send(res,201,socWorkflow.lessonToDetection(user.id,m[1],await body(req)));}
+        if((m=p.match(/^\/api\/soc\/exercises\/([a-f0-9-]{36})\/complete$/))&&method==='POST'){roles(['admin','analyst']);return send(res,200,socWorkflow.completeExercise(user.id,m[1],await body(req)));}
+      }
       // CG-126 data residency, export, erasure and tenant binding.
       if(p==='/api/data-governance'&&method==='GET'){roles(['admin']);return send(res,200,dataGovernance.view());}
       if(p==='/api/data-governance/residency'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,dataGovernance.declareRegion(user.id,await body(req)));}
