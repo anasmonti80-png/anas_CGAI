@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T02:41:09.843Z",
+  "at": "2026-11-26T02:48:59.508Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -141,7 +141,8 @@
     "change_safety": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-131", "disable_db_rule": "unsafe: App to database breaks, Web to app unchanged", "remove_route": "Web to app: allowed then no route, breaks", "disclaimer": "shown in Arabic", "console_errors": 0},
     "intended_state": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-132", "differences_listed": 9, "duplicate_arp_address": "one row for two MACs", "review": "VLAN difference approved as update-source-of-truth from the page", "patch": "netbox-review-patch.json with dcim.interface 202 VLAN 30 to 10, applied_by_cyberguard false", "console_errors": 0},
     "impact_graph": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-133", "uplink_before_declaration": "Gi1/0/48 to CORE-SW-01 blocked, impact unknown", "core_declared_from_page": "CORE-SW-01 core", "uplink_after_declaration": "review required, core affected", "edge_port": "Gi1/0/5 ready with known impact: VoIP, 2 devices, Payroll (high)", "block_ip_without_core": "blocked", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 133, "next": "CG-134"}
+    "l2_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-134", "features": "DHCP snooping, DAI, IP Source Guard, 802.1X all partial with VLANs and ports", "corroborated": ["rogue DHCP 10.20.10.41 (snooping + traffic)", "ARP conflict 10.20.10.41 (ARP inspection + ARP table)"], "single_signal": ["ARP conflict 10.20.10.99", "MAC move 00:11:22:33:44:77"], "alerts": "rogue DHCP high, posture medium x2, single signals low", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 134, "next": "CG-135"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

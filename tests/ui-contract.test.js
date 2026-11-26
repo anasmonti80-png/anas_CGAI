@@ -692,3 +692,8 @@ test('the network map shows the change impact graph with roles, declarations and
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/impact-graph'\)/);assert.match(app,/\/api\/impact-graph\/assess/);assert.match(app,/change_impact_unknown_on_core_or_management/);
   for(const marker of ['Network change impact graph','Shared uplink','Management path','Declare role','Assess an action','Blocked: core or management impact unknown','CG-133']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows layer-2 security posture per device and signals with their confidence and benign causes (CG-134)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/l2-security'\)/);
+  for(const marker of ['Layer-2 security posture','DHCP snooping','Dynamic ARP Inspection','IP Source Guard','Rogue DHCP','MAC move','ARP conflict','Single signal','Possible benign causes','CG-134']) assert.ok(app.includes(marker),marker);
+});

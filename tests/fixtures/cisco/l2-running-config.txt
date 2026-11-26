@@ -1,0 +1,41 @@
+Building configuration...
+!
+version 17.9
+hostname ACC-SW-02
+!
+aaa new-model
+ip dhcp snooping vlan 10
+ip dhcp snooping
+ip arp inspection vlan 10,30
+!
+interface GigabitEthernet1/0/5
+ switchport access vlan 10
+ switchport mode access
+ ip verify source
+ authentication port-control auto
+ mab
+!
+interface GigabitEthernet1/0/7
+ switchport access vlan 10
+ switchport mode access
+ authentication port-control auto
+!
+interface GigabitEthernet1/0/9
+ switchport access vlan 30
+ switchport mode access
+!
+interface GigabitEthernet1/0/10
+ switchport access vlan 30
+ switchport mode access
+ shutdown
+!
+interface GigabitEthernet1/0/48
+ switchport mode trunk
+ ip dhcp snooping trust
+ ip arp inspection trust
+!
+interface Vlan10
+ ip address 10.20.10.2 255.255.255.0
+ ip helper-address 10.20.1.10
+!
+end

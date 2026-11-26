@@ -19,6 +19,7 @@ import { registerView } from './lib/research-register.js';
 import { ChangeSafety } from './lib/change-safety.js';
 import { IntendedState } from './lib/intended-state.js';
 import { ImpactGraph } from './lib/impact-graph.js';
+import { l2View } from './lib/l2-security.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -283,6 +284,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
       // CG-132 intended (source of truth) versus observed state.
+      // CG-134 layer-2 security posture.
+      if(p==='/api/l2-security'&&method==='GET'){roles(['admin','analyst']);return send(res,200,l2View(store,clock?clock():Date.now()));}
       // CG-133 network change impact graph.
       if(p==='/api/impact-graph'&&method==='GET'){roles(['admin','analyst']);return send(res,200,impactGraph.view());}
       if(p==='/api/impact-graph/roles'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,impactGraph.declare(user.id,await body(req)));}

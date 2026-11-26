@@ -1,0 +1,5 @@
+Nov 26 02:10:11.123: %SW_MATM-4-MACFLAP_NOTIF: Host 0011.2233.4477 in vlan 10 is flapping between port Gi1/0/5 and port Gi1/0/7
+Nov 26 02:11:00.456: %DHCP_SNOOPING-5-DHCP_SNOOPING_UNTRUSTED_PORT: DHCP_SNOOPING drop message on untrusted port, message type: DHCPOFFER, MAC sa: 0011.2233.4499
+Nov 26 02:12:30.789: %SW_DAI-4-DHCP_SNOOPING_DENY: 1 Invalid ARPs (Res) on Gi1/0/7, vlan 10.([0011.2233.4499/10.20.10.41/a4bb.6d11.2021/10.20.10.21/02:12:30 UTC Thu Nov 26 2026])
+Nov 26 02:13:00.000: %IP-4-DUPADDR: Duplicate address 10.20.10.99 on Vlan10, sourced by 0011.2233.4488
+Nov 26 02:14:00.000: %LINK-3-UPDOWN: Interface GigabitEthernet1/0/9, changed state to up
