@@ -827,3 +827,8 @@ test('the cloud page shows the collection cost and permissions preview and the n
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/collection-preview'"));
   for(const marker of ['Cloud collection cost and permissions preview','Estimate before enabling','Not computed — no prices','Stopping collection without losing the incident record','needs the incident owner','open_incident_from_source_requires_incident_owner','CG-160']) assert.ok(app.includes(marker),marker);
 });
+
+test('the threats page shows stateful correlation rules with stages, windows, allow-lists, sample tests and replay (CG-161)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/correlation-rules')"));
+  for(const marker of ['Stateful correlation rules','Sample test','Replay (7 days)','benign fired','correlation_samples_must_pass','correlation_rule_needs_second_approver','CG-161']) assert.ok(app.includes(marker),marker);
+});

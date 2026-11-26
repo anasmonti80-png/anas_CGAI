@@ -38,6 +38,7 @@ import { jitView } from './lib/azure-jit.js';
 import { vaultLockView } from './lib/backup-vault-lock.js';
 import { ArtifactAdmission } from './lib/artifact-admission.js';
 import { appAccessView } from './lib/saas-app-access.js';
+import { CorrelationRules } from './lib/correlation-rules.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -344,6 +345,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const stopMatch=p.match(/^\/api\/sources\/([a-f0-9-]{36})\/(stop-preview|stop)$/);
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
+      // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      if(p==='/api/correlation-rules'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new CorrelationRules(store,{clock,kinds:evidenceKinds}).view());}
+      if(p==='/api/correlation-rules'&&method==='POST'){roles(['admin','analyst']);return send(res,201,new CorrelationRules(store,{clock,kinds:evidenceKinds}).create(user.id,await body(req)));}
+      const corrMatch=p.match(/^\/api\/correlation-rules\/(\d+)\/(approve|disable)$/);
+      if(corrMatch&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);const cr=new CorrelationRules(store,{clock,kinds:evidenceKinds});return send(res,200,corrMatch[2]==='approve'?cr.approve(user.id,Number(corrMatch[1])):cr.disable(user.id,Number(corrMatch[1])));}
       if(p==='/api/saas-app-access'&&method==='GET'){roles(['admin','analyst']);return send(res,200,appAccessView(store));}
       if(p==='/api/artifact-integrity'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new ArtifactAdmission(store,{selfDefense,signer:hypotheses.signer}).view());}
       if(p==='/api/backup-vault-lock'&&method==='GET'){roles(['admin','analyst']);return send(res,200,vaultLockView(store));}

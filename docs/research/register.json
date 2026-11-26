@@ -1061,6 +1061,29 @@
       "applicability": "Provider records that survive a CyberGuard stop, free allowances, retention billing.",
       "risks": "Network telemetry and Network Watcher per-GB rates were not stored.",
       "decision_reason": "Implemented as units and free allowances only."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-161"
+      ],
+      "topic": "detection-mapping",
+      "id": "R-046",
+      "title": "Google SecOps YARA-L 2.0 multi-event rules",
+      "source_type": "official",
+      "url": "https://cloud.google.com/chronicle/docs/detection/yara-l-2-0-overview",
+      "source_date": "2026-11-27",
+      "summary": "YARA-L 2.0 rules declare event variables with field conditions, join them through shared placeholder variables, group them in a match section over a time window, and fire on a condition that can require counts of each event variable; outcome sections compute values. It is a useful reference for multi-event, windowed, thresholded detection, not a dependency.",
+      "applicability": "Stages joined by a key in a window with counts, distinct counts and order, evaluated by CyberGuard.",
+      "risks": "CyberGuard does not parse YARA-L; rules use a JSON form validated against stored evidence kinds.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/correlation-rules.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented natively with mandatory malicious and benign samples."
     }
   ],
   "rounds": [
