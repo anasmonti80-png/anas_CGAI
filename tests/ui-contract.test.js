@@ -707,3 +707,8 @@ test('the network map shows wireless and guest network assurance with SSIDs, rog
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/wireless'\)/);
   for(const marker of ['Wireless and guest network assurance','Client isolation','Rogue access points','Broadcasting our SSID over the air only','Coverage limits','Sites without scanning','CG-136']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows the management-plane audit with the version baseline, compliance and regressions (CG-137)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/mgmt-plane'\)/);
+  for(const marker of ['Infrastructure management-plane audit','Baseline','Compliance','Regressed since','Expected','Observed','CG-137']) assert.ok(app.includes(marker),marker);
+});

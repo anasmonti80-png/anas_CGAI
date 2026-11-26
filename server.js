@@ -22,6 +22,7 @@ import { ImpactGraph } from './lib/impact-graph.js';
 import { l2View } from './lib/l2-security.js';
 import { routingView } from './lib/routing-security.js';
 import { wirelessView } from './lib/wireless.js';
+import { mgmtView } from './lib/mgmt-plane.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -286,6 +287,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
       // CG-132 intended (source of truth) versus observed state.
+      // CG-137 management-plane audit.
+      if(p==='/api/mgmt-plane'&&method==='GET'){roles(['admin','analyst']);return send(res,200,mgmtView(store));}
       // CG-136 wireless and guest network assurance.
       if(p==='/api/wireless'&&method==='GET'){roles(['admin','analyst']);return send(res,200,wirelessView(store,domain.portMaps()));}
       // CG-135 BGP routing security.
