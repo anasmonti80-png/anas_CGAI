@@ -792,3 +792,8 @@ test('the cloud page shows the attack path evidence graph separating validated e
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/cloud-attack-paths')"));
   for(const marker of ['Cloud attack path evidence graph','External reachability validated by an external observation','Inferred path (from configuration)','Comparison with Microsoft Defender for Cloud','CG-153']) assert.ok(app.includes(marker),marker);
 });
+
+test('the cloud page shows GCP attack exposure from Security Command Center without inventing scores (CG-154)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/gcp-attack-exposure')"));
+  for(const marker of ['GCP attack exposure posture (Security Command Center)','Not available — no substitute score is computed','No score from SCC','active findings without an SCC score (left unscored, never zero)','CG-154']) assert.ok(app.includes(marker),marker);
+});

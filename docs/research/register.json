@@ -845,6 +845,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented from stored records with per-step evidence."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-154"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-037",
+      "title": "Google Cloud Security Command Center: attack exposure scores, toxic combinations and chokepoints",
+      "source_type": "official",
+      "url": "https://cloud.google.com/security-command-center/docs/attack-exposure-learn",
+      "source_date": "2026-11-27",
+      "summary": "Attack exposure scores (resources 0 to 10, findings without a fixed upper limit) and attack paths exist in the Premium and Enterprise tiers with organization-level activation, not with project-level activation; simulations run up to every 48 hours and use a default high-value resource set until one is defined. Toxic combinations are critical at a score of 10 or more, chokepoints always critical. Finding fields: attackExposure (score, state CALCULATED or NOT_CALCULATED, exposed high, medium and low value resource counts, latestCalculationTime), toxicCombination (attackExposureScore, relatedFindings), findingClass including TOXIC_COMBINATION and CHOKEPOINT.",
+      "applicability": "Import as calculated, with availability notes and no substitute score.",
+      "risks": "The gcloud JSON wrapping of list results is handled in both forms.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/gcp-attack-exposure.js",
+        "scripts/gcp-attack-exposure.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented; never invents a score."
     }
   ],
   "rounds": [

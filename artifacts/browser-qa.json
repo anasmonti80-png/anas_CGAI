@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T21:32:11.248Z",
+  "at": "2026-11-26T21:38:43.610Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -161,7 +161,8 @@
     "service_zero_trust": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-151", "namespaces": "payments STRICT with identity-tier authorization and a port exception; billing PERMISSIVE inherited with network-tier only; reporting PERMISSIVE and unrestricted", "credentials": "API key rotation overdue, shared secret without rotation, one pair without authentication", "certificates": "SPIFFE SVID 1 hour; static certificate 17520 hours long-lived", "console_errors": 0},
     "permission_reduction": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-152", "decisions": "2 recommended, 1 seasonal with insufficient window, 1 without owner, 1 break-glass excluded", "workflow": "change request CHG-152 opened from the page with MFA; approval by a non-owner refused with the Arabic message", "dry_run": "changes_made 0, two proposed changes with workflow state", "console_errors": 0},
     "cloud_attack_paths": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-153", "paths": "3 paths: web-frontend to customer-exports and to public-reports with external reachability validated (critical), public-reports self path inferred (medium)", "steps": "exposure, misconfiguration, identity (declared), permission, sensitive target, each with its source", "comparison": "Defender for Cloud comparison table shown", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 153, "next": "CG-154"}
+    "gcp_attack_exposure": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-154", "organization": "123456789012 (synthetic), Premium, organization level, no high-value set defined", "shown": "2 toxic combinations (12.4 critical, 6.1 high), 1 chokepoint without score, top scored findings, 1 active finding left unscored", "notes": "default high-value set caveat shown", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 154, "next": "CG-155"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
