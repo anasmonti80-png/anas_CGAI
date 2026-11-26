@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T10:53:21.793Z",
+  "at": "2026-11-26T11:00:58.933Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -147,7 +147,8 @@
     "mgmt_plane": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-137", "core_sw_01": "cisco-ios-xe-17, 89% after the syslog host was removed and Telnet enabled; 2 regressions shown and alerted high", "old_acc_sw": "cisco-ios-15, 16%, type 5 secret accepted for 15.2", "arabic": "expected values, on/off and minutes translated", "console_errors": 0},
     "adapter_registry": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-138", "entries": 19, "fortinet_port_shutdown": "no adapter, other functions are not support", "ios_xe_16_3": "unsupported firmware (minimum 16.6)", "ise_lab_without_undo": "refused 400", "ise_lab_with_undo": "ISE 3.3 / 3.3 lab-validated", "console_errors": "only the expected 400 refusal"},
     "attack_cases": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-139", "sp_01": "probable compromise, analyst must confirm: vulnerable build (KEV), exposure from 198.51.100.77 once, ToolPane POST with SignOut referrer, spinstall0.aspx answered 200, w3wp.exe started PowerShell with an encoded command, new scheduled task", "alerts": "medium, high, critical in order", "arabic": "signal details translated", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 139, "next": "CG-140"}
+    "telecom_hardening": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-140", "pe_edge_01": "two exports: Smart Install, web UI, Guest Shell, SSH 2222 and no flow export; undeclared ERSPAN session 2, GRE Tunnel99 to 198.51.100.66, ACL permit added for 198.51.100.66, static route added", "declared_session_1": "not reported", "alerts": "4 technique, 4 hardening", "arabic": "details translated", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 140, "next": "CG-141"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

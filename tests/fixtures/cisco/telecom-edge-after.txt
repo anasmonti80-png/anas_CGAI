@@ -1,0 +1,36 @@
+Building configuration...
+!
+version 17.9
+hostname PE-EDGE-01
+!
+ip ssh version 2
+ip ssh port 2222 rotary 1
+ip http server
+ip http secure-server
+!
+interface GigabitEthernet1/0/1
+ switchport mode access
+!
+interface GigabitEthernet0/0/0
+ ip address 203.0.113.10 255.255.255.252
+!
+ip access-list extended MGMT-ACL
+ 10 permit tcp 192.0.2.0 0.0.0.255 any eq 22
+ 15 permit ip host 198.51.100.66 any
+ 20 deny ip any any log
+!
+ip route 0.0.0.0 0.0.0.0 203.0.113.9
+ip route 10.99.0.0 255.255.0.0 Tunnel99
+!
+monitor session 1 source interface GigabitEthernet1/0/1
+monitor session 1 destination interface GigabitEthernet1/0/2
+interface Tunnel99
+ tunnel source GigabitEthernet0/0/0
+ tunnel destination 198.51.100.66
+!
+monitor session 2 type erspan-source
+ source interface GigabitEthernet0/0/0
+!
+iox
+!
+end

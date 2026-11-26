@@ -564,6 +564,73 @@
       "verification": "partially-verified",
       "decision": "deferred",
       "decision_reason": "The JSON export is imported now; embedding a validator or querying it live is reconsidered if customers need continuous validation."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-140"
+      ],
+      "topic": "telecom-defense",
+      "id": "R-025",
+      "title": "CISA/NSA/FBI Enhanced Visibility and Hardening Guidance for Communications Infrastructure",
+      "source_type": "official",
+      "url": "https://www.cisa.gov/resources-tools/resources/enhanced-visibility-and-hardening-guidance-communications-infrastructure",
+      "source_date": "2024-12-04",
+      "summary": "Joint guidance with Five Eyes partners: monitor configuration changes and administrative access, keep logs and flow telemetry off the device, restrict and harden management access, disable unused services and apply vendor-specific hardening for Cisco devices.",
+      "applicability": "Network devices the organisation owns, and carrier devices only with the carrier written authorization.",
+      "risks": "Written for communications providers; enterprise use takes the device hardening and visibility parts only.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/telecom-hardening.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Hardening and visibility checks implemented on authorized configuration exports."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-140"
+      ],
+      "topic": "telecom-defense",
+      "id": "R-026",
+      "title": "CISA AA25-239A Countering Chinese State-Sponsored Actors (Salt Typhoon)",
+      "source_type": "official",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-239a",
+      "source_date": "2025-08-27",
+      "summary": "Names the exploited CVEs (Cisco Smart Install CVE-2018-0171, IOS XE web UI CVE-2023-20198 and CVE-2023-20273, PAN-OS CVE-2024-3400, Ivanti CVE-2023-46805 and CVE-2024-21887) and techniques: ACL entries added for actor IPs, SPAN/RSPAN/ERSPAN mirroring, GRE/IPsec tunnels and static routes, Guest Shell containers, SSH on non-standard ports and IOS XR sshd_operns on TCP/57722; warns not to rely on device syslog alone.",
+      "applicability": "Detection of these configuration techniques between authorized exports.",
+      "risks": "Actors can change and restore configurations between exports; continuous AAA command accounting and off-box flows remain necessary.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/telecom-hardening.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Technique checks implemented; exposure to the named CVEs is matched through the existing vulnerability catalogs."
+    },
+    {
+      "reviewed_at": "2026-11-26",
+      "dependencies": [],
+      "requirements": [
+        "CG-140"
+      ],
+      "topic": "telecom-defense",
+      "id": "R-027",
+      "title": "IOS XR sshd_operns host SSH on TCP/57722",
+      "source_type": "official",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories/aa25-239a",
+      "source_date": "2025-08-27",
+      "summary": "An additional SSH endpoint to the IOS XR host Linux, disabled by default; enabling it gives shell access outside the IOS XR CLI.",
+      "applicability": "IOS XR routers.",
+      "risks": "The configuration line that enables it was not confirmed from a vendor document in this review; detecting TCP/57722 needs an authorized port observation.",
+      "priority": "P3",
+      "verification": "partially-verified",
+      "evidence_files": [],
+      "decision": "deferred",
+      "decision_reason": "Added when an IOS XR configuration sample or port observation source is available."
     }
   ],
   "rounds": [
@@ -607,6 +674,12 @@
       "topic": "routing-security",
       "at": "2026-11-26",
       "sources_reviewed": 4,
+      "new_valuable_ideas": 3
+    },
+    {
+      "topic": "telecom-defense",
+      "at": "2026-11-26",
+      "sources_reviewed": 2,
       "new_valuable_ideas": 3
     }
   ]

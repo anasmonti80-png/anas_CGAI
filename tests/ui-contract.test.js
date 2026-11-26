@@ -722,3 +722,8 @@ test('the threats page shows multi-signal attack cases with state, signals, miss
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/attack-cases'\)/);
   for(const marker of ['Multi-signal attack cases','Probable compromise — analyst must confirm','Missing visibility','Response steps','IIS logs','CG-139']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows the telecom / Salt Typhoon study with owned-device scope, findings and advisory CVEs (CG-140)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/telecom-hardening'\)/);
+  for(const marker of ['Telecom / Salt Typhoon defensive study','Actor technique','Carrier device, authorized','CVEs exploited per AA25-239A','CG-140']) assert.ok(app.includes(marker),marker);
+});
