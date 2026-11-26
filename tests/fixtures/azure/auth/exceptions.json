@@ -1,0 +1,4 @@
+[
+  { "app": "Legacy payroll terminal", "reason": "Vendor client supports only password plus OTP", "owner": "finance-it", "compensating": "Reachable only from the payroll VLAN; OTP with number matching", "review_by": "2026-06-30" },
+  { "app": "Shared scanner mailbox", "reason": "Device sends mail over SMTP AUTH", "owner": "facilities", "compensating": "Dedicated account restricted to one sender address", "review_by": "2027-03-31" }
+]

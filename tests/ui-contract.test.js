@@ -772,3 +772,8 @@ test('the identity page shows Entra workload identities with Conditional Access 
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/workload-identities')"));
   for(const marker of ['Entra workload identity security','Not coverable','Permission and credential changes','Sign-in deviations','Conditional Access limits for workload identities','CG-149']) assert.ok(app.includes(marker),marker);
 });
+
+test('the identity page shows phishing-resistant authentication posture by tier, enforcement, legacy protocols and app exceptions (CG-150)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/auth-strength')"));
+  for(const marker of ['Phishing-resistant authentication posture','Administrators without a phishing-resistant method','Legacy protocols not blocked by an enabled policy','Successful legacy protocol sign-ins (bypass MFA)','Applications that cannot use phishing-resistant methods (declared exceptions)','CG-150']) assert.ok(app.includes(marker),marker);
+});

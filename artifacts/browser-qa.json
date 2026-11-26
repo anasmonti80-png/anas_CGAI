@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T21:04:05.721Z",
+  "at": "2026-11-26T21:11:24.269Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -157,7 +157,8 @@
     "gws_baseline": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-147", "domain": "gws-lab (synthetic), ScubaGoggles 1.1.0, Business Plus, 2 imports", "summary": "3 SHALL deviations, 1 SHOULD, 5 meet, 2 license dependent (Context-Aware Access, DLP), 1 without log events, 1 manual", "areas": "MFA SHALL deviation in both; sharing deviates in GWS and SharePoint not assessed; mail SHOULD deviation in GWS and meets in Microsoft 365; apps SHALL deviation", "drift": "GWS.DRIVEDOCS.1.1v1 regressed and raised CG-GWS-DRIFT-147", "console_errors": 0},
     "access_analyzer": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-148", "account": "111122223333 (AWS documentation example), regions us-east-1 and eu-west-1", "analyses": "external partially active (not analysed in eu-west-1), unused active with 3 findings, internal not active (paid)", "zone": "account zone of trust explained", "findings": "1 external, 1 unused role, 1 unused access key, 1 unused permissions; archived finding hidden", "console_errors": 0},
     "workload_identities": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-149", "tenant": "synthetic tenant with 2 single-tenant apps, 1 multitenant app and 1 managed identity", "coverage": "1 covered, 1 excluded and not covered, 2 not coverable", "changes": "app role assignment and service principal credential added", "deviations": "payroll-sync from a new country (high), managed identity from a new address (medium)", "credentials": "expired, long-lived and client secret findings", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 149, "next": "CG-150"}
+    "phishing_resistant_auth": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-150", "users": "7 users: 2 phishing-resistant, 2 app or OTP, 1 SMS, 1 not MFA, 1 none; 1 unclassified method", "admins": "admin2 with push only flagged", "enforcement": "some users or roles (admin role policy); legacy block in report-only mode not counted", "legacy": "IMAP4 and Authenticated SMTP successful sign-ins listed", "exceptions": "2 declared, 1 review overdue", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 150, "next": "CG-151"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

@@ -28,6 +28,7 @@ import { m365View } from './lib/m365-baseline.js';
 import { gwsView } from './lib/gws-baseline.js';
 import { accessAnalyzerView } from './lib/access-analyzer.js';
 import { workloadView } from './lib/workload-identity.js';
+import { authPostureView } from './lib/phishing-resistant.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
 import { telecomView } from './lib/telecom-hardening.js';
@@ -322,6 +323,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/adapters/support'&&method==='POST'){roles(['admin','analyst']);return send(res,200,adapters.supports(await body(req)));}
       {const m=p.match(/^\/api\/adapters\/(A-\d{3})\/lab$/);if(m&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,201,adapters.recordLab(user.id,m[1],await body(req)));}}
       // CG-137 management-plane audit.
+      if(p==='/api/auth-strength'&&method==='GET'){roles(['admin','analyst']);return send(res,200,authPostureView(store));}
       if(p==='/api/workload-identities'&&method==='GET'){roles(['admin','analyst']);return send(res,200,workloadView(store));}
       if(p==='/api/access-analyzer'&&method==='GET'){roles(['admin','analyst']);return send(res,200,accessAnalyzerView(store));}
       if(p==='/api/gws-baseline'&&method==='GET'){roles(['admin','analyst']);return send(res,200,gwsView(store));}

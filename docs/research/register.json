@@ -751,6 +751,30 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented; uncoverable identities are never shown as protected."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-150"
+      ],
+      "topic": "saas-baselines",
+      "id": "R-033",
+      "title": "CISA fact sheet: Implementing Phishing-Resistant MFA",
+      "source_type": "official",
+      "url": "https://www.cisa.gov/sites/default/files/publications/fact-sheet-implementing-phishing-resistant-mfa-508c.pdf",
+      "source_date": "2022-10-01",
+      "summary": "Ranks MFA from strongest to weakest: phishing-resistant (FIDO/WebAuthn and PKI-based), app-based OTP or push with number matching, push without number matching, SMS or voice as a last resort. Some systems may not support phishing-resistant MFA: start with services that do, phase rollout from administrators and help desk, and escalate systems without MFA to senior leadership.",
+      "applicability": "Tier ranking of registered methods and declared application exceptions.",
+      "risks": "Microsoft Entra methodsRegistered is a free-form collection; new values stay unclassified until mapped. Built-in Phishing-resistant MFA strength allows Windows Hello for Business or platform credential, FIDO2 security key and multifactor certificate-based authentication.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/phishing-resistant.js",
+        "scripts/auth-strength-posture.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented; registration is never read as enforcement."
     }
   ],
   "rounds": [

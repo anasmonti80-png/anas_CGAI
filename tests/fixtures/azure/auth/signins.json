@@ -1,0 +1,6 @@
+{ "value": [
+  { "createdDateTime": "2026-11-25T08:00:00Z", "userPrincipalName": "user2@lab.example", "appDisplayName": "Office 365 Exchange Online", "clientAppUsed": "IMAP4", "status": { "errorCode": 0 } },
+  { "createdDateTime": "2026-11-25T09:00:00Z", "userPrincipalName": "user2@lab.example", "appDisplayName": "Office 365 Exchange Online", "clientAppUsed": "Authenticated SMTP", "status": { "errorCode": 0 } },
+  { "createdDateTime": "2026-11-25T10:00:00Z", "userPrincipalName": "user4@lab.example", "appDisplayName": "Office 365 Exchange Online", "clientAppUsed": "IMAP4", "status": { "errorCode": 50126 } },
+  { "createdDateTime": "2026-11-25T11:00:00Z", "userPrincipalName": "user1@lab.example", "appDisplayName": "Microsoft Teams", "clientAppUsed": "Mobile Apps and Desktop clients", "status": { "errorCode": 0 } }
+] }

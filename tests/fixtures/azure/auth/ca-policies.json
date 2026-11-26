@@ -1,0 +1,6 @@
+{ "value": [
+  { "id": "p1", "displayName": "Admins require phishing-resistant MFA", "state": "enabled", "conditions": { "users": { "includeRoles": ["62e90394-69f5-4237-9190-012177145e10"] }, "applications": { "includeApplications": ["All"] } },
+    "grantControls": { "operator": "OR", "builtInControls": [], "authenticationStrength": { "displayName": "Phishing-resistant MFA", "allowedCombinations": ["windowsHelloForBusiness", "fido2", "x509CertificateMultiFactor"] } } },
+  { "id": "p2", "displayName": "All users MFA", "state": "enabled", "conditions": { "users": { "includeUsers": ["All"], "excludeUsers": ["breakglass-1"] }, "applications": { "includeApplications": ["All"] } }, "grantControls": { "operator": "OR", "builtInControls": ["mfa"] } },
+  { "id": "p3", "displayName": "Block legacy authentication", "state": "enabledForReportingButNotEnforced", "conditions": { "users": { "includeUsers": ["All"] }, "clientAppTypes": ["exchangeActiveSync", "other"] }, "grantControls": { "operator": "OR", "builtInControls": ["block"] } }
+] }

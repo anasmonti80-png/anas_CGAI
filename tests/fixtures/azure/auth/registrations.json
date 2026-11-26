@@ -1,0 +1,9 @@
+{ "value": [
+  { "id": "u1", "userPrincipalName": "admin1@lab.example", "isAdmin": true, "userType": "member", "isMfaRegistered": true, "methodsRegistered": ["passKeyDeviceBound", "microsoftAuthenticatorPush"] },
+  { "id": "u2", "userPrincipalName": "admin2@lab.example", "isAdmin": true, "userType": "member", "isMfaRegistered": true, "methodsRegistered": ["microsoftAuthenticatorPush", "mobilePhone"] },
+  { "id": "u3", "userPrincipalName": "user1@lab.example", "isAdmin": false, "userType": "member", "isMfaRegistered": true, "methodsRegistered": ["windowsHelloForBusiness"] },
+  { "id": "u4", "userPrincipalName": "user2@lab.example", "isAdmin": false, "userType": "member", "isMfaRegistered": true, "methodsRegistered": ["mobilePhone", "email"] },
+  { "id": "u5", "userPrincipalName": "user3@lab.example", "isAdmin": false, "userType": "member", "isMfaRegistered": false, "methodsRegistered": ["email"] },
+  { "id": "u6", "userPrincipalName": "user4@lab.example", "isAdmin": false, "userType": "member", "isMfaRegistered": false, "methodsRegistered": [] },
+  { "id": "u7", "userPrincipalName": "user5@lab.example", "isAdmin": false, "userType": "member", "isMfaRegistered": true, "methodsRegistered": ["softwareOneTimePasscode", "futureMethodX"] }
+] }
