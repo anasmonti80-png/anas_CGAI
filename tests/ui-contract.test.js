@@ -687,3 +687,8 @@ test('the network map shows intended versus observed state with per-difference r
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/intended-state'\)/);assert.match(app,/\/api\/intended-state\/patch/);
   for(const marker of ['Intended versus observed state','Interface mismatch','VLAN mismatch','Update source of truth','Download reviewed NetBox patch','CG-132']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows the change impact graph with roles, declarations and per-action assessment (CG-133)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/impact-graph'\)/);assert.match(app,/\/api\/impact-graph\/assess/);assert.match(app,/change_impact_unknown_on_core_or_management/);
+  for(const marker of ['Network change impact graph','Shared uplink','Management path','Declare role','Assess an action','Blocked: core or management impact unknown','CG-133']) assert.ok(app.includes(marker),marker);
+});
