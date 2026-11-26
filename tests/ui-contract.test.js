@@ -702,3 +702,8 @@ test('the network map shows BGP routing security with ROV, prefix filters, ROA c
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/routing-security'\)/);
   for(const marker of ['BGP routing security and RPKI','Route origin validation','Inbound filter','Outbound filter','Loose maxLength','Announcement changes since','status_ar','CG-135']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows wireless and guest network assurance with SSIDs, rogue APs and RF coverage limits (CG-136)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/wireless'\)/);
+  for(const marker of ['Wireless and guest network assurance','Client isolation','Rogue access points','Broadcasting our SSID over the air only','Coverage limits','Sites without scanning','CG-136']) assert.ok(app.includes(marker),marker);
+});

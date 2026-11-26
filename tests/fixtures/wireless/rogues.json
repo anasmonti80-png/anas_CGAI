@@ -1,0 +1,5 @@
+[
+  { "bssid": "a4:bb:6d:11:20:2f", "ssid": "CORP-WiFi", "rssi": -48, "channel": 36, "clients": 2, "detected_by": ["ap-floor2-01"], "last_heard": "2026-11-20T02:00:00Z" },
+  { "bssid": "00:24:6c:aa:bb:01", "ssid": "CORP-WiFi", "rssi": -81, "channel": 6, "clients": 0, "detected_by": ["ap-floor2-01"], "last_heard": "2026-11-20T02:05:00Z" },
+  { "bssid": "3c:7a:aa:00:00:10", "ssid": "CoffeeShop", "rssi": -85, "channel": 11, "clients": 0, "detected_by": ["ap-floor2-01"], "last_heard": "2026-11-20T02:06:00Z" }
+]

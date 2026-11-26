@@ -1,0 +1,45 @@
+Building configuration...
+!
+hostname WLC-9800-01
+!
+aaa new-model
+aaa group server radius ISE-GROUP
+ server name ISE-01
+ server name ISE-02
+aaa authentication dot1x ISE-AUTH group ISE-GROUP
+radius server ISE-01
+ address ipv4 192.0.2.61 auth-port 1812 acct-port 1813
+radius server ISE-02
+ address ipv4 192.0.2.62 auth-port 1812 acct-port 1813
+!
+wireless profile policy CORP-POLICY
+ vlan 10
+ no shutdown
+wireless profile policy GUEST-POLICY
+ vlan 10
+ no shutdown
+wireless profile policy IOT-POLICY
+ vlan 40
+ no shutdown
+wireless tag policy HQ-TAG
+ wlan CORP policy CORP-POLICY
+ wlan GUEST policy GUEST-POLICY
+ wlan IOT policy IOT-POLICY
+!
+wlan CORP 1 CORP-WiFi
+ security dot1x authentication-list ISE-AUTH
+ security wpa wpa3
+ security pmf mandatory
+ no shutdown
+wlan GUEST 2 Guest-WiFi
+ no security wpa
+ no security wpa wpa2
+ no security wpa akm dot1x
+ security web-auth
+ no shutdown
+wlan IOT 3 IOT-Devices
+ no security wpa akm dot1x
+ security wpa akm psk
+ no shutdown
+!
+end

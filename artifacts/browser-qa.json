@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T02:56:56.105Z",
+  "at": "2026-11-26T03:02:49.645Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -143,7 +143,8 @@
     "impact_graph": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-133", "uplink_before_declaration": "Gi1/0/48 to CORE-SW-01 blocked, impact unknown", "core_declared_from_page": "CORE-SW-01 core", "uplink_after_declaration": "review required, core affected", "edge_port": "Gi1/0/5 ready with known impact: VoIP, 2 devices, Payroll (high)", "block_ip_without_core": "blocked", "console_errors": 0},
     "l2_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-134", "features": "DHCP snooping, DAI, IP Source Guard, 802.1X all partial with VLANs and ports", "corroborated": ["rogue DHCP 10.20.10.41 (snooping + traffic)", "ARP conflict 10.20.10.41 (ARP inspection + ARP table)"], "single_signal": ["ARP conflict 10.20.10.99", "MAC move 00:11:22:33:44:77"], "alerts": "rogue DHCP high, posture medium x2, single signals low", "console_errors": 0},
     "routing_security": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-135", "rov": "configured, invalid not dropped from AS64600", "filters": "192.0.2.9 without inbound and outbound filters", "roa": "203.0.113.0/24 valid with loose maxLength, 198.51.100.0/25 without ROA", "hijack": "203.0.113.128/25 from AS64666, RPKI invalid, impact WEB-01 Customer portal", "leak": "192.0.2.0/24 advertised to 192.0.2.9", "nist_status": "shown as initial public draft, not final", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 135, "next": "CG-136"}
+    "wireless": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-136", "ssids": "CORP-WiFi WPA2/WPA3-Enterprise with 2 RADIUS and mandatory PMF; Guest-WiFi open with portal, no isolation, shares VLAN 10; IOT-Devices WPA2 shared key", "rogues": "a4:bb:6d:11:20:2f corroborated on acc-sw-01 Gi1/0/5; 00:24:6c:aa:bb:01 single signal; CoffeeShop neighbour", "coverage": "2 of 3 APs scanning, Branch-2 blind", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 136, "next": "CG-137"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

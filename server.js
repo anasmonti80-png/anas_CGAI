@@ -21,6 +21,7 @@ import { IntendedState } from './lib/intended-state.js';
 import { ImpactGraph } from './lib/impact-graph.js';
 import { l2View } from './lib/l2-security.js';
 import { routingView } from './lib/routing-security.js';
+import { wirelessView } from './lib/wireless.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -285,6 +286,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
       // CG-132 intended (source of truth) versus observed state.
+      // CG-136 wireless and guest network assurance.
+      if(p==='/api/wireless'&&method==='GET'){roles(['admin','analyst']);return send(res,200,wirelessView(store,domain.portMaps()));}
       // CG-135 BGP routing security.
       if(p==='/api/routing-security'&&method==='GET'){roles(['admin','analyst']);return send(res,200,routingView(store));}
       // CG-134 layer-2 security posture.

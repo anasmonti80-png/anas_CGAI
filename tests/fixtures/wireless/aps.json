@@ -1,0 +1,5 @@
+[
+  { "name": "ap-floor2-01", "site": "HQ", "mode": "local", "rogue_detection": true },
+  { "name": "ap-floor3-01", "site": "HQ", "mode": "local", "rogue_detection": true },
+  { "name": "ap-branch-01", "site": "Branch-2", "mode": "local", "rogue_detection": false }
+]
