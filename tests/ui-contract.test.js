@@ -747,3 +747,8 @@ test('the events page shows post-patch investigations with per-item evidence, co
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/post-patch'\)/);assert.match(app,/post_patch_investigation_open/);
   for(const marker of ['Past-compromise check after patching','Evidence in the window','Insufficient evidence','Closed with gaps','Close investigation','CG-144']) assert.ok(app.includes(marker),marker);
 });
+
+test('the threats page shows attack technique coverage by evidence with missing evidence and a detection test form (CG-145)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/coverage-evidence'\)/);assert.match(app,/\/api\/coverage-evidence\/navigator-layer/);
+  for(const marker of ['Attack technique coverage by evidence','Covered by evidence','Posture rules only (not counted)','No passing detection test','Performance limits undocumented','Record a detection test','CG-145']) assert.ok(app.includes(marker),marker);
+});
