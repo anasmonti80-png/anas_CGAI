@@ -24,6 +24,7 @@ import { routingView } from './lib/routing-security.js';
 import { wirelessView } from './lib/wireless.js';
 import { mgmtView } from './lib/mgmt-plane.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
+import { attackCasesView } from './lib/attack-cases.js';
 import https from 'node:https';
 import { selfSignedCertificate } from './lib/selfsigned.js';
 import fs from 'node:fs';
@@ -288,6 +289,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
       // CG-132 intended (source of truth) versus observed state.
+      // CG-139 multi-signal attack cases.
+      if(p==='/api/attack-cases'&&method==='GET'){roles(['admin','analyst']);return send(res,200,attackCasesView(domain));}
       // CG-138 vendor adapter validation registry.
       if(p==='/api/adapters'&&method==='GET'){roles(['admin','analyst']);return send(res,200,adapters.view());}
       if(p==='/api/adapters/support'&&method==='POST'){roles(['admin','analyst']);return send(res,200,adapters.supports(await body(req)));}

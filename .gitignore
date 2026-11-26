@@ -10,3 +10,6 @@ coverage/
 *.pfx
 tenants/
 *.cgbak
+
+# CG-139 synthetic IIS log fixture (not a real log)
+!tests/fixtures/toolshell/*.log

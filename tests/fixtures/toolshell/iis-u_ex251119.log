@@ -1,0 +1,8 @@
+#Software: Microsoft Internet Information Services 10.0
+#Version: 1.0
+#Date: {{DATE}} 08:00:00
+#Fields: date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) cs(Referer) sc-status sc-substatus sc-win32-status time-taken
+{{DATE}} 08:01:12 10.30.0.20 GET /sites/hr/default.aspx - 443 CORP\alice 10.30.5.14 Mozilla/5.0 - 200 0 0 120
+{{DATE}} 08:02:40 10.30.0.20 GET /_layouts/15/start.aspx - 443 - 198.51.100.77 Mozilla/5.0 - 200 0 0 85
+{{DATE}} 08:03:05 10.30.0.20 POST /_layouts/15/ToolPane.aspx DisplayMode=Edit&a=/ToolPane.aspx 443 - 198.51.100.77 Mozilla/5.0+(Windows+NT+10.0) https://sp.example.test/_layouts/SignOut.aspx 200 0 0 340
+{{DATE}} 08:03:30 10.30.0.20 GET /_layouts/15/spinstall0.aspx - 443 - 198.51.100.77 curl/8.0 - 200 0 0 15

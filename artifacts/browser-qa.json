@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T06:53:33.361Z",
+  "at": "2026-11-26T10:53:21.793Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -146,7 +146,8 @@
     "wireless": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-136", "ssids": "CORP-WiFi WPA2/WPA3-Enterprise with 2 RADIUS and mandatory PMF; Guest-WiFi open with portal, no isolation, shares VLAN 10; IOT-Devices WPA2 shared key", "rogues": "a4:bb:6d:11:20:2f corroborated on acc-sw-01 Gi1/0/5; 00:24:6c:aa:bb:01 single signal; CoffeeShop neighbour", "coverage": "2 of 3 APs scanning, Branch-2 blind", "console_errors": 0},
     "mgmt_plane": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-137", "core_sw_01": "cisco-ios-xe-17, 89% after the syslog host was removed and Telnet enabled; 2 regressions shown and alerted high", "old_acc_sw": "cisco-ios-15, 16%, type 5 secret accepted for 15.2", "arabic": "expected values, on/off and minutes translated", "console_errors": 0},
     "adapter_registry": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-138", "entries": 19, "fortinet_port_shutdown": "no adapter, other functions are not support", "ios_xe_16_3": "unsupported firmware (minimum 16.6)", "ise_lab_without_undo": "refused 400", "ise_lab_with_undo": "ISE 3.3 / 3.3 lab-validated", "console_errors": "only the expected 400 refusal"},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 138, "next": "CG-139"}
+    "attack_cases": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-139", "sp_01": "probable compromise, analyst must confirm: vulnerable build (KEV), exposure from 198.51.100.77 once, ToolPane POST with SignOut referrer, spinstall0.aspx answered 200, w3wp.exe started PowerShell with an encoded command, new scheduled task", "alerts": "medium, high, critical in order", "arabic": "signal details translated", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 139, "next": "CG-140"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

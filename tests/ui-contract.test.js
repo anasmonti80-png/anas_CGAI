@@ -717,3 +717,8 @@ test('the sources page shows the vendor adapter registry with function-level sup
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/adapters'\)/);assert.match(app,/\/api\/adapters\/support/);
   for(const marker of ['Vendor adapter validation registry','Fixture-verified only','Lab-validated','Is this function supported?','Record a lab test','Undo verified','CG-138']) assert.ok(app.includes(marker),marker);
 });
+
+test('the threats page shows multi-signal attack cases with state, signals, missing visibility and response steps (CG-139)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/attack-cases'\)/);
+  for(const marker of ['Multi-signal attack cases','Probable compromise — analyst must confirm','Missing visibility','Response steps','IIS logs','CG-139']) assert.ok(app.includes(marker),marker);
+});
