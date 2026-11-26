@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T11:00:58.933Z",
+  "at": "2026-11-26T11:06:49.633Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -148,7 +148,8 @@
     "adapter_registry": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-138", "entries": 19, "fortinet_port_shutdown": "no adapter, other functions are not support", "ios_xe_16_3": "unsupported firmware (minimum 16.6)", "ise_lab_without_undo": "refused 400", "ise_lab_with_undo": "ISE 3.3 / 3.3 lab-validated", "console_errors": "only the expected 400 refusal"},
     "attack_cases": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-139", "sp_01": "probable compromise, analyst must confirm: vulnerable build (KEV), exposure from 198.51.100.77 once, ToolPane POST with SignOut referrer, spinstall0.aspx answered 200, w3wp.exe started PowerShell with an encoded command, new scheduled task", "alerts": "medium, high, critical in order", "arabic": "signal details translated", "console_errors": 0},
     "telecom_hardening": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-140", "pe_edge_01": "two exports: Smart Install, web UI, Guest Shell, SSH 2222 and no flow export; undeclared ERSPAN session 2, GRE Tunnel99 to 198.51.100.66, ACL permit added for 198.51.100.66, static route added", "declared_session_1": "not reported", "alerts": "4 technique, 4 hardening", "arabic": "details translated", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 140, "next": "CG-141"}
+    "remote_correlation": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-141", "srv_01": "RDP from 203.0.113.50 after 6 failed logons, then cmd, whoami and a new service: suspected misuse, analyst must confirm", "ws_01": "AnyDesk installed, started, connected and authenticated behind a relay (peer hidden): external session needs review", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 141, "next": "CG-142"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

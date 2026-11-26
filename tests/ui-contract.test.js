@@ -727,3 +727,8 @@ test('the network map shows the telecom / Salt Typhoon study with owned-device s
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/telecom-hardening'\)/);
   for(const marker of ['Telecom / Salt Typhoon defensive study','Actor technique','Carrier device, authorized','CVEs exploited per AA25-239A','CG-140']) assert.ok(app.includes(marker),marker);
 });
+
+test('the remote page shows remote-access correlation with separate stages, peers and identity plus behaviour evidence (CG-141)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/remote-correlation'\)/);
+  for(const marker of ['Remote-access session correlation','Behind a relay (peer hidden)','Suspected misuse — analyst must confirm','Identity and behaviour evidence','CG-141']) assert.ok(app.includes(marker),marker);
+});
