@@ -677,3 +677,8 @@ test('reports show the research evidence register with saturation per topic (CG-
   const app=read('app.js');assert.match(app,/optionalApi\('\/api\/research-register'\)/);
   for(const marker of ['Research evidence register','Review rounds','Stop research (saturated)','Verified in code','Deferred','CG-130']) assert.ok(app.includes(marker),marker);
 });
+
+test('the network map shows network change safety with required flows and before/after analysis (CG-131)',()=>{
+  const app=read('app.js');assert.match(app,/optionalApi\('\/api\/change-safety'\)/);assert.match(app,/\/api\/change-safety\/analyse/);
+  for(const marker of ['Network change safety','Required flows','Analyse a change before applying it','Cannot verify','Breaks','CG-131']) assert.ok(app.includes(marker),marker);
+});

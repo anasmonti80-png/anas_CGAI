@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T02:19:03.765Z",
+  "at": "2026-11-26T02:25:13.252Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -138,7 +138,8 @@
     "self_defense": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-128", "before_mfa": "administrator MFA: fail", "after_mfa": "administrator MFA: pass", "posture": "9 pass, 1 warning (unsigned development build), 1 fail (no platform backup yet)", "console_errors": 0},
     "capacity_model": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-129", "profile": "62,756 EPS, 335 bytes per event, 25/25 detected under load", "plan_2000_eps_90_days": "57.89 GB per day, 5,209.9 GB storage, 1 core, 2 GB memory, no GPU", "monthly_cost_at_0_02_per_gb_month": 104.2, "console_errors": 0},
     "research_register": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-130", "register": "valid, 20 ideas, 18 accepted, 2 deferred, 15 verified in code", "topics": "all continue research (not enough recorded rounds yet)", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 130, "next": "CG-131"}
+    "change_safety": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-131", "disable_db_rule": "unsafe: App to database breaks, Web to app unchanged", "remove_route": "Web to app: allowed then no route, breaks", "disclaimer": "shown in Arabic", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 131, "next": "CG-132"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

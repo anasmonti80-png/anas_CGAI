@@ -1,33 +1,542 @@
 {
   "schema_version": "cg.research-register/1",
-  "stop_rule": { "min_rounds": 3, "quiet_rounds": 2, "description": "A topic stops when it has at least three review rounds and the last two produced no new valuable idea." },
+  "stop_rule": {
+    "min_rounds": 3,
+    "quiet_rounds": 2,
+    "description": "A topic stops when it has at least three review rounds and the last two produced no new valuable idea."
+  },
   "entries": [
-    { "id": "R-001", "topic": "detection-mapping", "title": "MITRE ATT&CK techniques and tactics", "source_type": "official", "url": "https://attack.mitre.org/", "source_date": "2024-10-31", "reviewed_at": "2026-11-20", "summary": "Knowledge base of adversary tactics and techniques used as the common language for what each rule detects.", "applicability": "Every CyberGuard rule is mapped to its techniques and exported as a Navigator layer.", "dependencies": [], "risks": "Technique IDs change between versions; the mapping states the version it targets.", "priority": "P1", "verification": "verified-in-code", "evidence_files": ["lib/attack-mapping.js"], "decision": "accepted", "decision_reason": "Needed to show coverage and gaps per technique.", "requirements": ["CG-110"] },
-    { "id": "R-002", "topic": "detection-mapping", "title": "MITRE D3FEND defensive techniques", "source_type": "official", "url": "https://d3fend.mitre.org/", "source_date": "2024-01-01", "reviewed_at": "2026-11-20", "summary": "Knowledge graph of defensive countermeasures linked to offensive techniques.", "applicability": "Each rule names its D3FEND detect and respond techniques.", "dependencies": ["R-001"], "risks": "Countermeasure names are still evolving.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/attack-mapping.js"], "decision": "accepted", "decision_reason": "Gives the defensive action for each detection.", "requirements": ["CG-110"] },
-    { "id": "R-003", "topic": "ai-safety", "title": "MITRE ATLAS LLM prompt injection (AML.T0051)", "source_type": "official", "url": "https://atlas.mitre.org/", "source_date": "2024-01-01", "reviewed_at": "2026-11-22", "summary": "Adversarial techniques against AI systems, including prompt injection through data the model reads.", "applicability": "Evidence that instructs the AI analyst raises CG-AI-INJECTION-121 mapped to AML.T0051.", "dependencies": [], "risks": "Pattern detection cannot prove the absence of injection; the structural controls carry the protection.", "priority": "P1", "verification": "verified-in-code", "evidence_files": ["lib/prompt-guard.js", "lib/attack-mapping.js"], "decision": "accepted", "decision_reason": "Logs and mail are attacker-controlled text read by the analyst.", "requirements": ["CG-121"] },
-    { "id": "R-004", "topic": "vulnerability-prioritization", "title": "CISA Known Exploited Vulnerabilities catalog", "source_type": "official", "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog", "source_date": "2026-11-01", "reviewed_at": "2026-11-11", "summary": "Catalog of vulnerabilities with evidence of exploitation in the wild, with due dates for US federal agencies.", "applicability": "KEV membership raises vulnerability priority and drives due dates.", "dependencies": [], "risks": "US-centred; absence from KEV does not mean safe.", "priority": "P1", "verification": "verified-in-code", "evidence_files": ["lib/vulnerability-intel.js"], "decision": "accepted", "decision_reason": "Strongest public signal of real exploitation.", "requirements": ["CG-024", "CG-074"] },
-    { "id": "R-005", "topic": "vulnerability-prioritization", "title": "NVD CVE API 2.0", "source_type": "official", "url": "https://nvd.nist.gov/developers/vulnerabilities", "source_date": "2024-01-01", "reviewed_at": "2026-11-11", "summary": "Public API for CVE records with CPE applicability and CVSS metrics.", "applicability": "Source of affected version ranges for software inventory matching.", "dependencies": [], "risks": "Enrichment backlog and rate limits.", "priority": "P1", "verification": "verified-in-code", "evidence_files": ["lib/vulnerability-intel.js"], "decision": "accepted", "decision_reason": "Authoritative CVE data.", "requirements": ["CG-024"] },
-    { "id": "R-006", "topic": "vulnerability-prioritization", "title": "FIRST EPSS exploit prediction scores", "source_type": "official", "url": "https://www.first.org/epss/", "source_date": "2025-03-17", "reviewed_at": "2026-11-11", "summary": "Daily probability that a CVE will be exploited in the next 30 days.", "applicability": "Used next to KEV and exposure for risk ranking, not alone.", "dependencies": ["R-005"], "risks": "A probability, not proof of exploitation.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/domain.js"], "decision": "accepted", "decision_reason": "Improves ranking beyond CVSS.", "requirements": ["CG-025"] },
-    { "id": "R-007", "topic": "log-normalization", "title": "Open Cybersecurity Schema Framework (OCSF) 1.3.0", "source_type": "official", "url": "https://schema.ocsf.io/", "source_date": "2024-07-01", "reviewed_at": "2026-11-19", "summary": "Vendor-neutral event schema for security telemetry.", "applicability": "Normalised logs are exported as OCSF classes with a per-format quality report.", "dependencies": [], "risks": "Not every source field has an OCSF home; gaps are reported.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/ocsf.js"], "decision": "accepted", "decision_reason": "Interoperability with SIEMs and data lakes.", "requirements": ["CG-103"] },
-    { "id": "R-008", "topic": "saudi-regulation", "title": "NCA Essential Cybersecurity Controls ECC-2:2024", "source_type": "official", "url": "https://cdn.nca.gov.sa/api/files/public/upload/86e09090-44e4-481f-bc28-355673607654_ECC--2024-EN.pdf", "source_date": "2024-01-01", "reviewed_at": "2026-11-22", "summary": "4 domains and 28 subdomains of baseline controls for government and CNI entities.", "applicability": "Evidence mapping per subdomain with applicability by entity profile.", "dependencies": [], "risks": "The Arabic text is binding; mapping is at subdomain level.", "priority": "P1", "verification": "verified-source", "evidence_files": ["lib/compliance-nca.js"], "decision": "accepted", "decision_reason": "Primary Saudi baseline for target customers.", "requirements": ["CG-124"] },
-    { "id": "R-009", "topic": "saudi-regulation", "title": "NCA Cloud Cybersecurity Controls CCC-2:2024", "source_type": "official", "url": "https://cdn.nca.gov.sa/api/files/public/upload/6d5408a3-d8e6-4e96-963b-2c7198e5b7c2_CCC-2-2024-EN-.pdf", "source_date": "2024-01-01", "reviewed_at": "2026-11-22", "summary": "Extension of ECC for cloud providers (CSP) and tenants (CST): 4 domains, 24 subdomains.", "applicability": "CST or CSP subdomain mapping when cloud is used or provided.", "dependencies": ["R-008"], "risks": "Control-level assessment uses the NCA tool.", "priority": "P1", "verification": "verified-source", "evidence_files": ["lib/compliance-nca.js"], "decision": "accepted", "decision_reason": "Applies to in-scope entities using cloud.", "requirements": ["CG-124"] },
-    { "id": "R-010", "topic": "saudi-regulation", "title": "NCA NPMSOC-1:2024 and RFMSOC-1:2024 (managed SOC policy and licensing)", "source_type": "official", "url": "https://nca.gov.sa/en/regulatory-documents/frameworks-and-standard-list/rfmsoc/", "source_date": "2024-03-10", "reviewed_at": "2026-11-22", "summary": "Licensing is required to provide managed SOC services in the Kingdom, in two tiers, with residency and staffing obligations.", "applicability": "Readiness gate before registering external customers.", "dependencies": ["R-008"], "risks": "Body text of the PDFs is drawn as images; non-heading points need confirmation against the Arabic text.", "priority": "P1", "verification": "partially-verified", "evidence_files": ["docs/research/MSOC_REGULATION_AR.md", "lib/msoc-readiness.js"], "decision": "accepted", "decision_reason": "Blocking condition before commercial service.", "requirements": ["CG-125"] },
-    { "id": "R-011", "topic": "ot-safety", "title": "NIST SP 800-82 Rev. 3 Guide to OT Security", "source_type": "official", "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final", "source_date": "2023-09-28", "reviewed_at": "2026-11-17", "summary": "Guidance for securing operational technology while keeping safety and availability first.", "applicability": "Passive-first OT mode, no active scanning, separate safety approval.", "dependencies": [], "risks": "Plant-specific procedures still decide.", "priority": "P1", "verification": "verified-in-code", "evidence_files": ["lib/ot-safety.js"], "decision": "accepted", "decision_reason": "Prevents the platform from harming industrial processes.", "requirements": ["CG-100"] },
-    { "id": "R-012", "topic": "linux-runtime", "title": "Falco runtime security", "source_type": "repository", "url": "https://github.com/falcosecurity/falco", "source_date": "2024-01-01", "reviewed_at": "2026-11-15", "summary": "Kernel and container runtime detection engine emitting JSON alerts.", "applicability": "Falco JSON alerts are parsed as IDS records.", "dependencies": [], "risks": "Kernel driver or eBPF probe required on the host.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/log-normalizer.js"], "decision": "accepted", "decision_reason": "Mature open source runtime signal for Linux and Kubernetes.", "requirements": ["CG-094"] },
-    { "id": "R-013", "topic": "supply-chain", "title": "Trivy image and SBOM scanning", "source_type": "repository", "url": "https://github.com/aquasecurity/trivy", "source_date": "2024-01-01", "reviewed_at": "2026-11-20", "summary": "Scanner for container images, file systems and SBOMs.", "applicability": "Trivy JSON results feed container vulnerability alerts.", "dependencies": [], "risks": "Database freshness determines results.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/kubernetes.js"], "decision": "accepted", "decision_reason": "Widely used, machine-readable output.", "requirements": ["CG-105"] },
-    { "id": "R-014", "topic": "supply-chain", "title": "SLSA provenance", "source_type": "official", "url": "https://slsa.dev/", "source_date": "2023-04-19", "reviewed_at": "2026-11-20", "summary": "Framework and provenance format describing how an artifact was built.", "applicability": "Artifact verification checks provenance and trusted builders.", "dependencies": [], "risks": "Provenance proves the build path, not the absence of malicious code.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/supply-chain.js"], "decision": "accepted", "decision_reason": "Standard way to verify build origin.", "requirements": ["CG-106"] },
-    { "id": "R-015", "topic": "file-triage", "title": "YARA rules", "source_type": "repository", "url": "https://github.com/VirusTotal/yara", "source_date": "2024-01-01", "reviewed_at": "2026-11-14", "summary": "Pattern-matching language for classifying files.", "applicability": "Suspicious files are judged with YARA (or the built-in engine) without execution.", "dependencies": [], "risks": "Rule quality decides false positives.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/file-triage.js"], "decision": "accepted", "decision_reason": "Common format shared by threat intelligence teams.", "requirements": ["CG-092"] },
-    { "id": "R-016", "topic": "identity", "title": "Windows LAPS", "source_type": "official", "url": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview", "source_date": "2024-01-01", "reviewed_at": "2026-11-11", "summary": "Rotation and backup of local administrator passwords to AD or Entra ID.", "applicability": "LAPS posture is collected per host.", "dependencies": [], "risks": "Legacy LAPS and Windows LAPS coexist in many estates.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/domain.js"], "decision": "accepted", "decision_reason": "Shared local admin passwords enable lateral movement.", "requirements": ["CG-083"] },
-    { "id": "R-017", "topic": "incident-studies", "title": "CISA cybersecurity advisories used for incident studies", "source_type": "official", "url": "https://www.cisa.gov/news-events/cybersecurity-advisories", "source_date": "2024-02-07", "reviewed_at": "2026-11-18", "summary": "Published advisories describing real campaigns, techniques and mitigations.", "applicability": "Eight cited incidents show which stages CyberGuard sees per installation.", "dependencies": ["R-001"], "risks": "Advisories describe past campaigns.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/incident-studies.js"], "decision": "accepted", "decision_reason": "Grounds detection priorities in documented attacks.", "requirements": ["CG-064"] },
-    { "id": "R-018", "topic": "governance", "title": "NIST Cybersecurity Framework 2.0", "source_type": "official", "url": "https://www.nist.gov/cyberframework", "source_date": "2024-02-26", "reviewed_at": "2026-11-11", "summary": "Outcome-based framework with Govern, Identify, Protect, Detect, Respond and Recover functions.", "applicability": "Security outcomes are reported by CSF function.", "dependencies": [], "risks": "Outcomes, not controls; needs local profiles.", "priority": "P2", "verification": "verified-in-code", "evidence_files": ["lib/domain.js"], "decision": "accepted", "decision_reason": "Common executive language for posture.", "requirements": ["CG-068"] },
-    { "id": "R-019", "topic": "network-change-safety", "title": "Batfish network configuration analysis", "source_type": "repository", "url": "https://github.com/batfish/batfish", "source_date": "2024-01-01", "reviewed_at": "2026-11-26", "summary": "Analyzes network configuration snapshots to answer reachability and policy questions before changes.", "applicability": "Candidate for pre-change ACL, firewall and route analysis.", "dependencies": [], "risks": "Runs as a separate Java service; vendor and feature coverage must be confirmed per device model.", "priority": "P2", "verification": "unverified", "evidence_files": [], "decision": "deferred", "decision_reason": "Researched in CG-131 before any adoption decision.", "requirements": ["CG-131"] },
-    { "id": "R-020", "topic": "detection-mapping", "title": "Sigma generic detection rule format", "source_type": "repository", "url": "https://github.com/SigmaHQ/sigma", "source_date": "2024-01-01", "reviewed_at": "2026-11-26", "summary": "Vendor-neutral YAML format for log detection rules with a large community rule set.", "applicability": "Possible import format for detection-as-code hypotheses.", "dependencies": ["R-001"], "risks": "Rule licence terms and field mapping to CyberGuard records must be reviewed; community rules need tuning.", "priority": "P3", "verification": "unverified", "evidence_files": [], "decision": "deferred", "decision_reason": "Native declarative hypotheses (CG-065) cover current needs; revisit when importing community content.", "requirements": [] }
+    {
+      "id": "R-001",
+      "topic": "detection-mapping",
+      "title": "MITRE ATT&CK techniques and tactics",
+      "source_type": "official",
+      "url": "https://attack.mitre.org/",
+      "source_date": "2024-10-31",
+      "reviewed_at": "2026-11-20",
+      "summary": "Knowledge base of adversary tactics and techniques used as the common language for what each rule detects.",
+      "applicability": "Every CyberGuard rule is mapped to its techniques and exported as a Navigator layer.",
+      "dependencies": [],
+      "risks": "Technique IDs change between versions; the mapping states the version it targets.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/attack-mapping.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Needed to show coverage and gaps per technique.",
+      "requirements": [
+        "CG-110"
+      ]
+    },
+    {
+      "id": "R-002",
+      "topic": "detection-mapping",
+      "title": "MITRE D3FEND defensive techniques",
+      "source_type": "official",
+      "url": "https://d3fend.mitre.org/",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-20",
+      "summary": "Knowledge graph of defensive countermeasures linked to offensive techniques.",
+      "applicability": "Each rule names its D3FEND detect and respond techniques.",
+      "dependencies": [
+        "R-001"
+      ],
+      "risks": "Countermeasure names are still evolving.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/attack-mapping.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Gives the defensive action for each detection.",
+      "requirements": [
+        "CG-110"
+      ]
+    },
+    {
+      "id": "R-003",
+      "topic": "ai-safety",
+      "title": "MITRE ATLAS LLM prompt injection (AML.T0051)",
+      "source_type": "official",
+      "url": "https://atlas.mitre.org/",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-22",
+      "summary": "Adversarial techniques against AI systems, including prompt injection through data the model reads.",
+      "applicability": "Evidence that instructs the AI analyst raises CG-AI-INJECTION-121 mapped to AML.T0051.",
+      "dependencies": [],
+      "risks": "Pattern detection cannot prove the absence of injection; the structural controls carry the protection.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/prompt-guard.js",
+        "lib/attack-mapping.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Logs and mail are attacker-controlled text read by the analyst.",
+      "requirements": [
+        "CG-121"
+      ]
+    },
+    {
+      "id": "R-004",
+      "topic": "vulnerability-prioritization",
+      "title": "CISA Known Exploited Vulnerabilities catalog",
+      "source_type": "official",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "source_date": "2026-11-01",
+      "reviewed_at": "2026-11-11",
+      "summary": "Catalog of vulnerabilities with evidence of exploitation in the wild, with due dates for US federal agencies.",
+      "applicability": "KEV membership raises vulnerability priority and drives due dates.",
+      "dependencies": [],
+      "risks": "US-centred; absence from KEV does not mean safe.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/vulnerability-intel.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Strongest public signal of real exploitation.",
+      "requirements": [
+        "CG-024",
+        "CG-074"
+      ]
+    },
+    {
+      "id": "R-005",
+      "topic": "vulnerability-prioritization",
+      "title": "NVD CVE API 2.0",
+      "source_type": "official",
+      "url": "https://nvd.nist.gov/developers/vulnerabilities",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-11",
+      "summary": "Public API for CVE records with CPE applicability and CVSS metrics.",
+      "applicability": "Source of affected version ranges for software inventory matching.",
+      "dependencies": [],
+      "risks": "Enrichment backlog and rate limits.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/vulnerability-intel.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Authoritative CVE data.",
+      "requirements": [
+        "CG-024"
+      ]
+    },
+    {
+      "id": "R-006",
+      "topic": "vulnerability-prioritization",
+      "title": "FIRST EPSS exploit prediction scores",
+      "source_type": "official",
+      "url": "https://www.first.org/epss/",
+      "source_date": "2025-03-17",
+      "reviewed_at": "2026-11-11",
+      "summary": "Daily probability that a CVE will be exploited in the next 30 days.",
+      "applicability": "Used next to KEV and exposure for risk ranking, not alone.",
+      "dependencies": [
+        "R-005"
+      ],
+      "risks": "A probability, not proof of exploitation.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/domain.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Improves ranking beyond CVSS.",
+      "requirements": [
+        "CG-025"
+      ]
+    },
+    {
+      "id": "R-007",
+      "topic": "log-normalization",
+      "title": "Open Cybersecurity Schema Framework (OCSF) 1.3.0",
+      "source_type": "official",
+      "url": "https://schema.ocsf.io/",
+      "source_date": "2024-07-01",
+      "reviewed_at": "2026-11-19",
+      "summary": "Vendor-neutral event schema for security telemetry.",
+      "applicability": "Normalised logs are exported as OCSF classes with a per-format quality report.",
+      "dependencies": [],
+      "risks": "Not every source field has an OCSF home; gaps are reported.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/ocsf.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Interoperability with SIEMs and data lakes.",
+      "requirements": [
+        "CG-103"
+      ]
+    },
+    {
+      "id": "R-008",
+      "topic": "saudi-regulation",
+      "title": "NCA Essential Cybersecurity Controls ECC-2:2024",
+      "source_type": "official",
+      "url": "https://cdn.nca.gov.sa/api/files/public/upload/86e09090-44e4-481f-bc28-355673607654_ECC--2024-EN.pdf",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-22",
+      "summary": "4 domains and 28 subdomains of baseline controls for government and CNI entities.",
+      "applicability": "Evidence mapping per subdomain with applicability by entity profile.",
+      "dependencies": [],
+      "risks": "The Arabic text is binding; mapping is at subdomain level.",
+      "priority": "P1",
+      "verification": "verified-source",
+      "evidence_files": [
+        "lib/compliance-nca.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Primary Saudi baseline for target customers.",
+      "requirements": [
+        "CG-124"
+      ]
+    },
+    {
+      "id": "R-009",
+      "topic": "saudi-regulation",
+      "title": "NCA Cloud Cybersecurity Controls CCC-2:2024",
+      "source_type": "official",
+      "url": "https://cdn.nca.gov.sa/api/files/public/upload/6d5408a3-d8e6-4e96-963b-2c7198e5b7c2_CCC-2-2024-EN-.pdf",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-22",
+      "summary": "Extension of ECC for cloud providers (CSP) and tenants (CST): 4 domains, 24 subdomains.",
+      "applicability": "CST or CSP subdomain mapping when cloud is used or provided.",
+      "dependencies": [
+        "R-008"
+      ],
+      "risks": "Control-level assessment uses the NCA tool.",
+      "priority": "P1",
+      "verification": "verified-source",
+      "evidence_files": [
+        "lib/compliance-nca.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Applies to in-scope entities using cloud.",
+      "requirements": [
+        "CG-124"
+      ]
+    },
+    {
+      "id": "R-010",
+      "topic": "saudi-regulation",
+      "title": "NCA NPMSOC-1:2024 and RFMSOC-1:2024 (managed SOC policy and licensing)",
+      "source_type": "official",
+      "url": "https://nca.gov.sa/en/regulatory-documents/frameworks-and-standard-list/rfmsoc/",
+      "source_date": "2024-03-10",
+      "reviewed_at": "2026-11-22",
+      "summary": "Licensing is required to provide managed SOC services in the Kingdom, in two tiers, with residency and staffing obligations.",
+      "applicability": "Readiness gate before registering external customers.",
+      "dependencies": [
+        "R-008"
+      ],
+      "risks": "Body text of the PDFs is drawn as images; non-heading points need confirmation against the Arabic text.",
+      "priority": "P1",
+      "verification": "partially-verified",
+      "evidence_files": [
+        "docs/research/MSOC_REGULATION_AR.md",
+        "lib/msoc-readiness.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Blocking condition before commercial service.",
+      "requirements": [
+        "CG-125"
+      ]
+    },
+    {
+      "id": "R-011",
+      "topic": "ot-safety",
+      "title": "NIST SP 800-82 Rev. 3 Guide to OT Security",
+      "source_type": "official",
+      "url": "https://csrc.nist.gov/pubs/sp/800/82/r3/final",
+      "source_date": "2023-09-28",
+      "reviewed_at": "2026-11-17",
+      "summary": "Guidance for securing operational technology while keeping safety and availability first.",
+      "applicability": "Passive-first OT mode, no active scanning, separate safety approval.",
+      "dependencies": [],
+      "risks": "Plant-specific procedures still decide.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/ot-safety.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Prevents the platform from harming industrial processes.",
+      "requirements": [
+        "CG-100"
+      ]
+    },
+    {
+      "id": "R-012",
+      "topic": "linux-runtime",
+      "title": "Falco runtime security",
+      "source_type": "repository",
+      "url": "https://github.com/falcosecurity/falco",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-15",
+      "summary": "Kernel and container runtime detection engine emitting JSON alerts.",
+      "applicability": "Falco JSON alerts are parsed as IDS records.",
+      "dependencies": [],
+      "risks": "Kernel driver or eBPF probe required on the host.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/log-normalizer.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Mature open source runtime signal for Linux and Kubernetes.",
+      "requirements": [
+        "CG-094"
+      ]
+    },
+    {
+      "id": "R-013",
+      "topic": "supply-chain",
+      "title": "Trivy image and SBOM scanning",
+      "source_type": "repository",
+      "url": "https://github.com/aquasecurity/trivy",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-20",
+      "summary": "Scanner for container images, file systems and SBOMs.",
+      "applicability": "Trivy JSON results feed container vulnerability alerts.",
+      "dependencies": [],
+      "risks": "Database freshness determines results.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/kubernetes.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Widely used, machine-readable output.",
+      "requirements": [
+        "CG-105"
+      ]
+    },
+    {
+      "id": "R-014",
+      "topic": "supply-chain",
+      "title": "SLSA provenance",
+      "source_type": "official",
+      "url": "https://slsa.dev/",
+      "source_date": "2023-04-19",
+      "reviewed_at": "2026-11-20",
+      "summary": "Framework and provenance format describing how an artifact was built.",
+      "applicability": "Artifact verification checks provenance and trusted builders.",
+      "dependencies": [],
+      "risks": "Provenance proves the build path, not the absence of malicious code.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/supply-chain.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Standard way to verify build origin.",
+      "requirements": [
+        "CG-106"
+      ]
+    },
+    {
+      "id": "R-015",
+      "topic": "file-triage",
+      "title": "YARA rules",
+      "source_type": "repository",
+      "url": "https://github.com/VirusTotal/yara",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-14",
+      "summary": "Pattern-matching language for classifying files.",
+      "applicability": "Suspicious files are judged with YARA (or the built-in engine) without execution.",
+      "dependencies": [],
+      "risks": "Rule quality decides false positives.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/file-triage.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Common format shared by threat intelligence teams.",
+      "requirements": [
+        "CG-092"
+      ]
+    },
+    {
+      "id": "R-016",
+      "topic": "identity",
+      "title": "Windows LAPS",
+      "source_type": "official",
+      "url": "https://learn.microsoft.com/en-us/windows-server/identity/laps/laps-overview",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-11",
+      "summary": "Rotation and backup of local administrator passwords to AD or Entra ID.",
+      "applicability": "LAPS posture is collected per host.",
+      "dependencies": [],
+      "risks": "Legacy LAPS and Windows LAPS coexist in many estates.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/domain.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Shared local admin passwords enable lateral movement.",
+      "requirements": [
+        "CG-083"
+      ]
+    },
+    {
+      "id": "R-017",
+      "topic": "incident-studies",
+      "title": "CISA cybersecurity advisories used for incident studies",
+      "source_type": "official",
+      "url": "https://www.cisa.gov/news-events/cybersecurity-advisories",
+      "source_date": "2024-02-07",
+      "reviewed_at": "2026-11-18",
+      "summary": "Published advisories describing real campaigns, techniques and mitigations.",
+      "applicability": "Eight cited incidents show which stages CyberGuard sees per installation.",
+      "dependencies": [
+        "R-001"
+      ],
+      "risks": "Advisories describe past campaigns.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/incident-studies.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Grounds detection priorities in documented attacks.",
+      "requirements": [
+        "CG-064"
+      ]
+    },
+    {
+      "id": "R-018",
+      "topic": "governance",
+      "title": "NIST Cybersecurity Framework 2.0",
+      "source_type": "official",
+      "url": "https://www.nist.gov/cyberframework",
+      "source_date": "2024-02-26",
+      "reviewed_at": "2026-11-11",
+      "summary": "Outcome-based framework with Govern, Identify, Protect, Detect, Respond and Recover functions.",
+      "applicability": "Security outcomes are reported by CSF function.",
+      "dependencies": [],
+      "risks": "Outcomes, not controls; needs local profiles.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/domain.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Common executive language for posture.",
+      "requirements": [
+        "CG-068"
+      ]
+    },
+    {
+      "id": "R-019",
+      "topic": "network-change-safety",
+      "title": "Batfish network configuration analysis",
+      "source_type": "repository",
+      "url": "https://github.com/batfish/batfish",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-26",
+      "summary": "Builds a model from network configuration snapshots (vendor formats include Arista, F5 BIG-IP, Cisco NX-OS and IOS-XR, Dell Force10, Foundry, Juniper JunOS and Palo Alto) and answers reachability and differential questions before a change, through a Java service and the pybatfish Python client.",
+      "applicability": "Candidate external analyzer for vendors and features the native engine does not model; the native CG-131 engine covers normalised rulesets and IPv4 routes.",
+      "dependencies": [],
+      "risks": "Separate Java service plus Python client (CyberGuard has no runtime dependencies); per-model feature coverage must be confirmed before results count in a decision.",
+      "priority": "P2",
+      "verification": "verified-source",
+      "evidence_files": [],
+      "decision": "deferred",
+      "decision_reason": "The native engine gives before/after reachability for stored snapshots now; Batfish is reconsidered when customers need multi-vendor control-plane simulation.",
+      "requirements": [
+        "CG-131"
+      ]
+    },
+    {
+      "id": "R-020",
+      "topic": "detection-mapping",
+      "title": "Sigma generic detection rule format",
+      "source_type": "repository",
+      "url": "https://github.com/SigmaHQ/sigma",
+      "source_date": "2024-01-01",
+      "reviewed_at": "2026-11-26",
+      "summary": "Vendor-neutral YAML format for log detection rules with a large community rule set.",
+      "applicability": "Possible import format for detection-as-code hypotheses.",
+      "dependencies": [
+        "R-001"
+      ],
+      "risks": "Rule licence terms and field mapping to CyberGuard records must be reviewed; community rules need tuning.",
+      "priority": "P3",
+      "verification": "unverified",
+      "evidence_files": [],
+      "decision": "deferred",
+      "decision_reason": "Native declarative hypotheses (CG-065) cover current needs; revisit when importing community content.",
+      "requirements": []
+    },
+    {
+      "id": "R-021",
+      "topic": "network-change-safety",
+      "title": "Native pre-change reachability engine",
+      "source_type": "repository",
+      "url": "https://github.com/anasmonti80-png/anas_CGAI",
+      "source_date": "2026-11-26",
+      "reviewed_at": "2026-11-26",
+      "summary": "Evaluates required flows across firewall rulesets and IPv4 routes before and after a proposed change, marking unsupported rule features as unknown.",
+      "applicability": "Pre-change gate for ACL, firewall and route changes on devices with stored snapshots.",
+      "dependencies": [
+        "R-019"
+      ],
+      "risks": "Does not model NAT, state, load balancers or asymmetric routing; results are configuration analysis only.",
+      "priority": "P1",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/change-safety.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Gives a safe, cannot-verify or unsafe decision with no new dependency.",
+      "requirements": [
+        "CG-131"
+      ]
+    }
   ],
   "rounds": [
-    { "topic": "detection-mapping", "at": "2026-11-20", "sources_reviewed": 3, "new_valuable_ideas": 2 },
-    { "topic": "detection-mapping", "at": "2026-11-26", "sources_reviewed": 1, "new_valuable_ideas": 1 },
-    { "topic": "saudi-regulation", "at": "2026-11-22", "sources_reviewed": 4, "new_valuable_ideas": 3 },
-    { "topic": "vulnerability-prioritization", "at": "2026-11-11", "sources_reviewed": 3, "new_valuable_ideas": 3 },
-    { "topic": "network-change-safety", "at": "2026-11-26", "sources_reviewed": 1, "new_valuable_ideas": 1 }
+    {
+      "topic": "detection-mapping",
+      "at": "2026-11-20",
+      "sources_reviewed": 3,
+      "new_valuable_ideas": 2
+    },
+    {
+      "topic": "detection-mapping",
+      "at": "2026-11-26",
+      "sources_reviewed": 1,
+      "new_valuable_ideas": 1
+    },
+    {
+      "topic": "saudi-regulation",
+      "at": "2026-11-22",
+      "sources_reviewed": 4,
+      "new_valuable_ideas": 3
+    },
+    {
+      "topic": "vulnerability-prioritization",
+      "at": "2026-11-11",
+      "sources_reviewed": 3,
+      "new_valuable_ideas": 3
+    },
+    {
+      "topic": "network-change-safety",
+      "at": "2026-11-26",
+      "sources_reviewed": 1,
+      "new_valuable_ideas": 1
+    },
+    {
+      "topic": "network-change-safety",
+      "at": "2026-11-26",
+      "sources_reviewed": 3,
+      "new_valuable_ideas": 1
+    }
   ]
 }
