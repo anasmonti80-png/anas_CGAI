@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T02:42:08.055Z",
+  "at": "2026-11-27T02:48:06.001Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -179,7 +179,8 @@
     "feed_governance": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-169", "feeds": "partner list v1 superseded, v2 active (+1 −1 ~1), v3 staged mass change; KEV v1 active", "console_errors": 0},
     "isolation_survival": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-170", "paths": "VPN laptop with MDM out-of-band recovery (ready), hypervisor-hosted VM untested (refused)", "outcome": "isolation approved but not executed, shown as not executed (execution and independent proof covered by the unit test)", "console_errors": 0},
     "blast_radius": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-171", "calculations": "security group sg-web: limited, two resources, one public with warning; unknown account: unknown, needs human review", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 171, "next": "CG-172"}
+    "rule_leases": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-172", "leases": "one installed with device-side expiry, one installed without device timer (flagged), one removed early, one pending approval", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 172, "next": "CG-173"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

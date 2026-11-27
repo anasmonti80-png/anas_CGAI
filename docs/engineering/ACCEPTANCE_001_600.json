@@ -1201,6 +1201,13 @@
       "tests": ["tests/blast-radius.test.js: stop service, switch port, disable user and security group changes get a specific blast radius from visible relationships, and unknown when none is visible (CG-171)", "tests/ui-contract.test.js: the response page offers the blast radius calculator for the four change types with unknown needing human review (CG-171)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The calculator assesses; disabling users and changing security groups are not response actions in CyberGuard. The level thresholds (up to five affected items is limited) are a heuristic shown with the items themselves."]
+    },
+    "CG-172": {
+      "reason": "Just-in-time rule lease engine. lib/rule-lease.js keeps leases with an explicit scope (asset, source, destination, protocol, port; wildcards refused), TTL, owner, change ticket, a different approving administrator with recent MFA and a revocation deadline (expiry plus 15 minutes). Expiry is enforced on the enforcement layer: the installing response connector reports response.lease_state with the device-side expiry timer, and a lease is installed only when that timer is at or before the approved expiry; otherwise it is flagged with a high alert. Reconciliation runs on every device report and on every health check, so after a CyberGuard outage leases past their revocation deadline without confirmed removal become overdue (high alert), rules the device holds with no lease are orphans, and rules removed before expiry are shown as removed early; a later removal report closes an overdue lease as expired on the device. CG-LEASE-172 covers these alerts and the response page shows leases in Arabic and English.",
+      "code": ["lib/rule-lease.js", "lib/domain.js", "lib/store.js", "lib/attack-mapping.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md"],
+      "tests": ["tests/rule-lease.test.js: leases are exact, ticketed and second-approved, expire on the enforcement layer, and reconciliation finds overdue, unenforced, orphan and early-removed rules after an outage (CG-172)", "tests/ui-contract.test.js: the response page shows rule leases with approved expiry, device timer, revocation deadline and reconciled status (CG-172)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["CyberGuard does not program the device timer; the response connector does and reports it. Orphan detection depends on the connector reporting rules it holds."]
     }
   }
 }

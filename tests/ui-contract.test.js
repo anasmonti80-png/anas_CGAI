@@ -882,3 +882,8 @@ test('the response page offers the blast radius calculator for the four change t
   const app=read('app.js');assert.ok(app.includes("api('/api/blast-radius'"));
   for(const marker of ['Blast radius calculator','Unknown — needs human review','Disable user','Security group change','Switch port shutdown','missing data is never reported as no impact','CG-171']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page shows rule leases with approved expiry, device timer, revocation deadline and reconciled status (CG-172)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/rule-leases')"));
+  for(const marker of ['Just-in-time rule leases','Device timer','Revocation deadline','Installed without device-side expiry','Past revocation deadline','lease_needs_second_approver','CG-172']) assert.ok(app.includes(marker),marker);
+});
