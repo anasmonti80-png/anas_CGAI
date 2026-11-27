@@ -862,3 +862,8 @@ test('the policies page shows minimization rules, built-in detectors and retenti
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/privacy')"));
   for(const marker of ['Telemetry minimization and privacy','Keyed HMAC (keeps correlation)','AES-256-GCM encryption','Retention by source and legal obligation','Held for open evidence','retention_below_legal_minimum','CG-167']) assert.ok(app.includes(marker),marker);
 });
+
+test('the sources page shows event volume, refusals, lateness, queue lag, parser errors and detection time with the rate effect (CG-168)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/event-reliability')"));
+  for(const marker of ['Event volume and detection reliability','EPS in / processed','Detection from observation (p50 / p95)','Sender queue lag','Rate effect on detection time','Parser errors','CG-168']) assert.ok(app.includes(marker),marker);
+});

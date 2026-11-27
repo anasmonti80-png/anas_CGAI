@@ -1173,6 +1173,13 @@
       "tests": ["tests/privacy.test.js: sensitive fields are dropped, masked, pseudonymised or encrypted before storage, cards and IBANs are always masked, and decryption is audited (CG-167)", "tests/privacy.test.js: retention follows the source, source type or evidence kind, never goes below a legal minimum and never purges evidence of open alerts (CG-167)", "tests/ui-contract.test.js: the policies page shows minimization rules, built-in detectors and retention by source and legal obligation (CG-167)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Rules apply to events ingested after they are added; stored events are not rewritten. The protection key must be backed up with the data directory or encrypted values cannot be read."]
+    },
+    "CG-168": {
+      "reason": "Event volume and detection reliability measured per hour over 24 hours. Every accepted batch now records accepted, duplicate and processing milliseconds (ingest_batches), refused batches are counted from ingest_rejections (CG-162), and lib/event-reliability.js reports input, processed, rejected, duplicate and late events (received more than five minutes after observation) with EPS, batch processing p95, detection time from first evidence observation to alert (p50, p95) and from receipt to alert (p95), sender queue depth and lag (CG-060), parser refusal codes and unrecognised log lines, and the rate effect: detection time in the busier half of the alerting hours compared with the quieter half (stable at a ratio of 1.5 or less). CG-PIPELINE-168 raises an operational alert from the health check when the last hour refuses more than 5%, has more than 10% late events or a detection p95 from receipt above five minutes. The sources page shows it in Arabic and English.",
+      "code": ["lib/event-reliability.js", "lib/domain.js", "lib/store.js", "lib/attack-mapping.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md"],
+      "tests": ["tests/event-reliability.test.js: volume, refusals, duplicates, late events, processing time, queue lag and detection time are measured per hour, and a degraded last hour raises an operational alert (CG-168)", "tests/ui-contract.test.js: the sources page shows event volume, refusals, lateness, queue lag, parser errors and detection time with the rate effect (CG-168)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Measurements start with this release (earlier batches were not recorded). The rate effect needs at least two hours with alerts."]
     }
   }
 }

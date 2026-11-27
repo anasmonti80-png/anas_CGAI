@@ -44,6 +44,7 @@ import { lossView } from './lib/visibility-loss.js';
 import { Deception } from './lib/deception.js';
 import { IncidentConfidence } from './lib/incident-confidence.js';
 import { Privacy } from './lib/privacy.js';
+import { reliability } from './lib/event-reliability.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -353,6 +354,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      if(p==='/api/event-reliability'&&method==='GET'){roles(['admin','analyst']);return send(res,200,reliability(store,{clock}));}
       // CG-167 minimization rules, field decryption and retention (administrators with recent MFA change them).
       if(p==='/api/privacy'&&method==='GET'){roles(['admin','analyst']);return send(res,200,domain.privacy.view());}
       if(p.startsWith('/api/privacy/')&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);const input=await body(req),pr=domain.privacy,rm=p.match(/^\/api\/privacy\/rules\/(\d{1,9})\/disable$/);

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T02:10:33.368Z",
+  "at": "2026-11-27T02:17:03.218Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -175,7 +175,8 @@
     "detection_lifecycle": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-165", "lifecycle": "rule rolled back automatically from v2 to v1 after three alerts over a limit of two; lab backtest 1 of 2 lab events; canary gates shown", "console_errors": 0},
     "incident_confidence": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-166", "levels": "observed events, suspicious indicators, one verified incident and one confirmed compromise (attacker access) shown separately", "console_errors": 0},
     "privacy": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-167", "rules": "HMAC on auth.failed account, encryption of sign-in source addresses; card and IBAN detectors; retention 365 days for log forwarders with a 365-day legal minimum", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 167, "next": "CG-168"}
+    "event_reliability": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-168", "measures": "hourly input/processed EPS, one refused and one duplicate batch, late events, sender queue lag, parser code invalid_observed_at, detection time", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 168, "next": "CG-169"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
