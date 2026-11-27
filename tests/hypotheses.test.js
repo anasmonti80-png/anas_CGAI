@@ -38,14 +38,16 @@ test('published evidence becomes a declarative hypothesis that alerts only after
   assert.equal((await req(`/api/hypotheses/${id}/test`, { method: 'POST', data: { samples }, user: analyst })).data.error, 'manual_review_attestation_required');
   let tested = await req(`/api/hypotheses/${id}/test`, { method: 'POST', data: { samples: [samples[0], { ...samples[1], expect: 'match' }], manual_review: true }, user: analyst });
   assert.deepEqual([tested.data.status, tested.data.test.passed, tested.data.test.failures], ['draft', false, 1]);
-  tested = await req(`/api/hypotheses/${id}/test`, { method: 'POST', data: { samples, manual_review: true, notes: 'Checked against two weeks of VPN logs' }, user: analyst });
+  tested = await req(`/api/hypotheses/${id}/test`, { method: 'POST', data: { samples, manual_review: true, notes: 'Checked against two weeks of VPN logs', lab_source_id: source.id }, user: analyst });
   assert.equal(tested.data.status, 'tested'); assert.deepEqual([tested.data.test.replay.events, tested.data.test.replay.would_alert], [2, 2], 'replay over stored evidence shows how often it would fire');
   // Approval: administrators only, with recent MFA; never the author or tester.
   assert.equal((await req(`/api/hypotheses/${id}/approve`, { method: 'POST', data: {}, user: analyst })).status, 403);
   const own = await req('/api/hypotheses', { method: 'POST', data: { ...body, title: 'Own hypothesis' }, user: admin });
   await req(`/api/hypotheses/${own.data.id}/test`, { method: 'POST', data: { samples, manual_review: true }, user: admin });
   assert.equal((await req(`/api/hypotheses/${own.data.id}/approve`, { method: 'POST', data: {}, user: admin })).data.error, 'independent_hypothesis_approver_required');
-  assert.equal((await req(`/api/hypotheses/${id}/approve`, { method: 'POST', data: { note: 'Reviewed' }, user: admin })).data.status, 'approved');
+  assert.equal((await req(`/api/hypotheses/${id}/approve`, { method: 'POST', data: { note: 'Reviewed', canary_hours: 1 }, user: admin })).data.lifecycle_stage, 'canary');
+  // CG-165: the canary runs in the shadow for an hour, then an administrator with recent MFA promotes it.
+  now += 3600001; app.store.run('UPDATE sessions SET mfa_at=?,last_seen=?,expires_at=?', now, now, now + 28800000); assert.equal((await req(`/api/hypotheses/${id}/promote`, { method: 'POST', data: {}, user: admin })).data.lifecycle_stage, 'published');
   // Active: matching new evidence raises an alert under the hypothesis rule; other evidence does not.
   ingest({ account: 'svc-backup', source_ip: '198.51.100.33', protocol: 'rdp' }); assert.equal(hypAlerts().length, 0);
   ingest({ account: 'ADMIN', source_ip: '198.51.100.34', protocol: 'rdp' }); const alerts = hypAlerts(); assert.equal(alerts.length, 1); assert.equal(alerts[0].rule_id, 'CG-HYP-0001'); assert.equal(alerts[0].severity, 'high'); assert.equal(JSON.parse(alerts[0].evidence_ids).length, 1);
@@ -53,7 +55,7 @@ test('published evidence becomes a declarative hypothesis that alerts only after
   assert.equal((await req(`/api/hypotheses/${id}/retire`, { method: 'POST', data: {}, user: admin })).data.status, 'retired');
   now += 86400000; ingest({ account: 'admin', source_ip: '198.51.100.35', protocol: 'rdp' }); assert.equal(hypAlerts().length, 1);
   const actions = app.store.all("SELECT action FROM audit WHERE action LIKE 'hypothesis.%' AND target=?", String(id)).map(r => r.action);
-  assert.deepEqual(actions, ['hypothesis.created', 'hypothesis.tested', 'hypothesis.tested', 'hypothesis.approved', 'hypothesis.retired']);
+  assert.deepEqual(actions, ['hypothesis.created', 'hypothesis.tested', 'hypothesis.tested', 'hypothesis.approved', 'hypothesis.promoted', 'hypothesis.retired']);
   const list = (await req('/api/hypotheses', { user: await login('analyst') })).data; assert.ok(list.claim_ar.includes('لا يُنفذ شيء من المصدر'));
   // Operators are plain comparisons over values, case-insensitive for text.
   assert.equal(matchCondition({ field: 'a.b', operator: 'gte', value: 5 }, { a: { b: 7 } }), true); assert.equal(matchCondition({ field: 'tags', operator: 'contains', value: 'X' }, { tags: ['ax', 'b'] }), true);

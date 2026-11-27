@@ -1,0 +1,46 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { Store } from '../lib/store.js';
+import { Domain, evidenceKinds } from '../lib/domain.js';
+import { Hypotheses } from '../lib/hypotheses.js';
+import { RuleSigner } from '../lib/rule-signing.js';
+
+test('a rule needs a firing lab backtest, runs as a shadow canary whose hits are reviewed against the false-positive budget, and a noisy published version rolls back automatically to the last good signed version (CG-165)', t => {
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'cg165-')); t.after(() => fs.rmSync(dir, { recursive: true, force: true }));
+  const s = new Store(':memory:'); t.after(() => s.close()); const clock = { now: Date.now() - 4 * 3600000 }, c = () => clock.now;
+  for (const [u, role] of [['analyst', 'analyst'], ['admin', 'admin']]) s.run('INSERT INTO users VALUES (?,?,?,?,?)', u, u, 'fixture-not-a-password-hash', role, new Date(clock.now).toISOString());
+  const d = new Domain(s, { clock: c }), hyp = new Hypotheses(s, { clock: c, domain: d, evidenceKinds, signer: new RuleSigner(dir) }); d.hypothesisEngine = hyp;
+  const prod = d.createSource('admin', { name: 'Production auth', stale_seconds: 86400 }), lab = d.createSource('admin', { name: 'Lab replay', stale_seconds: 86400 }); let n = 0;
+  const send = (src, account, host = 'srv1') => d.ingest('admin', src.id, { schema_version: 'cg.telemetry/1', events: [{ event_id: `e${n++}`, kind: 'auth.failed', observed_at: new Date(clock.now).toISOString(), asset: { external_id: host, hostname: host, os_family: 'linux', device_type: 'server', addresses: [] }, details: { account, source_ip: '198.51.100.50', protocol: 'ssh' } }] });
+  const alerts = (v) => s.get(`SELECT COUNT(*) n FROM alerts WHERE rule_id='CG-HYP-0001'${v ? ` AND rule_version='${v}.0.0'` : ''}`).n;
+  send(lab, 'root'); send(lab, 'oracle');
+  const h = hyp.create('analyst', { title: 'Root SSH failures', source_type: 'internal-observation', source_ref: 'SOC-165', technique_ids: ['T1110'], severity: 'medium', rationale: 'Direct root login attempts', logic: { kind: 'auth.failed', match: 'all', conditions: [{ field: 'account', operator: 'equals', value: 'root' }] }, environment_tuning: { false_positive_budget_percent: 20, max_alerts_per_day: 2 } });
+  const samples = [{ details: { account: 'root' }, expect: 'match' }, { details: { account: 'deploy' }, expect: 'no-match' }];
+  hyp.test('analyst', h.id, { samples, manual_review: true });
+  assert.throws(() => hyp.decide('admin', h.id, 'approve', null, { canary_hours: 1 }), /hypothesis_requires_lab_backtest_that_fires/);
+  const tested = hyp.test('analyst', h.id, { samples, manual_review: true, lab_source_id: lab.id }); assert.deepEqual([tested.test.backtest.events, tested.test.backtest.would_alert], [2, 1]);
+  let r = hyp.decide('admin', h.id, 'approve', 'reviewed', { canary_hours: 1 }); assert.deepEqual([r.lifecycle_stage, r.active_version, r.canary_version], ['canary', null, 1]);
+  send(prod, 'root'); assert.equal(alerts(), 0, 'the canary runs in the shadow: no alert'); assert.equal(s.get('SELECT COUNT(*) n FROM canary_hits').n, 1);
+  assert.throws(() => hyp.promote('admin', h.id), /canary_period_not_elapsed/);
+  clock.now += 3600001; assert.throws(() => hyp.promote('admin', h.id), /canary_hits_need_review/);
+  const hit = s.get('SELECT event_id FROM canary_hits').event_id;
+  hyp.canaryReview('analyst', h.id, { event_id: hit, disposition: 'false-positive' }); assert.throws(() => hyp.promote('admin', h.id), /canary_false_positives_over_budget/);
+  const l = hyp.canaryReview('analyst', h.id, { event_id: hit, disposition: 'true-positive' }); assert.equal(l.promotable, true);
+  r = hyp.promote('admin', h.id); assert.deepEqual([r.lifecycle_stage, r.active_version], ['published', 1]);
+  send(prod, 'root', 'srv2'); assert.equal(alerts(1), 1, 'the published version alerts');
+  // v2 widens the rule; v1 keeps running during the v2 canary; after promotion v2 floods and is rolled back to v1.
+  hyp.revise('analyst', h.id, { logic: { kind: 'auth.failed', match: 'any', conditions: [{ field: 'account', operator: 'equals', value: 'root' }, { field: 'account', operator: 'equals', value: 'oracle' }] } });
+  hyp.test('analyst', h.id, { samples: [{ details: { account: 'oracle' }, expect: 'match' }, { details: { account: 'deploy' }, expect: 'no-match' }], manual_review: true, lab_source_id: lab.id });
+  hyp.decide('admin', h.id, 'approve', null, { canary_hours: 1 }); send(prod, 'root', 'srv3'); assert.equal(alerts(1), 2, 'v1 keeps alerting while v2 is a canary');
+  for (const x of s.all('SELECT event_id FROM canary_hits WHERE version=2')) hyp.canaryReview('analyst', h.id, { event_id: x.event_id, disposition: 'true-positive' });
+  clock.now += 3600001; r = hyp.promote('admin', h.id); assert.deepEqual([r.active_version, r.previous_version], [2, 1]);
+  for (const host of ['a1', 'a2', 'a3']) send(prod, 'oracle', host);
+  const after = hyp.get(h.id); assert.deepEqual([after.active_version, after.lifecycle_stage], [1, 'rolled-back'], 'three alerts in a day exceed the limit of two: back to v1');
+  assert.match(s.get("SELECT title FROM alerts WHERE rule_id='CG-RULE-NOISE-165'").title, /CG-HYP-0001 v2 → v1/);
+  assert.equal(s.get("SELECT COUNT(*) n FROM audit WHERE action='hypothesis.auto_rolled_back'").n, 1);
+  send(prod, 'oracle', 'a4'); assert.equal(alerts(2), 3, 'v2 no longer runs after the rollback');
+  assert.deepEqual(hyp.lifecycle(hyp.get(h.id)).auto_rollbacks.map(x => [x.from_version, x.to_version]), [[2, 1]]);
+});

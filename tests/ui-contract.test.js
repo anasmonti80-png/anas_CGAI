@@ -847,3 +847,8 @@ test('the threats page shows the decoy register with D3FEND techniques, isolatio
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/deception')"));
   for(const marker of ['High-signal deception (decoys)','Proposed — awaiting a second administrator','Authenticates nowhere','Object access audit (SACL)','decoy_needs_second_approver','decoy_must_not_contain_credentials','CG-164']) assert.ok(app.includes(marker),marker);
 });
+
+test('the threats page shows the detection content lifecycle with lab backtest, canary gates and automatic rollbacks (CG-165)',()=>{
+  const app=read('app.js');
+  for(const marker of ['Detection content lifecycle','Canary (shadow, no alerts)','Lab backtest','Publication gates','Rolled back automatically','False positives within budget','canary_hits_need_review','hypothesis_requires_lab_backtest_that_fires','CG-165']) assert.ok(app.includes(marker),marker);
+});
