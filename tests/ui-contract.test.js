@@ -902,3 +902,8 @@ test('the response page shows change IDs, provider request IDs, restore methods 
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/action-coordination')"));
   for(const marker of ['Idempotency and conflict detection','Change ID','Provider request ID','Restore method','Supersedes','shared_resource_requires_restore_method','CG-175']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page shows simulation coverage, what is not modelled and each simulation qualification (CG-176)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/simulation-coverage')"));
+  for(const marker of ['Network policy simulation coverage','Not modelled','Reachability output','Not qualified','qualified_simulation_required_for_sensitive_production','CG-176']) assert.ok(app.includes(marker),marker);
+});

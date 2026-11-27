@@ -52,6 +52,7 @@ import { RuleLeases } from './lib/rule-lease.js';
 import { ledger as actionLedger } from './lib/action-ledger.js';
 import { CriticalShutdown } from './lib/critical-shutdown.js';
 import { ActionCoordination } from './lib/action-coordination.js';
+import { SimulationCoverage } from './lib/simulation-coverage.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -321,7 +322,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(p==='/api/sandboxes'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,sandbox.register(user.id,await body(req)));}
       if(p==='/api/detonations'&&method==='POST'){roles(['admin','analyst']);return send(res,201,sandbox.request(user.id,await body(req)));}
       const detonationDecision=p.match(/^\/api\/detonations\/(\d{1,9})\/(approve|reject)$/);if(detonationDecision&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,sandbox.decide(user.id,Number(detonationDecision[1]),detonationDecision[2]));}
-      if(p==='/api/firewall-rules/what-if'&&method==='POST'){roles(['admin','analyst']);return send(res,200,domain.firewallChangeImpact(await body(req)));}
+      if(p==='/api/firewall-rules/what-if'&&method==='POST'){roles(['admin','analyst']);return send(res,200,domain.firewallChangeImpact(await body(req),user.id));}
       const pathRoute=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/network-path$/);if(pathRoute&&method==='GET') return send(res,200,domain.networkPath(pathRoute[1]));
       if(p==='/api/attack-mapping'&&method==='GET') return send(res,200,domain.attackMapping());
       if(p==='/api/attack-mapping/navigator-layer'&&method==='GET') return send(res,200,domain.attackNavigatorLayer());
@@ -361,6 +362,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      if(p==='/api/simulation-coverage'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new SimulationCoverage(store,{clock}).view());}
       if(p==='/api/action-coordination'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new ActionCoordination(store).view());}
       // CG-174 critical infrastructure: declare roles, request composite plans, two admin approvals with MFA.
       if(p==='/api/critical-shutdown'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new CriticalShutdown(store,{clock}).view());}

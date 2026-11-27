@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T14:19:47.662Z",
+  "at": "2026-11-27T14:28:17.811Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -183,7 +183,8 @@
     "action_ledger": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-173", "ledger": "one approved isolation entry: requester, approver, ticket IR-173, API job pending approval, password redacted in reason, chain head and export shown (execution, outcome and rollback covered by the unit test)", "console_errors": 0},
     "critical_shutdown": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-174", "view": "ESXi host declared critical and a domain controller by device type; one plan approved by two admins with iLO recovery, one pending", "console_errors": 0},
     "action_coordination": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-175", "view": "block and superseding allow on the same address, shutdown of a shared firewall with a stated restore method, change IDs shown", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 175, "next": "CG-176"}
+    "simulation_coverage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-176", "simulations": "one qualified simulation and one not qualified because of an application rule, with coverage and not-modelled list shown", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 176, "next": "CG-177"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

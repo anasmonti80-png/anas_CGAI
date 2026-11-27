@@ -1132,6 +1132,30 @@
       "applicability": "Any authentication by a decoy account is a signal; decoy files need a SACL so their access is logged.",
       "risks": "The 4663 page is archived legacy documentation.",
       "decision_reason": "Used to define isolation attestations and detection inputs."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-176"
+      ],
+      "topic": "network-change-safety",
+      "id": "R-049",
+      "title": "Batfish supported devices and forwarding analysis",
+      "source_type": "official",
+      "url": "https://batfish.readthedocs.io/en/latest/supported_devices.html",
+      "source_date": "2026-11-27",
+      "summary": "Batfish supports configurations from many vendors (Cisco ASA, IOS, IOS-XE, IOS-XR, NX-OS; all Junos platforms; Palo Alto; Fortinet; Arista; Check Point; F5; iptables; AWS VPC constructs) with limited support for Aruba, Dell Force10 and Foundry. Its forwarding questions include directional and bidirectional traceroute, reachability searches over all matching flows, loop detection and multipath consistency, with dispositions such as accepted, denied or no route and the filters applied at each hop.",
+      "applicability": "Defines what a whole-network simulator covers, against which CyberGuard states its single-device filter scope.",
+      "risks": "Batfish is a reference, not a dependency; CyberGuard does not claim NAT, routing or path coverage.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/simulation-coverage.js",
+        "docs/research/NETWORK_SIMULATION_AR.md"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Coverage and qualification stated with every simulation."
     }
   ],
   "rounds": [
