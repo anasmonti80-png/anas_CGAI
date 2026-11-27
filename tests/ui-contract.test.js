@@ -892,3 +892,8 @@ test('the response page shows the evidence-backed action ledger with chain head 
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/action-ledger')"));
   for(const marker of ['Evidence-backed action ledger','Who / why','Trigger / evidence','Outcome / rollback','Chain head','Export the ledger for verification','CG-173']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page shows critical assets and composite plans with two approvals and window or out-of-band recovery (CG-174)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/critical-shutdown')"));
+  for(const marker of ['No single-action critical shutdown','Composite plans','Awaiting two approvals','ESXi/Hyper-V host','Maintenance window','plan_needs_two_distinct_approvers','CG-174']) assert.ok(app.includes(marker),marker);
+});

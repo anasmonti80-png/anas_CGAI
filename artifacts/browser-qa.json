@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T02:54:27.300Z",
+  "at": "2026-11-27T06:22:15.340Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -181,7 +181,8 @@
     "blast_radius": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-171", "calculations": "security group sg-web: limited, two resources, one public with warning; unknown account: unknown, needs human review", "console_errors": 0},
     "rule_leases": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-172", "leases": "one installed with device-side expiry, one installed without device timer (flagged), one removed early, one pending approval", "console_errors": 0},
     "action_ledger": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-173", "ledger": "one approved isolation entry: requester, approver, ticket IR-173, API job pending approval, password redacted in reason, chain head and export shown (execution, outcome and rollback covered by the unit test)", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 173, "next": "CG-174"}
+    "critical_shutdown": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-174", "view": "ESXi host declared critical and a domain controller by device type; one plan approved by two admins with iLO recovery, one pending", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 174, "next": "CG-175"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

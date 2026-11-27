@@ -50,6 +50,7 @@ import { IsolationSurvival } from './lib/isolation-survival.js';
 import { blastRadius } from './lib/blast-radius.js';
 import { RuleLeases } from './lib/rule-lease.js';
 import { ledger as actionLedger } from './lib/action-ledger.js';
+import { CriticalShutdown } from './lib/critical-shutdown.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -359,6 +360,12 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      // CG-174 critical infrastructure: declare roles, request composite plans, two admin approvals with MFA.
+      if(p==='/api/critical-shutdown'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new CriticalShutdown(store,{clock}).view());}
+      if(p==='/api/critical-shutdown/assets'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,new CriticalShutdown(store,{clock}).declare(user.id,await body(req)));}
+      if(p==='/api/critical-shutdown/plans'&&method==='POST'){roles(['admin','analyst']);return send(res,201,new CriticalShutdown(store,{clock}).plan(user.id,await body(req)));}
+      const planMatch=p.match(/^\/api\/critical-shutdown\/plans\/([a-f0-9-]{36})\/approve$/);
+      if(planMatch&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,new CriticalShutdown(store,{clock}).approve(user.id,planMatch[1]));}
       // CG-173 evidence-backed action ledger (hash-chained, secrets redacted).
       if(p==='/api/action-ledger'&&method==='GET'){roles(['admin','analyst']);return send(res,200,actionLedger(store,domain,{clock}));}
       if(p==='/api/action-ledger/export'&&method==='GET'){roles(['admin','analyst']);res.writeHead(200,{'content-type':'application/json; charset=utf-8','content-disposition':'attachment; filename="cyberguard-action-ledger.json"','cache-control':'no-store'});return res.end(JSON.stringify(actionLedger(store,domain,{clock}),null,2));}

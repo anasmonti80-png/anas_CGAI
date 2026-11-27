@@ -1215,6 +1215,13 @@
       "tests": ["tests/action-ledger.test.js: every command is one hash-chained ledger entry with who, why, ticket, evidence, preflight, API result, outcome and rollback, and no password reaches it (CG-173)", "tests/ui-contract.test.js: the response page shows the evidence-backed action ledger with chain head and export (CG-173)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["The ledger is derived from the stored records on request; its chain protects the export, while the underlying audit log keeps its own hash chain."]
+    },
+    "CG-174": {
+      "reason": "No single-action critical shutdown. lib/critical-shutdown.js identifies critical assets (domain controller, core switch or uplink, backup controller, ESXi/Hyper-V host, security platform) from owner declarations, the domain-controller device type and impact-graph roles. A disruptive action (isolate, shut down, stop/disable/remove service, port shutdown, NAC quarantine, cloud isolation) on a critical asset is refused unless it is the next step of an approved composite plan: 2 to 10 ordered steps, a change reference, and either a maintenance window or out-of-band recovery with owner and evidence, approved by two administrators other than the requester with recent MFA. Steps are used once and in order, only inside the window and before expiry, and a completed plan cannot be replayed. The existing protected-role refusal for domain controllers stays unless an approved plan covers the step. The response page shows critical assets and plans in Arabic and English. This release also makes the CG-173 ledger test deterministic: its redaction check used a value that could appear by chance in random hex identifiers.",
+      "code": ["lib/critical-shutdown.js", "lib/domain.js", "lib/store.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md", "tests/action-ledger.test.js"],
+      "tests": ["tests/critical-shutdown.test.js: critical infrastructure is never disrupted by a single command: only the next step of a two-approver composite plan with a window or out-of-band recovery (CG-174)", "tests/ui-contract.test.js: the response page shows critical assets and composite plans with two approvals and window or out-of-band recovery (CG-174)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Plans govern CyberGuard response actions only; changes made outside CyberGuard are not covered. Out-of-band recovery is recorded as declared evidence, not tested by CyberGuard."]
     }
   }
 }
