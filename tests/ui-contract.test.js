@@ -887,3 +887,8 @@ test('the response page shows rule leases with approved expiry, device timer, re
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/rule-leases')"));
   for(const marker of ['Just-in-time rule leases','Device timer','Revocation deadline','Installed without device-side expiry','Past revocation deadline','lease_needs_second_approver','CG-172']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page shows the evidence-backed action ledger with chain head and export (CG-173)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/action-ledger')"));
+  for(const marker of ['Evidence-backed action ledger','Who / why','Trigger / evidence','Outcome / rollback','Chain head','Export the ledger for verification','CG-173']) assert.ok(app.includes(marker),marker);
+});

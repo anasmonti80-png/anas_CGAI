@@ -1208,6 +1208,13 @@
       "tests": ["tests/rule-lease.test.js: leases are exact, ticketed and second-approved, expire on the enforcement layer, and reconciliation finds overdue, unenforced, orphan and early-removed rules after an outage (CG-172)", "tests/ui-contract.test.js: the response page shows rule leases with approved expiry, device timer, revocation deadline and reconciled status (CG-172)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["CyberGuard does not program the device timer; the response connector does and reports it. Orphan detection depends on the connector reporting rules it holds."]
+    },
+    "CG-173": {
+      "reason": "Evidence-backed action ledger. lib/action-ledger.js builds one entry per response command joining who requested, approved, safety-approved, dispatched and (as a named connector) executed it; why (reason, trigger as AI proposal on an alert or manual request, the alert); the ticket (authorization reference); the evidence events of the alert with their hashes; the preflight (dry-run hash, before state, recovery plan hash); the API result (connector, request hash, status, phase, completion); the independent outcome verification (CG-118); the rollback steps; and the action timeline with audit hashes. Every string passes the secret redactor and an extra password, pin and passphrase scan, so no password reaches the ledger. Entries are SHA-256 chained in request order and verifyLedger detects a changed entry at its position. GET /api/action-ledger, an export, and the response page show it in Arabic and English.",
+      "code": ["lib/action-ledger.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md"],
+      "tests": ["tests/action-ledger.test.js: every command is one hash-chained ledger entry with who, why, ticket, evidence, preflight, API result, outcome and rollback, and no password reaches it (CG-173)", "tests/ui-contract.test.js: the response page shows the evidence-backed action ledger with chain head and export (CG-173)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The ledger is derived from the stored records on request; its chain protects the export, while the underlying audit log keeps its own hash chain."]
     }
   }
 }
