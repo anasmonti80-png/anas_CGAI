@@ -39,7 +39,7 @@ test('low-impact runs after one approval; destructive shutdown needs a safety ap
   gate.addWindow('admin-a', { asset_ref: 'srv-app-01', starts_at: iso(1200000), ends_at: iso(4800000), change_ref: 'CHG-119' });
   assert.throws(() => d.executeAction('admin-a', down.id), /requires_change_window/, 'a future window does not count yet');
   // Inside the window: fresh management check, new preview, both approvals, confirmation by the executor.
-  advance(1200000 + 1000); refresh(); const run = preview('endpoint.shutdown-host', { device_ref: 'srv-app-01' }); d.approveAction('admin-b', run.id); d.safetyApproveAction('admin-c', run.id);
+  advance(1200000 + 1000); refresh(); d.cancelAction('admin-a', down.id, 'Replaced by a request inside the change window'); const run = preview('endpoint.shutdown-host', { device_ref: 'srv-app-01' }); d.approveAction('admin-b', run.id); d.safetyApproveAction('admin-c', run.id);
   gate.confirm('admin-a', run.id, { typed_target: 'SRV-APP-01' }); advance(11 * 60000); assert.throws(() => d.executeAction('admin-a', run.id), /requires_confirmation_expired/, 'the confirmation is valid for 10 minutes');
   gate.confirm('admin-a', run.id, { typed_target: 'SRV-APP-01' }); assert.throws(() => d.executeAction('admin-b', run.id), /the_confirming_user_must_execute/);
   assert.equal(d.executeAction('admin-a', run.id).status, 'dispatched'); const down2 = run;

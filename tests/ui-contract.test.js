@@ -897,3 +897,8 @@ test('the response page shows critical assets and composite plans with two appro
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/critical-shutdown')"));
   for(const marker of ['No single-action critical shutdown','Composite plans','Awaiting two approvals','ESXi/Hyper-V host','Maintenance window','plan_needs_two_distinct_approvers','CG-174']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page shows change IDs, provider request IDs, restore methods and supersedes (CG-175)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/action-coordination')"));
+  for(const marker of ['Idempotency and conflict detection','Change ID','Provider request ID','Restore method','Supersedes','shared_resource_requires_restore_method','CG-175']) assert.ok(app.includes(marker),marker);
+});

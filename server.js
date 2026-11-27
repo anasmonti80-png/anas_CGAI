@@ -51,6 +51,7 @@ import { blastRadius } from './lib/blast-radius.js';
 import { RuleLeases } from './lib/rule-lease.js';
 import { ledger as actionLedger } from './lib/action-ledger.js';
 import { CriticalShutdown } from './lib/critical-shutdown.js';
+import { ActionCoordination } from './lib/action-coordination.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -360,6 +361,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      if(p==='/api/action-coordination'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new ActionCoordination(store).view());}
       // CG-174 critical infrastructure: declare roles, request composite plans, two admin approvals with MFA.
       if(p==='/api/critical-shutdown'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new CriticalShutdown(store,{clock}).view());}
       if(p==='/api/critical-shutdown/assets'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,new CriticalShutdown(store,{clock}).declare(user.id,await body(req)));}
@@ -639,6 +641,8 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       const action=p.match(/^\/api\/actions\/([a-f0-9-]{36})\/(approve|safety-approve|execute|rollback)$/);
       const actionDetail=p.match(/^\/api\/actions\/([a-f0-9-]{36})$/);
       if(actionDetail&&method==='GET') return send(res,200,domain.action(actionDetail[1]));
+      // CG-175 withdraw a request before dispatch (requester or administrator).
+      {const cm=p.match(/^\/api\/actions\/([a-f0-9-]{36})\/cancel$/);if(cm&&method==='POST'){roles(['admin','analyst']);auth.requireRecentMfa(user);const input=await body(req);return send(res,200,domain.cancelAction(user.id,cm[1],input?.reason));}}
       if(action&&method==='POST') {roles(['admin']);auth.requireRecentMfa(user);const fn={approve:'approveAction','safety-approve':'safetyApproveAction',execute:'executeAction',rollback:'rollbackAction'}[action[2]];return send(res,200,domain[fn](user.id,action[1]));}
       if(p==='/api/audit/verify'&&method==='GET') {roles(['admin']);return send(res,200,store.verifyAudit());}
       if(p==='/api/coverage'&&method==='GET') return send(res,200,{...coverage,support:readJson('docs/engineering/SUPPORT_MATRIX.json'),capabilities:readJson('docs/engineering/CAPABILITIES.json')});

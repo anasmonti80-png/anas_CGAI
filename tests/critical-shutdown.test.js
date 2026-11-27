@@ -17,7 +17,7 @@ test('critical infrastructure is never disrupted by a single command: only the n
   const assetId = s.get("SELECT a.id FROM assets a JOIN sources s ON s.id=a.source_id WHERE a.external_id='esxi-01' AND s.name='Sensors'").id;
   const preview = (type, plan_id) => d.previewAction('admin-a', { type, asset_id: assetId, target, connector_id: 'MGMT-174', authorization_ref: 'CHG-174', reason: 'Planned host maintenance', ttl_seconds: 600, ...(plan_id ? { plan_id } : {}) });
   // Before it is declared critical, a single isolation is accepted by this gate.
-  assert.ok(preview('endpoint.isolate-device').id);
+  assert.ok(preview('endpoint.isolate-device').id); now += 601000; s.run('UPDATE mfa_assertions SET verified_at=?,expires_at=?', new Date(now).toISOString(), new Date(now + 3600000).toISOString()); // that request expires unapproved, so it no longer counts as in flight (CG-175)
   cs.declare('admin-a', { asset_ref: 'esxi-01', role: 'hypervisor-host', evidence_ref: 'CMDB-ESXI-01' });
   assert.throws(() => preview('endpoint.isolate-device'), /critical_asset_requires_composite_plan:hypervisor-host/);
   assert.throws(() => cs.plan('admin-a', { asset_ref: 'esxi-01', steps: ['endpoint.shutdown-host'], change_ref: 'CHG-174', reason: 'x', oob: { method: 'ilo-idrac-ipmi', owner: 'dc-ops', evidence_ref: 'ILO-1' } }), /composite_plan_requires_2_to_10_steps/);
