@@ -832,3 +832,8 @@ test('the threats page shows stateful correlation rules with stages, windows, al
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/correlation-rules')"));
   for(const marker of ['Stateful correlation rules','Sample test','Replay (7 days)','benign fired','correlation_samples_must_pass','correlation_rule_needs_second_approver','CG-161']) assert.ok(app.includes(marker),marker);
 });
+
+test('the sources page shows the event data contract, parse failure rate and field completeness per connector (CG-162)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/data-contracts')"));
+  for(const marker of ['Event data contract per connector','Declared contract','Parse failure','Field completeness','No declared contract','Clock source unverified or unsynchronised','CG-162']) assert.ok(app.includes(marker),marker);
+});

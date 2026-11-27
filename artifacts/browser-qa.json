@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-26T23:34:50.057Z",
+  "at": "2026-11-27T01:27:11.637Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -169,7 +169,8 @@
     "saas_app_access": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-159", "entra": "consent policy Any app; Contoso Mail Sync unverified with Mail.Read (2 users); Fabrikam admin consent with Files.ReadWrite.All; Anyone links without expiry", "google": "Mail Merge Helper unreviewed high-risk (shadow IT); Old Drive Tool blocked but holds tokens; Quiz Sign-in anonymous; file sharing counts under privacy policy", "console_errors": 0},
     "collection_preview": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-160", "catalog": "9 cloud sources with default state, provider record, billing units, enable/read permissions and regions", "estimate": "CloudTrail data events from a 1-hour sample: 8,640,000 events/month, ingestion 86.4 x 100k at the entered price, egress after the 100 GB free allowance, partial total", "stop": "source table with protected evidence and open cases", "console_errors": 0},
     "correlation_rules": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-161", "rules": "two built-in rules active with sample tests passed (malicious 1/1, benign fired 0/4 and 0/2)", "replay": "brute force then success replayed over stored synthetic events: 1 match", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 161, "next": "CG-162"}
+    "data_contract": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-162", "contract": "lab agent declared (Asia/Riyadh, ntp); synthetic fixture source shows no declared contract", "failure": "one batch refused with invalid_observed_at shows in the parse failure rate", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 162, "next": "CG-163"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
