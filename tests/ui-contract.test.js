@@ -857,3 +857,8 @@ test('the incidents page separates observed events, suspicious indicators, verif
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/incident-confidence')"));
   for(const marker of ['Incident confidence separation','Suspicious indicator','Verified security incident','Confirmed compromise','AI never raises the level','compromise_needs_second_person','CG-166']) assert.ok(app.includes(marker),marker);
 });
+
+test('the policies page shows minimization rules, built-in detectors and retention by source and legal obligation (CG-167)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/privacy')"));
+  for(const marker of ['Telemetry minimization and privacy','Keyed HMAC (keeps correlation)','AES-256-GCM encryption','Retention by source and legal obligation','Held for open evidence','retention_below_legal_minimum','CG-167']) assert.ok(app.includes(marker),marker);
+});
