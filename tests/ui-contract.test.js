@@ -837,3 +837,8 @@ test('the sources page shows the event data contract, parse failure rate and fie
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/data-contracts')"));
   for(const marker of ['Event data contract per connector','Declared contract','Parse failure','Field completeness','No declared contract','Clock source unverified or unsynchronised','CG-162']) assert.ok(app.includes(marker),marker);
 });
+
+test('the sources page shows independent visibility-loss events with cause, assessment and affected rules, never as compromise (CG-163)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/visibility-loss')"));
+  for(const marker of ['Independent visibility-loss events','Rules losing input','Concurrent suspicious alerts','Authorised change','never inferred from a loss','Logs cleared','Device clock changed','CG-163']) assert.ok(app.includes(marker),marker);
+});

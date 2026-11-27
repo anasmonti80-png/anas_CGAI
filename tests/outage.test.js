@@ -34,10 +34,10 @@ test('collectors queue locally through an outage, retry with backoff and resend 
   assert.equal(fs.readdirSync(path.join(spool, 'outbox'))[0], first, 'the queue survives on disk in order');
   // The link flaps: the server stores the first batch but the answer is lost, so the forwarder keeps the file.
   mode = 'lost'; fclock += 3000; r = await fwd.drainOnce(); assert.equal(r.status, 'backoff'); assert.equal(r.files, 2);
-  assert.equal(app.store.get('SELECT COUNT(*) n FROM events').n, 3);
+  assert.equal(app.store.get("SELECT COUNT(*) n FROM events WHERE kind!='visibility.loss'").n, 3);
   // Link restored: the first batch is resent and recognised as duplicates; nothing is stored twice; order is kept.
   mode = 'up'; fclock += 10000; r = await fwd.drainOnce(); assert.deepEqual([r.status, r.delivered, r.duplicates, r.files], ['drained', 2, 3, 0]);
-  assert.equal(app.store.get('SELECT COUNT(*) n FROM events').n, 5);
+  assert.equal(app.store.get("SELECT COUNT(*) n FROM events WHERE kind!='visibility.loss'").n, 5);
   const receipts = fs.readFileSync(path.join(spool, 'sent', 'receipts.jsonl'), 'utf8').trim().split('\n').map(JSON.parse); assert.deepEqual(receipts.map(x => [x.accepted, x.duplicates]), [[0, 3], [2, 0]]);
   // The server saw a two-hour-old backlog: flagged as a late delivery after an outage.
   const late = app.store.get("SELECT severity,title FROM alerts WHERE rule_id='CG-DELIVERY-BACKLOG-060'"); assert.equal(late.severity, 'medium'); assert.match(late.title, /Branch syslog forwarder/);

@@ -41,5 +41,5 @@ test('a custom correlation rule is tested on its samples and runs only after a s
   assert.equal(cr.approve('approver', r.row_id).status, 'active'); assert.ok(cr.active().some(x => x.id === r.id));
   assert.throws(() => validateRule({ ...def, stages: [{ ...def.stages[0], kind: 'not.a.kind' }] }, evidenceKinds), /correlation_stage_0_kind/);
   assert.throws(() => validateRule({ ...def, samples: { malicious: [], benign: def.samples.benign } }, evidenceKinds), /correlation_requires_malicious_samples/);
-  assert.equal(cr.disable('approver', r.row_id).status, 'disabled'); assert.equal(cr.view().rules.length, 4);
+  assert.equal(cr.disable('approver', r.row_id).status, 'disabled'); assert.equal(cr.view().rules.length, 5);
 });
