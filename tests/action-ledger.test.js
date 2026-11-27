@@ -4,13 +4,14 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { ledger, verifyLedger, scrub } from '../lib/action-ledger.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 test('every command is one hash-chained ledger entry with who, why, ticket, evidence, preflight, API result, outcome and rollback, and no password reaches it (CG-173)', t => {
   const s = new Store(':memory:'); t.after(() => s.close()); let now = Date.now(); const d = new Domain(s, { clock: () => now });
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', new Date(now).toISOString()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', new Date(now).toISOString(), new Date(now + 5 * 60000).toISOString(), digest({ id, now })); }
   const sensors = d.createSource('admin-a', { name: 'Sensors', stale_seconds: 86400 }), responder = d.createSource('admin-a', { name: 'EDR', stale_seconds: 86400, source_type: 'response-connector' });
   const host = { external_id: 'ws-173', hostname: 'WS-173', os_family: 'windows', device_type: 'workstation', addresses: ['10.0.0.73'] }, target = { device_ref: 'ws-173' };
-  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: host, details }), put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e });
+  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: host, details }), put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   put(sensors, ev('seen', 'asset.observed', {}));
   put(responder, ev('cap', 'response.capability', { connector_id: 'EDR-173', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device'], target_asset_refs: ['ws-173'], tested_at: new Date(now - 3600000).toISOString(), evidence_ref: 'EDR-TEST-173', status: 'active' }),
     ev('mgmt', 'response.management_preflight', { connector_id: 'EDR-173', action_type: 'endpoint.isolate-device', target_hash: digest(target), protected_role: 'none', management_channel_impact: 'none', alternate_management: { status: 'not-applicable', evidence_ref: null }, captured_at: new Date(now - 60000).toISOString(), evidence_ref: 'MGMT-173' }));

@@ -4,13 +4,14 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { SafetyGate, tierOf, REQUIREMENTS } from '../lib/safety-tiers.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 function fixture(t) {
   const s = new Store(':memory:'); t.after(() => s.close()); let now = Date.parse('2026-11-22T10:00:00.000Z'); const d = new Domain(s, { clock: () => now }), gate = new SafetyGate(s, { clock: () => now }); d.safetyGate = gate;
   for (const id of ['admin-a', 'admin-b', 'admin-c']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', new Date(now).toISOString()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', new Date(now).toISOString(), new Date(now + 3600000).toISOString(), digest({ id })); }
   const sensors = d.createSource('admin-a', { name: 'Sensors', stale_seconds: 86400 }), responder = d.createSource('admin-a', { name: 'EDR', stale_seconds: 86400, source_type: 'response-connector' });
   const host = { external_id: 'srv-app-01', hostname: 'SRV-APP-01', os_family: 'windows', device_type: 'server', addresses: ['10.0.3.10'] }, iso = (o = 0) => new Date(now + o).toISOString();
-  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: iso(), asset: host, details }), put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e });
+  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: iso(), asset: host, details }), put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   put(sensors, ev('a', 'asset.observed', {}));
   put(responder, ev('cap', 'response.capability', { connector_id: 'EDR-119', owner_system: 'cyberguard-connector', capabilities: ['endpoint.shutdown-host', 'network.block-ip'], target_asset_refs: ['srv-app-01'], tested_at: iso(-3600000), evidence_ref: 'EDR-119', status: 'active' }),
     ...[['endpoint.shutdown-host', { device_ref: 'srv-app-01' }], ['network.block-ip', { ip: '198.51.100.9' }]].map(([type, target], i) => ev(`m${i}`, 'response.management_preflight', { connector_id: 'EDR-119', action_type: type, target_hash: digest(target), protected_role: 'none', management_channel_impact: 'none', alternate_management: { status: 'not-applicable', evidence_ref: null }, captured_at: iso(-60000), evidence_ref: `M-${i}` })));

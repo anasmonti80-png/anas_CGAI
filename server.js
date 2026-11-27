@@ -53,6 +53,7 @@ import { ledger as actionLedger } from './lib/action-ledger.js';
 import { CriticalShutdown } from './lib/critical-shutdown.js';
 import { ActionCoordination } from './lib/action-coordination.js';
 import { SimulationCoverage } from './lib/simulation-coverage.js';
+import { ConnectorGrants } from './lib/connector-grants.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -362,6 +363,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      // CG-177 connector write grants: request (admin), approve and revoke (another admin with MFA); token inventory.
+      if(p==='/api/connector-grants'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new ConnectorGrants(store,{clock}).view());}
+      if(p==='/api/connector-grants'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,new ConnectorGrants(store,{clock}).request(user.id,await body(req)));}
+      {const gm=p.match(/^\/api\/connector-grants\/([a-f0-9-]{36})\/(approve|revoke)$/);if(gm&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);const cg=new ConnectorGrants(store,{clock}),input=await body(req);return send(res,200,gm[2]==='approve'?cg.approve(user.id,gm[1]):cg.revoke(user.id,gm[1],input?.reason));}}
       if(p==='/api/simulation-coverage'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new SimulationCoverage(store,{clock}).view());}
       if(p==='/api/action-coordination'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new ActionCoordination(store).view());}
       // CG-174 critical infrastructure: declare roles, request composite plans, two admin approvals with MFA.

@@ -4,6 +4,7 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { qualify, COVERAGE } from '../lib/simulation-coverage.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 const rule = (id, extra = {}) => ({ rule_id: id, name: id, position: 1, enabled: true, direction: 'in', action: 'allow', protocol: 'tcp', src: ['any'], dst: ['192.0.2.10/32'], src_ports: ['any'], dst_ports: ['443'], application: null, profile: 'any', last_hit_at: null, hit_count: null, expires_at: null, owner: null, created_at: null, filters_readable: true, scope_constraints: [], ...extra });
 
@@ -15,7 +16,7 @@ test('every simulation states its coverage and qualification, and an unqualified
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', new Date(now).toISOString()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', new Date(now).toISOString(), new Date(now + 48 * 3600000).toISOString(), digest({ id, now })); }
   const sensors = d.createSource('admin-a', { name: 'Sensors', stale_seconds: 86400 }), responder = d.createSource('admin-a', { name: 'FW connector', stale_seconds: 86400, source_type: 'response-connector' });
   const fw = { external_id: 'fw-176', hostname: 'FW-176', os_family: 'network', device_type: 'firewall', addresses: ['192.0.2.1'] }, target = { ip: '198.51.100.76' };
-  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: fw, details }), put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e });
+  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: fw, details }), put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   const ruleset = (id, rules) => ev(id, 'firewall.ruleset', { ruleset_id: id, device_ref: 'fw-176', vendor: 'palo-alto', evaluation: 'first-match', rules });
   for (const [ref, role] of [['core-1', 'core'], ['mgmt-1', 'management']]) s.run('INSERT INTO impact_roles(id,asset_ref,role,consumers_json,note,declared_by,declared_at) VALUES (?,?,?,?,?,?,?)', ref, ref, role, '["*"]', 'test', 'admin-a', new Date(now).toISOString());
   put(sensors, ev('seen', 'asset.observed', {}), ev('ctx', 'asset.context', { owner: { owner_id: 'net', display_name: 'Network', contact: null }, business_service: 'Internet edge', service_name: null, site: 'HQ', data_sensitivity: 'internal', maintenance_windows: [], service_criticality: 'critical' }), ruleset('rs-1', [rule('web')]));

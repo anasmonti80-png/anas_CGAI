@@ -4,13 +4,14 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { ControlOutcomes } from '../lib/control-outcome.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 function fixture(t) {
   const s = new Store(':memory:'); t.after(() => s.close()); let now = Date.parse('2026-11-22T10:00:00.000Z'); const d = new Domain(s, { clock: () => now });
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', new Date(now).toISOString()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', new Date(now).toISOString(), new Date(now + 5 * 60000).toISOString(), digest({ id, now })); }
   const sensors = d.createSource('admin-a', { name: 'Network sensors', stale_seconds: 86400 }), responder = d.createSource('admin-a', { name: 'EDR connector', stale_seconds: 86400, source_type: 'response-connector' });
   const host = { external_id: 'lab-ws-01', hostname: 'LAB-WS-01', os_family: 'windows', device_type: 'workstation', addresses: ['10.0.0.20'] };
-  const ev = (id, kind, details, asset = host) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset, details }), put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e });
+  const ev = (id, kind, details, asset = host) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset, details }), put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   const advance = ms => { now += ms; s.run('UPDATE mfa_assertions SET verified_at=?,expires_at=?', new Date(now).toISOString(), new Date(now + 5 * 60000).toISOString()); };
   put(sensors, ev('seen', 'asset.observed', {}));
   put(responder, ev('cap', 'response.capability', { connector_id: 'EDR-118', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device', 'network.block-ip'], target_asset_refs: ['lab-ws-01'], tested_at: new Date(now - 3600000).toISOString(), evidence_ref: 'EDR-TEST-118', status: 'active' }),

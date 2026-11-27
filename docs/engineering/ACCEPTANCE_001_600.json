@@ -1236,6 +1236,13 @@
       "tests": ["tests/simulation-coverage.test.js: every simulation states its coverage and qualification, and an unqualified or stale result is never applied to a sensitive production firewall (CG-176)", "tests/ui-contract.test.js: the response page shows simulation coverage, what is not modelled and each simulation qualification (CG-176)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["CyberGuard simulates one device; multi-device path, NAT and routing analysis needs a dedicated tool such as Batfish."]
+    },
+    "CG-177": {
+      "reason": "Least-privilege connector grants. lib/connector-grants.js makes every source read-only by default: a response connector declaring capabilities and targets on its own can no longer write. A write grant per tenant, cloud account or site lists exact target IDs (wildcards refused), is requested by an administrator, approved by a different administrator with recent MFA, expires in 1 to 365 days and can be revoked, all audited. The governed preview checks, for every response action, an active unexpired grant naming the target ID. The token inventory shows each source privilege (read-only or write by grant), token age since issue or rotation with rotation due after 90 days, and its grants with state and expiry. Existing response tests now obtain their write grants through the real request and approval path via tests/helpers/write-grant.js. The response page shows the inventory in Arabic and English.",
+      "code": ["lib/connector-grants.js", "lib/domain.js", "lib/store.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md", "tests/helpers/write-grant.js"],
+      "tests": ["tests/connector-grants.test.js: sources are read-only by default; a connector writes only under a second-approved, expiring, revocable grant naming the target ID, and tokens are inventoried (CG-177)", "tests/ui-contract.test.js: the response page shows each source privilege, token rotation state and write grants (CG-177)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Ingest tokens are not expired automatically; their age and rotation due state are shown and rotation stays an administrator action. Grants are checked when an action is previewed."]
     }
   }
 }

@@ -4,6 +4,7 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { negotiate } from '../lib/capability-negotiation.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 const probe = (over = {}) => ({ probe_id: 'p1', device_ref: 'edge-01', vendor: 'cisco-iosxe', model: 'ISR4451', version: '17.3.8', license: { edition: 'network-advantage', features: [{ name: 'dna-advantage', expires_at: '2027-01-01T00:00:00.000Z' }, { name: 'old-feature', expires_at: '2026-01-01T00:00:00.000Z' }] }, probed_at: '2026-11-17T00:00:00.000Z', probe_method: 'connector', capabilities: [
   { capability: 'read', status: 'supported', method: 'RESTCONF GET', evidence: 'HTTP 200', min_version: null, license_feature: null },
@@ -31,7 +32,7 @@ test('a response action is refused when the target probe shows the needed capabi
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', at); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `s-${id}`, 'totp', at, new Date(now + 5 * 60000).toISOString(), digest({ id, now })); }
   const source = d.createSource('admin-a', { name: 'Probe test', stale_seconds: 3600 }), asset = { external_id: 'host-01', hostname: 'HOST-01', os_family: 'windows', device_type: 'workstation', addresses: [] };
   const ingest = events => d.ingest('admin-a', source.id, { schema_version: 'cg.telemetry/1', events });
-  const responder = d.createSource('admin-a', { name: 'EDR response connector', stale_seconds: 3600, source_type: 'response-connector' }), respond = events => d.ingest('admin-a', responder.id, { schema_version: 'cg.telemetry/1', events });
+  const responder = d.createSource('admin-a', { name: 'EDR response connector', stale_seconds: 3600, source_type: 'response-connector' }), respond = events => { const r = d.ingest('admin-a', responder.id, { schema_version: 'cg.telemetry/1', events }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   respond([{ event_id: 'cap', kind: 'response.capability', observed_at: at, asset, details: { connector_id: 'EDR-1', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device'], target_asset_refs: ['host-01'], tested_at: at, evidence_ref: 'EDR-TEST', status: 'active' } },
     { event_id: 'mgmt', kind: 'response.management_preflight', observed_at: at, asset, details: { connector_id: 'EDR-1', action_type: 'endpoint.isolate-device', target_hash: digest({ device_ref: 'host-01' }), protected_role: 'none', management_channel_impact: 'none', alternate_management: { status: 'not-applicable', evidence_ref: null }, captured_at: at, evidence_ref: 'MGMT' } }]);
   const assetId = d.list('assets').items.find(a => a.external_id === 'host-01').id, request = () => d.previewAction('admin-a', { type: 'endpoint.isolate-device', asset_id: assetId, target: { device_ref: 'host-01' }, connector_id: 'EDR-1', authorization_ref: 'IR-044', reason: 'Contain', ttl_seconds: 600 });

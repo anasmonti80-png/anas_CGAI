@@ -4,13 +4,14 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { CriticalShutdown } from '../lib/critical-shutdown.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 test('critical infrastructure is never disrupted by a single command: only the next step of a two-approver composite plan with a window or out-of-band recovery (CG-174)', t => {
   const s = new Store(':memory:'); t.after(() => s.close()); let now = Date.now(); const d = new Domain(s, { clock: () => now }), cs = new CriticalShutdown(s, { clock: () => now });
   for (const id of ['admin-a', 'admin-b', 'admin-c']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', new Date(now).toISOString()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', new Date(now).toISOString(), new Date(now + 60 * 60000).toISOString(), digest({ id, now })); }
   const sensors = d.createSource('admin-a', { name: 'Sensors', stale_seconds: 86400 }), responder = d.createSource('admin-a', { name: 'Mgmt', stale_seconds: 86400, source_type: 'response-connector' });
   const hv = { external_id: 'esxi-01', hostname: 'ESXI-01', os_family: 'linux', device_type: 'server', addresses: ['10.1.0.10'] }, target = { device_ref: 'esxi-01' };
-  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: hv, details }), put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e });
+  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: hv, details }), put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   put(sensors, ev('seen', 'asset.observed', {}));
   put(responder, ev('cap', 'response.capability', { connector_id: 'MGMT-174', owner_system: 'cyberguard-connector', capabilities: ['endpoint.isolate-device', 'endpoint.shutdown-host'], target_asset_refs: ['esxi-01'], tested_at: new Date(now - 3600000).toISOString(), evidence_ref: 'MGMT-TEST-174', status: 'active' }),
     ...['endpoint.isolate-device', 'endpoint.shutdown-host'].map((type, i) => ev(`pf${i}`, 'response.management_preflight', { connector_id: 'MGMT-174', action_type: type, target_hash: digest(target), protected_role: 'none', management_channel_impact: 'none', alternate_management: { status: 'not-applicable', evidence_ref: null }, captured_at: new Date(now - 60000).toISOString(), evidence_ref: `PF-${i}` })));

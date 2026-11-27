@@ -9,6 +9,7 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { Orchestrator, PLAYBOOKS } from '../lib/orchestration.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 const ROOT = fileURLToPath(new URL('../', import.meta.url)), FX = n => path.join(ROOT, 'tests/fixtures/cisco', `acc-sw-01-${n}.txt`);
 function fixture(t) {
@@ -16,7 +17,7 @@ function fixture(t) {
   const s = new Store(':memory:'); t.after(() => s.close()); let now = Date.now(); const d = new Domain(s, { clock: () => now }), iso = (o = 0) => new Date(now + o).toISOString();
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', iso()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', iso(), iso(3600000), digest({ id })); }
   const sensors = d.createSource('admin-a', { name: 'Sensors', stale_seconds: 86400 }), conn = name => d.createSource('admin-a', { name, stale_seconds: 86400, source_type: 'response-connector' });
-  const put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }), ev = (id, kind, details, asset) => ({ event_id: id, kind, observed_at: iso(), asset, details });
+  const put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; }, ev = (id, kind, details, asset) => ({ event_id: id, kind, observed_at: iso(), asset, details });
   const ws = { external_id: 'ws-win-01', hostname: 'WS-WIN-01', os_family: 'windows', device_type: 'workstation', addresses: ['10.0.0.20'] }, vm = { external_id: 'i-0abc1234def567890', hostname: 'web-prod-1', os_family: 'linux', device_type: 'virtual-machine', addresses: ['172.31.5.10'] };
   const alice = { external_id: 'ws-alice', hostname: 'WS-ALICE', os_family: 'windows', device_type: 'workstation', addresses: ['10.20.10.21'] }, sw = { external_id: 'acc-sw-01', hostname: 'ACC-SW-01', os_family: 'network', device_type: 'switch', addresses: ['10.20.10.2'] };
   const out = path.join(dir, 'pm.json'), r = spawnSync(process.execPath, [path.join(ROOT, 'scripts/port-map.js'), '--switch-ref', 'acc-sw-01', '--authorization-ref', 'NET-120', '--output', out, '--arp', FX('arp'), '--mac-table', FX('mac'), '--switchport', FX('switchport'), '--lldp', FX('lldp')], { encoding: 'utf8' }); assert.equal(r.status, 0, r.stderr);

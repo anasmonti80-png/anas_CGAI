@@ -6,6 +6,7 @@ import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { catalystInventory, catalystTopology, catalystHealth, fmcAccessRules, iosxeNative, iseAncRequest } from '../lib/connectors/cisco.js';
 import { validateResponseTarget } from '../lib/response-actions.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 const fx = name => JSON.parse(fs.readFileSync(new URL(`./fixtures/cisco/${name}`, import.meta.url), 'utf8'));
 
@@ -42,7 +43,7 @@ test('Cisco telemetry feeds topology, health alerts, the firewall analyzer and d
   const ev = (id, kind, details, asset = collector) => ({ event_id: id, kind, observed_at: at, asset, details });
   const ingest = events => d.ingest('admin-a', source.id, { schema_version: 'cg.telemetry/1', events });
   // CG-045: ISE registration and jobs use a separate response-connector source.
-  const responder = d.createSource('admin-a', { name: 'ISE response connector', stale_seconds: 3600, source_type: 'response-connector' }), respond = events => d.ingest('admin-a', responder.id, { schema_version: 'cg.telemetry/1', events });
+  const responder = d.createSource('admin-a', { name: 'ISE response connector', stale_seconds: 3600, source_type: 'response-connector' }), respond = events => { const r = d.ingest('admin-a', responder.id, { schema_version: 'cg.telemetry/1', events }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   ingest(catalystInventory(fx('catalyst-network-device.json')).map((x, i) => ev(`inv-${i}`, 'asset.observed', {}, x.asset)));
   const topo = catalystTopology(fx('catalyst-physical-topology.json'));
   ingest([ev('topo', 'network.topology', { topology_id: 'cisco-catalyst-physical', source: 'cisco-catalyst-center', nodes: topo.nodes, links: topo.links }), ev('health', 'network.device_health', { snapshot_id: 'cisco-catalyst-health', source: 'cisco-catalyst-center', devices: catalystHealth(fx('catalyst-device-health.json')) })]);

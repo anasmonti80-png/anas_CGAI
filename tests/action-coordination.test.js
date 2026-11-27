@@ -5,13 +5,14 @@ import { Domain } from '../lib/domain.js';
 import { digest } from '../lib/common.js';
 import { RuleLeases } from '../lib/rule-lease.js';
 import { ActionCoordination } from '../lib/action-coordination.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 test('a change runs once, opposing changes and active leases need an explicit supersede, provider request IDs are unique and shared resources state a restore method (CG-175)', t => {
   const s = new Store(':memory:'); t.after(() => s.close()); let now = Date.now(); const d = new Domain(s, { clock: () => now });
   for (const id of ['admin-a', 'admin-b']) { s.run('INSERT INTO users VALUES (?,?,?,?,?)', id, id, 'fixture-not-a-password-hash', 'admin', new Date(now).toISOString()); s.run('INSERT INTO mfa_assertions VALUES (?,?,?,?,?,?,?)', `${id}-mfa`, id, `fixture-session-${id}`, 'totp', new Date(now).toISOString(), new Date(now + 3600000).toISOString(), digest({ id, now })); }
   const sensors = d.createSource('admin-a', { name: 'Sensors', stale_seconds: 86400 }), responder = d.createSource('admin-a', { name: 'Firewall connector', stale_seconds: 86400, source_type: 'response-connector' });
   const fw = { external_id: 'fw-175', hostname: 'FW-175', os_family: 'network', device_type: 'firewall', addresses: ['192.0.2.1'] };
-  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: fw, details }), put = (src, ...e) => d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e });
+  const ev = (id, kind, details) => ({ event_id: id, kind, observed_at: new Date(now).toISOString(), asset: fw, details }), put = (src, ...e) => { const r = d.ingest('admin-a', src.id, { schema_version: 'cg.telemetry/1', events: e }); grantDeclaredCapabilities(s, { clock: () => now }); return r; };
   const ips = ['198.51.100.9', '198.51.100.50'], targets = [...ips.flatMap(ip => [['network.block-ip', { ip }], ['network.allow-ip', { ip }]]), ['endpoint.shutdown-host', { device_ref: 'fw-175' }]];
   put(sensors, ev('seen', 'asset.observed', {}));
   put(responder, ev('cap', 'response.capability', { connector_id: 'FW-175', owner_system: 'cyberguard-connector', capabilities: ['network.block-ip', 'network.allow-ip', 'endpoint.shutdown-host'], target_asset_refs: ['fw-175'], tested_at: new Date(now - 3600000).toISOString(), evidence_ref: 'FW-TEST', status: 'active' }),

@@ -7,6 +7,7 @@ import { Store } from '../lib/store.js';
 import { Domain } from '../lib/domain.js';
 import { redact, digest } from '../lib/common.js';
 import { responseActionTypes, validateResponseTarget } from '../lib/response-actions.js';
+import { grantDeclaredCapabilities } from './helpers/write-grant.js';
 
 function fixture(t) {
   const s=new Store(':memory:'); t.after(()=>s.close());
@@ -18,7 +19,7 @@ function fixture(t) {
   let responderSource=null;const responder={get id(){return (responderSource||=d.createSource('admin-a',{name:'Synthetic responder',stale_seconds:86400,source_type:'response-connector'})).id;}};
   const event=(id,kind='asset.observed',details={},asset={})=>({event_id:id,kind,observed_at:new Date(now).toISOString(),asset:{external_id:'synthetic-01',hostname:'LAB-01',os_family:'windows',device_type:'workstation',addresses:['192.0.2.10'],...asset},details});
   const ingest=events=>d.ingest('admin-a',source.id,{schema_version:'cg.telemetry/1',events});
-  const respond=events=>d.ingest('admin-a',responder.id,{schema_version:'cg.telemetry/1',events});
+  const respond=events=>{const r=d.ingest('admin-a',responder.id,{schema_version:'cg.telemetry/1',events});grantDeclaredCapabilities(s,{clock:()=>now});return r;};
   return {s,d,source,responder,respond,event,ingest,advance:ms=>{now+=ms;const verified=new Date(now).toISOString(),expires=new Date(now+5*60000).toISOString();s.run('UPDATE mfa_assertions SET verified_at=?,expires_at=?',verified,expires);}};
 }
 
