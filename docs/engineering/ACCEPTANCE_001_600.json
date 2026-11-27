@@ -1243,6 +1243,13 @@
       "tests": ["tests/connector-grants.test.js: sources are read-only by default; a connector writes only under a second-approved, expiring, revocable grant naming the target ID, and tokens are inventoried (CG-177)", "tests/ui-contract.test.js: the response page shows each source privilege, token rotation state and write grants (CG-177)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Ingest tokens are not expired automatically; their age and rotation due state are shown and rotation stays an administrator action. Grants are checked when an action is previewed."]
+    },
+    "CG-178": {
+      "reason": "CIS Benchmark evidence mapping (R-050). Owners import compliance.cis_assessment results produced under their own CIS licence for Windows Server, Cisco IOS XE, Microsoft 365 and firewalls: platform and version, benchmark title and version as CIS lists them, profile, source reference, tool, assessment date, licence basis and per-control results with evidence. lib/cis-mapping.js maps each system to the assessed benchmark and flags a benchmark that does not match the platform version, assessments older than 90 days, failed controls, and a free-PDF or unknown licence basis as possibly restricted for commercial use, since CIS lists the free Benchmark PDFs under CC BY-NC-SA 4.0. CG-CIS-BASELINE-178 alerts on failed controls or a mismatched benchmark. CyberGuard ships no CIS content. The policies page shows the mapping in Arabic and English.",
+      "code": ["lib/cis-mapping.js", "lib/domain.js", "lib/attack-mapping.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md", "docs/research/register.json"],
+      "tests": ["tests/cis-mapping.test.js: each system baseline maps to the assessed CIS benchmark with version, source, date and evidence, flags mismatched versions, stale assessments, failed controls and non-commercial licensing (CG-178)", "tests/ui-contract.test.js: the policies page maps systems to the assessed CIS benchmark with licence and version checks (CG-178)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["Benchmark versions are taken as declared by the owner; CyberGuard checks platform and version consistency but does not hold CIS content."]
     }
   }
 }

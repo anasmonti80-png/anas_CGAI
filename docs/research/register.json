@@ -1156,6 +1156,29 @@
       ],
       "decision": "accepted",
       "decision_reason": "Coverage and qualification stated with every simulation."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-178"
+      ],
+      "topic": "governance",
+      "id": "R-050",
+      "title": "CIS Benchmarks list and terms (free PDF use licence)",
+      "source_type": "official",
+      "url": "https://www.cisecurity.org/terms-and-conditions-table-of-contents",
+      "source_date": "2026-11-27",
+      "summary": "The CIS terms list \"CIS Benchmarks (Free PDF Use) – Creative Commons License\" linking to CC BY-NC-SA 4.0; tailoring benchmarks is offered through a CIS SecureSuite Membership. The CIS Benchmarks list includes Cisco IOS XE 17.x and Microsoft 365 Foundations among other platform benchmarks.",
+      "applicability": "Licence basis declared per assessment; free PDF or unknown basis flagged for commercial use.",
+      "risks": "Benchmark names and versions change; CyberGuard stores what the owner declares and checks only the platform and version match.",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/cis-mapping.js"
+      ],
+      "decision": "accepted",
+      "decision_reason": "Implemented as an evidence mapping without CIS content."
     }
   ],
   "rounds": [

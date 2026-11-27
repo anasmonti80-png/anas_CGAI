@@ -912,3 +912,8 @@ test('the response page shows each source privilege, token rotation state and wr
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/connector-grants')"));
   for(const marker of ['Least-privilege connector grants','Read-only','Write by grant','Rotation due','connector_write_grant_required_for_target','grant_needs_second_approver','CG-177']) assert.ok(app.includes(marker),marker);
 });
+
+test('the policies page maps systems to the assessed CIS benchmark with licence and version checks (CG-178)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/cis-baselines')"));
+  for(const marker of ['CIS Benchmark evidence mapping','Benchmark does not match the platform version','Licence may restrict commercial use','Free PDF (non-commercial)','CIS terms','CG-178']) assert.ok(app.includes(marker),marker);
+});

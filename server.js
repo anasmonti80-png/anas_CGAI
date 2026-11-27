@@ -54,6 +54,7 @@ import { CriticalShutdown } from './lib/critical-shutdown.js';
 import { ActionCoordination } from './lib/action-coordination.js';
 import { SimulationCoverage } from './lib/simulation-coverage.js';
 import { ConnectorGrants } from './lib/connector-grants.js';
+import { cisView } from './lib/cis-mapping.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -363,6 +364,7 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      if(p==='/api/cis-baselines'&&method==='GET'){roles(['admin','analyst']);return send(res,200,cisView(store,{clock}));}
       // CG-177 connector write grants: request (admin), approve and revoke (another admin with MFA); token inventory.
       if(p==='/api/connector-grants'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new ConnectorGrants(store,{clock}).view());}
       if(p==='/api/connector-grants'&&method==='POST'){auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,201,new ConnectorGrants(store,{clock}).request(user.id,await body(req)));}

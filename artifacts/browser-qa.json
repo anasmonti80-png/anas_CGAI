@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T14:35:43.134Z",
+  "at": "2026-11-27T14:41:19.872Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -185,7 +185,8 @@
     "action_coordination": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-175", "view": "block and superseding allow on the same address, shutdown of a shared firewall with a stated restore method, change IDs shown", "console_errors": 0},
     "simulation_coverage": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-176", "simulations": "one qualified simulation and one not qualified because of an application rule, with coverage and not-modelled list shown", "console_errors": 0},
     "connector_grants": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-177", "inventory": "sensor source read-only, EDR connector with one active site grant and one pending grant, token states shown", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 177, "next": "CG-178"}
+    "cis_baselines": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-178", "systems": "Windows Server 2022 consistent; Windows host assessed with a 2019 benchmark, stale, free PDF licence and failures; IOS XE 17.x with unknown licence and a failure; M365 Foundations consistent", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 178, "next": "CG-179"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
