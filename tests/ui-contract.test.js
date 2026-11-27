@@ -867,3 +867,8 @@ test('the sources page shows event volume, refusals, lateness, queue lag, parser
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/event-reliability')"));
   for(const marker of ['Event volume and detection reliability','EPS in / processed','Detection from observation (p50 / p95)','Sender queue lag','Rate effect on detection time','Parser errors','CG-168']) assert.ok(app.includes(marker),marker);
 });
+
+test('the threats page shows staged and active feed versions with source date, licence, diff and decisions (CG-169)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/feeds')"));
+  for(const marker of ['IOC and KEV feed change governance','Staged — awaiting approval','Diff against active','Mass change','Applying a feed creates no response action','feed_needs_second_approver','CG-169']) assert.ok(app.includes(marker),marker);
+});
