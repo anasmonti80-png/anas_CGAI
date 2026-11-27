@@ -41,6 +41,7 @@ import { appAccessView } from './lib/saas-app-access.js';
 import { CorrelationRules } from './lib/correlation-rules.js';
 import { contractView } from './lib/data-contract.js';
 import { lossView } from './lib/visibility-loss.js';
+import { Deception } from './lib/deception.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -348,6 +349,11 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      // CG-164 deception: propose (admin/analyst), approve (another admin with MFA), retire (admin with MFA).
+      if(p==='/api/deception'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new Deception(store,{clock}).view());}
+      if(p==='/api/deception'&&method==='POST'){roles(['admin','analyst']);return send(res,201,new Deception(store,{clock}).propose(user.id,await body(req)));}
+      const decoyMatch=p.match(/^\/api\/deception\/([a-f0-9-]{36})\/(approve|retire)$/);
+      if(decoyMatch&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);const dc=new Deception(store,{clock});return send(res,200,decoyMatch[2]==='approve'?dc.approve(user.id,decoyMatch[1]):dc.retire(user.id,decoyMatch[1]));}
       if(p==='/api/visibility-loss'&&method==='GET'){roles(['admin','analyst']);return send(res,200,lossView(store));}
       if(p==='/api/data-contracts'&&method==='GET'){roles(['admin','analyst']);return send(res,200,contractView(store,{clock}));}
       if(p==='/api/correlation-rules'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new CorrelationRules(store,{clock,kinds:[...evidenceKinds,'visibility.loss']}).view());}

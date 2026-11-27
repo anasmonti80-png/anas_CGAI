@@ -1084,6 +1084,54 @@
       ],
       "decision": "accepted",
       "decision_reason": "Implemented natively with mandatory malicious and benign samples."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-164"
+      ],
+      "topic": "detection-mapping",
+      "source_type": "official",
+      "source_date": "2026-11-27",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/deception.js",
+        "docs/research/DECEPTION_AR.md"
+      ],
+      "decision": "accepted",
+      "id": "R-047",
+      "title": "MITRE D3FEND Deceive tactic",
+      "url": "https://d3fend.mitre.org/tactic/d3f:Deceive/",
+      "summary": "Deceive uses deception to advertise, entice and allow potential attackers access to an observed or controlled environment. Techniques: Decoy Environment D3-DE (Integrated, Connected and Standalone Honeynet) and Decoy Object D3-DO with Decoy File D3-DF, Decoy Public Release D3-DPR, Decoy User Credential D3-DUC, Decoy Network Resource D3-DNR, Decoy Persona D3-DP and Decoy Session Token D3-DST.",
+      "applicability": "Decoy accounts, files, shares and honeytoken markers with approval and detection on stored evidence.",
+      "risks": "Honeynets and public decoys are out of scope; deployment stays with the owner.",
+      "decision_reason": "Implemented D3-DUC, D3-DF, D3-DNR and D3-DST as an approved decoy register."
+    },
+    {
+      "reviewed_at": "2026-11-27",
+      "dependencies": [],
+      "requirements": [
+        "CG-164"
+      ],
+      "topic": "detection-mapping",
+      "source_type": "official",
+      "source_date": "2026-11-27",
+      "priority": "P2",
+      "verification": "verified-in-code",
+      "evidence_files": [
+        "lib/deception.js",
+        "docs/research/DECEPTION_AR.md"
+      ],
+      "decision": "accepted",
+      "id": "R-048",
+      "title": "Defender for Identity honeytoken tag and Windows event 4663",
+      "url": "https://learn.microsoft.com/en-us/defender-for-identity/entity-tags",
+      "summary": "Defender for Identity tags users and devices as Honeytoken; these accounts are usually dormant and any sign-in from one triggers an alert. Windows event 4663 records an access right actually used on an object only when the object SACL has the required ACE (Audit File System), with account, object name, process name and accesses.",
+      "applicability": "Any authentication by a decoy account is a signal; decoy files need a SACL so their access is logged.",
+      "risks": "The 4663 page is archived legacy documentation.",
+      "decision_reason": "Used to define isolation attestations and detection inputs."
     }
   ],
   "rounds": [

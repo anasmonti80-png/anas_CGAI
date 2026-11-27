@@ -842,3 +842,8 @@ test('the sources page shows independent visibility-loss events with cause, asse
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/visibility-loss')"));
   for(const marker of ['Independent visibility-loss events','Rules losing input','Concurrent suspicious alerts','Authorised change','never inferred from a loss','Logs cleared','Device clock changed','CG-163']) assert.ok(app.includes(marker),marker);
 });
+
+test('the threats page shows the decoy register with D3FEND techniques, isolation, approval and touches (CG-164)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/deception')"));
+  for(const marker of ['High-signal deception (decoys)','Proposed — awaiting a second administrator','Authenticates nowhere','Object access audit (SACL)','decoy_needs_second_approver','decoy_must_not_contain_credentials','CG-164']) assert.ok(app.includes(marker),marker);
+});

@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T01:36:38.266Z",
+  "at": "2026-11-27T01:44:34.996Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -171,7 +171,8 @@
     "correlation_rules": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-161", "rules": "two built-in rules active with sample tests passed (malicious 1/1, benign fired 0/4 and 0/2)", "replay": "brute force then success replayed over stored synthetic events: 1 match", "console_errors": 0},
     "data_contract": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-162", "contract": "lab agent declared (Asia/Riyadh, ntp); synthetic fixture source shows no declared contract", "failure": "one batch refused with invalid_observed_at shows in the parse failure rate", "console_errors": 0},
     "visibility_loss": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-163", "losses": "log deletion, clock change and agent disabled (authorised change) from synthetic tamper evidence; agent disconnected after silence", "compromise": "confirmed compromise 0, never inferred", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 163, "next": "CG-164"}
+    "deception": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-164", "decoys": "decoy account active with one touch, honeytoken active with one touch, decoy file proposed awaiting a second administrator", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 164, "next": "CG-165"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
