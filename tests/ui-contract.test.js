@@ -877,3 +877,8 @@ test('the response page shows management paths, survival tests, out-of-band reco
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/isolation-survival')"));
   for(const marker of ['Isolation connectivity survival','Full-tunnel VPN','Out-of-band recovery ready','Executed — isolation not proven yet','Isolation proven independently','oob_recovery_requires_owner_and_evidence','CG-170']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page offers the blast radius calculator for the four change types with unknown needing human review (CG-171)',()=>{
+  const app=read('app.js');assert.ok(app.includes("api('/api/blast-radius'"));
+  for(const marker of ['Blast radius calculator','Unknown — needs human review','Disable user','Security group change','Switch port shutdown','missing data is never reported as no impact','CG-171']) assert.ok(app.includes(marker),marker);
+});

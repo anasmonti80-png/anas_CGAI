@@ -1194,6 +1194,13 @@
       "tests": ["tests/isolation-survival.test.js: a host behind a full-tunnel VPN, proxy or hypervisor host is isolated only with a survived management channel or out-of-band recovery, and isolation is not shown as success before it is proven (CG-170)", "tests/ui-contract.test.js: the response page shows management paths, survival tests, out-of-band recovery and isolation proven or not (CG-170)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["CyberGuard does not run the survival test itself; the owner tests the channel in a controlled window and records the evidence. Assets without a recorded path are not gated, so the path should be recorded for remote and virtualised hosts."]
+    },
+    "CG-171": {
+      "reason": "Blast radius calculator. lib/blast-radius.js gives a specific warning before four changes, from visible relationships only: stopping a service (infrastructure roles from the CG-133 impact graph, business service and owner, distinct clients in flow logs over seven days), shutting a switch port (devices learned on the port, LLDP neighbour and their roles), disabling a user (sign-ins, remote sessions and their hosts, applications and SaaS services running as the account, permissions used over 30 days) and changing a cloud security group (resources that reference it in the cloud inventory, which now accepts security_groups per resource, public exposure and business services). Each result states what it is based on and its level (none, limited, broad); when no relationship is visible the impact is unknown and requires human review, so missing data is never reported as no impact. POST /api/blast-radius and the response page form show it in Arabic and English.",
+      "code": ["lib/blast-radius.js", "lib/domain.js", "server.js", "public/app.js", "docs/OPERATIONS_AR.md"],
+      "tests": ["tests/blast-radius.test.js: stop service, switch port, disable user and security group changes get a specific blast radius from visible relationships, and unknown when none is visible (CG-171)", "tests/ui-contract.test.js: the response page offers the blast radius calculator for the four change types with unknown needing human review (CG-171)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["The calculator assesses; disabling users and changing security groups are not response actions in CyberGuard. The level thresholds (up to five affected items is limited) are a heuristic shown with the items themselves."]
     }
   }
 }

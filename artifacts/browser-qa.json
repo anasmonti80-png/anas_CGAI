@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T02:35:33.045Z",
+  "at": "2026-11-27T02:42:08.055Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -178,7 +178,8 @@
     "event_reliability": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-168", "measures": "hourly input/processed EPS, one refused and one duplicate batch, late events, sender queue lag, parser code invalid_observed_at, detection time", "console_errors": 0},
     "feed_governance": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-169", "feeds": "partner list v1 superseded, v2 active (+1 −1 ~1), v3 staged mass change; KEV v1 active", "console_errors": 0},
     "isolation_survival": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-170", "paths": "VPN laptop with MDM out-of-band recovery (ready), hypervisor-hosted VM untested (refused)", "outcome": "isolation approved but not executed, shown as not executed (execution and independent proof covered by the unit test)", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 170, "next": "CG-171"}
+    "blast_radius": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-171", "calculations": "security group sg-web: limited, two resources, one public with warning; unknown account: unknown, needs human review", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 171, "next": "CG-172"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",
