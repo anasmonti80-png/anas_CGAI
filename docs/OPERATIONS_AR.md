@@ -181,6 +181,22 @@
 - يكشف: CORS الذي يعكس أي أصل (مع بيانات الاعتماد = مرتفع)، نقاطًا تجيب دون المصادقة المطلوبة، مفاتيح API في الرابط، غياب تحديد المعدل (طلبات متكررة فقط في بيئة test أو staging)، وترويسات الأمان وخصائص ملفات تعريف الارتباط وكشف إصدار الخادم. لا تُحفظ معاملات الاستعلام.
 - أحداث WAF (ModSecurity وAWS WAF وCloud Armor) تُلخص في صفحة الثغرات. التطبيق نفسه (CyberGuard) اجتاز هذا الفحص.
 
+## اختبار بقاء الاتصال قبل العزل (CG-170)
+
+- **تسجيل مسار الإدارة:** `POST /api/assets/<id>/isolation-path` للمحلل أو المسؤول. حقوله:
+  - `path_type`: ‏direct أو full-tunnel-vpn أو proxy أو hypervisor-host أو unknown.
+  - `management_channel`.
+  - `survival`: ‏tested-survives أو tested-lost أو untested، مع `tested_at` و`test_evidence_ref`.
+  - `oob_method`: ‏ilo-idrac-ipmi أو hypervisor-console أو mdm أو physical-access أو none، مع `oob_owner` و`oob_evidence_ref`.
+- **بوابة العزل:**
+  - تشمل `endpoint.isolate-device` و`network.switch-port-admin-down` و`network.nac-quarantine-endpoint`.
+  - إذا كان المسار خطِرًا (VPN بنفق كامل أو بروكسي أو مضيف افتراضي أو غير معروف)، يُرفض طلب العزل ما لم تتحقق إحدى الحالتين:
+    - صمدت القناة في اختبار عزل خلال 30 يومًا.
+    - سُجلت طريقة استعادة خارج النطاق بمالكها ودليلها.
+  - رمز الرفض `isolation_survival_not_proven:<السبب>`.
+- **عرض النتيجة:** العزل المنفذ يظهر «نُفذ — العزل غير مثبت بعد» حتى يؤكده فحص مستقل من مصدر غير الموصل المنفذ (CG-118)، ثم يظهر «العزل مثبت باستقلال».
+- تظهر في صفحة الاستجابة.
+
 ## حوكمة تغيير تغذيات IOC وKEV (CG-169)
 
 - **التجهيز:** `POST /api/feeds` للمحلل أو المسؤول، بالحقول التالية:

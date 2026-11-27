@@ -46,6 +46,7 @@ import { IncidentConfidence } from './lib/incident-confidence.js';
 import { Privacy } from './lib/privacy.js';
 import { reliability } from './lib/event-reliability.js';
 import { FeedGovernance } from './lib/feed-governance.js';
+import { IsolationSurvival } from './lib/isolation-survival.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -355,6 +356,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      // CG-170 isolation survival: record the management path and its survival test or out-of-band recovery.
+      if(p==='/api/isolation-survival'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new IsolationSurvival(store,{clock,domain}).view());}
+      const isoMatch=p.match(/^\/api\/assets\/([a-f0-9-]{36})\/isolation-path$/);
+      if(isoMatch&&method==='POST'){roles(['admin','analyst']);return send(res,200,new IsolationSurvival(store,{clock,domain}).record(user.id,isoMatch[1],await body(req)));}
       // CG-169 feed change governance: stage (admin/analyst), approve/reject/rollback (another admin with MFA).
       if(p==='/api/feeds'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new FeedGovernance(store,{clock,domain,threatIntel:threatIntelligence}).view());}
       if(p==='/api/feeds'&&method==='POST'){roles(['admin','analyst']);return send(res,201,new FeedGovernance(store,{clock,domain,threatIntel:threatIntelligence}).stage(user.id,await body(req)));}

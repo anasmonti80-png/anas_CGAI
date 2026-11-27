@@ -872,3 +872,8 @@ test('the threats page shows staged and active feed versions with source date, l
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/feeds')"));
   for(const marker of ['IOC and KEV feed change governance','Staged — awaiting approval','Diff against active','Mass change','Applying a feed creates no response action','feed_needs_second_approver','CG-169']) assert.ok(app.includes(marker),marker);
 });
+
+test('the response page shows management paths, survival tests, out-of-band recovery and isolation proven or not (CG-170)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/isolation-survival')"));
+  for(const marker of ['Isolation connectivity survival','Full-tunnel VPN','Out-of-band recovery ready','Executed — isolation not proven yet','Isolation proven independently','oob_recovery_requires_owner_and_evidence','CG-170']) assert.ok(app.includes(marker),marker);
+});
