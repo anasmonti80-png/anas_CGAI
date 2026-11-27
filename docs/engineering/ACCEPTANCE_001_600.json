@@ -1250,6 +1250,13 @@
       "tests": ["tests/cis-mapping.test.js: each system baseline maps to the assessed CIS benchmark with version, source, date and evidence, flags mismatched versions, stale assessments, failed controls and non-commercial licensing (CG-178)", "tests/ui-contract.test.js: the policies page maps systems to the assessed CIS benchmark with licence and version checks (CG-178)"],
       "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
       "restrictions": ["Benchmark versions are taken as declared by the owner; CyberGuard checks platform and version consistency but does not hold CIS content."]
+    },
+    "CG-179": {
+      "reason": "Crypto-agility inventory, researched from NIST FIPS 203 (ML-KEM), FIPS 204 (ML-DSA), FIPS 205 (SLH-DSA) and IR 8547 (docs/research/CRYPTO_AGILITY_AR.md, R-051). Owners import crypto.inventory events of what TLS, SSH and VPN endpoints negotiate. lib/crypto-inventory.js reports per endpoint legacy cryptography (SSL/TLS 1.0/1.1, SSH 1, IKEv1, RC4/3DES/DES/NULL/EXPORT ciphers, MD5/SHA-1 signatures, RSA or DH below 2048 bits, alerted as CG-CRYPTO-LEGACY-179), reliance on quantum-vulnerable public-key algorithms unless a hybrid or post-quantum key exchange is negotiated, and readiness: migrated, ready to migrate (product supports it), wait for vendor, do not force (not supported) or confirm with vendor. Recommendations appear only for supporting products and start in a test window; CyberGuard never changes algorithms and the inventory creates no action. The policies page shows the inventory in Arabic and English.",
+      "code": ["lib/crypto-inventory.js", "lib/domain.js", "lib/attack-mapping.js", "server.js", "public/app.js", "docs/research/CRYPTO_AGILITY_AR.md", "docs/OPERATIONS_AR.md", "docs/research/register.json"],
+      "tests": ["tests/crypto-inventory.test.js: endpoints are inventoried for legacy and quantum-vulnerable cryptography with post-quantum readiness, and nothing is forced on products that do not support it (CG-179)", "tests/ui-contract.test.js: the policies page shows the crypto-agility inventory with legacy findings, post-quantum readiness and FIPS references (CG-179)"],
+      "evidence": ["artifacts/verification.json", "artifacts/tests.tap", "artifacts/browser-qa.json", "docs/engineering/BROWSER_QA_AR.md"],
+      "restrictions": ["CyberGuard does not scan endpoints itself and stores no deprecation dates; the IR 8547 timeline is applied by the owner."]
     }
   }
 }

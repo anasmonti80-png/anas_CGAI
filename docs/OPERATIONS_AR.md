@@ -181,6 +181,20 @@
 - يكشف: CORS الذي يعكس أي أصل (مع بيانات الاعتماد = مرتفع)، نقاطًا تجيب دون المصادقة المطلوبة، مفاتيح API في الرابط، غياب تحديد المعدل (طلبات متكررة فقط في بيئة test أو staging)، وترويسات الأمان وخصائص ملفات تعريف الارتباط وكشف إصدار الخادم. لا تُحفظ معاملات الاستعلام.
 - أحداث WAF (ModSecurity وAWS WAF وCloud Armor) تُلخص في صفحة الثغرات. التطبيق نفسه (CyberGuard) اجتاز هذا الفحص.
 
+## جرد المرونة التشفيرية (CG-179)
+
+- **البحث:** في `docs/research/CRYPTO_AGILITY_AR.md` (FIPS 203/204/205 وIR 8547).
+- **الاستيراد:** حدث `crypto.inventory` من فاحص أو تصدير إعدادات. لكل عنصر الحقول التالية:
+  - `endpoint`.
+  - `protocol`: ‏tls أو ssh أو ipsec أو openvpn أو wireguard.
+  - `versions` و`key_exchange`.
+  - `key`: ‏`algorithm` و`bits`.
+  - `signature_hash` و`ciphers` و`product` و`product_version`.
+  - `pqc_support`: ‏supported أو vendor-roadmap أو not-supported أو unknown.
+- **النتائج لكل نقطة:** التشفير القديم (يُنبَّه عليه بـ `CG-CRYPTO-LEGACY-179`)، والاعتماد على خوارزميات معرضة لحوسبة الكم، والجاهزية، والتوصية.
+- **حدود التوصية:** لا يُفرض شيء على منتج لا يدعم خوارزميات ما بعد الكم، ولا يغير CyberGuard الخوارزميات.
+- تظهر في صفحة السياسات.
+
 ## ربط أدلة CIS Benchmark (CG-178)
 
 - **حدود الاستخدام:** لا يوزع CyberGuard محتوى CIS. يستورد المالك نتائج التقييم التي أنتجها بترخيصه، في حدث `compliance.cis_assessment` بالحقول التالية:

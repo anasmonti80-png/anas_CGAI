@@ -917,3 +917,8 @@ test('the policies page maps systems to the assessed CIS benchmark with licence 
   const app=read('app.js');assert.ok(app.includes("optionalApi('/api/cis-baselines')"));
   for(const marker of ['CIS Benchmark evidence mapping','Benchmark does not match the platform version','Licence may restrict commercial use','Free PDF (non-commercial)','CIS terms','CG-178']) assert.ok(app.includes(marker),marker);
 });
+
+test('the policies page shows the crypto-agility inventory with legacy findings, post-quantum readiness and FIPS references (CG-179)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/crypto-inventory')"));
+  for(const marker of ['Crypto-agility and post-quantum readiness','Quantum-vulnerable','Ready to migrate','Do not force — not supported','Wait for vendor','CG-179']) assert.ok(app.includes(marker),marker);
+});
