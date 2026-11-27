@@ -1,5 +1,5 @@
 {
-  "at": "2026-11-27T01:56:13.938Z",
+  "at": "2026-11-27T02:02:56.407Z",
   "level": "Unit Tested with local Chromium inspection",
   "environment": {
     "platform": "Windows",
@@ -173,7 +173,8 @@
     "visibility_loss": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-163", "losses": "log deletion, clock change and agent disabled (authorised change) from synthetic tamper evidence; agent disconnected after silence", "compromise": "confirmed compromise 0, never inferred", "console_errors": 0},
     "deception": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-164", "decoys": "decoy account active with one touch, honeytoken active with one touch, decoy file proposed awaiting a second administrator", "console_errors": 0},
     "detection_lifecycle": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-165", "lifecycle": "rule rolled back automatically from v2 to v1 after three alerts over a limit of two; lab backtest 1 of 2 lab events; canary gates shown", "console_errors": 0},
-    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 165, "next": "CG-166"}
+    "incident_confidence": {"result": "pass", "agent": "Claude", "requirement_link_visible": "CG-166", "levels": "observed events, suspicious indicators, one verified incident and one confirmed compromise (attacker access) shown separately", "console_errors": 0},
+    "achievements_scope_001_600": {"result": "pass", "registered": 600, "acceptance_verified_after_this_promotion": 166, "next": "CG-167"}
   },
   "limitations": [
     "This is a local Chromium application check with isolated synthetic data, not a sensor, connector, or production validation.",

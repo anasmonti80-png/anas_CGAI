@@ -852,3 +852,8 @@ test('the threats page shows the detection content lifecycle with lab backtest, 
   const app=read('app.js');
   for(const marker of ['Detection content lifecycle','Canary (shadow, no alerts)','Lab backtest','Publication gates','Rolled back automatically','False positives within budget','canary_hits_need_review','hypothesis_requires_lab_backtest_that_fires','CG-165']) assert.ok(app.includes(marker),marker);
 });
+
+test('the incidents page separates observed events, suspicious indicators, verified incidents and confirmed compromises (CG-166)',()=>{
+  const app=read('app.js');assert.ok(app.includes("optionalApi('/api/incident-confidence')"));
+  for(const marker of ['Incident confidence separation','Suspicious indicator','Verified security incident','Confirmed compromise','AI never raises the level','compromise_needs_second_person','CG-166']) assert.ok(app.includes(marker),marker);
+});

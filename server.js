@@ -42,6 +42,7 @@ import { CorrelationRules } from './lib/correlation-rules.js';
 import { contractView } from './lib/data-contract.js';
 import { lossView } from './lib/visibility-loss.js';
 import { Deception } from './lib/deception.js';
+import { IncidentConfidence } from './lib/incident-confidence.js';
 import { CollectionControl, preview as collectionPreview } from './lib/collection-preview.js';
 import { AdapterRegistry } from './lib/adapter-registry.js';
 import { attackCasesView } from './lib/attack-cases.js';
@@ -351,6 +352,10 @@ export function createApp({dataDir=process.env.CG_DATA_DIR||path.join(ROOT,'data
       if(stopMatch&&stopMatch[2]==='stop-preview'&&method==='GET'){roles(['admin','analyst']);return send(res,200,collectionControl.stopPreview(stopMatch[1]));}
       if(stopMatch&&stopMatch[2]==='stop'&&method==='POST'){roles(['admin']);auth.requireRecentMfa(user);return send(res,200,collectionControl.stop(user.id,stopMatch[1],await body(req)));}
       // CG-161 stateful correlation rules: list with sample tests and replay, create, approve (second admin, MFA), disable.
+      // CG-166 incident confidence: analysts verify, a different administrator with MFA confirms or downgrades.
+      if(p==='/api/incident-confidence'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new IncidentConfidence(store,{clock}).view());}
+      const confMatch=p.match(/^\/api\/cases\/([a-f0-9-]{36})\/(verify|confirm-compromise|confidence-downgrade)$/);
+      if(confMatch&&method==='POST'){const ic=new IncidentConfidence(store,{clock});if(confMatch[2]==='verify'){roles(['admin','analyst']);return send(res,200,ic.verify(user.id,confMatch[1],await body(req)));}auth.require(user,['admin']);auth.requireRecentMfa(user);return send(res,200,confMatch[2]==='confirm-compromise'?ic.confirm(user.id,confMatch[1],await body(req)):ic.downgrade(user.id,confMatch[1],await body(req)));}
       // CG-164 deception: propose (admin/analyst), approve (another admin with MFA), retire (admin with MFA).
       if(p==='/api/deception'&&method==='GET'){roles(['admin','analyst']);return send(res,200,new Deception(store,{clock}).view());}
       if(p==='/api/deception'&&method==='POST'){roles(['admin','analyst']);return send(res,201,new Deception(store,{clock}).propose(user.id,await body(req)));}
